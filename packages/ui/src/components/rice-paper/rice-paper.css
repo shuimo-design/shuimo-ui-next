@@ -1,0 +1,55 @@
+@layer m.component {
+  .m-rice-paper {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: rgb(var(--m-paper-rgb));
+    color: var(--m-fg);
+  }
+
+  .m-rice-paper__paper {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity calc(var(--m-duration) * 3) var(--m-ease);
+  }
+
+  .m-rice-paper--ready .m-rice-paper__paper {
+    opacity: 1;
+  }
+
+  .m-rice-paper__mountains {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .m-rice-paper__layer {
+    position: absolute;
+    display: block;
+    will-change: transform;
+    /* 山体白色遮挡多边形靠 multiply 变透明 */
+    mix-blend-mode: multiply;
+  }
+
+  :root[data-theme="dark"] .m-rice-paper__layer {
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .m-rice-paper__layer {
+      filter: invert(1);
+      mix-blend-mode: screen;
+    }
+  }
+
+  .m-rice-paper__content {
+    position: relative;
+    z-index: 1;
+    min-height: inherit;
+  }
+}

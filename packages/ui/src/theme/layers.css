@@ -1,0 +1,3 @@
+/* 层顺序一次声明；后声明的层覆盖先声明的。
+   用户想要"无皮肤"：不引入 m.ink，或在自己的样式里重写 @layer m.ink {} */
+@layer m.reset, m.tokens, m.base, m.component, m.ink;

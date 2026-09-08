@@ -1,0 +1,58 @@
+{
+  "name": "MButton",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MButton"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "按钮语义类型，决定墨色与笔触",
+      "default": "\"default\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ButtonType | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "href",
+      "description": "渲染为 a 标签时的链接地址",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "nativeType",
+      "description": "原生 button 的 type",
+      "default": "\"button\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"button\" | \"submit\" | \"reset\" | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "click"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

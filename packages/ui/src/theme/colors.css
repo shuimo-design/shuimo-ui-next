@@ -1,0 +1,70 @@
+/* 中国传统色 · 按五行分组。变量名原样继承自 shuimo-ui 0.x，这是品牌资产，不改。 */
+@layer m.tokens {
+  :root {
+    /* 木 · 春 */
+    --m-color-piaobi: #c0d695; /* 缥碧 */
+    --m-color-qingqing: #4f6f46; /* 青青 */
+    --m-color-cuiqiu: #446a37; /* 翠虬 */
+    --m-color-qingshou: #284852; /* 青绶 */
+    --m-color-qingluan: #9aa7b1; /* 青鸾 */
+    --m-color-songlan: #6b798e; /* 菘蓝 */
+    --m-color-qingdai: #45465e; /* 青黛 */
+    --m-color-luozidai: #13393e; /* 螺子黛 */
+    --m-color-qiling: #12264f; /* 麒麟 */
+    --m-color-cuiwei: #4c8045; /* 翠微 */
+    --m-color-tingwulv: #68945c; /* 庭芜绿 */
+    --m-color-cangjia: #a8bf8f; /* 苍葭 */
+    --m-color-huangliliu: #fedc5e; /* 黄栗留 */
+    --m-color-zhizi: #fac03d; /* 栀子 */
+
+    /* 火 · 夏 */
+    --m-color-zhuyantuo: #f29a76; /* 朱颜酡 */
+    --m-color-wozhe: #dd6b7b; /* 渥赭 */
+    --m-color-chunzhi: #c25160; /* 唇脂 */
+    --m-color-danji: #e60012; /* 丹罽 */
+    --m-color-daran: #a81c2b; /* 大繎 */
+    --m-color-jiangsha: #b27777; /* 绛纱 */
+    --m-color-xilan: #e3adb9; /* 夕岚 */
+
+    /* 金 · 秋 */
+    --m-color-gaoyu: #efefef; /* 缟羽 */
+    --m-color-yuse: #eae4d1; /* 玉色 */
+    --m-color-luanhua: #c0ad5e; /* 栾华 */
+    --m-color-xinzi: #da9233; /* 杏子 */
+    --m-color-moge: #9f5221; /* 靺鞈 */
+    --m-color-chenxiang: #99806c; /* 沉香 */
+    --m-color-mihe: #dfd7c2; /* 蜜合 */
+    --m-color-huaqing: #1a2847; /* 花青 */
+
+    /* 水 · 冬 */
+    --m-color-yuebai: #d4e5ef; /* 月白 */
+    --m-color-qingshan: #a3bbdb; /* 晴山 */
+    --m-color-ziyuan: #757cbb; /* 紫苑 */
+    --m-color-zhengqing: #6ca8af; /* 正青 */
+    --m-color-yuyangran: #576470; /* 育阳染 */
+    --m-color-jingyuan: #31322c; /* 京元 */
+    --m-color-tieli: #46433b; /* 驖骊 */
+    --m-color-tajian: #151d29; /* 獭见 */
+    --m-color-jieshizi: #602641; /* 芥拾紫 */
+    --m-color-shiyin: #c8b6bb; /* 石英 */
+
+    /* 土 */
+    --m-color-xiaoyaoyou: #b2bfc3; /* 逍遥游 */
+    --m-color-huangliang: #c4b798; /* 黄梁 */
+    --m-color-tanhe: #945635; /* 檀褐 */
+    --m-color-jijin: #896d47; /* 吉金 */
+    --m-color-youhulu: #644d31; /* 油葫芦 */
+
+    /* 五行 · 阴阳 */
+    --m-color-jin-yang: var(--m-color-xinzi);
+    --m-color-jin-yin: var(--m-color-gaoyu);
+    --m-color-mu-yang: var(--m-color-cuiqiu);
+    --m-color-mu-yin: var(--m-color-piaobi);
+    --m-color-shui-yang: var(--m-color-tajian);
+    --m-color-shui-yin: var(--m-color-qingshan);
+    --m-color-huo-yang: var(--m-color-daran);
+    --m-color-huo-yin: var(--m-color-wozhe);
+    --m-color-tu-yang: var(--m-color-tanhe);
+    --m-color-tu-yin: var(--m-color-huangliang);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@shuimo-design/playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@shuimo-design/ui": "workspace:*",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vue-tsc": "^3.3.11"
+  }
+}

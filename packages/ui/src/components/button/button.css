@@ -1,0 +1,55 @@
+@layer m.component {
+  .m-button {
+    --m-button-h: 36px;
+    --m-button-px: var(--m-space-4);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--m-button-h);
+    padding: 0 var(--m-button-px);
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: transparent;
+    color: var(--m-fg);
+    font: inherit;
+    text-decoration: none;
+    cursor: var(--m-cursor-pointer);
+    transition:
+      color var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease);
+
+    &:hover:not(.m-button--disabled) {
+      color: var(--m-accent);
+    }
+
+    &.m-button--primary,
+    &.m-button--confirm {
+      background: var(--m-accent);
+      border-color: var(--m-accent);
+      color: var(--m-color-gaoyu);
+    }
+
+    &.m-button--text {
+      border-color: transparent;
+    }
+
+    &.m-button--disabled {
+      color: var(--m-fg-muted);
+      background: var(--m-disabled);
+      border-color: var(--m-disabled);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+}
+
+/* 水墨皮肤：笔触边框与墨晕由 ink 引擎注入变量，这里只声明用法 */
+@layer m.ink {
+  /* 滤镜由 ink 引擎注入后才引用，避免 filter: url(#不存在) */
+  html.m-ink-ready .m-button {
+    border-image-source: var(--m-ink-stroke-border, none);
+    border-image-slice: 8 fill;
+    border-image-width: 6px;
+    border-image-outset: 2px;
+    filter: url(#m-ink-bleed);
+  }
+}

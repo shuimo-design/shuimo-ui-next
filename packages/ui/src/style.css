@@ -1,0 +1,5 @@
+/* 全量样式入口。组件样式由各组件 index.ts 自带，这里只负责主题层。 */
+@import "./theme/layers.css";
+@import "./theme/colors.css";
+@import "./theme/tokens.css";
+@import "./theme/base.css";

@@ -1,0 +1,105 @@
+{
+  "name": "MRicePaper",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MRicePaper"
+  },
+  "attributes": [
+    {
+      "name": "seed",
+      "description": "生成种子；同 seed 同纸同山。不传则随机",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "tier",
+      "description": "强制特效档位：0 纯色纸，1 纸 + 山 + 视差，2 再加墨晕。默认按设备检测",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "InkTier | undefined"
+      }
+    },
+    {
+      "name": "paper",
+      "description": "纸色预设或自定义 RGB；默认跟随主题 token --m-paper-rgb",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "PaperPreset | [number, number, number] | undefined"
+      }
+    },
+    {
+      "name": "goldFlecks",
+      "description": "洒金",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "deckleEdge",
+      "description": "毛边",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "mountains",
+      "description": "是否画远山",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "layers",
+      "description": "远山层数，默认 4",
+      "default": "4",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "mountainsOpacity",
+      "description": "远山整体不透明度，默认 0.55",
+      "default": "0.55",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "parallax",
+      "description": "视差最大位移 px，默认 24；0 关闭",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "ready"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@shuimo-design/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.16.0",
+    "@shuimo-design/ui": "workspace:*",
+    "nuxt": "^4.5.2",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vue-tsc": "^3.3.11"
+  }
+}

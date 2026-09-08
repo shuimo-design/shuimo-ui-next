@@ -1,0 +1,11 @@
+@layer m.base {
+  [class^="m-"],
+  [class*=" m-"] {
+    box-sizing: border-box;
+    font-family: var(--m-font-sans);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    color: var(--m-fg);
+    cursor: var(--m-cursor-auto);
+  }
+}

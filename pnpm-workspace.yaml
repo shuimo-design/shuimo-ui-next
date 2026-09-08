@@ -1,0 +1,25 @@
+packages:
+  - packages/*
+  - playground
+  - docs
+
+# 版本统一在 catalog 里锁，各包只写 "catalog:"；与 shuimo-core 仓库同写法
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@0.3.0
+  vite-plus: 0.3.0
+  vitest: 4.1.11
+  "@vitest/browser-playwright": 4.1.11
+  vue: ^3.5.42
+  typescript: ^5.9.3
+
+# vite 被 alias 到 vite-plus-core，peer 校验按包名会失败，放行
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+
+# pnpm 12 要求对带 build 脚本的依赖明确表态
+allowBuilds:
+  esbuild: true
+  "@parcel/watcher": true
+  unrs-resolver: false
