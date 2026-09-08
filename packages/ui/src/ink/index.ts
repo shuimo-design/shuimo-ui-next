@@ -28,6 +28,16 @@ export {
   type ParallaxLayerTarget,
   type ParallaxOptions,
 } from "./parallax";
+export {
+  applyBrushBorder,
+  brushBorderUrl,
+  clearBrushBorder,
+  STROKE_ATTR,
+  useBrushBorder,
+  type BrushBorder,
+  type BrushBorderOptions,
+  type UseBrushBorderOptions,
+} from "./stroke";
 
 export interface InkEngineOptions {
   seed?: number;

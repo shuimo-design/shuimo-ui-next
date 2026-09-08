@@ -1,0 +1,63 @@
+{
+  "name": "MBorder",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MBorder"
+  },
+  "attributes": [
+    {
+      "name": "seed",
+      "description": "笔触种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "strokeWidth",
+      "description": "笔宽 px，默认 3",
+      "default": "3",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "roughness",
+      "description": "边缘噪声 0–1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "flyingWhite",
+      "description": "飞白 0–1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "tag",
+      "description": "渲染标签，默认 div",
+      "default": "\"div\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

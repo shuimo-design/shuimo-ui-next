@@ -163,6 +163,13 @@ shuimo-ui-next/                      # 仓库名待定
 - shuimo-core 的 Perlin 噪声表在第一次调用时才从 prng 取 4096 个数填充，所以 `prng.seed()` 之后"首次"与"之后"结果不同，且依赖历史 seed；`generateLandscape` 本身同 seed 两次也不一致。ui 侧在 `prng.seed(seed)` 后显式 `noise.reset()` 解决。**shuimo-core 待办：`generatePainting` 内部做同样处理。**
 - Chromium 的 `createImageBitmap` 不接受 SVG blob，worker 里无法光栅化 SVG；rolldown 也不认 `?worker`，所以 worker 引用统一用 `new URL(变量, import.meta.url)`。
 
+### stroke 模块（笔触边框，2026-09-08）
+
+- 实现：`ink/stroke/generate.ts` 沿矩形四边各走一笔 `naturalBrushStroke`（或 shan-shui `stroke()`），画黑、拼成 SVG，内嵌一层 feTurbulence 位移 + 微模糊做晕染；`useBrushBorder(el)` 监听尺寸、8px 分桶缓存、写入 `--m-ink-stroke-border`（data URL）和 `--m-ink-stroke-pad`；`stroke.css` 用 `::before` 外扩 pad、以该 SVG 作 `mask-image`、底色 `--m-ink`，所以墨色跟主题走、暗色自动成立。生成 800×400 一张 < 50ms，主线程同步即可。
+- 体积：生成器是懒加载 chunk，消费者侧 145KB（gzip 63KB），大头是 shuimo-core 内嵌的噪声 WASM base64（118KB）。
+- **shuimo-core bug（待上游修）**：`Brush.stroke` 对相邻两段方向角做算术平均，向左的笔画方向角在 ±π 附近平均成 0，法线翻转，画出串珠伪影。ui 侧规避：四条边一律向右/向下画。
+- shan-shui `stroke()` 默认宽度函数是 `sin` 梭形，边框场景要传接近匀宽的 `fun`。
+
 ### 宣纸 worker 基准（2026-09-08，Chromium headless，`pnpm bench:paper`）
 
 | 场景                             | 耗时   | PNG 解码成 ImageBitmap | PNG 大小 |

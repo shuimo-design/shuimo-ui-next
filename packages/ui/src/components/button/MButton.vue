@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useTemplateRef } from "vue";
+import { useBrushBorder } from "../../ink/stroke";
 import type { ButtonEmits, ButtonProps, ButtonSlots } from "./types";
 
 defineOptions({ name: "MButton" });
@@ -14,6 +15,8 @@ const emit = defineEmits<ButtonEmits>();
 defineSlots<ButtonSlots>();
 
 const tag = computed(() => (href ? "a" : "button"));
+const root = useTemplateRef<HTMLElement>("root");
+useBrushBorder(root, { strokeWidth: 2.5 });
 
 function onClick(event: MouseEvent) {
   if (disabled) {
@@ -27,6 +30,7 @@ function onClick(event: MouseEvent) {
 <template>
   <component
     :is="tag"
+    ref="root"
     class="m-button"
     :class="[`m-button--${type}`, { 'm-button--disabled': disabled }]"
     :href="href"

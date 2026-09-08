@@ -1,0 +1,9 @@
+@layer m.component {
+  .m-border {
+    position: relative;
+    box-sizing: border-box;
+    padding: var(--m-space-4);
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+  }
+}

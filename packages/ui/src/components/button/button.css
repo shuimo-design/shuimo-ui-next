@@ -42,14 +42,14 @@
   }
 }
 
-/* 水墨皮肤：笔触边框与墨晕由 ink 引擎注入变量，这里只声明用法 */
+/* 水墨皮肤：笔触边框由 useBrushBorder 注入（见 ink/stroke/stroke.css），这里只处理墨晕 */
 @layer m.ink {
-  /* 滤镜由 ink 引擎注入后才引用，避免 filter: url(#不存在) */
   html.m-ink-ready .m-button {
-    border-image-source: var(--m-ink-stroke-border, none);
-    border-image-slice: 8 fill;
-    border-image-width: 6px;
-    border-image-outset: 2px;
-    filter: url(#m-ink-bleed);
+    filter: url(#m-ink-bleed-light);
+  }
+
+  html.m-ink-ready .m-button--primary,
+  html.m-ink-ready .m-button--confirm {
+    --m-ink: var(--m-accent);
   }
 }

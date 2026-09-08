@@ -28,6 +28,8 @@ export default defineConfig({
       "@vueuse/core",
       "@jobinjia/shuimo-core",
       "@jobinjia/shuimo-core/xuan-paper/worker",
+      "@jobinjia/shuimo-core/foundation",
+      "@jobinjia/shuimo-core/drawing",
     ],
   },
 

@@ -1,0 +1,22 @@
+/* 笔触边框：::before 外扩 pad，用生成的 SVG 当 alpha 遮罩，墨色来自 --m-ink */
+@layer m.ink {
+  html.m-ink-ready [data-ink-stroke] {
+    position: relative;
+    border-color: transparent;
+  }
+
+  html.m-ink-ready [data-ink-stroke]::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--m-ink-stroke-pad, 0px) * -1);
+    background: var(--m-ink);
+    mask: var(--m-ink-stroke-border) center / 100% 100% no-repeat;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  html.m-ink-ready [data-ink-stroke] > * {
+    position: relative;
+    z-index: 1;
+  }
+}
