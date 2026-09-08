@@ -29,7 +29,7 @@ export async function brushBorderUrl(
 ): Promise<{ url: string; padding: number }> {
   const w = bucket(width);
   const h = bucket(height);
-  const key = `${w}x${h}:${options.seed ?? 1}:${options.strokeWidth ?? 3}:${options.roughness ?? ""}:${options.flyingWhite ?? ""}:${options.renderer ?? ""}:${options.texture ?? ""}:${JSON.stringify(options.bleed ?? true)}`;
+  const key = `${w}x${h}:${options.seed ?? 1}:${options.strokeWidth ?? 3}:${options.roughness ?? ""}:${options.flyingWhite ?? ""}:${options.renderer ?? ""}:${options.texture ?? ""}:${JSON.stringify(options.bleed ?? true)}:${JSON.stringify(options.reveal ?? false)}`;
   const hit = cache.get(key);
   if (hit) return hit;
   const { generateBrushBorder, svgToDataUrl } = await loadGenerate();
@@ -55,6 +55,8 @@ export function clearBrushBorder(el: HTMLElement) {
 export interface UseBrushBorderOptions extends BrushBorderOptions {
   /** 关掉时不生成也不打标记；默认跟随 html.m-ink-ready */
   enabled?: Ref<boolean> | boolean;
+  /** 首次落笔沿笔画描出（尺寸变化后的重生成不再播放）。默认 true；跟随 prefers-reduced-motion */
+  revealOnMount?: boolean;
 }
 
 function isInkReady(): boolean {
@@ -73,6 +75,10 @@ export function useBrushBorder(
 ) {
   const { width, height } = useElementSize(target);
   let token = 0;
+  let firstPaint = true;
+  const reducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
 
   function enabled(): boolean {
     const flag = options.enabled;
@@ -88,8 +94,11 @@ export function useBrushBorder(
       return;
     }
     const current = ++token;
-    const entry = await brushBorderUrl(width.value, height.value, options);
+    const { enabled: _enabled, revealOnMount = true, ...generateOptions } = options;
+    const reveal = firstPaint && revealOnMount && !reducedMotion ? (options.reveal ?? true) : false;
+    const entry = await brushBorderUrl(width.value, height.value, { ...generateOptions, reveal });
     if (current !== token || target.value !== el) return;
+    firstPaint = false;
     applyBrushBorder(el, entry);
   }
 

@@ -24,6 +24,8 @@ export interface BrushBorderOptions {
   renderer?: "brush" | "shanshui";
   /** 在 SVG 内嵌一层晕染滤镜（feTurbulence 位移 + 微模糊），默认开 */
   bleed?: boolean | { frequency?: number; scale?: number; blur?: number };
+  /** 落墨：按笔顺沿路径描出（SMIL，图片加载即播放）。true = 1.2s */
+  reveal?: boolean | { duration?: number; delay?: number };
 }
 
 export interface BrushBorder {
@@ -106,12 +108,21 @@ export function generateBrushBorder(
         });
   // 四条边一律向右 / 向下画。shuimo-core 的 Brush 对相邻两段方向角做算术平均，
   // 向左的笔画方向角在 ±π 附近会平均成 0，法线翻转，画出串珠伪影（待上游修）。
-  const strokes = [
-    draw(edge(corners[0]!, corners[1]!, wobble, overshoot)),
-    draw(edge(corners[1]!, corners[2]!, wobble, overshoot)),
-    draw(edge(corners[3]!, corners[2]!, wobble, overshoot)),
-    draw(edge(corners[0]!, corners[3]!, wobble, overshoot)),
-  ].join("");
+  const edges = [
+    edge(corners[0]!, corners[1]!, wobble, overshoot),
+    edge(corners[1]!, corners[2]!, wobble, overshoot),
+    edge(corners[3]!, corners[2]!, wobble, overshoot),
+    edge(corners[0]!, corners[3]!, wobble, overshoot),
+  ];
+  const reveal = options.reveal
+    ? revealMasks(edges, strokeWidth + wobble * 2, seed, options.reveal)
+    : undefined;
+  const strokes = edges
+    .map((points, index) => {
+      const body = draw(points);
+      return reveal ? `<g mask="url(#${reveal.ids[index]})">${body}</g>` : body;
+    })
+    .join("");
 
   const bleed = options.bleed ?? true;
   const bleedOpts = typeof bleed === "object" ? bleed : {};
@@ -121,8 +132,52 @@ export function generateBrushBorder(
     : "";
   const vw = w + padding * 2;
   const vh = h + padding * 2;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${vw}" height="${vh}" viewBox="${-padding} ${-padding} ${vw} ${vh}">${filter}<g${bleed ? ` filter="url(#${filterId})"` : ""}>${strokes}</g></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${vw}" height="${vh}" viewBox="${-padding} ${-padding} ${vw} ${vh}">${filter}${reveal?.defs ?? ""}<g${bleed ? ` filter="url(#${filterId})"` : ""}>${strokes}</g></svg>`;
   return { svg, padding, width: vw, height: vh };
+}
+
+function pathLength(points: Point[]): number {
+  let length = 0;
+  for (let i = 1; i < points.length; i++) {
+    length += Math.hypot(points[i]![0] - points[i - 1]![0], points[i]![1] - points[i - 1]![1]);
+  }
+  return length;
+}
+
+/**
+ * 按笔顺描出：每条边一个 <mask>，里面是沿中心线的宽描边 path，用 SMIL 把 dashoffset 从全长扫到 0。
+ * 各边按长度分配时长、依次起笔。图片一加载就播放，所以只在首次落笔时用带 reveal 的版本。
+ */
+function revealMasks(
+  edges: Point[][],
+  maskWidth: number,
+  seed: number,
+  reveal: boolean | { duration?: number; delay?: number },
+): { defs: string; ids: string[] } {
+  const total = typeof reveal === "object" ? (reveal.duration ?? 1200) : 1200;
+  const startDelay = typeof reveal === "object" ? (reveal.delay ?? 0) : 0;
+  const lengths = edges.map(pathLength);
+  const sum = lengths.reduce((a, b) => a + b, 0) || 1;
+  let begin = startDelay;
+  const ids: string[] = [];
+  const masks = edges.map((points, index) => {
+    const id = `r${seed}-${index}`;
+    ids.push(id);
+    const length = lengths[index]!;
+    const duration = (total * length) / sum;
+    const d = points
+      .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`)
+      .join(" ");
+    const mask =
+      `<mask id="${id}" maskUnits="userSpaceOnUse" x="-1000" y="-1000" width="4000" height="4000">` +
+      `<path d="${d}" fill="none" stroke="#fff" stroke-width="${(maskWidth * 2.5).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round" ` +
+      `stroke-dasharray="${length.toFixed(1)}" stroke-dashoffset="${length.toFixed(1)}">` +
+      `<animate attributeName="stroke-dashoffset" from="${length.toFixed(1)}" to="0" begin="${(begin / 1000).toFixed(3)}s" dur="${Math.max(0.05, duration / 1000).toFixed(3)}s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>` +
+      `</path></mask>`;
+    begin += duration;
+    return mask;
+  });
+  return { defs: `<defs>${masks.join("")}</defs>`, ids };
 }
 
 /** 转成可放进 CSS url() 的 data URL（不用 base64，可读且更小） */

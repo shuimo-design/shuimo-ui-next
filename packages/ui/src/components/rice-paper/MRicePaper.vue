@@ -207,6 +207,7 @@ onBeforeUnmount(() => {
         :key="index"
         ref="layerCanvases"
         class="m-rice-paper__layer"
+        :style="{ '--m-layer-index': index - 1 }"
       ></canvas>
     </div>
     <div class="m-rice-paper__content"><slot /></div>

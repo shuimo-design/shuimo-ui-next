@@ -3,6 +3,7 @@
  */
 import { detectInkTier, type InkTier } from "./tier";
 import { ensureInkFilters, type InkFilterOptions, type InkFiltersHandle } from "./bleed";
+import { prepareInkViewTransition } from "./transition";
 
 export { detectInkTier, type InkTier };
 export { ensureInkFilters, INK_FILTERS_ID, INK_READY_CLASS, type InkFilterOptions } from "./bleed";
@@ -38,6 +39,20 @@ export {
   type BrushBorderOptions,
   type UseBrushBorderOptions,
 } from "./stroke";
+export {
+  revealElement,
+  useInkReveal,
+  vInkReveal,
+  wipeMaskUrl,
+  type InkRevealOptions,
+  type WipeMaskOptions,
+} from "./reveal";
+export {
+  prepareInkViewTransition,
+  startInkViewTransition,
+  supportsViewTransition,
+  type InkViewTransitionOptions,
+} from "./transition";
 
 export interface InkEngineOptions {
   seed?: number;
@@ -58,6 +73,7 @@ export function createInkEngine(options: InkEngineOptions = {}): InkEngine {
   let filters: InkFiltersHandle | undefined;
   if (typeof document !== "undefined" && tier > 0) {
     filters = ensureInkFilters({ seed, ...options.filters });
+    prepareInkViewTransition({ seed });
   }
   return {
     seed,

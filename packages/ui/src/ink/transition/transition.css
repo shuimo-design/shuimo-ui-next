@@ -1,0 +1,24 @@
+/* View Transitions：新页面以墨迹擦入覆盖旧页面 */
+@layer m.ink {
+  html.m-ink-vt::view-transition-old(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  html.m-ink-vt::view-transition-new(root) {
+    animation: m-ink-vt-wipe var(--m-ink-vt-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1) both;
+    mask-image: var(--m-ink-vt-mask);
+    mask-size: var(--m-ink-vt-size, 200% 100%);
+    mask-repeat: no-repeat;
+    mix-blend-mode: normal;
+  }
+
+  @keyframes m-ink-vt-wipe {
+    from {
+      mask-position: var(--m-ink-vt-from, 100% 0%);
+    }
+    to {
+      mask-position: var(--m-ink-vt-to, 0% 0%);
+    }
+  }
+}

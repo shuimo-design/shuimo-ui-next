@@ -32,6 +32,16 @@ describe("brush border", () => {
     expect(a).not.toBe(c);
   });
 
+  it("reveal embeds one SMIL mask per edge with sequential timing", () => {
+    const { svg } = generateBrushBorder(200, 60, { seed: 1, reveal: { duration: 1000 } });
+    expect(svg.match(/<mask /g)).toHaveLength(4);
+    expect(svg.match(/<animate /g)).toHaveLength(4);
+    const begins = [...svg.matchAll(/begin="([\d.]+)s"/g)].map((m) => Number(m[1]));
+    expect(begins[0]).toBe(0);
+    expect(begins).toEqual([...begins].sort((a, b) => a - b));
+    expect(svg).not.toBe(generateBrushBorder(200, 60, { seed: 1 }).svg);
+  });
+
   it("generates a large border quickly", () => {
     const t0 = performance.now();
     generateBrushBorder(800, 400, { seed: 5 });

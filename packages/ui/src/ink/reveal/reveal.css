@@ -1,0 +1,18 @@
+/* 墨迹擦入：动画期间由 revealElement 写入变量并打上 data-ink-reveal */
+@layer m.ink {
+  [data-ink-reveal="self"] {
+    mask-image: var(--m-ink-reveal-mask);
+    mask-size: var(--m-ink-reveal-size, 200% 100%);
+    mask-repeat: no-repeat;
+  }
+
+  /* 笔触边框等伪元素：叠在原有遮罩之上取交集 */
+  [data-ink-reveal="pseudo"]::before {
+    mask-image: var(--m-ink-stroke-border), var(--m-ink-reveal-mask);
+    mask-size:
+      100% 100%,
+      var(--m-ink-reveal-size, 200% 100%);
+    mask-repeat: no-repeat, no-repeat;
+    mask-composite: intersect;
+  }
+}

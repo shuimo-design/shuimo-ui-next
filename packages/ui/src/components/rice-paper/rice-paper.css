@@ -33,17 +33,37 @@
     will-change: transform;
     /* 山体白色遮挡多边形靠 multiply 变透明 */
     mix-blend-mode: multiply;
+    /* 洇入：远山先来、近山后到，从模糊到清晰 */
+    opacity: 0;
+    filter: blur(8px);
+    transition:
+      opacity calc(var(--m-duration) * 4) var(--m-ease),
+      filter calc(var(--m-duration) * 4) var(--m-ease);
+    transition-delay: calc(var(--m-duration) * 1.5 * var(--m-layer-index, 0));
+  }
+
+  .m-rice-paper--ready .m-rice-paper__layer {
+    opacity: 1;
+    filter: blur(0);
   }
 
   :root[data-theme="dark"] .m-rice-paper__layer {
-    filter: invert(1);
+    filter: invert(1) blur(8px);
     mix-blend-mode: screen;
+  }
+
+  :root[data-theme="dark"] .m-rice-paper--ready .m-rice-paper__layer {
+    filter: invert(1) blur(0);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .m-rice-paper__layer {
-      filter: invert(1);
+      filter: invert(1) blur(8px);
       mix-blend-mode: screen;
+    }
+
+    :root:not([data-theme="light"]) .m-rice-paper--ready .m-rice-paper__layer {
+      filter: invert(1) blur(0);
     }
   }
 

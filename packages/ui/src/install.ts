@@ -1,5 +1,6 @@
 import type { App, Component, Plugin } from "vue";
 import * as components from "./components";
+import { vInkReveal } from "./ink/reveal";
 
 export interface InstallOptions {
   /** 只注册这些组件（组件名，如 "MButton"） */
@@ -16,6 +17,7 @@ function isComponent(value: unknown): value is Component {
 export function createShuimo(options: InstallOptions = {}): Plugin {
   return {
     install(app: App) {
+      app.directive("ink-reveal", vInkReveal);
       for (const [name, value] of Object.entries(components)) {
         if (!isComponent(value)) continue;
         if (options.include && !options.include.includes(name)) continue;

@@ -1,0 +1,100 @@
+{
+  "name": "MInkTransition",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MInkTransition"
+  },
+  "attributes": [
+    {
+      "name": "duration",
+      "description": "进入时长 ms，默认 900",
+      "default": "900",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "leaveDuration",
+      "description": "离开时长 ms，默认 600",
+      "default": "600",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "appear",
+      "description": "首次渲染也播放，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "mode",
+      "description": "透传给 <Transition> 的 mode",
+      "default": "\"default\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"default\" | \"in-out\" | \"out-in\" | undefined"
+      }
+    },
+    {
+      "name": "reducedMotion",
+      "description": "强制跳过动画；未传则跟随 prefers-reduced-motion",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "raggedness",
+      "description": "毛边幅度（相对遮罩宽度的百分比），默认 6",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "softness",
+      "description": "边缘晕开，默认 1.5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "扫入方向：right = 从左向右显现",
+      "default": "\"right\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"right\" | \"left\" | \"down\" | \"up\" | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}
