@@ -30,8 +30,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - uses: changesets/action@v1
         with:
-          publish: pnpm release
-          version: pnpm version
+          # 必须写 pnpm run：pnpm 自带 version 子命令，直接写 pnpm version 会跑内置的那个，
+          # 根本到不了 package.json 里的脚本（本地实测过）
+          publish: pnpm run release
+          version: pnpm run version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
