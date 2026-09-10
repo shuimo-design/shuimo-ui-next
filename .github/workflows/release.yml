@@ -1,3 +1,6 @@
+# changesets 发版。没配 NPM_TOKEN 时整个任务跳过：
+# 否则每次推 main 都会去发当前版本，registry 上没有这个包就报 404，把 main 刷成一片红。
+# 真要发版时在仓库里配上 NPM_TOKEN（scope @shuimo-design 要先在 npm 上建好）。
 name: Release
 on:
   push:
@@ -6,6 +9,9 @@ concurrency: release-${{ github.ref }}
 jobs:
   release:
     runs-on: ubuntu-latest
+    # secrets 在 if 条件里读不到，先落到 job 的 env 上
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     permissions:
       contents: write
       pull-requests: write
@@ -19,7 +25,10 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
-      - uses: changesets/action@v1
+      - if: ${{ env.NPM_TOKEN == '' }}
+        run: echo "::warning::未配置 NPM_TOKEN，跳过发版"
+      - if: ${{ env.NPM_TOKEN != '' }}
+        uses: changesets/action@v1
         with:
           publish: pnpm release
           version: pnpm version

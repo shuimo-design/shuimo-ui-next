@@ -413,3 +413,10 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 
 - GitHub Actions 的 `if` 条件里**读不到 `secrets` 上下文**，job 层和 step 层都不行。要按「secret 配没配」分支，得先在 `env` 里接一道，再判断 `env.XXX != ''`。
 - Vercel 部署产生的那个带哈希的长域名默认受 SSO 保护（访客会被弹到登录页），但正式别名 `shuimo-ui-next.vercel.app` 是公开的。验证可访问性要认准后者。
+
+**CI 两处红叉（2026-09-10 修）**
+
+仓库推上去之后 CI 和 Release 从第一次提交起就一直失败，和文档改动无关：
+
+- `MStamp.test.ts` 有一条断言比的是「serif 排出来的章宽 ≠ monospace 排出来的」。这要求机器上装了两套以上中文字体；GitHub 的 Ubuntu runner 只有 Playwright 带的 wqy-zenhei 一套，两个通用族落到同一个字面、宽度必然相等，于是假失败（本地 Mac 上过）。改成逐字体和 `createGlyphMeasurer(font)` 直接生成的结果对账——同样能判出「有没有拿真渲染的字体去量」，且不挑机器。
+- `release.yml` 每次推 main 都跑 `changeset publish`，而包还没发过、也没配 `NPM_TOKEN`，于是每次都 `ERR_PNPM_FAILED_TO_PUBLISH … 404`。改成和 `deploy.yml` 一样的写法：`NPM_TOKEN` 没配就跳过。真要发版时先在 npm 上建好 `@shuimo-design` scope，再配这个 secret。

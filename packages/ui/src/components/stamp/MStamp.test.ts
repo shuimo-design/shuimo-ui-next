@@ -108,19 +108,22 @@ describe("MStamp", () => {
       screen.unmount();
       return w;
     };
-    const serif = await widthWith("serif");
-    const mono = await widthWith("monospace");
-    expect(serif).not.toBeCloseTo(mono, 1);
-    // 和用同一个度量函数直接生成的结果一致
-    const expected = generateStamp({
-      text: "水墨",
-      shape: "auto",
-      carving: 0,
-      bleed: 0,
-      id: "x",
-      measure: createGlyphMeasurer("serif"),
-    });
-    expect(serif).toBeCloseTo(expected.width, 3);
+    // 每种字体量出来的宽度，都要和「用同一字体的度量函数直接生成」的结果对得上。
+    // 原来这里比的是 serif 和 monospace 排出来的宽度不相等，但那要求机器上装了两套以上中文字体：
+    // Linux CI 通常只有一套（Playwright 只带 wqy-zenhei），两个通用族落到同一个字面、宽度必然相等，
+    // 断言就假失败。改成逐字体和自己的度量函数对账，判别力不减且不挑机器
+    for (const font of ["serif", "monospace"] as const) {
+      const measured = await widthWith(font);
+      const expected = generateStamp({
+        text: "水墨",
+        shape: "auto",
+        carving: 0,
+        bleed: 0,
+        id: "x",
+        measure: createGlyphMeasurer(font),
+      });
+      expect(measured).toBeCloseTo(expected.width, 3);
+    }
   });
 
   it("re-lays out with measured glyph boxes once the font is ready", async () => {
