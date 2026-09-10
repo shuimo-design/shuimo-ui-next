@@ -1,0 +1,131 @@
+@layer m.component {
+  .m-scroll {
+    /* 滚动条占的槽位宽度，也是滑块的可点区域 */
+    --m-scroll-size: 10px;
+    /* 滑块墨条的粗细 */
+    --m-scroll-line: 6px;
+    --m-scroll-thumb-color: var(--m-ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 真正滚动的是视口；原生滚动条藏掉，由 __bar 画自己的 */
+  .m-scroll__view {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* 内容层收缩到内容宽度，横向溢出时 ResizeObserver 才量得到宽度变化 */
+  .m-scroll__content {
+    display: inline-block;
+    min-width: 100%;
+    vertical-align: top;
+  }
+
+  .m-scroll__bar {
+    position: absolute;
+    /* 轨道不吃事件，免得盖住视口边缘的内容 */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity calc(var(--m-duration) * 1.5) var(--m-ease);
+  }
+
+  .m-scroll__bar--v {
+    top: 0;
+    right: 0;
+    width: var(--m-scroll-size);
+    height: var(--m-scroll-track);
+  }
+
+  .m-scroll__bar--h {
+    bottom: 0;
+    left: 0;
+    width: var(--m-scroll-track);
+    height: var(--m-scroll-size);
+  }
+
+  .m-scroll:hover .m-scroll__bar,
+  .m-scroll--scrolling .m-scroll__bar,
+  .m-scroll--dragging .m-scroll__bar,
+  .m-scroll--always .m-scroll__bar {
+    opacity: 1;
+  }
+
+  .m-scroll__thumb {
+    position: absolute;
+    pointer-events: auto;
+    cursor: var(--m-cursor-pointer);
+    touch-action: none;
+    user-select: none;
+
+    /* 墨条本体：默认皮肤是一条圆头细条，m.ink 层换成笔触线 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      border-radius: 3px;
+      background: var(--m-scroll-thumb-color);
+      opacity: 0.45;
+      transition: opacity var(--m-duration) var(--m-ease);
+    }
+
+    &:hover::before {
+      opacity: 0.85;
+    }
+  }
+
+  .m-scroll--dragging .m-scroll__thumb::before {
+    opacity: 0.85;
+  }
+
+  .m-scroll__bar--v .m-scroll__thumb {
+    left: 0;
+    width: 100%;
+    /* 滑块的位置与长度由脚本量出来写在变量里 */
+    top: var(--m-scroll-thumb-offset);
+    height: var(--m-scroll-thumb-length);
+
+    &::before {
+      width: var(--m-scroll-line);
+    }
+  }
+
+  .m-scroll__bar--h .m-scroll__thumb {
+    top: 0;
+    height: 100%;
+    left: var(--m-scroll-thumb-offset);
+    width: var(--m-scroll-thumb-length);
+
+    &::before {
+      height: var(--m-scroll-line);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 滑块换成按实际长度生成的笔触线：画幅比笔画宽（留了晕染余量），居中盖在槽位上 */
+  html.m-ink-ready .m-scroll__bar--v .m-scroll__thumb::before {
+    inset: 0 auto 0 50%;
+    width: var(--m-scroll-band);
+    margin: 0;
+    border-radius: 0;
+    transform: translateX(-50%);
+    mask: var(--m-scroll-thumb-mask) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-scroll__bar--h .m-scroll__thumb::before {
+    inset: 50% 0 auto 0;
+    height: var(--m-scroll-band);
+    margin: 0;
+    border-radius: 0;
+    transform: translateY(-50%);
+    mask: var(--m-scroll-thumb-mask) center / 100% 100% no-repeat;
+  }
+}

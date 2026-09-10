@@ -1,0 +1,76 @@
+@layer m.component {
+  .m-divider {
+    --m-divider-thickness: 4px;
+    --m-divider-color: var(--m-ink);
+    /* 文字两侧留白 */
+    --m-divider-gap: var(--m-space-4);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: var(--m-space-4) 0;
+    color: var(--m-fg);
+
+    &.m-divider--vertical {
+      display: inline-flex;
+      flex-direction: column;
+      align-self: stretch;
+      width: auto;
+      /* 单独放在行内时给个最小高度，不至于缩成一个点；在 flex 行里会被拉伸到整行高 */
+      min-height: 1em;
+      margin: 0 var(--m-space-3);
+      vertical-align: middle;
+    }
+  }
+
+  /* 默认皮肤：一条实墨；m.ink 层换成按长度生成的笔触线 */
+  .m-divider__line {
+    position: relative;
+    flex: 1 1 auto;
+    height: var(--m-divider-thickness);
+    /* 两端略不对称的圆角，看着像一笔收住而不是切出来的 */
+    border-radius: 3px 1px 2px 3px / 2px 3px 1px 2px;
+    background: var(--m-divider-color);
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  .m-divider--vertical .m-divider__line {
+    width: var(--m-divider-thickness);
+    height: auto;
+    align-self: center;
+  }
+
+  .m-divider__text {
+    flex: 0 0 auto;
+    padding: 0 var(--m-divider-gap);
+    font-size: var(--m-font-size);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .m-divider--vertical .m-divider__text {
+    padding: var(--m-divider-gap) 0;
+    writing-mode: vertical-rl;
+  }
+
+  /* 文字偏左 / 偏右：短的那段线固定占一小截。笔触线两端各留了约 8px 晕染余量，太短就只剩一个墨点 */
+  .m-divider--left .m-divider__line--head,
+  .m-divider--right .m-divider__line--tail {
+    flex: 0 0 40px;
+  }
+}
+
+@layer m.ink {
+  /* 画幅比笔画高（留了晕染余量），让画幅在粗细方向上居中铺满，笔画自然落在中线 */
+  html.m-ink-ready .m-divider__line {
+    height: var(--m-brush-line-band, var(--m-divider-thickness));
+    border-radius: 0;
+    /* 还没量出长度时先用通用横线兜底，量出来后换成按实际长度生成的那条 */
+    mask: var(--m-brush-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-divider--vertical .m-divider__line {
+    width: var(--m-brush-line-band, var(--m-divider-thickness));
+    height: auto;
+    mask: var(--m-brush-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+  }
+}

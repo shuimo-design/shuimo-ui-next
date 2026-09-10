@@ -1,0 +1,9 @@
+@layer m.base {
+  .m-icon {
+    /* 主题里有一条给所有 m- 开头 class 设字色的规则，会把图标也匹配进去；图标必须跟着所在元素的文字色走 */
+    color: inherit;
+    display: inline-block;
+    flex-shrink: 0;
+    vertical-align: -0.15em;
+  }
+}

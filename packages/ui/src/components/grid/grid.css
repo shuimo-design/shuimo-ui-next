@@ -1,0 +1,130 @@
+@layer m.component {
+  .m-grid {
+    --m-grid-gap: 0px;
+    display: flex;
+    flex-direction: row;
+    gap: var(--m-grid-gap);
+    box-sizing: border-box;
+    width: 100%;
+
+    &.m-grid--column {
+      flex-direction: column;
+    }
+
+    /* cols 模式：等宽网格，格子用 span / offset 占位；行间距不传时跟随主间距 */
+    &.m-grid--cols {
+      --m-grid-cols: var(--m-grid-cols-xs, 12);
+      display: grid;
+      grid-template-columns: repeat(var(--m-grid-cols), minmax(0, 1fr));
+      gap: var(--m-grid-row-gap, var(--m-grid-gap)) var(--m-grid-gap);
+    }
+  }
+
+  /* 断点：没给的档位沿用比它小的那一档 */
+  @media (min-width: 640px) {
+    .m-grid.m-grid--cols {
+      --m-grid-cols: var(--m-grid-cols-sm, var(--m-grid-cols-xs, 12));
+    }
+  }
+  @media (min-width: 768px) {
+    .m-grid.m-grid--cols {
+      --m-grid-cols: var(--m-grid-cols-md, var(--m-grid-cols-sm, var(--m-grid-cols-xs, 12)));
+    }
+  }
+  @media (min-width: 1024px) {
+    .m-grid.m-grid--cols {
+      --m-grid-cols: var(
+        --m-grid-cols-lg,
+        var(--m-grid-cols-md, var(--m-grid-cols-sm, var(--m-grid-cols-xs, 12)))
+      );
+    }
+  }
+  @media (min-width: 1280px) {
+    .m-grid.m-grid--cols {
+      --m-grid-cols: var(
+        --m-grid-cols-xl,
+        var(
+          --m-grid-cols-lg,
+          var(--m-grid-cols-md, var(--m-grid-cols-sm, var(--m-grid-cols-xs, 12)))
+        )
+      );
+    }
+  }
+
+  .m-cell {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    width: var(--m-cell-w, auto);
+    height: var(--m-cell-h, auto);
+    vertical-align: top;
+    color: var(--m-fg);
+
+    /* 直边的边框是一圈细线（m.ink 层由 useBrushBorder 换成笔触）；斜边的轮廓由 SVG 画 */
+    &.m-cell--border:not(.m-cell--tilted) {
+      border: 1px solid var(--m-border);
+      border-radius: var(--m-radius);
+    }
+  }
+
+  .m-cell__main {
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+  }
+
+  .m-cell__outline {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: var(--m-border);
+    stroke-width: 1;
+    pointer-events: none;
+  }
+
+  /* 横排里没给宽的格子均分剩余宽度，给了宽的按宽来 */
+  .m-grid--row > .m-cell:not(.m-cell--fixed-w) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .m-grid--row > .m-cell--fixed-w {
+    flex: 0 0 auto;
+  }
+  .m-grid--column > .m-cell {
+    flex: 0 0 auto;
+  }
+  /* 网格模式下宽度由列决定，格子自己的 w 不再生效 */
+  .m-grid--cols > .m-cell {
+    display: block;
+    width: auto;
+    min-width: 0;
+  }
+}
+
+@layer m.ink {
+  /* 斜边格子：::before 外扩 pad，用笔触多边形当遮罩，墨色来自 --m-ink */
+  html.m-ink-ready .m-cell--tilted.m-cell--border {
+    --m-cell-quad-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E");
+
+    & .m-cell__outline {
+      display: none;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-cell-quad-pad, 0px) * -1);
+      background: var(--m-ink);
+      mask: var(--m-cell-quad-mask) center / 100% 100% no-repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    & > .m-cell__main {
+      z-index: 1;
+    }
+  }
+}

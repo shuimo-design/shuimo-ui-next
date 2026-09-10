@@ -1,0 +1,219 @@
+{
+  "name": "MSelect",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSelect"
+  },
+  "attributes": [
+    {
+      "name": "options",
+      "description": "候选项",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "SelectOptionLike[]"
+      }
+    },
+    {
+      "name": "optionParam",
+      "description": "选项是对象时，下拉里显示哪个字段；不传就用 label",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "valueParam",
+      "description": "选项是对象时，写回 v-model 的是哪个字段；不传就用 value（没有 value 字段就写回整个对象）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "inputParam",
+      "description": "选项是对象时，选中后触发区里显示哪个字段；不传就跟 optionParam",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "toMatch",
+      "description": "自定义\"某个选项是否等于当前值\"，v-model 是对象时用；参数是原始选项和 v-model 的值",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "((option: SelectOptionLike, value: SelectValue) => boolean) | undefined"
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "占位文字，默认「请选择」",
+      "default": "\"请选择\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "clearable",
+      "description": "有值时显示清空按钮",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "multiple",
+      "description": "多选；v-model 为数组",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "filterable",
+      "description": "可输入过滤；默认按显示文字包含匹配，大小写不敏感",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "filter",
+      "description": "自定义过滤函数，参数是原始选项和输入的文字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "((option: SelectOptionLike, query: string) => boolean) | undefined"
+      }
+    },
+    {
+      "name": "loading",
+      "description": "下拉显示加载中（替换整个列表）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "fetch",
+      "description": "滚到底部时调用，用来分页追加候选项；调用期间列表底部显示加载中",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "(() => Promise<void>) | undefined"
+      }
+    },
+    {
+      "name": "emptyText",
+      "description": "无候选项时的文字，默认「暂无数据」",
+      "default": "\"暂无数据\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "maxHeight",
+      "description": "下拉最大高度 px，默认 240",
+      "default": "240",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "下拉传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SelectValue | SelectValue[] | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "input",
+      "description": "过滤框里的文字变化"
+    },
+    {
+      "name": "change",
+      "description": "选中值变化"
+    },
+    {
+      "name": "focus"
+    },
+    {
+      "name": "blur"
+    },
+    {
+      "name": "clear",
+      "description": "点了清空按钮"
+    },
+    {
+      "name": "select",
+      "description": "点选了某个选项，参数是原始选项（多选时取消勾选也会触发）"
+    },
+    {
+      "name": "visibleChange",
+      "description": "下拉开合"
+    },
+    {
+      "name": "removeTag",
+      "description": "多选时点了 Tag 的关闭"
+    }
+  ],
+  "slots": [
+    {
+      "name": "option",
+      "description": "自定义选项内容；option 是原始选项，label 是按 optionParam 取出的显示文字"
+    },
+    {
+      "name": "empty",
+      "description": "无数据时的内容"
+    },
+    {
+      "name": "prefix",
+      "description": "触发区前的内容（图标）"
+    }
+  ]
+}

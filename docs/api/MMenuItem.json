@@ -1,0 +1,59 @@
+{
+  "name": "MMenuItem",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MMenuItem"
+  },
+  "attributes": [
+    {
+      "name": "name",
+      "description": "唯一标识，对应 MMenu 的 v-model",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "MenuKey"
+      }
+    },
+    {
+      "name": "label",
+      "description": "文字，也可用 label 插槽",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "data",
+      "description": "原始数据，透传到事件的 item.data 上",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "MenuItemData | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "子菜单：放更多 MMenuItem"
+    },
+    {
+      "name": "label",
+      "description": "自定义文字，作用域 { item, level }"
+    }
+  ]
+}

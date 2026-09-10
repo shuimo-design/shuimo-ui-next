@@ -1,0 +1,100 @@
+@layer m.component {
+  .m-breadcrumb {
+    --m-breadcrumb-gap: var(--m-space-3);
+    --m-breadcrumb-font-size: 16px;
+    /* 斜杠分隔符的盒子，和旧版位图一样 13×23 */
+    --m-breadcrumb-slash-w: 13px;
+    --m-breadcrumb-slash-h: 23px;
+    color: var(--m-fg);
+    font-size: var(--m-breadcrumb-font-size);
+    line-height: 30px;
+  }
+
+  .m-breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--m-breadcrumb-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .m-breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-breadcrumb-gap);
+    color: var(--m-fg-muted);
+
+    /* 最后一项就是当前页，用重墨 */
+    &:last-child {
+      color: var(--m-fg-strong);
+    }
+
+    /* 分隔符画在每一项前面，第一项前面不要 */
+    &:first-child > .m-breadcrumb-item__separator {
+      display: none;
+    }
+  }
+
+  .m-breadcrumb-item__separator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--m-fg-muted);
+    user-select: none;
+  }
+
+  /* 默认皮肤的斜杠：一根略微右倾的细线；m.ink 层换成一笔墨迹 */
+  .m-breadcrumb-item__slash {
+    position: relative;
+    display: inline-block;
+    width: var(--m-breadcrumb-slash-w);
+    height: var(--m-breadcrumb-slash-h);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      left: 50%;
+      width: 1.5px;
+      border-radius: 1px;
+      background: currentColor;
+      transform: translateX(-50%) rotate(18deg);
+    }
+  }
+
+  .m-breadcrumb-item__content {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--m-duration) var(--m-ease);
+  }
+
+  a.m-breadcrumb-item__content {
+    cursor: var(--m-cursor-pointer);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 斜杠换成素材库的一笔：盒子只有 13px 宽，遮罩按高度铺满、水平居中裁掉两侧空白 */
+  html.m-ink-ready .m-breadcrumb-item__slash {
+    background: var(--m-ink);
+    opacity: 0.8;
+    mask: var(--m-breadcrumb-slash) center / auto 100% no-repeat;
+
+    &::before {
+      content: none;
+    }
+  }
+}

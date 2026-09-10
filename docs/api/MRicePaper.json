@@ -16,7 +16,7 @@
     },
     {
       "name": "tier",
-      "description": "强制特效档位：0 纯色纸，1 纸 + 山 + 视差，2 再加墨晕。默认按设备检测",
+      "description": "强制特效档位：0 纯色纸，≥1 带纹理和远山。默认按设备检测",
       "required": false,
       "value": {
         "kind": "expression",
@@ -33,13 +33,43 @@
       }
     },
     {
+      "name": "grain",
+      "description": "纹理强度 0–1，默认 0.5",
+      "default": "0.5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
       "name": "goldFlecks",
-      "description": "洒金",
+      "description": "洒金：true 用默认的金箔（密度 0.15、片径 1 ~ 7px、成簇 0.3、金色），传对象可调密度 density、\n尺寸 sizeRange、成簇 clustering、颜色 color（gold / paleGold / roseGold / copper / silver / bronze 或 RGB）",
       "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
-        "type": "boolean | undefined"
+        "type": "boolean | Omit<GoldFleckOptions, \"seed\"> | undefined"
+      }
+    },
+    {
+      "name": "fibers",
+      "description": "矢量纤维密度 0 ~ 4，默认 1；0 关掉",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "particles",
+      "description": "矢量颗粒密度 0 ~ 1，默认 0.5；0 关掉",
+      "default": "0.5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
       }
     },
     {
@@ -53,8 +83,8 @@
       }
     },
     {
-      "name": "mountains",
-      "description": "是否画远山",
+      "name": "landscape",
+      "description": "底部两侧的远山（左右各远近两层 SVG 剪影）。默认开：这是旧站宣纸的标志性远景，\n四张 SVG 整个会话只生成一次，tier 0（省流量 / 减弱动效）下自动不画",
       "default": "true",
       "required": false,
       "value": {
@@ -63,32 +93,23 @@
       }
     },
     {
-      "name": "layers",
-      "description": "远山层数，默认 4",
-      "default": "4",
-      "required": false,
-      "value": {
-        "kind": "expression",
-        "type": "number | undefined"
-      }
-    },
-    {
-      "name": "mountainsOpacity",
-      "description": "远山整体不透明度，默认 0.55",
-      "default": "0.55",
-      "required": false,
-      "value": {
-        "kind": "expression",
-        "type": "number | undefined"
-      }
-    },
-    {
       "name": "parallax",
-      "description": "视差最大位移 px，默认 24；0 关闭",
+      "description": "远山跟随鼠标、滚动做视差，默认开；prefers-reduced-motion 下自动不动",
+      "default": "true",
       "required": false,
       "value": {
         "kind": "expression",
-        "type": "number | undefined"
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "layout",
+      "description": "布局：auto 跟随内容；full-screen 铺满视口并自己滚动。默认 auto",
+      "default": "\"auto\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"auto\" | \"full-screen\" | undefined"
       }
     }
   ],

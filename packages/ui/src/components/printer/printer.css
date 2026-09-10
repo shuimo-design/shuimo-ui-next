@@ -1,0 +1,53 @@
+@layer m.component {
+  .m-printer {
+    /* 光标墨点的直径 */
+    --m-printer-dot: 0.55em;
+    display: inline;
+    color: inherit;
+  }
+
+  .m-printer__text {
+    white-space: pre-wrap;
+  }
+
+  /* 光标是一枚墨点：默认皮肤画个略不规则的圆，m.ink 层换成毛边墨团 */
+  .m-printer__cursor {
+    display: inline-block;
+    width: var(--m-printer-dot);
+    height: var(--m-printer-dot);
+    margin-left: 0.15em;
+    border-radius: 50% 45% 50% 42% / 45% 50% 42% 50%;
+    background: var(--m-ink);
+    vertical-align: baseline;
+    animation: m-printer-blink 1s linear infinite;
+  }
+
+  @keyframes m-printer-blink {
+    0%,
+    49% {
+      opacity: 1;
+    }
+
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .m-printer__cursor {
+      animation: none;
+    }
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-printer__cursor {
+    /* 墨团画幅里留了毛边余量，放大一点让实心部分接近默认皮肤的直径 */
+    width: calc(var(--m-printer-dot) * 1.3);
+    height: calc(var(--m-printer-dot) * 1.3);
+    margin-bottom: calc(var(--m-printer-dot) * -0.15);
+    border-radius: 0;
+    mask: var(--m-ink-dot) center / 100% 100% no-repeat;
+  }
+}

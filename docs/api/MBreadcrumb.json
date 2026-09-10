@@ -1,0 +1,39 @@
+{
+  "name": "MBreadcrumb",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MBreadcrumb"
+  },
+  "attributes": [
+    {
+      "name": "separator",
+      "description": "自定义分隔符文字；不传就画一笔斜杠。separator 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "options",
+      "description": "用数据渲染子项；给了就忽略默认插槽",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "BreadcrumbItemProps[] | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MBreadcrumbItem"
+    },
+    {
+      "name": "separator",
+      "description": "自定义分隔符内容"
+    }
+  ]
+}

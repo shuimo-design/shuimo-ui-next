@@ -1,0 +1,132 @@
+@layer m.component {
+  .m-skeleton {
+    /* 占位块的底色和扫过的那道墨晕，都从墨色调淡，暗色下自动跟着换 */
+    --m-skeleton-color: color-mix(in srgb, var(--m-ink) 8%, var(--m-bg));
+    --m-skeleton-shine: color-mix(in srgb, var(--m-ink) 6%, transparent);
+    --m-skeleton-radius: 4px;
+    --m-skeleton-gap: 12px;
+    display: block;
+    width: 100%;
+  }
+
+  /* 默认排布：左边一个圆，右边标题 + 段落 */
+  .m-skeleton__default {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .m-skeleton__avatar {
+    flex-shrink: 0;
+  }
+
+  .m-skeleton__content,
+  .m-skeleton__paragraph {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--m-skeleton-gap);
+    min-width: 0;
+  }
+
+  /* 段落最后一行短一截，像一段话自然收尾；只有一行时不缩 */
+  .m-skeleton__paragraph > .m-skeleton__row:last-child:not(:only-child) {
+    width: 60%;
+  }
+
+  .m-skeleton-item {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 14px;
+    overflow: hidden;
+    border-radius: var(--m-skeleton-radius, 4px);
+    /* 单独使用（不在 MSkeleton 里）时拿不到根上的变量，这里给一样的兜底 */
+    background: var(--m-skeleton-color, color-mix(in srgb, var(--m-ink) 8%, var(--m-bg)));
+
+    &.m-skeleton-item--h1 {
+      width: 50%;
+      height: 24px;
+    }
+
+    &.m-skeleton-item--h3 {
+      width: 40%;
+      height: 18px;
+    }
+
+    &.m-skeleton-item--circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    &.m-skeleton-item--rect,
+    &.m-skeleton-item--image {
+      height: 120px;
+    }
+
+    &.m-skeleton-item--image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &.m-skeleton-item--button {
+      width: 80px;
+      height: 32px;
+    }
+  }
+
+  .m-skeleton-item__icon {
+    font-size: 28px;
+    color: var(--m-fg-muted);
+    opacity: 0.5;
+  }
+
+  /* 动画：一道淡墨从左扫到右。只动 transform，不在动画路径上放滤镜 */
+  .m-skeleton--animated .m-skeleton-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--m-skeleton-shine, color-mix(in srgb, var(--m-ink) 6%, transparent)),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: m-skeleton-shine 1.4s linear infinite;
+  }
+
+  @keyframes m-skeleton-shine {
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .m-skeleton--animated .m-skeleton-item::after {
+      animation: none;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 文字行做成一笔的样子：起笔处略齐、收笔处渐淡，上下沿的圆角略不对称。全是 CSS，不生成 SVG */
+  html.m-ink-ready .m-skeleton-item--text,
+  html.m-ink-ready .m-skeleton-item--h1,
+  html.m-ink-ready .m-skeleton-item--h3 {
+    border-radius: 3px 7px 4px 6px / 6px 3px 7px 4px;
+    mask: linear-gradient(90deg, transparent, #000 5px, #000 calc(100% - 16px), transparent);
+  }
+
+  /* 圆和按钮像手按出来的，不那么规整 */
+  html.m-ink-ready .m-skeleton-item--circle {
+    border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%;
+  }
+
+  html.m-ink-ready .m-skeleton-item--button {
+    border-radius: 5px 3px 6px 4px / 3px 6px 4px 5px;
+  }
+}

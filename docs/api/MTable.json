@@ -1,0 +1,92 @@
+{
+  "name": "MTable",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTable"
+  },
+  "attributes": [
+    {
+      "name": "data",
+      "description": "表格数据，一项一行",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "T[] | undefined"
+      }
+    },
+    {
+      "name": "columns",
+      "description": "列声明；不传则由默认插槽里的 MTableColumn 决定",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableColumnDef[] | undefined"
+      }
+    },
+    {
+      "name": "rowKey",
+      "description": "行的 key：字段名或函数，不传按下标",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableRowKey<T> | undefined"
+      }
+    },
+    {
+      "name": "height",
+      "description": "表格最大高度（CSS 长度）；超出后表体内滚动、表头固定",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "align",
+      "description": "单元格默认对齐，默认居中",
+      "default": "\"center\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableAlign | undefined"
+      }
+    },
+    {
+      "name": "stripe",
+      "description": "斑马纹：偶数行铺一层淡墨",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "emptyText",
+      "description": "没有数据时的文字；empty 插槽优先",
+      "default": "\"暂无数据\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "rowClick",
+      "description": "点击某一行"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MTableColumn，用组件的方式声明列"
+    },
+    {
+      "name": "empty",
+      "description": "没有数据时显示的内容"
+    }
+  ]
+}

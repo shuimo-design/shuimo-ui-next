@@ -1,0 +1,68 @@
+{
+  "name": "MCheckboxGroup",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MCheckboxGroup"
+  },
+  "attributes": [
+    {
+      "name": "disabled",
+      "description": "整组禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "min",
+      "description": "至少勾选几个；到下限后剩余已选项不可取消",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "max",
+      "description": "最多勾选几个；到上限后未选项不可再选",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "横排（默认）还是竖排",
+      "default": "\"horizontal\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"horizontal\" | \"vertical\" | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CheckboxValue[] | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "name": "MCollapseItem",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MCollapseItem"
+  },
+  "attributes": [
+    {
+      "name": "name",
+      "description": "项的标识，写进 MCollapse 的 v-model；不传则自动生成（单独使用时用不到）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CollapseName | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题文字；title 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用后不能展开 / 收起",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "divider",
+      "description": "标题右侧是否画笔触线；不传则跟随 MCollapse（默认画）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "description": "单独使用（不在 MCollapse 里）时靠这个 v-model 记展开态，对应旧版单面板的 v-model",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "单独使用（不在 MCollapse 里）时展开 / 收起的变化"
+    }
+  ],
+  "slots": [
+    {
+      "name": "title",
+      "description": "标题区"
+    },
+    {
+      "name": "default",
+      "description": "展开后的内容"
+    }
+  ]
+}

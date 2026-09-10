@@ -1,0 +1,193 @@
+@layer m.component {
+  .m-alert {
+    --m-alert-color: var(--m-info);
+    --m-alert-fg: var(--m-fg);
+    --m-alert-fg-muted: var(--m-fg-muted);
+    --m-alert-bg: color-mix(in srgb, var(--m-alert-color) 10%, var(--m-bg));
+    --m-alert-bar: var(--m-alert-color);
+    --m-alert-bar-thickness: 3px;
+    --m-alert-icon: 20px;
+    --m-alert-px: 16px;
+    --m-alert-py: 12px;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--m-space-3);
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--m-alert-py) var(--m-alert-px);
+    border-radius: var(--m-radius);
+    background: var(--m-alert-bg);
+    color: var(--m-alert-fg);
+    font-size: var(--m-font-size);
+    line-height: 20px;
+    overflow: hidden;
+    transition:
+      opacity var(--m-duration) var(--m-ease),
+      height var(--m-duration) var(--m-ease),
+      padding var(--m-duration) var(--m-ease),
+      margin var(--m-duration) var(--m-ease);
+
+    &.m-alert--success {
+      --m-alert-color: var(--m-success);
+    }
+    &.m-alert--warn {
+      --m-alert-color: var(--m-warn);
+    }
+    &.m-alert--danger {
+      --m-alert-color: var(--m-danger);
+    }
+    &.m-alert--info {
+      --m-alert-color: var(--m-info);
+    }
+
+    /* 深色：整块是语义色，文字、徽记、关闭都用白；色边压深一点才看得出是一笔 */
+    &.m-alert--dark {
+      --m-alert-fg: #fff;
+      --m-alert-fg-muted: rgb(255 255 255 / 0.85);
+      --m-alert-bg: var(--m-alert-color);
+      --m-alert-bar: color-mix(in srgb, var(--m-ink) 35%, var(--m-alert-color));
+    }
+
+    &.m-alert--center {
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* 有标题时说明文字退成次要色；只有一行说明时它就是正文 */
+    &.m-alert--with-title .m-alert__description {
+      margin-top: var(--m-space-1);
+      color: var(--m-alert-fg-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  }
+
+  .m-alert-leave-to {
+    opacity: 0;
+  }
+
+  /* 左侧色边：默认皮肤是一条实色竖条，m.ink 层换成按高度生成的竖向笔触线 */
+  .m-alert__bar {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 3px;
+    width: var(--m-alert-bar-thickness);
+    /* 两端略不对称的圆角，像一笔收住而不是切出来的 */
+    border-radius: 2px 3px 1px 3px / 3px 1px 3px 2px;
+    background: var(--m-alert-bar);
+    pointer-events: none;
+  }
+
+  /* 状态徽记：一团墨里挖出记号，颜色跟类型走；dark 效果下改成白 */
+  .m-alert__icon {
+    flex: none;
+    width: var(--m-alert-icon);
+    height: var(--m-alert-icon);
+    background: var(--m-alert-color);
+    mask: var(--m-alert-badge) center / 100% 100% no-repeat;
+  }
+
+  .m-alert--dark .m-alert__icon {
+    background: var(--m-alert-fg);
+  }
+
+  .m-alert__icon--custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    mask: none;
+    color: var(--m-alert-color);
+    font-size: var(--m-alert-icon);
+  }
+
+  .m-alert--dark .m-alert__icon--custom {
+    color: var(--m-alert-fg);
+  }
+
+  .m-alert__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .m-alert--center .m-alert__content {
+    flex: 0 1 auto;
+  }
+
+  .m-alert__title {
+    font-weight: 600;
+  }
+
+  .m-alert__action {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-2);
+  }
+
+  .m-alert__close {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin: 0 -4px 0 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--m-radius);
+    background: transparent;
+    color: var(--m-alert-fg-muted);
+    font: inherit;
+    font-size: 16px;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-alert-fg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-alert-color);
+      outline-offset: 1px;
+    }
+  }
+
+  .m-alert--dark .m-alert__close:focus-visible {
+    outline-color: var(--m-alert-fg);
+  }
+}
+
+@layer m.ink {
+  /* 色边换成竖向笔触线：画幅比笔画宽（留了晕染余量），把画幅中线对到原来竖条的中线上 */
+  html.m-ink-ready .m-alert__bar {
+    width: var(--m-brush-line-band, var(--m-alert-bar-thickness));
+    left: calc(
+      3px + var(--m-alert-bar-thickness) / 2 -
+        var(--m-brush-line-band, var(--m-alert-bar-thickness)) / 2
+    );
+    border-radius: 0;
+    /* 还没量出高度时先用通用竖线兜底，量出来后换成按实际高度生成的那条 */
+    mask: var(--m-brush-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-alert__icon {
+    filter: url(#m-ink-bleed-light);
+  }
+
+  /* 关闭叉换成素材库那一笔 */
+  html.m-ink-ready .m-alert__close .m-icon {
+    display: none;
+  }
+
+  html.m-ink-ready .m-alert__close::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    background: currentColor;
+    mask: var(--m-ink-mark-cross) center / contain no-repeat;
+  }
+}

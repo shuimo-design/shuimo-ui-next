@@ -1,5 +1,5 @@
 /* 语义 token。组件只允许用这里的变量，不直接用传统色。
-   暗色：显式 [data-theme="dark"] 优先，其次跟随系统。 */
+   默认明亮纸色；暗色要显式 [data-theme="dark"]；写 [data-theme="system"] 才跟随系统。 */
 @layer m.tokens {
   :root {
     color-scheme: light;
@@ -21,8 +21,13 @@
     --m-danger: #861717;
     --m-info: #1661ab;
     --m-border: #5e616d;
+    /* 中性色块（默认按钮底色）：旧库的菘蓝，悬停提亮到青鸾 */
+    --m-neutral: var(--m-color-songlan);
+    --m-neutral-hover: var(--m-color-qingluan);
     --m-divider: rgb(15 20 35 / 0.2);
     --m-disabled: #dbdadd;
+    /* 印泥：朱砂红 */
+    --m-seal: #c1272d;
 
     --m-space-1: 4px;
     --m-space-2: 8px;
@@ -32,6 +37,9 @@
     --m-radius: 2px;
     --m-font-sans: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
     --m-font-brush: "wljh", var(--m-font-sans);
+    /* 印章字：先找篆体，没装就退到衬线字 */
+    --m-font-seal:
+      "峄山碑篆体", "方正小篆体", "汉仪篆书繁", "Noto Serif CJK SC", "Songti SC", serif;
     --m-font-size: 14px;
     --m-line-height: 1.6;
     --m-duration: 240ms;
@@ -55,25 +63,32 @@
     --m-accent: #cc163a;
     --m-accent-soft: var(--m-color-wozhe);
     --m-border: #8a8d99;
+    --m-neutral: var(--m-color-songlan);
+    --m-neutral-hover: var(--m-color-qingluan);
     --m-divider: rgb(230 226 216 / 0.2);
     --m-disabled: #3a3d47;
+    --m-seal: #d0323a;
   }
 
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+    :root[data-theme="system"] {
       color-scheme: dark;
       --m-fg: #e6e2d8;
       --m-fg-muted: #9a978f;
       --m-fg-strong: #ffffff;
       --m-bg: #0f1116;
       --m-paper: var(--m-color-tajian);
+      --m-paper-rgb: 21 29 41;
       --m-paper-tint: rgb(0 0 0 / 0.5);
       --m-ink: #e6e2d8;
       --m-accent: #cc163a;
       --m-accent-soft: var(--m-color-wozhe);
       --m-border: #8a8d99;
+      --m-neutral: var(--m-color-songlan);
+      --m-neutral-hover: var(--m-color-qingluan);
       --m-divider: rgb(230 226 216 / 0.2);
       --m-disabled: #3a3d47;
+      --m-seal: #d0323a;
     }
   }
 

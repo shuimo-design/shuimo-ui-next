@@ -1,0 +1,65 @@
+{
+  "name": "MDivider",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MDivider"
+  },
+  "attributes": [
+    {
+      "name": "vertical",
+      "description": "竖向分割线；高度跟随父容器（flex 里自动拉伸），也可自己设 height",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "text",
+      "description": "线中间的文字（也可用默认插槽）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "align",
+      "description": "文字位置，默认居中",
+      "default": "\"center\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DividerAlign | undefined"
+      }
+    },
+    {
+      "name": "thickness",
+      "description": "笔画粗细（px），默认 4",
+      "default": "4",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触随机种子：同一页多条分割线传不同种子，飞白就不会一模一样",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替代 text"
+    }
+  ]
+}

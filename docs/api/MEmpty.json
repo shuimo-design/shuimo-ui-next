@@ -1,0 +1,64 @@
+{
+  "name": "MEmpty",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MEmpty"
+  },
+  "attributes": [
+    {
+      "name": "description",
+      "description": "说明文字，默认「暂无数据」",
+      "default": "\"暂无数据\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "imageSize",
+      "description": "插图区高度 px，默认 120",
+      "default": "120",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "image",
+      "description": "内置插图：enso 一笔圆、ridge 远山、none 不画，默认 enso",
+      "default": "\"enso\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "EmptyImage | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "插图的随机种子",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "image",
+      "description": "自定义插图，替换内置的"
+    },
+    {
+      "name": "description",
+      "description": "说明文字，优先于 description"
+    },
+    {
+      "name": "default",
+      "description": "说明下面的操作区（按钮等）"
+    }
+  ]
+}

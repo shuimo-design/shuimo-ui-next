@@ -1,0 +1,51 @@
+{
+  "name": "MStep",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MStep"
+  },
+  "attributes": [
+    {
+      "name": "title",
+      "description": "标题；title 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "description",
+      "description": "描述，标题下面一行小字；description 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "status",
+      "description": "强制指定这一步的状态，不传则按序号和 MSteps 的 active 推断",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "StepStatus | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "icon",
+      "description": "节点里的内容，替换掉序号 / 勾 / 叉"
+    },
+    {
+      "name": "title",
+      "description": "标题"
+    },
+    {
+      "name": "description",
+      "description": "描述"
+    }
+  ]
+}

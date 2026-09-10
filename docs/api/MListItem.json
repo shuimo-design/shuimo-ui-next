@@ -1,0 +1,39 @@
+{
+  "name": "MListItem",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MListItem"
+  },
+  "attributes": [
+    {
+      "name": "active",
+      "description": "激活态：文字加重、墨点换成朱砂点外套墨圈",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "marker",
+      "description": "是否显示项目符号；不传则跟随 MList",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "click"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

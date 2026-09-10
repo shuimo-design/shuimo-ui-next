@@ -1,0 +1,66 @@
+{
+  "name": "MDeleteIcon",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MDeleteIcon"
+  },
+  "attributes": [
+    {
+      "name": "kind",
+      "description": "图形：brush 是旧版那支斜放的毛笔（默认），cross 是一笔叉",
+      "default": "\"brush\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DeleteIconKind | undefined"
+      }
+    },
+    {
+      "name": "size",
+      "description": "边长（px），默认 32",
+      "default": "32",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：不响应点击、置灰",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "label",
+      "description": "无障碍名称，默认「删除」",
+      "default": "\"删除\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "叉的笔触随机种子",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "description": "点了图标（禁用时不触发）"
+    }
+  ],
+  "slots": []
+}

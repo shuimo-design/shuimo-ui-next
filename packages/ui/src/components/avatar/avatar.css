@@ -1,0 +1,73 @@
+@layer m.component {
+  .m-avatar {
+    --m-avatar-size: 40px;
+    /* 图片那一块的边长；墨圈 / 方框套在它外面。下面几个变量都由 MAvatar.vue 按尺寸算好写进来 */
+    --m-avatar-body: 32px;
+    --m-avatar-frame-pad: 0px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: var(--m-avatar-size);
+    height: var(--m-avatar-size);
+    color: var(--m-fg);
+    font-size: calc(var(--m-avatar-body) * 0.42);
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  /* 图片 / 兜底内容：被毛边墨团（圆）或毛边矩形（方）裁出形状 */
+  .m-avatar__body {
+    position: relative;
+    z-index: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--m-avatar-body);
+    height: var(--m-avatar-body);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--m-ink) 8%, transparent);
+    mask: var(--m-avatar-mask, none) center / var(--m-avatar-mask-size, 100% 100%) no-repeat;
+  }
+
+  .m-avatar__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .m-avatar__fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .m-avatar__icon {
+    font-size: 1.4em;
+    color: var(--m-fg-muted);
+  }
+
+  /* 头像框：一笔墨圈或一圈笔触边框，画幅比盒子大一点，飞溅和出头落在盒子外 */
+  .m-avatar__frame {
+    position: absolute;
+    inset: calc(var(--m-avatar-frame-pad) * -1);
+    z-index: 1;
+    background: var(--m-ink);
+    mask: var(--m-avatar-frame, none) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-avatar__frame {
+    filter: url(#m-ink-bleed-light);
+  }
+}

@@ -1,0 +1,77 @@
+@layer m.component {
+  .m-empty {
+    --m-empty-image-size: 120px;
+    --m-empty-ink: var(--m-ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 40px 0;
+    color: var(--m-fg-muted);
+    font-size: var(--m-font-size);
+    text-align: center;
+  }
+
+  /* 插图区固定 imageSize 高；自定义插图（图片 / SVG）在里面等比缩进来 */
+  .m-empty__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--m-empty-image-size);
+    max-width: 100%;
+
+    & > img,
+    & > svg {
+      max-height: 100%;
+    }
+  }
+
+  /* 内置插图：素材当 mask，墨色由 --m-empty-ink 决定，跟着主题换色 */
+  .m-empty__figure {
+    display: block;
+    height: 100%;
+    background: var(--m-empty-ink);
+    mask: var(--m-empty-figure, none) center / contain no-repeat;
+  }
+
+  /* 一笔圆：正方画幅，淡一点，不抢正文 */
+  .m-empty--enso .m-empty__figure {
+    width: var(--m-empty-image-size);
+    opacity: 0.7;
+  }
+
+  /* 远山：横幅，画幅是 5:2，山体压在底部、上方自然留白；左右两端用渐变遮罩化进纸里，不留硬切口 */
+  .m-empty--ridge .m-empty__figure {
+    width: calc(var(--m-empty-image-size) * 2.5);
+    max-width: 100%;
+    mask:
+      var(--m-empty-figure, none) center bottom / 100% 100% no-repeat,
+      linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+    mask-composite: intersect;
+  }
+
+  .m-empty__description {
+    margin: var(--m-space-3) 0 0;
+    line-height: 1.6;
+  }
+
+  .m-empty--none .m-empty__description {
+    margin-top: 0;
+  }
+
+  .m-empty__extra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m-space-2);
+    margin-top: var(--m-space-4);
+  }
+}
+
+@layer m.ink {
+  /* 一笔圆再过一道轻晕染，边缘和纸面咬得更实 */
+  html.m-ink-ready .m-empty--enso .m-empty__figure {
+    filter: url(#m-ink-bleed-light);
+  }
+}

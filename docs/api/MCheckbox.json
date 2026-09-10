@@ -1,0 +1,78 @@
+{
+  "name": "MCheckbox",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MCheckbox"
+  },
+  "attributes": [
+    {
+      "name": "value",
+      "description": "放进 CheckboxGroup 时用来标识自己的值",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CheckboxValue | undefined"
+      }
+    },
+    {
+      "name": "label",
+      "description": "文字；默认插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "indeterminate",
+      "description": "半选态（只影响外观，不影响值）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "name",
+      "description": "原生 name",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "用户操作导致勾选态变化"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

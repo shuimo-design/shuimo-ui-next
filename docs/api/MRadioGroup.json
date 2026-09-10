@@ -1,0 +1,59 @@
+{
+  "name": "MRadioGroup",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MRadioGroup"
+  },
+  "attributes": [
+    {
+      "name": "disabled",
+      "description": "整组禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "横排（默认）还是竖排",
+      "default": "\"horizontal\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"horizontal\" | \"vertical\" | undefined"
+      }
+    },
+    {
+      "name": "name",
+      "description": "组内所有原生 radio 共用的 name；不传则自动生成，保证方向键能在组内切换",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "RadioValue | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "用户操作导致选中项变化"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

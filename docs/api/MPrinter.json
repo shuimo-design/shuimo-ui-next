@@ -1,0 +1,76 @@
+{
+  "name": "MPrinter",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MPrinter"
+  },
+  "attributes": [
+    {
+      "name": "text",
+      "description": "要逐字打出的文字；换行按原样保留",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "speed",
+      "description": "每个字的间隔 ms，默认 80；0 或负数直接整段显示",
+      "default": "80",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "loop",
+      "description": "打完后停一停再从头打，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "pause",
+      "description": "循环时打完到重打之间停多久 ms，默认 1200",
+      "default": "1200",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "cursor",
+      "description": "是否显示闪烁的墨点光标，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "autoplay",
+      "description": "挂载后自动开始，默认 true；关掉后要自己调 restart()",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "end",
+      "description": "一段文字全部打完时触发；循环时每一轮都会触发"
+    }
+  ],
+  "slots": []
+}

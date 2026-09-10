@@ -1,0 +1,106 @@
+{
+  "name": "MCell",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MCell"
+  },
+  "attributes": [
+    {
+      "name": "w",
+      "description": "宽 px；不传则在栅格里均分剩余宽度",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "h",
+      "description": "高 px；不传则由内容撑开",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "border",
+      "description": "画边框（默认皮肤是细线，水墨模式换成笔触）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "points",
+      "description": "四条边的倾斜角简写，同 CSS 的 1–4 值写法：上 右 下 左；一个数字则四边同角",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CellAngle | undefined"
+      }
+    },
+    {
+      "name": "a",
+      "description": "上边倾斜角（度），正值右端下沉",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CellAngle | undefined"
+      }
+    },
+    {
+      "name": "b",
+      "description": "右边倾斜角（度），正值成 \"/\"（下端左移）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CellAngle | undefined"
+      }
+    },
+    {
+      "name": "c",
+      "description": "下边倾斜角（度），正值左端上抬",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CellAngle | undefined"
+      }
+    },
+    {
+      "name": "d",
+      "description": "左边倾斜角（度），正值成 \"/\"（上端右移）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CellAngle | undefined"
+      }
+    },
+    {
+      "name": "span",
+      "description": "在 cols 模式的栅格里横跨几列，默认 1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "在 cols 模式的栅格里从行首空出几列再放（即从第 offset+1 列开始）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

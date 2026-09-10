@@ -1,0 +1,95 @@
+{
+  "name": "MMessage",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MMessage"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "消息类型，决定图标与配色，默认 info",
+      "default": "\"info\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "MessageType | undefined"
+      }
+    },
+    {
+      "name": "content",
+      "description": "消息文字；也可以用默认插槽",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "duration",
+      "description": "自动关闭的毫秒数，默认 3000；0 或负数表示不自动关闭",
+      "default": "3000",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "出现的位置，默认 top-right；决定进出场方向和能往哪边拖",
+      "default": "\"top-right\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "MessageDirection | undefined"
+      }
+    },
+    {
+      "name": "dragAllow",
+      "description": "允许拖动关闭：往屏幕外拖过三分之一松手即关，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "closable",
+      "description": "显示关闭按钮，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "墨迹种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "close",
+      "description": "离场动画结束、可以从 DOM 移除时"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替代 content"
+    },
+    {
+      "name": "icon",
+      "description": "替代类型图标"
+    }
+  ]
+}

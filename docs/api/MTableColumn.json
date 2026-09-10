@@ -1,0 +1,56 @@
+{
+  "name": "MTableColumn",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTableColumn"
+  },
+  "attributes": [
+    {
+      "name": "param",
+      "description": "列对应的字段名，取值 row[param]",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "string"
+      }
+    },
+    {
+      "name": "label",
+      "description": "列名；head 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "width",
+      "description": "列宽，数字按 px；不传按内容自动分配",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "align",
+      "description": "对齐，默认跟随表格的 align",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableAlign | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "单元格内容，作用域 { row, data, value, index, column }"
+    },
+    {
+      "name": "head",
+      "description": "表头内容"
+    }
+  ]
+}

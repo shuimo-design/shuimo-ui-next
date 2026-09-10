@@ -1,0 +1,67 @@
+{
+  "name": "MRadio",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MRadio"
+  },
+  "attributes": [
+    {
+      "name": "value",
+      "description": "这一项代表的值；选中后写进 v-model",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "RadioValue"
+      }
+    },
+    {
+      "name": "label",
+      "description": "文字；默认插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "name",
+      "description": "原生 name；在 RadioGroup 里时以组的 name 为准",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "RadioValue | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "用户操作选中了这一项"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

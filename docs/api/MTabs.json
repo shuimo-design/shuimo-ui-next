@@ -1,0 +1,94 @@
+{
+  "name": "MTabs",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTabs"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "外形：line 导航条下一条笔触线 + 激活项一横朱笔指示器；card 每个标签一条签条（书签式），\n激活的那条纸色、朝内容区探出一截压在内容区框线上。不开水墨引擎时退回实线和 CSS 双线框",
+      "default": "\"line\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TabsType | undefined"
+      }
+    },
+    {
+      "name": "position",
+      "description": "导航条位置；left / right 时标签竖着排，方向键改用上下",
+      "default": "\"top\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TabsPosition | undefined"
+      }
+    },
+    {
+      "name": "closable",
+      "description": "所有标签都显示关闭按钮；单个 MTabPane 可用自己的 closable 覆盖",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "stretch",
+      "description": "标签平分导航条宽度",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "整组禁用：所有标签不可切换、不可关闭",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TabName | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "激活的标签变化"
+    },
+    {
+      "name": "tabClick",
+      "description": "点了某个标签（不管有没有真的切换）"
+    },
+    {
+      "name": "tabRemove",
+      "description": "点了某个标签的关闭按钮；组件不会自己删 pane，由使用方处理"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MTabPane"
+    },
+    {
+      "name": "extra",
+      "description": "导航条末尾（横排时靠右，竖排时靠下）的附加内容"
+    }
+  ]
+}

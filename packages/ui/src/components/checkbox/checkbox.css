@@ -1,0 +1,152 @@
+@layer m.component {
+  .m-checkbox {
+    --m-checkbox-size: 20px;
+    /* 勾选墨块的宽高：旧版位图是 24px 框里一块 12×10 的墨，略扁 */
+    --m-checkbox-mark-w: 10px;
+    --m-checkbox-mark-h: 9px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    color: var(--m-fg);
+    cursor: var(--m-cursor-pointer);
+    user-select: none;
+
+    &.m-checkbox--disabled {
+      color: var(--m-fg-muted);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 原生控件铺满整个 label 但透明：无障碍树、键盘、点击都走原生 */
+  .m-checkbox__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+    /* 压在方框之上，无文字时点击也能命中原生控件 */
+    z-index: 1;
+  }
+
+  .m-checkbox__box {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-checkbox-size);
+    height: var(--m-checkbox-size);
+    border: 1.5px solid var(--m-border);
+    /* 四角略不等，像手画的方框 */
+    border-radius: 3px 4px 2px 5px / 4px 2px 5px 3px;
+    background: transparent;
+    color: var(--m-ink);
+    transition:
+      border-color var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease);
+  }
+
+  /* 勾选：框里一块实墨，四角略歪；半选：一横。都从中心涨出来 */
+  .m-checkbox__mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--m-checkbox-mark-w);
+    height: var(--m-checkbox-mark-h);
+    border-radius: 2px 1px 2px 1px / 1px 2px 1px 2px;
+    background: var(--m-ink);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition:
+      opacity var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
+  }
+
+  .m-checkbox--indeterminate .m-checkbox__mark {
+    height: 3px;
+  }
+
+  .m-checkbox--checked .m-checkbox__box,
+  .m-checkbox--indeterminate .m-checkbox__box {
+    border-color: var(--m-ink);
+  }
+
+  .m-checkbox--checked .m-checkbox__mark,
+  .m-checkbox--indeterminate .m-checkbox__mark {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .m-checkbox:hover:not(.m-checkbox--disabled) .m-checkbox__box {
+    border-color: var(--m-accent);
+  }
+
+  .m-checkbox__input:focus-visible + .m-checkbox__box {
+    outline: 2px solid var(--m-accent);
+    outline-offset: 2px;
+  }
+
+  .m-checkbox--disabled .m-checkbox__box {
+    border-color: var(--m-disabled);
+    background: color-mix(in srgb, var(--m-disabled) 40%, transparent);
+    color: var(--m-fg-muted);
+  }
+
+  .m-checkbox--disabled .m-checkbox__mark {
+    background: var(--m-fg-muted);
+  }
+
+  .m-checkbox-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--m-space-2) var(--m-space-4);
+
+    &.m-checkbox-group--vertical {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 方框由 useBrushBorder 描成细笔触（stroke.css），这里只管颜色：悬停蘸朱砂、禁用褪成灰 */
+  html.m-ink-ready .m-checkbox__box {
+    border-radius: 0;
+    background: transparent;
+  }
+
+  html.m-ink-ready .m-checkbox:hover:not(.m-checkbox--disabled) .m-checkbox__box::before {
+    background: var(--m-accent);
+  }
+
+  html.m-ink-ready .m-checkbox--disabled .m-checkbox__box::before {
+    background: var(--m-disabled);
+  }
+
+  /*
+   * 勾选换成毛边墨块遮罩。stroke.css 会把笔触边框的子元素统统设成 position: relative，
+   * 这里要把绝对定位抢回来；元素按晕染余量外扩一圈，毛边才不会被自己的盒子裁掉。
+   */
+  html.m-ink-ready .m-checkbox__box > .m-checkbox__mark {
+    position: absolute;
+    width: calc(var(--m-checkbox-mark-w) + var(--m-checkbox-mark-pad, 0px) * 2);
+    height: calc(var(--m-checkbox-mark-h) + var(--m-checkbox-mark-pad, 0px) * 2);
+    border-radius: 0;
+    background: var(--m-ink);
+    mask: var(--m-checkbox-mark-mask) center / 100% 100% no-repeat;
+  }
+
+  /* 半选是一短笔：画幅比笔画高（留了晕染余量），按画幅高度铺，笔画自然落在中线 */
+  html.m-ink-ready .m-checkbox--indeterminate .m-checkbox__box > .m-checkbox__mark {
+    width: var(--m-checkbox-bar-w, 18px);
+    height: var(--m-checkbox-bar-band, 13px);
+    mask: var(--m-checkbox-bar-mask) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-checkbox--disabled .m-checkbox__box > .m-checkbox__mark {
+    background: var(--m-fg-muted);
+  }
+}

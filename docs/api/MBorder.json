@@ -17,8 +17,8 @@
     },
     {
       "name": "strokeWidth",
-      "description": "笔宽 px，默认 3",
-      "default": "3",
+      "description": "笔宽 px，默认 2（旧版是一条 2px 上下的细手绘线）",
+      "default": "2",
       "required": false,
       "value": {
         "kind": "expression",
@@ -27,7 +27,8 @@
     },
     {
       "name": "roughness",
-      "description": "边缘噪声 0–1",
+      "description": "边缘噪声 0–1，默认 0.35",
+      "default": "0.35",
       "required": false,
       "value": {
         "kind": "expression",
@@ -36,7 +37,8 @@
     },
     {
       "name": "flyingWhite",
-      "description": "飞白 0–1",
+      "description": "飞白 0–1，默认 0.06",
+      "default": "0.06",
       "required": false,
       "value": {
         "kind": "expression",
@@ -51,6 +53,84 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      }
+    },
+    {
+      "name": "border",
+      "description": "画不画边：true 四边全画、false 全不画，也可传对象按边指定；优先级低于 top / right / bottom / left。默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | BorderSides | undefined"
+      }
+    },
+    {
+      "name": "top",
+      "description": "单独控制上边，不传则听 border 的",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "right",
+      "description": "单独控制右边，不传则听 border 的",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "bottom",
+      "description": "单独控制下边，不传则听 border 的",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "left",
+      "description": "单独控制左边，不传则听 border 的",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "mask",
+      "description": "内容蒙层：半透明纸色加背景模糊，压在远山或图片上时字更清楚。默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "color",
+      "description": "墨色，默认 --m-ink（无水墨引擎时退成 --m-border）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "padding",
+      "description": "内边距，数字按 px；默认 0，内容贴边，笔触压在内容边缘上",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
       }
     }
   ],

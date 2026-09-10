@@ -1,0 +1,236 @@
+@layer m.component {
+  .m-steps {
+    /* 节点直径 */
+    --m-step-size: 28px;
+    --m-step-line-thickness: 1.5px;
+    display: flex;
+    align-items: flex-start;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: 1.5;
+
+    &.m-steps--vertical {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  /* 一步 = 节点 + 连接线 + 文字，三块用网格摆位：横向是「节点 线 / 文字 文字」 */
+  .m-step {
+    display: grid;
+    flex: 1 1 0;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "node line"
+      "main main";
+    column-gap: var(--m-space-2);
+    row-gap: var(--m-space-2);
+    align-items: center;
+    min-width: 0;
+
+    /* 最后一步没有线，只占自己内容的宽度，前面的步把余下的宽度平分 */
+    &.m-step--last {
+      flex: 0 0 auto;
+    }
+  }
+
+  /* 纵向：「节点 文字 / 线 文字」，线撑满节点下面到下一步之间的高度 */
+  .m-steps--vertical .m-step {
+    flex: 0 0 auto;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "node main"
+      "line main";
+    column-gap: var(--m-space-3);
+    row-gap: var(--m-space-1);
+    align-items: start;
+
+    &:not(.m-step--last) {
+      min-height: 72px;
+    }
+  }
+
+  /* 紧凑版：节点、标题、线排成一行；纵向紧凑版沿用纵向布局，只是矮一点 */
+  .m-steps--simple:not(.m-steps--vertical) .m-step {
+    grid-template-columns: auto auto 1fr;
+    grid-template-areas: "node main line";
+  }
+
+  .m-steps--simple.m-steps--vertical .m-step:not(.m-step--last) {
+    min-height: 56px;
+  }
+
+  .m-steps--simple .m-step__description {
+    display: none;
+  }
+
+  /* 节点：一个 CSS 圆。isolate 让 m.ink 层的墨团 / 一笔圆能用 z-index:-1 垫在序号下面而不跑到页面背景后 */
+  .m-step__node {
+    position: relative;
+    grid-area: node;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--m-step-size);
+    height: var(--m-step-size);
+    border: 1.5px solid var(--m-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font-size: 13px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    isolation: isolate;
+    transition:
+      border-color var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease),
+      color var(--m-duration) var(--m-ease);
+
+    /* icon 插槽里放线性图标时的默认大小 */
+    & > .m-icon {
+      font-size: 16px;
+    }
+  }
+
+  .m-step--process .m-step__node {
+    border-color: var(--m-ink);
+    color: var(--m-ink);
+  }
+
+  /* 完成：实心墨圆，里面纸色的勾 */
+  .m-step--finish .m-step__node {
+    border-color: var(--m-ink);
+    background: var(--m-ink);
+    color: var(--m-bg);
+  }
+
+  .m-step--error .m-step__node {
+    border-color: var(--m-danger);
+    color: var(--m-danger);
+  }
+
+  /* 勾 / 叉是素材库一笔写出的记号，颜色跟节点文字色 */
+  .m-step__mark {
+    width: 16px;
+    height: 16px;
+    background: currentColor;
+    mask: var(--m-step-check) center / contain no-repeat;
+
+    &.m-step__mark--cross {
+      mask-image: var(--m-step-cross);
+    }
+  }
+
+  /* 连接线：默认皮肤一条细实线；已完成的段是墨色，其余是边框灰。m.ink 层换成按长度生成的笔触线 */
+  .m-step__line {
+    grid-area: line;
+    height: var(--m-step-line-thickness);
+    min-width: 16px;
+    margin: 0 var(--m-space-1);
+    border-radius: 2px 1px 2px 1px / 1px 2px 1px 2px;
+    background: var(--m-border);
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  .m-step--finish .m-step__line {
+    background: var(--m-ink);
+  }
+
+  .m-steps--vertical .m-step__line {
+    width: var(--m-step-line-thickness);
+    height: auto;
+    min-height: 16px;
+    margin: var(--m-space-1) 0;
+    justify-self: center;
+    align-self: stretch;
+  }
+
+  .m-step__main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  /* 横向时文字右边留一点空，长标题不会顶到下一步的节点 */
+  .m-steps:not(.m-steps--vertical) .m-step:not(.m-step--last) .m-step__main {
+    padding-right: var(--m-space-4);
+  }
+
+  .m-steps--vertical .m-step:not(.m-step--last) .m-step__main {
+    padding-bottom: var(--m-space-4);
+  }
+
+  .m-step__title {
+    color: var(--m-fg);
+    transition: color var(--m-duration) var(--m-ease);
+  }
+
+  .m-step--wait .m-step__title {
+    color: var(--m-fg-muted);
+  }
+
+  .m-step--process .m-step__title {
+    color: var(--m-ink);
+    font-weight: 600;
+  }
+
+  .m-step--error .m-step__title {
+    color: var(--m-danger);
+  }
+
+  .m-step__description {
+    margin-top: 2px;
+    color: var(--m-fg-muted);
+    font-size: 12px;
+  }
+}
+
+@layer m.ink {
+  /* 画幅比笔画高（留了晕染余量），让画幅在粗细方向上居中铺满，笔画自然落在中线 */
+  html.m-ink-ready .m-step__line {
+    height: var(--m-brush-line-band, var(--m-step-line-thickness));
+    border-radius: 0;
+    /* 老库的线是淡的干墨，不是实黑 */
+    opacity: 0.8;
+    /* 还没量出长度时先用通用横线兜底，量出来后换成按实际长度生成的那条 */
+    mask: var(--m-brush-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-steps--vertical .m-step__line {
+    width: var(--m-brush-line-band, var(--m-step-line-thickness));
+    height: auto;
+    mask: var(--m-brush-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+  }
+
+  /* 完成：规整的实心圆换成毛边墨团。素材里墨团只占画幅八成，盒子往外扩一圈让墨点仍是节点大小 */
+  html.m-ink-ready .m-step--finish .m-step__node {
+    border-color: transparent;
+    background: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      z-index: -1;
+      background: var(--m-ink);
+      mask: var(--m-step-blob) center / 100% 100% no-repeat;
+    }
+  }
+
+  /* 当前步 / 出错步：规整圆环换成一笔绕出的圆相，起笔重、收笔留口；颜色跟节点文字色 */
+  html.m-ink-ready .m-step--process .m-step__node,
+  html.m-ink-ready .m-step--error .m-step__node {
+    border-color: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      z-index: -1;
+      background: currentColor;
+      mask: var(--m-step-enso) center / 100% 100% no-repeat;
+    }
+  }
+}

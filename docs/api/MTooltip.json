@@ -1,0 +1,146 @@
+{
+  "name": "MTooltip",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTooltip"
+  },
+  "attributes": [
+    {
+      "name": "placement",
+      "description": "提示出现的方位（floating-ui placement），默认 bottom",
+      "default": "\"bottom\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Placement | undefined"
+      }
+    },
+    {
+      "name": "trigger",
+      "description": "触发方式：hover（同时响应键盘聚焦）/ click / focus / manual，默认 hover",
+      "default": "\"hover\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "PopoverTrigger | undefined"
+      }
+    },
+    {
+      "name": "content",
+      "description": "提示文字，等价于 #content",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：不再弹出，已打开的会收起",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "arrow",
+      "description": "显示指向参照元素的墨尖箭头，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "提示与参照元素的间距 px，默认 6",
+      "default": "6",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "openDelay",
+      "description": "hover 触发的打开延时 ms，默认 80",
+      "default": "80",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "closeDelay",
+      "description": "hover 触发的收起延时 ms，默认 80",
+      "default": "80",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "disableClickAway",
+      "description": "click 触发时点到提示外不自动收起",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "提示传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触边框与墨尖的种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "show",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "visibleChange",
+      "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+    },
+    {
+      "name": "update:show"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "被提示的内容；第一个元素当参照元素，并挂上 aria-describedby"
+    },
+    {
+      "name": "content",
+      "description": "提示内容"
+    }
+  ]
+}

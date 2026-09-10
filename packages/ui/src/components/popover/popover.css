@@ -1,0 +1,83 @@
+@layer m.component {
+  /* 壳本身不占盒子，插槽里的第一个元素就是参照元素，箭头才能指到它 */
+  .m-popover {
+    display: contents;
+  }
+
+  /* 插槽里只有文字时壳自己当参照，这时得有盒子 */
+  .m-popover--wrap {
+    display: inline-block;
+  }
+
+  /* 气泡被 Teleport 到 body，继承不到根上的变量，全部在这里声明 */
+  .m-popover__float {
+    --m-popover-pad: var(--m-space-2) var(--m-space-3);
+    --m-popover-max-w: 320px;
+    --m-popover-arrow-w: 14px;
+    --m-popover-arrow-h: 7px;
+    /* 箭头压进气泡边框的深度，盖住那 1px 边线让墨尖像从框上长出来 */
+    --m-popover-arrow-overlap: 1px;
+    position: relative;
+    max-width: var(--m-popover-max-w);
+    color: var(--m-fg);
+  }
+
+  .m-popover__float > .m-popover__panel {
+    padding: var(--m-popover-pad);
+    background: var(--m-bg);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+    overflow-wrap: anywhere;
+  }
+
+  /* 墨尖：SVG 遮罩上墨色，方向靠 rotate；沿交叉轴的位置由 MPopper 写在 --m-popper-arrow-x / -y */
+  .m-popover__arrow {
+    position: absolute;
+    z-index: 1;
+    width: var(--m-popover-arrow-w);
+    height: var(--m-popover-arrow-h);
+    background: var(--m-border);
+    mask: var(--m-popover-tip) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+
+  .m-popper[data-placement^="bottom"] .m-popover__arrow {
+    top: 0;
+    left: var(--m-popper-arrow-x, 50%);
+    transform: translate(-50%, calc(-100% + var(--m-popover-arrow-overlap)));
+  }
+
+  .m-popper[data-placement^="top"] .m-popover__arrow {
+    top: 100%;
+    left: var(--m-popper-arrow-x, 50%);
+    transform: translate(-50%, calc(var(--m-popover-arrow-overlap) * -1)) rotate(180deg);
+  }
+
+  /* 左右两侧：盒子转 90° 后视觉宽高互换，先把中心对到边上再往外挪半个高度 */
+  .m-popper[data-placement^="left"] .m-popover__arrow {
+    top: var(--m-popper-arrow-y, 50%);
+    left: 100%;
+    transform: translate(
+        calc(-50% + var(--m-popover-arrow-h) / 2 - var(--m-popover-arrow-overlap)),
+        -50%
+      )
+      rotate(90deg);
+  }
+
+  .m-popper[data-placement^="right"] .m-popover__arrow {
+    top: var(--m-popper-arrow-y, 50%);
+    right: 100%;
+    transform: translate(
+        calc(50% - var(--m-popover-arrow-h) / 2 + var(--m-popover-arrow-overlap)),
+        -50%
+      )
+      rotate(-90deg);
+  }
+}
+
+@layer m.ink {
+  /* 笔触边框挂在面板（MBorder）上；墨尖换成墨色并加一点晕染，和边框是同一支笔 */
+  html.m-ink-ready .m-popover__arrow {
+    background: var(--m-ink);
+    filter: url(#m-ink-bleed-light);
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "name": "MAlert",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MAlert"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "语义类型：success 石绿、warn 藤黄、danger 朱砂、info 花青，默认 info",
+      "default": "\"info\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "AlertType | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "description",
+      "description": "辅助说明，也可用默认插槽",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "closable",
+      "description": "显示关闭按钮，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "showIcon",
+      "description": "显示状态徽记，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "center",
+      "description": "文字居中",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "effect",
+      "description": "light 淡底 + 语义色边和徽记；dark 语义色底 + 白字，默认 light",
+      "default": "\"light\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "AlertEffect | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "左侧笔触线和徽记的随机种子",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "close",
+      "description": "点了关闭按钮；随后组件自己隐藏"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "说明文字，优先于 description"
+    },
+    {
+      "name": "title",
+      "description": "标题，优先于 title"
+    },
+    {
+      "name": "icon",
+      "description": "替换状态徽记"
+    },
+    {
+      "name": "action",
+      "description": "右侧操作区（按钮、链接）"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+@layer m.component {
+  .m-loading {
+    --m-loading-speed: 2000ms;
+    --m-loading-size: 40px;
+    --m-loading-color: var(--m-ink);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m-space-2);
+    color: var(--m-fg-muted);
+    font-size: 13px;
+    line-height: 1;
+
+    /* 遮罩：盖住最近的定位父元素，纸色半透明 + 轻微磨砂，下面的内容隐约可见 */
+    &.m-loading--mask {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      background: color-mix(in srgb, var(--m-bg) 72%, transparent);
+      backdrop-filter: blur(4px);
+    }
+  }
+
+  .m-loading__indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .m-loading__spinner {
+    width: var(--m-loading-size);
+    height: var(--m-loading-size);
+    fill: var(--m-loading-color);
+    animation: m-loading-spin var(--m-loading-speed) linear infinite;
+  }
+
+  .m-loading__text {
+    white-space: nowrap;
+  }
+
+  /* v-loading 指令挂在宿主上的两个钩子类：宿主升成定位上下文；容器不占布局 */
+  .m-loading-parent {
+    position: relative;
+  }
+
+  .m-loading-host {
+    display: contents;
+  }
+
+  @keyframes m-loading-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* 减弱动效：墨尾静止，仍能看出是在加载 */
+  @media (prefers-reduced-motion: reduce) {
+    .m-loading__spinner {
+      animation: none;
+    }
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-loading__spinner {
+    filter: url(#m-ink-bleed-light);
+  }
+}

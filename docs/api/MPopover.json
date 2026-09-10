@@ -1,0 +1,146 @@
+{
+  "name": "MPopover",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MPopover"
+  },
+  "attributes": [
+    {
+      "name": "placement",
+      "description": "气泡出现的方位（floating-ui placement），默认 bottom",
+      "default": "\"bottom\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Placement | undefined"
+      }
+    },
+    {
+      "name": "trigger",
+      "description": "触发方式：hover / click / focus / manual（只听 v-model:show），默认 click",
+      "default": "\"click\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "PopoverTrigger | undefined"
+      }
+    },
+    {
+      "name": "content",
+      "description": "内容只是一段文字时可以直接传，等价于 #content",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：不再响应触发，已打开的会收起",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "arrow",
+      "description": "显示指向参照元素的墨尖箭头，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "气泡与参照元素的间距 px，默认 8",
+      "default": "8",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "openDelay",
+      "description": "hover 触发的打开延时 ms，默认 0",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "closeDelay",
+      "description": "hover 触发的收起延时 ms，默认 100；鼠标从参照移到气泡上时靠它不闪断",
+      "default": "100",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "disableClickAway",
+      "description": "click 触发时点到气泡外不自动收起",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "气泡传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触边框与墨尖的种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "show",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "visibleChange",
+      "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+    },
+    {
+      "name": "update:show"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发内容；第一个元素当参照元素"
+    },
+    {
+      "name": "content",
+      "description": "气泡内容"
+    }
+  ]
+}

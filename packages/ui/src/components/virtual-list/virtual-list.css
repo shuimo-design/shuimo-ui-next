@@ -1,0 +1,73 @@
+@layer m.component {
+  .m-virtual-list {
+    --m-virtual-list-h: 300px;
+    position: relative;
+    box-sizing: border-box;
+    height: var(--m-virtual-list-h);
+    overflow: hidden auto;
+    color: var(--m-fg);
+    /* 滚动条收细、去掉轨道，只留一条把手 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--m-border) transparent;
+    /* 触底回弹会让 scrollTop 越界，位置计算不需要那种回弹 */
+    overscroll-behavior: contain;
+  }
+
+  .m-virtual-list__phantom {
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .m-virtual-list__body {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    will-change: transform;
+  }
+
+  .m-virtual-list__item {
+    box-sizing: border-box;
+  }
+
+  /* 定高模式下项高写死在行内；内容多了裁掉，免得撑坏位置计算 */
+  .m-virtual-list__item[style*="height"] {
+    overflow: hidden;
+  }
+
+  /* 分隔线：零高元素，线画在伪元素上、骑在交界线上，默认皮肤一条 1px 细线 */
+  .m-virtual-list__divider {
+    position: relative;
+    z-index: 1;
+    height: 0;
+    pointer-events: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -0.5px;
+      right: 0;
+      left: 0;
+      height: 1px;
+      background: var(--m-divider);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 水墨模式：滚动条把手蘸墨 */
+  html.m-ink-ready .m-virtual-list {
+    scrollbar-color: var(--m-ink) transparent;
+  }
+
+  /* 分隔线换成按列表宽度生成的细笔触线（MVirtualList 写在根的变量里），画幅比笔画高、居中骑在交界线上；
+     没量到宽度前回落到通用横线。淡墨，和表格的行间线一个口径 */
+  html.m-ink-ready .m-virtual-list__divider::before {
+    --m-virtual-list-line-band-ink: var(--m-virtual-list-line-band, 9px);
+    top: calc(var(--m-virtual-list-line-band-ink) / -2);
+    height: var(--m-virtual-list-line-band-ink);
+    background: var(--m-ink);
+    opacity: 0.55;
+    mask: var(--m-virtual-list-line, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+}

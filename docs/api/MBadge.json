@@ -1,0 +1,94 @@
+{
+  "name": "MBadge",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MBadge"
+  },
+  "attributes": [
+    {
+      "name": "value",
+      "description": "显示的数字或文字；数字超过 max 显示 \"max+\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "max",
+      "description": "数字上限，默认 99",
+      "default": "99",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "dot",
+      "description": "只显示一个小点，不显示数字",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "hidden",
+      "description": "隐藏角标",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "type",
+      "description": "语义色，默认 danger（朱砂印泥色）",
+      "default": "\"danger\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "BadgeType | undefined"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "位移 [x, y]，单位 px，在默认位置（内容右上角）基础上叠加",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "[number, number] | undefined"
+      }
+    },
+    {
+      "name": "showZero",
+      "description": "value 为 0 时也显示，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "水墨层小印毛边、印泥纹理和小点的随机种子；同一页多个角标可以各给一个，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "被标注的内容；不传时角标独立显示，不做绝对定位"
+    }
+  ]
+}

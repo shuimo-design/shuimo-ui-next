@@ -1,0 +1,193 @@
+@layer m.component {
+  .m-table {
+    /* 表头那条粗线与行间细线的高度；m.ink 层会换成笔触线的画幅高度 */
+    --m-table-line-thick-band: 2px;
+    --m-table-line-thin-band: 1px;
+    --m-table-head-bg: color-mix(in srgb, var(--m-ink) 12%, transparent);
+    --m-table-hover-bg: color-mix(in srgb, var(--m-ink) 7%, transparent);
+    --m-table-stripe-bg: color-mix(in srgb, var(--m-ink) 4%, transparent);
+    --m-table-cell-py: 9px;
+    --m-table-cell-px: var(--m-space-2);
+    position: relative;
+    width: 100%;
+    /* 表头顶线一半探在表头之外，留出这半截，别压到上面的内容 */
+    padding-top: calc(var(--m-table-line-thick-band) / 2);
+    color: var(--m-fg);
+
+    /* 表头顶线放在滚动区外面：表头吸顶时它还在原位，正好压着表头上沿 */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 3;
+      height: var(--m-table-line-thick-band);
+      background: var(--m-ink);
+      pointer-events: none;
+    }
+  }
+
+  .m-table__scroll {
+    overflow: auto;
+  }
+
+  /*
+   * 用 grid + subgrid 排：每一行是一个真实的盒子，才能在它身上画整行的线和 hover 墨晕
+   * （table-row 上的 mask / 伪元素各家浏览器都不认）。角色用 role 补回来。
+   */
+  .m-table__inner {
+    display: grid;
+    width: 100%;
+    border-spacing: 0;
+    /* 末行底线一半探在行外，留出来别被滚动容器裁掉 */
+    padding-bottom: calc(var(--m-table-line-thin-band) / 2);
+  }
+
+  .m-table__head,
+  .m-table__body {
+    display: contents;
+  }
+
+  .m-table__row {
+    position: relative;
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
+
+  .m-table__row--head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--m-table-head-bg);
+    font-weight: 600;
+
+    /* 表头下沿的粗线：跟着表头一起吸顶 */
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: calc(var(--m-table-line-thick-band) / -2);
+      left: 0;
+      z-index: 1;
+      height: var(--m-table-line-thick-band);
+      background: var(--m-ink);
+      pointer-events: none;
+    }
+  }
+
+  /* 会滚动时表头要挡住底下滚过的行，垫一层纸色 */
+  .m-table--scroll .m-table__row--head {
+    background: linear-gradient(var(--m-table-head-bg), var(--m-table-head-bg)), var(--m-bg);
+  }
+
+  .m-table__row--body {
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  /* 行间细线；空数据那一行也画一条，把表格收住 */
+  .m-table__row--body,
+  .m-table__row--empty {
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: calc(var(--m-table-line-thin-band) / -2);
+      left: 0;
+      z-index: 1;
+      height: var(--m-table-line-thin-band);
+      background: var(--m-divider);
+      pointer-events: none;
+    }
+  }
+
+  .m-table__row--body:hover {
+    background-color: var(--m-table-hover-bg);
+  }
+
+  .m-table--stripe .m-table__row--body:nth-child(even) {
+    background-color: var(--m-table-stripe-bg);
+  }
+
+  .m-table--stripe .m-table__row--body:hover {
+    background-color: var(--m-table-hover-bg);
+  }
+
+  .m-table__th,
+  .m-table__td {
+    min-width: 0;
+    padding: var(--m-table-cell-py) var(--m-table-cell-px);
+    align-content: center;
+    word-break: break-word;
+    text-align: center;
+  }
+
+  .m-table__th--left,
+  .m-table__td--left {
+    text-align: left;
+  }
+
+  .m-table__th--right,
+  .m-table__td--right {
+    text-align: right;
+  }
+
+  .m-table__empty {
+    grid-column: 1 / -1;
+    padding: var(--m-space-3) var(--m-table-cell-px);
+    line-height: 40px;
+    color: var(--m-fg-muted);
+    text-align: center;
+  }
+}
+
+@layer m.ink {
+  /* 线换成按表格宽度生成的笔触线（MTable 写在行内变量里），没量到宽度前回落到通用线 */
+  html.m-ink-ready .m-table {
+    --m-table-line-thick-band: var(--m-table-ink-thick-band, 18px);
+    --m-table-line-thin-band: var(--m-table-ink-thin-band, 9px);
+
+    &::before {
+      mask: var(--m-table-line-thick, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+    }
+  }
+
+  html.m-ink-ready .m-table__row--head::after {
+    mask: var(--m-table-line-thick, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-table__row--body::after,
+  html.m-ink-ready .m-table__row--empty::after {
+    background: var(--m-ink);
+    opacity: 0.55;
+    mask: var(--m-table-line-thin, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  /* hover 不再平铺底色，而是一团毛边淡墨在纸上洇开 */
+  html.m-ink-ready .m-table__row--body {
+    &:hover {
+      background-color: transparent;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(-1 * var(--m-table-wash-pad, 4px));
+      background: var(--m-ink);
+      opacity: 0;
+      mask: var(--m-table-wash, none) center / 100% 100% no-repeat;
+      transition: opacity var(--m-duration) var(--m-ease);
+      pointer-events: none;
+    }
+
+    &:hover::before {
+      opacity: 0.09;
+    }
+  }
+
+  /* 斑马纹在 hover 时让位给墨晕 */
+  html.m-ink-ready .m-table--stripe .m-table__row--body:hover {
+    background-color: transparent;
+  }
+}

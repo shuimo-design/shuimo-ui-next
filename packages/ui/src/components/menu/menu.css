@@ -1,0 +1,168 @@
+@layer m.component {
+  .m-menu {
+    /* 左侧留给竖线和墨点的宽度 */
+    --m-menu-gutter: 28px;
+    /* 竖线中心离菜单左边的距离 */
+    --m-menu-line-x: 8px;
+    --m-menu-line-w: 2px;
+    /* 一级项前的墨点直径 */
+    --m-menu-dot: 10px;
+    /* 每级子菜单的缩进 */
+    --m-menu-indent: 16px;
+    --m-menu-root-size: 18px;
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 0 0 0 var(--m-menu-gutter);
+    color: var(--m-fg);
+    list-style: none;
+
+    /* 左侧那一条竖墨线（m.ink 层换成按高度生成的笔触线） */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(var(--m-menu-line-x) - var(--m-menu-line-w) / 2);
+      width: var(--m-menu-line-w);
+      background: var(--m-ink);
+      /* 旧版那条线是淡墨，别压过文字 */
+      opacity: 0.75;
+      mask: linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
+      pointer-events: none;
+    }
+  }
+
+  .m-menu-item {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &::marker {
+      content: "";
+    }
+  }
+
+  .m-menu-item__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 2px var(--m-space-2) 2px 0;
+    color: inherit;
+    line-height: 1.6;
+    cursor: var(--m-cursor-pointer);
+    user-select: none;
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-fg-strong);
+    }
+
+    &:hover > .m-menu-item__label {
+      font-weight: 600;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -2px;
+      border-radius: var(--m-radius);
+    }
+  }
+
+  /* 一级项：字大一号、行距松一些，前面一枚墨点落在竖线上 */
+  .m-menu-item--root > .m-menu-item__row {
+    margin: var(--m-space-3) 0 var(--m-space-1);
+    font-size: var(--m-menu-root-size);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: calc(var(--m-menu-line-x) - var(--m-menu-gutter) - var(--m-menu-dot) / 2);
+      width: var(--m-menu-dot);
+      height: var(--m-menu-dot);
+      border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+      background: var(--m-ink);
+      transform: translateY(-50%);
+      transition:
+        background-color var(--m-duration) var(--m-ease),
+        box-shadow var(--m-duration) var(--m-ease);
+    }
+  }
+
+  /* 当前项在这一支下面：墨点蘸成朱砂，外面套一圈墨 */
+  .m-menu-item--root.m-menu-item--active > .m-menu-item__row::before {
+    background: var(--m-accent);
+    box-shadow: 0 0 0 1.5px var(--m-ink);
+  }
+
+  .m-menu-item--current > .m-menu-item__row {
+    color: var(--m-accent);
+  }
+
+  .m-menu-item--current > .m-menu-item__row > .m-menu-item__label {
+    font-weight: 600;
+  }
+
+  .m-menu-item--disabled > .m-menu-item__row {
+    color: var(--m-fg-muted);
+    cursor: var(--m-cursor-disabled);
+
+    &:hover > .m-menu-item__label {
+      font-weight: inherit;
+    }
+  }
+
+  .m-menu-item--root.m-menu-item--disabled > .m-menu-item__row::before {
+    background: var(--m-disabled);
+  }
+
+  .m-menu-item__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 子菜单高度动画：同 Collapse 的 grid 技巧 */
+  .m-menu-item__sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--m-duration) var(--m-ease);
+  }
+
+  .m-menu-item--expanded > .m-menu-item__sub {
+    grid-template-rows: 1fr;
+  }
+
+  /* 收起：动画结束后再 visibility:hidden，展开时立即可见 */
+  .m-menu-item__sub-list {
+    min-height: 0;
+    margin: 0;
+    padding: 0 0 0 var(--m-menu-indent);
+    overflow: hidden;
+    font-size: var(--m-font-size);
+    list-style: none;
+    visibility: hidden;
+    transition: visibility 0s linear var(--m-duration);
+  }
+
+  .m-menu-item--expanded > .m-menu-item__sub > .m-menu-item__sub-list {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+}
+
+@layer m.ink {
+  /* 竖线换成按菜单高度生成的笔触线：两端收笔、带飞白，颜色仍由 background 决定 */
+  html.m-ink-ready .m-menu::before {
+    /* 画幅比笔画宽（留了晕染余量），按画幅宽度铺满，笔画自然落在中线 */
+    left: calc(var(--m-menu-line-x) - var(--m-menu-line-band, 18px) / 2);
+    width: var(--m-menu-line-band, 18px);
+    mask: var(--m-menu-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-menu-item--root > .m-menu-item__row::before {
+    filter: url(#m-ink-bleed-light);
+  }
+}

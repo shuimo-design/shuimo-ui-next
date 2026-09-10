@@ -1,0 +1,153 @@
+@layer m.component {
+  .m-slider {
+    /* 旧版是 200×20 的一条，宽度用变量改 */
+    --m-slider-w: 200px;
+    --m-slider-h: 20px;
+    /* 轨道那一抹的起笔粗细 */
+    --m-slider-rail-h: 8px;
+    /* 珠子直径 */
+    --m-slider-thumb: 20px;
+    display: inline-block;
+    width: var(--m-slider-w);
+    max-width: 100%;
+    color: var(--m-fg);
+    vertical-align: middle;
+
+    &.m-slider--disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 信息行：min 靠左、百分比紧随其后、max 靠右 */
+  .m-slider__info {
+    display: flex;
+    gap: var(--m-space-2);
+    margin-bottom: var(--m-space-1);
+    font-size: 13px;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .m-slider__percent {
+    color: var(--m-fg-muted);
+  }
+
+  .m-slider__max {
+    margin-left: auto;
+  }
+
+  .m-slider__body {
+    position: relative;
+    height: var(--m-slider-h);
+    cursor: var(--m-cursor-pointer);
+    touch-action: none;
+    user-select: none;
+  }
+
+  .m-slider--disabled .m-slider__body {
+    cursor: var(--m-cursor-disabled);
+  }
+
+  /* 轨道是一抹淡墨（起笔在左、向右收细），已选区间是同一抹的浓墨；m.ink 层把整条轨道套上笔触遮罩 */
+  .m-slider__rail {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: var(--m-slider-rail-h);
+    /* 没有笔触时也做成左粗右细的一抹 */
+    clip-path: polygon(0 4%, 100% 30%, 100% 70%, 0 96%);
+    background: color-mix(in srgb, var(--m-ink) 30%, transparent);
+    transform: translateY(-50%);
+  }
+
+  .m-slider__track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: var(--m-ink);
+    pointer-events: none;
+  }
+
+  /* 珠子：一粒釉面墨珠，左上两点反光 */
+  .m-slider__thumb {
+    position: absolute;
+    top: 50%;
+    width: var(--m-slider-thumb);
+    height: var(--m-slider-thumb);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 27%, var(--m-bg) 0 13%, transparent 19%),
+      radial-gradient(circle at 60% 22%, var(--m-bg) 0 5%, transparent 9%), var(--m-ink);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-ink) 25%, transparent);
+    transform: translateY(-50%);
+    outline: 0;
+    cursor: grab;
+    transition: scale var(--m-duration) var(--m-ease);
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+
+    &.m-slider__thumb--active {
+      scale: 1.08;
+      cursor: grabbing;
+    }
+  }
+
+  .m-slider__tooltip {
+    position: absolute;
+    bottom: calc(100% + var(--m-space-2));
+    left: 50%;
+    padding: 2px var(--m-space-2);
+    border-radius: var(--m-radius);
+    background: var(--m-ink);
+    color: var(--m-bg);
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--m-duration) var(--m-ease);
+  }
+
+  .m-slider__thumb:hover .m-slider__tooltip,
+  .m-slider__thumb:focus-visible .m-slider__tooltip,
+  .m-slider__thumb--active .m-slider__tooltip {
+    opacity: 1;
+  }
+
+  .m-slider--disabled .m-slider__rail {
+    background: color-mix(in srgb, var(--m-fg-muted) 35%, transparent);
+  }
+
+  .m-slider--disabled .m-slider__track {
+    background: var(--m-disabled);
+  }
+
+  .m-slider--disabled .m-slider__thumb {
+    background:
+      radial-gradient(circle at 30% 27%, var(--m-bg) 0 13%, transparent 19%), var(--m-disabled);
+    cursor: var(--m-cursor-disabled);
+
+    .m-slider__tooltip {
+      display: none;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 轨道套上一抹笔触的遮罩，淡墨底和浓墨区间都顺着这一笔走 */
+  html.m-ink-ready .m-slider__rail {
+    height: var(--m-slider-line-band, 28px);
+    clip-path: none;
+    mask: var(--m-slider-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  /* 珠子边缘略毛，像墨滴 */
+  html.m-ink-ready .m-slider__thumb {
+    filter: url(#m-ink-bleed-light);
+  }
+}

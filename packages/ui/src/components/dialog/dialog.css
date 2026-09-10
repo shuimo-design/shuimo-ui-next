@@ -1,0 +1,389 @@
+@layer m.component {
+  /* 根被 Teleport 到 body：变量全部声明在这里，面板与遮罩都在它里面 */
+  .m-dialog {
+    --m-dialog-w: min(560px, calc(100vw - 32px));
+    --m-dialog-h: auto;
+    /* 比浮层（1000）低：弹窗里的下拉、日期面板要能浮在弹窗之上 */
+    --m-dialog-z: 900;
+    --m-dialog-mask-bg: rgb(0 0 0 / 0.3);
+    --m-dialog-duration: calc(var(--m-duration) * 1.25);
+    position: fixed;
+    inset: 0;
+    z-index: var(--m-dialog-z);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--m-space-4);
+    color: var(--m-fg);
+    font-family: var(--m-font-sans);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    /* 根自己不淡入淡出：根一半透明，里面的遮罩就被隔在一个独立的合成组里，磨砂（backdrop-filter）看不到页面，
+       要等根完全不透明那一刻才突然糊上——就是"蒙版最后才出现"的那一下。这条 transition 只是让 <Transition>
+       知道该等多久，真正的淡入淡出写在遮罩和面板包裹层上 */
+    transition: opacity var(--m-dialog-duration) var(--m-ease);
+  }
+
+  .m-dialog__active {
+    display: inline-block;
+  }
+
+  .m-dialog__mask {
+    position: absolute;
+    inset: 0;
+    transition:
+      background-color var(--m-dialog-duration) var(--m-ease),
+      backdrop-filter var(--m-dialog-duration) var(--m-ease);
+  }
+
+  .m-dialog--masked .m-dialog__mask {
+    background: var(--m-dialog-mask-bg);
+    backdrop-filter: blur(8px);
+  }
+
+  /* 面板外面包一层：尺寸就是面板的尺寸，回纹、小景、开合动画都挂在它上面 */
+  .m-dialog__frame {
+    position: relative;
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+    transition:
+      opacity var(--m-dialog-duration) var(--m-ease),
+      transform var(--m-dialog-duration) var(--m-ease);
+  }
+
+  .m-dialog__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: var(--m-dialog-w);
+    height: var(--m-dialog-h);
+    max-width: 100%;
+    max-height: 100%;
+    padding: var(--m-space-6);
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: var(--m-bg);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.18);
+    outline: 0;
+  }
+
+  .m-dialog__scene,
+  .m-dialog__close-splash,
+  .m-dialog__close-tassel {
+    display: none;
+  }
+
+  .m-dialog__close {
+    position: absolute;
+    top: var(--m-space-3);
+    right: var(--m-space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font-size: 16px;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .m-dialog__header {
+    margin: 0 0 var(--m-space-4);
+    padding-right: var(--m-space-6);
+    color: var(--m-fg-strong);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .m-dialog__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .m-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--m-space-2);
+    margin-top: var(--m-space-4);
+  }
+
+  /* 开合：遮罩的底色和磨砂一起渐变（磨砂从 0 糊到 8px，不是最后一下突然出现），面板淡入、从略低处浮上来 */
+  .m-dialog-enter-from .m-dialog__mask,
+  .m-dialog-leave-to .m-dialog__mask {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+
+  .m-dialog-enter-from .m-dialog__frame {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+
+  .m-dialog-leave-to .m-dialog__frame {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@layer m.ink {
+  /* 面板套一圈笔触纸框（useBrushBorder 的 ::before），原有细边、圆角让位；
+     旧版底图接近 3:2，高度给足、上方留出小景的位置，别成一条扁片 */
+  html.m-ink-ready .m-dialog__panel {
+    --m-dialog-lattice-size: 64px;
+    /* 挂牌的石板色：偏冷的灰，只带一点蓝（老素材牌底色 rgb(37 42 52)），不是暖墨色 */
+    --m-dialog-slate: color-mix(in srgb, var(--m-ink) 86%, var(--m-info));
+    min-height: 360px;
+    padding: 52px 44px 40px;
+    border-color: transparent;
+    border-radius: 0;
+    /* 老版是一张平铺在蒙版上的纸，没有投影；而且面板下面有 clip-path 挖角，投影会被裁成一块硬边灰方块 */
+    box-shadow: none;
+    /* 挂牌探出框外 */
+    overflow: visible;
+    /* 四个角各挖掉一块（旧版那里没铺纸、透出遮罩）：
+       左上——回纹竖杠右沿（19.5px）以左、横带底沿（25.8px）以上是空的，再加上竖杠右上角到山脚线露出面板上沿的那个小楔子；
+       右上——回纹竖杠（右 17.9px）以右、横带底（18.2px）以上整块是空的；
+       左下——粗竖杠（18.65px）以左、长横线（底上 17.9px）以下整块是空的；
+       右下——粗竖杠（右 18.74px）以右、长横线（底上 18px）以下整块是空的；
+       其余方向各放宽 100px 别裁到挂牌和笔触边框 */
+    clip-path: polygon(
+      19.5px 25.8px,
+      19.5px 7.9px,
+      33px 0,
+      33px -400px,
+      calc(100% - 17.9px) -400px,
+      calc(100% - 17.9px) 18.2px,
+      calc(100% + 100px) 18.2px,
+      calc(100% + 100px) calc(100% - 18px),
+      calc(100% - 18.74px) calc(100% - 18px),
+      calc(100% - 18.74px) calc(100% + 100px),
+      18.65px calc(100% + 100px),
+      18.65px calc(100% - 17.9px),
+      -100px calc(100% - 17.9px),
+      -100px 25.8px
+    );
+  }
+
+  /* 四角回纹：一个伪元素叠四张角饰遮罩（四张图案各不相同），各摆一角；画幅 64px、往框外探 12px，留给探出框外的部分。
+     挂在包裹层上（面板被 clip-path 裁过，伪元素会跟着被裁） */
+  html.m-ink-ready .m-dialog__frame::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    z-index: 2;
+    background: var(--m-ink);
+    mask-image:
+      var(--m-dialog-lattice-tl), var(--m-dialog-lattice-tr), var(--m-dialog-lattice-br),
+      var(--m-dialog-lattice-bl);
+    mask-position:
+      left top,
+      right top,
+      right bottom,
+      left bottom;
+    mask-size: var(--m-dialog-lattice-size) var(--m-dialog-lattice-size);
+    mask-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  /* 标题用手写体，像题在画上的款 */
+  html.m-ink-ready .m-dialog__header {
+    font-family: var(--m-font-brush);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+
+  /* 左上角的题头小景：软边远山、朱砂日、枯树、飞鸟，山脚踩在左上角回纹的竖杠上（山体是纸色实心，会把框线盖住），
+     山下三道水纹画在 viewBox 之外、落进框里。挂在包裹层上，压在面板之上 */
+  html.m-ink-ready .m-dialog__frame > .m-dialog__scene {
+    display: block;
+    position: absolute;
+    left: 2%;
+    bottom: calc(100% - 3px);
+    z-index: 3;
+    /* 旧版山景从左上角一直铺到弹窗一半宽，山又矮又长 */
+    width: 50%;
+    color: var(--m-ink);
+    pointer-events: none;
+
+    & > svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  /* 关闭按钮做成挂在右边竖框线上的石牌（照老素材 model-close.png 描的）：尖顶五边形的牌身、一根细绳吊着（绳头一个结钉在框线上）、
+     牌顶一团霜溅、牌底一枚坠子，整个慢慢晃。整套都是冷灰蓝一个色系——绳、结、坠子也是灰蓝，不是墨黑；
+     老素材是张位图，边缘都是软的，整个按钮加一圈很淡的同色投影把硬边糊掉。
+     按钮本身透明，牌身画在 ::before 上——clip-path 只裁牌身，不裁绳和坠子 */
+  html.m-ink-ready .m-dialog__panel > .m-dialog__close {
+    /* 绳、结、坠子的色：灰蓝掺纸色 */
+    --m-dialog-cord: color-mix(in srgb, var(--m-dialog-slate) 62%, var(--m-bg));
+    position: absolute;
+    /* 挂在右边竖框线上（不是上框线）：牌居中骑在线上、线从牌后面穿过去，牌顶离框线约 40px，紧挨着右上角回纹下面 */
+    top: 42px;
+    right: -11px;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 22px;
+    height: 36px;
+    /* 叉心在牌高一半略下（老素材约 53%） */
+    padding: 13px 0 0;
+    border-radius: 0;
+    background: none;
+    color: color-mix(in srgb, var(--m-bg) 78%, var(--m-dialog-slate));
+    filter: drop-shadow(0 0 0.8px color-mix(in srgb, var(--m-dialog-slate) 40%, transparent));
+    /* 绕绳结摆：幅度和节奏照旧版（10° → 15° → 0 → -10° → -15° → 0，8 秒一圈，匀速） */
+    transform-origin: 50% -9px;
+    animation: m-dialog-wave 8s linear infinite both;
+
+    /* 老版鼠标移上去不变色；这里只把牌身微微提亮当反馈，叉和小点不跟着换成主题色 */
+    &:hover {
+      color: color-mix(in srgb, var(--m-bg) 78%, var(--m-dialog-slate));
+    }
+
+    /* 牌身：冷灰蓝的石板，尖顶占三成；上浅下深（不是斜向的），左沿压一道暗边；叉的左下方撒两三粒浅色小点 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      clip-path: polygon(50% 0, 100% 30%, 100% 100%, 0 100%, 0 30%);
+      background:
+        radial-gradient(circle 0.7px at 37% 62%, currentColor 90%, transparent),
+        radial-gradient(circle 0.5px at 31% 68%, currentColor 90%, transparent),
+        radial-gradient(circle 0.6px at 42% 72%, currentColor 90%, transparent),
+        linear-gradient(
+          178deg,
+          color-mix(in srgb, var(--m-dialog-slate) 58%, var(--m-bg)),
+          color-mix(in srgb, var(--m-dialog-slate) 82%, var(--m-bg)) 45%,
+          color-mix(in srgb, var(--m-dialog-slate) 100%, var(--m-ink)) 100%
+        );
+      box-shadow: inset 1.5px 0 1px -0.5px color-mix(in srgb, var(--m-ink) 55%, transparent);
+      transition: filter var(--m-duration) var(--m-ease);
+    }
+
+    /* 绳：从牌尖往上一小段，绳头一个横着的结（老素材结心在牌尖上方约 9px，结上面还露一小截绳） */
+    &::after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      width: 8px;
+      height: 13px;
+      background:
+        radial-gradient(ellipse 3.5px 2px at 50% 4px, var(--m-dialog-cord) 98%, transparent),
+        linear-gradient(var(--m-dialog-cord), var(--m-dialog-cord)) center / 1.5px 100% no-repeat;
+      transform: translateX(-50%);
+    }
+
+    /* 叉：小小一个（老素材约 9px），浅灰蓝、笔画偏粗，像用白粉笔在石板上画的 */
+    & > svg {
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
+      stroke: currentColor;
+      stroke-width: 5;
+    }
+
+    &:hover::before {
+      filter: brightness(1.18);
+    }
+  }
+
+  /* 牌顶的墨花：七八朵分开的浅灰蓝尖瓣墨花散在屋檐两侧和肩头（形状见生成器），压在屋檐线上、半透，
+     顶边放在牌尖上方 7px（生成器按这个画幅定的）。它在牌身之上、叉之下 */
+  html.m-ink-ready .m-dialog__close-splash {
+    display: block;
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    z-index: 1;
+    width: 44px;
+    height: 28px;
+    background: color-mix(in srgb, var(--m-dialog-slate) 40%, var(--m-bg));
+    opacity: 0.9;
+    mask: var(--m-dialog-splash) center / 100% 100% no-repeat;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  /* 牌底：先垂一小段绳，绳头一枚往右弯的小坠——都是半透的灰蓝 */
+  html.m-ink-ready .m-dialog__close-tassel {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 1.5px;
+    height: 3px;
+    margin-left: -0.75px;
+    background: var(--m-dialog-cord);
+    pointer-events: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 4.5px;
+      height: 11px;
+      margin-left: -2.25px;
+      border-radius: 50% 50% 50% 50% / 25% 25% 75% 75%;
+      background: var(--m-dialog-slate);
+      opacity: 0.8;
+      transform: rotate(12deg);
+      transform-origin: 50% 0;
+    }
+  }
+
+  @keyframes m-dialog-wave {
+    0%,
+    50%,
+    100% {
+      transform: rotate(0deg);
+    }
+
+    10% {
+      transform: rotate(10deg);
+    }
+
+    30% {
+      transform: rotate(15deg);
+    }
+
+    60% {
+      transform: rotate(-10deg);
+    }
+
+    80% {
+      transform: rotate(-15deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.m-ink-ready .m-dialog__panel > .m-dialog__close {
+      animation: none;
+    }
+  }
+}

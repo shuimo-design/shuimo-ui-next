@@ -1,0 +1,43 @@
+@layer m.component {
+  .m-stamp {
+    --m-stamp-color: var(--m-seal);
+    --m-stamp-font: var(--m-font-seal);
+    --m-stamp-rotate: 0deg;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 0;
+    transform: rotate(var(--m-stamp-rotate));
+    transform-origin: center;
+    /* 印泥盖在纸上是叠色，不是盖色：正片叠底让它压在宣纸纹理上还看得见纸 */
+    mix-blend-mode: multiply;
+    /* 滤镜链是这个组件唯一贵的地方：屏幕外的章根本不栅格化，尺寸由组件写进变量占位 */
+    content-visibility: auto;
+    contain-intrinsic-size: auto var(--m-stamp-w, 120px) auto var(--m-stamp-h, 120px);
+  }
+
+  /* 暗色纸上叠底会把红吞掉，换回正常盖色 */
+  :root[data-theme="dark"] .m-stamp {
+    mix-blend-mode: normal;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme="system"] .m-stamp {
+      mix-blend-mode: normal;
+    }
+  }
+
+  .m-stamp__svg {
+    display: block;
+    overflow: visible;
+    font-family: var(--m-stamp-font);
+  }
+
+  .m-stamp__ink {
+    fill: var(--m-stamp-color);
+  }
+
+  /* 文字全部走 transform 摆位，字号固定在探测字号 */
+  .m-stamp__glyph {
+    user-select: none;
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "name": "MGrid",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MGrid"
+  },
+  "attributes": [
+    {
+      "name": "w",
+      "description": "格子的默认宽 px；格子自己传了 w 以自己的为准",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "h",
+      "description": "格子的默认高 px；格子自己传了 h 以自己的为准",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "gap",
+      "description": "格子之间的间距，数字按 px，字符串原样用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "colGap",
+      "description": "横向排列时格子之间的间距，优先于 gap",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "rowGap",
+      "description": "纵向排列时格子之间的间距，优先于 gap",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "gapRotate",
+      "description": "横向排列时每道分隔的倾斜角度（度），第 i 项作用在第 i 和 i+1 个格子之间；正值为 \"/\"，负值为 \"\\\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number[] | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "排列方向，默认 row",
+      "default": "\"row\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "\"row\" | \"column\" | undefined"
+      }
+    },
+    {
+      "name": "cols",
+      "description": "列数；传了就切成等宽的网格，格子用 span / offset 占位，gapRotate 不再生效",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "GridCols | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MCell"
+    }
+  ]
+}

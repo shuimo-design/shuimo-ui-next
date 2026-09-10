@@ -1,0 +1,174 @@
+@layer m.component {
+  .m-pagination {
+    /* 页码按钮的边长，也是朱砂印的尺寸 */
+    --m-pagination-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--m-space-1);
+    padding: 5px;
+    color: var(--m-fg);
+    white-space: nowrap;
+    user-select: none;
+
+    &.m-pagination--disabled {
+      color: var(--m-fg-muted);
+    }
+  }
+
+  .m-pagination__pages {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .m-pagination__page,
+  .m-pagination__arrow {
+    position: relative;
+    /* 自成一个层叠上下文：m.ink 层的朱砂印用 z-index:-1 垫在数字后面，不能掉到页面背景底下去 */
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--m-pagination-size);
+    height: var(--m-pagination-size);
+    padding: 0 var(--m-space-1);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: var(--m-cursor-pointer);
+    transition:
+      color var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
+
+    &:hover:not(:disabled) {
+      color: var(--m-info);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      color: var(--m-fg-muted);
+      opacity: 0.6;
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 当前页：朱砂色加重墨；m.ink 层再衬一枚印 */
+  .m-pagination__page--current {
+    color: var(--m-accent);
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+      color: var(--m-accent);
+    }
+  }
+
+  .m-pagination__fold {
+    letter-spacing: 1px;
+  }
+
+  .m-pagination__arrow-icon {
+    font-size: 16px;
+  }
+
+  /* 按下去往翻页方向挪 2px，旧版的手感 */
+  .m-pagination__arrow--prev:active:not(:disabled) {
+    transform: translateX(-2px);
+  }
+
+  .m-pagination__arrow--next:active:not(:disabled) {
+    transform: translateX(2px);
+  }
+
+  .m-pagination__total {
+    margin: 0 var(--m-space-1);
+  }
+
+  .m-pagination__jumper {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    margin: 0 var(--m-space-1);
+  }
+
+  /* 跳页框只装两三位数，收窄；数字输入的上下箭头也去掉 */
+  .m-pagination .m-pagination__input {
+    --m-input-h: var(--m-pagination-size);
+    --m-input-px: var(--m-space-2);
+    width: 56px;
+
+    .m-input__native {
+      text-align: center;
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        appearance: none;
+        margin: 0;
+      }
+    }
+  }
+
+  .m-pagination .m-pagination__select {
+    --m-select-h: var(--m-pagination-size);
+    --m-select-px: var(--m-space-2);
+    width: 112px;
+    margin: 0 var(--m-space-1);
+  }
+}
+
+@layer m.ink {
+  /* 当前页衬一枚毛边朱砂印，数字反白 */
+  html.m-ink-ready .m-pagination__page--current {
+    color: var(--m-bg);
+
+    &:hover:not(:disabled) {
+      color: var(--m-bg);
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-pagination-seal-pad, 0px) * -1);
+      z-index: -1;
+      background: var(--m-accent);
+      mask: var(--m-pagination-seal) center / 100% 100% no-repeat;
+      pointer-events: none;
+    }
+
+    &:disabled::before {
+      background: var(--m-disabled);
+    }
+  }
+
+  html.m-ink-ready .m-pagination--disabled .m-pagination__page--current {
+    color: var(--m-fg-muted);
+  }
+
+  /* 翻页箭头换成一笔写出的尖角：藏掉线性图标，按钮上直接铺墨迹遮罩 */
+  html.m-ink-ready .m-pagination__arrow-icon {
+    visibility: hidden;
+  }
+
+  html.m-ink-ready .m-pagination__arrow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    mask: var(--m-pagination-chevron-right) center / 22px 22px no-repeat;
+    pointer-events: none;
+  }
+
+  html.m-ink-ready .m-pagination__arrow--prev::after {
+    mask-image: var(--m-pagination-chevron-left);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "MSkeletonItem",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSkeletonItem"
+  },
+  "attributes": [
+    {
+      "name": "variant",
+      "description": "占位块形状：text 文字行、h1 / h3 标题、circle 圆、rect 矩形、image 带图片记号的矩形、button 按钮",
+      "default": "\"text\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SkeletonItemVariant | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": []
+}

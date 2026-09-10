@@ -1,0 +1,122 @@
+{
+  "name": "MTree",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTree"
+  },
+  "attributes": [
+    {
+      "name": "data",
+      "description": "树数据",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "TreeNodeData[]"
+      }
+    },
+    {
+      "name": "fieldNames",
+      "description": "字段名映射",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeFieldNames | undefined"
+      }
+    },
+    {
+      "name": "checkable",
+      "description": "显示勾选框",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "checkStrictly",
+      "description": "勾选时父子不联动（各自独立）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "defaultExpandAll",
+      "description": "初始展开全部",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "selectable",
+      "description": "点击节点文字可选中",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "expandedKeys",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeKey[] | undefined"
+      }
+    },
+    {
+      "name": "checkedKeys",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeKey[] | undefined"
+      }
+    },
+    {
+      "name": "selectedKey",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeKey | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:expandedKeys"
+    },
+    {
+      "name": "update:checkedKeys"
+    },
+    {
+      "name": "update:selectedKey"
+    },
+    {
+      "name": "nodeClick",
+      "description": "点击节点行（禁用节点不触发）；键盘回车 / 空格也算"
+    },
+    {
+      "name": "check",
+      "description": "勾选态变化，带上变化后的全部已勾选 key"
+    },
+    {
+      "name": "expand",
+      "description": "展开 / 收起"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "自定义节点文字，作用域 { node, level }"
+    }
+  ]
+}

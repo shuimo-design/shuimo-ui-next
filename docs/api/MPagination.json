@@ -1,0 +1,128 @@
+{
+  "name": "MPagination",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MPagination"
+  },
+  "attributes": [
+    {
+      "name": "total",
+      "description": "数据总条数，默认 0",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "pageSizes",
+      "description": "每页条数的候选，给 sizes 区域用，默认 [10, 20, 30, 40, 50, 100]",
+      "default": "[10, 20, 30, 40, 50, 100]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number[] | undefined"
+      }
+    },
+    {
+      "name": "layout",
+      "description": "区域排列，逗号分隔：prev / pager / next / jumper / sizes / total；默认 \"prev, pager, next, jumper, total\"",
+      "default": "\"prev, pager, next, jumper, total\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "foldedMaxPageBtn",
+      "description": "折叠后最多显示的页码个数（首末页算在内，偶数会补成奇数），默认 5",
+      "default": "5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "maxPageBtn",
+      "description": "总页数不超过它就全部平铺不折叠，默认 10",
+      "default": "10",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "showEdgePageNum",
+      "description": "折叠时始终显示首页和末页，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "hideOnSinglePage",
+      "description": "只有一页时整个不渲染",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "current",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "pageSize",
+      "default": "10",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "description": "当前页变化"
+    },
+    {
+      "name": "update:current"
+    },
+    {
+      "name": "update:pageSize"
+    },
+    {
+      "name": "sizeChange",
+      "description": "每页条数变化"
+    }
+  ],
+  "slots": [
+    {
+      "name": "total",
+      "description": "替代「共 N 条」"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "name": "MConfirm",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MConfirm"
+  },
+  "attributes": [
+    {
+      "name": "content",
+      "description": "正文；也可以用默认插槽",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题，不传就不渲染",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "mask",
+      "description": "遮罩配置，默认 { show: true, clickClose: true }",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ConfirmMask | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "传送目标：true 到 body、false 原地渲染、字符串为选择器；默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | boolean | undefined"
+      }
+    },
+    {
+      "name": "confirmText",
+      "description": "确定按钮文字，默认「确定」",
+      "default": "\"确定\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "cancelText",
+      "description": "取消按钮文字，默认「取消」",
+      "default": "\"取消\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "open",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "confirm",
+      "description": "点了确定"
+    },
+    {
+      "name": "update:open"
+    },
+    {
+      "name": "cancel",
+      "description": "点了取消、遮罩或按了 Esc"
+    },
+    {
+      "name": "closed",
+      "description": "离场动画结束"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替代 content"
+    },
+    {
+      "name": "footer",
+      "description": "替代底部按钮，参数里给了确定 / 取消两个方法"
+    }
+  ]
+}

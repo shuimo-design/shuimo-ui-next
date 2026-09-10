@@ -1,75 +1,88 @@
 @layer m.component {
   .m-rice-paper {
+    --m-rice-paper-tile: 384px;
+    --m-rice-paper-gold-tile: 768px;
+    /* 远山：旧站整组山 0.3 透明度（图本身近黑）；墨色掺一点纸的青色，暗色主题下 --m-ink 是灰白、掺黑后成灰，正好是旧 dark 那组的调子 */
+    --m-rice-paper-landscape-opacity: 0.55;
+    --m-rice-paper-landscape-color: color-mix(in srgb, var(--m-ink) 70%, var(--m-paper-tint));
     position: relative;
     isolation: isolate;
-    overflow: hidden;
-    background: rgb(var(--m-paper-rgb));
+    background: rgb(var(--m-rice-paper-rgb, var(--m-paper-rgb)));
     color: var(--m-fg);
+
+    /* 纹理铺在一层伪元素上，独立淡入，像墨洇进纸 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      /* 洒金在上、纸纹在下，各自按自己的单元平铺 */
+      background-image: var(--m-rice-paper-gold, none), var(--m-rice-paper-texture, none);
+      background-size:
+        var(--m-rice-paper-gold-tile) var(--m-rice-paper-gold-tile),
+        var(--m-rice-paper-tile) var(--m-rice-paper-tile);
+      opacity: 0;
+      transition: opacity calc(var(--m-duration) * 3) var(--m-ease);
+      pointer-events: none;
+    }
+
+    &.m-rice-paper--ready::before {
+      opacity: 1;
+    }
+
+    &.m-rice-paper--deckle {
+      mask: var(--m-rice-paper-mask) center / 100% 100% no-repeat;
+    }
+
+    &.m-rice-paper--full-screen {
+      width: 100vw;
+      height: 100vh;
+      overflow: auto;
+    }
   }
 
-  .m-rice-paper__paper {
+  /* 远山层：贴在纸的底部，裁在纸内（视差会把层往外推几像素），不接鼠标 */
+  .m-rice-paper__landscape {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
+    overflow: hidden;
+    pointer-events: none;
     opacity: 0;
     transition: opacity calc(var(--m-duration) * 3) var(--m-ease);
   }
 
-  .m-rice-paper--ready .m-rice-paper__paper {
-    opacity: 1;
+  .m-rice-paper--ready .m-rice-paper__landscape {
+    opacity: var(--m-rice-paper-landscape-opacity);
   }
 
-  .m-rice-paper__mountains {
+  /* 每座山是一张 SVG 当遮罩、上墨色：换主题只换颜色，不重新生成。
+     山是淡墨，近山直接叠在远山上会透出远山，所以先用实心剪影铺一层纸色把后面挡住，再在上面上墨；
+     整组山的透明度挂在外层容器上，容器是整体合成的，垫层不会露出来 */
+  .m-rice-paper__ridge {
     position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .m-rice-paper__layer {
-    position: absolute;
-    display: block;
+    bottom: 0;
     will-change: transform;
-    /* 山体白色遮挡多边形靠 multiply 变透明 */
-    mix-blend-mode: multiply;
-    /* 洇入：远山先来、近山后到，从模糊到清晰 */
-    opacity: 0;
-    filter: blur(8px);
-    transition:
-      opacity calc(var(--m-duration) * 4) var(--m-ease),
-      filter calc(var(--m-duration) * 4) var(--m-ease);
-    transition-delay: calc(var(--m-duration) * 1.5 * var(--m-layer-index, 0));
-  }
 
-  .m-rice-paper--ready .m-rice-paper__layer {
-    opacity: 1;
-    filter: blur(0);
-  }
-
-  :root[data-theme="dark"] .m-rice-paper__layer {
-    filter: invert(1) blur(8px);
-    mix-blend-mode: screen;
-  }
-
-  :root[data-theme="dark"] .m-rice-paper--ready .m-rice-paper__layer {
-    filter: invert(1) blur(0);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .m-rice-paper__layer {
-      filter: invert(1) blur(8px);
-      mix-blend-mode: screen;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
     }
 
-    :root:not([data-theme="light"]) .m-rice-paper--ready .m-rice-paper__layer {
-      filter: invert(1) blur(0);
+    &::before {
+      background: rgb(var(--m-rice-paper-rgb, var(--m-paper-rgb)));
+      mask: var(--m-rice-paper-ridge-silhouette) center / 100% 100% no-repeat;
+    }
+
+    &::after {
+      background: var(--m-rice-paper-landscape-color);
+      mask: var(--m-rice-paper-ridge) center / 100% 100% no-repeat;
     }
   }
 
   .m-rice-paper__content {
     position: relative;
-    z-index: 1;
     min-height: inherit;
   }
 }

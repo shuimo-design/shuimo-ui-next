@@ -1,0 +1,260 @@
+@layer m.component {
+  .m-select {
+    --m-select-h: 36px;
+    --m-select-px: var(--m-space-3);
+    --m-select-border: var(--m-border);
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    max-width: 320px;
+    color: var(--m-fg);
+
+    &.m-select--open,
+    &.m-select--focused {
+      --m-select-border: var(--m-accent);
+    }
+
+    &.m-select--disabled {
+      --m-select-border: var(--m-disabled);
+      color: var(--m-fg-muted);
+    }
+  }
+
+  .m-select__trigger {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--m-select-h);
+    padding: 0 var(--m-select-px);
+    gap: var(--m-space-2);
+    border: 1px solid var(--m-select-border);
+    border-radius: var(--m-radius);
+    background: transparent;
+    cursor: var(--m-cursor-pointer);
+    outline: 0;
+    transition: border-color var(--m-duration) var(--m-ease);
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+  }
+
+  .m-select--filterable .m-select__trigger {
+    cursor: text;
+  }
+
+  .m-select--disabled .m-select__trigger {
+    background: color-mix(in srgb, var(--m-disabled) 40%, transparent);
+    cursor: var(--m-cursor-disabled);
+  }
+
+  .m-select--multiple .m-select__trigger {
+    padding-block: var(--m-space-1);
+  }
+
+  .m-select__content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--m-space-1);
+    min-width: 0;
+  }
+
+  .m-select__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .m-select__placeholder {
+    color: var(--m-fg-muted);
+    opacity: 0.8;
+  }
+
+  .m-select__search {
+    flex: 1 1 60px;
+    min-width: 60px;
+    height: calc(var(--m-select-h) - 2px);
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    cursor: inherit;
+
+    &::placeholder {
+      color: var(--m-fg-muted);
+      opacity: 0.8;
+    }
+  }
+
+  .m-select--multiple .m-select__search {
+    height: 20px;
+  }
+
+  .m-select__prefix,
+  .m-select__suffix {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-1);
+    flex: none;
+    color: var(--m-fg-muted);
+  }
+
+  .m-select__arrow {
+    display: inline-flex;
+    width: 1em;
+    height: 1em;
+    transition: transform var(--m-duration) var(--m-ease);
+  }
+
+  .m-select__arrow-ink {
+    display: none;
+  }
+
+  .m-select--open .m-select__arrow {
+    transform: rotate(180deg);
+  }
+
+  .m-select__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+  }
+
+  .m-select__dropdown {
+    /* 下拉被 Teleport 到 body，继承不到根上的变量，这里重新声明一份 */
+    --m-select-px: var(--m-space-2);
+    /* 选项底色：悬停淡灰、选中深一档，都是半透明墨，深色主题下自动跟着变 */
+    --m-select-option-hover: color-mix(in srgb, var(--m-ink) 10%, transparent);
+    --m-select-option-selected: color-mix(in srgb, var(--m-ink) 20%, transparent);
+    padding: var(--m-space-1) 0;
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: var(--m-bg);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+  }
+
+  .m-select__options {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .m-select__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--m-space-2);
+    min-height: 32px;
+    margin: var(--m-space-1);
+    padding: 2px var(--m-select-px);
+    border-radius: 5px;
+    cursor: var(--m-cursor-pointer);
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &.m-select__option--active {
+      background: var(--m-select-option-hover);
+    }
+
+    &.m-select__option--selected {
+      background: var(--m-select-option-selected);
+    }
+
+    &.m-select__option--disabled {
+      color: var(--m-fg-muted);
+      opacity: 0.6;
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-select__option-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .m-select__check {
+    flex: none;
+    color: var(--m-accent);
+  }
+
+  .m-select__empty,
+  .m-select__loading,
+  .m-select__fetching {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m-space-2);
+    padding: var(--m-space-3);
+    color: var(--m-fg-muted);
+  }
+
+  .m-select__fetching {
+    padding: var(--m-space-1);
+  }
+
+  .m-select__loading .m-icon,
+  .m-select__fetching .m-icon {
+    animation: m-select-spin 1s linear infinite;
+  }
+
+  @keyframes m-select-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 笔触边框挂在 trigger 上（useBrushBorder），打开 / 聚焦 / 禁用只换墨色 */
+  html.m-ink-ready .m-select--open .m-select__trigger,
+  html.m-ink-ready .m-select--focused .m-select__trigger {
+    --m-ink: var(--m-accent);
+  }
+
+  html.m-ink-ready .m-select--disabled .m-select__trigger {
+    /* 禁用底色和 --m-disabled 几乎同色，笔触改成半透明灰墨才看得见 */
+    --m-ink: color-mix(in srgb, var(--m-fg-muted) 55%, transparent);
+  }
+
+  /* 下拉箭头换成一笔写出的尖角 */
+  html.m-ink-ready .m-select__arrow-icon {
+    display: none;
+  }
+
+  html.m-ink-ready .m-select__arrow-ink {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    mask: var(--m-ink-mark-chevron-down) center / 100% 100% no-repeat;
+  }
+
+  /* 下拉面板：笔触边框也挂在面板容器上（useBrushBorder），去掉普通皮肤的投影，像旧版那样只靠一圈手绘线 */
+  html.m-ink-ready .m-select__dropdown {
+    box-shadow: none;
+    border-radius: 0;
+  }
+}

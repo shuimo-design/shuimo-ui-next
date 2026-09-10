@@ -1,55 +1,151 @@
 @layer m.component {
   .m-button {
-    --m-button-h: 36px;
-    --m-button-px: var(--m-space-4);
+    --m-button-height: 32px;
+    /* 最小宽度：短文字的按钮也保持一块像样的墨块 */
+    --m-button-width: 32px;
+    --m-button-px: 15px;
+    /* 实色块配纸色字：亮色主题用纸底色，暗色主题纸底色太深，改用前景色 */
+    --m-button-color: light-dark(var(--m-bg), var(--m-fg));
+    --m-button-bg-color: var(--m-neutral);
+    /* 悬停时色块提亮一档（旧库每种类型都是往浅一号的同色系走） */
+    --m-button-bg-hover-color: var(--m-neutral-hover);
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: var(--m-button-h);
+    gap: var(--m-space-2);
+    height: var(--m-button-height);
+    min-width: var(--m-button-width);
     padding: 0 var(--m-button-px);
-    border: 1px solid var(--m-border);
+    border: 1px solid color-mix(in srgb, var(--m-ink) 70%, transparent);
     border-radius: var(--m-radius);
-    background: transparent;
-    color: var(--m-fg);
+    background: var(--m-button-scale, none) 0 0 / var(--m-button-scale-size, 19px 9.5px) repeat
+      var(--m-button-bg-color);
+    color: var(--m-button-color);
     font: inherit;
+    line-height: 1;
+    text-align: center;
     text-decoration: none;
+    white-space: nowrap;
     cursor: var(--m-cursor-pointer);
     transition:
       color var(--m-duration) var(--m-ease),
-      background-color var(--m-duration) var(--m-ease);
+      background-color var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
 
-    &:hover:not(.m-button--disabled) {
-      color: var(--m-accent);
+    &:hover:not(.m-button--disabled, .m-button--loading) {
+      background-color: var(--m-button-bg-hover-color);
     }
 
+    /* 按下去：色块轻轻沉一下 */
+    &:active:not(.m-button--disabled, .m-button--loading) {
+      transform: translateY(1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+
+    /* 其余类型：悬停往浅一号的同色系走 */
     &.m-button--primary,
-    &.m-button--confirm {
-      background: var(--m-accent);
-      border-color: var(--m-accent);
-      color: var(--m-color-gaoyu);
+    &.m-button--confirm,
+    &.m-button--error,
+    &.m-button--warning {
+      --m-button-bg-hover-color: color-mix(in srgb, var(--m-button-bg-color), var(--m-bg) 22%);
     }
 
+    &.m-button--primary {
+      --m-button-bg-color: var(--m-info);
+    }
+
+    &.m-button--confirm {
+      --m-button-bg-color: var(--m-success);
+    }
+
+    &.m-button--error {
+      --m-button-bg-color: var(--m-danger);
+    }
+
+    &.m-button--warning {
+      --m-button-bg-color: var(--m-warn);
+    }
+
+    /* 文字型：无底无框，悬停蘸朱砂 */
     &.m-button--text {
+      --m-button-color: var(--m-fg);
+      --m-button-bg-color: transparent;
+      --m-button-bg-hover-color: transparent;
+      --m-button-scale: none;
       border-color: transparent;
+
+      &:hover:not(.m-button--disabled, .m-button--loading) {
+        color: var(--m-accent);
+      }
     }
 
     &.m-button--disabled {
-      color: var(--m-fg-muted);
-      background: var(--m-disabled);
-      border-color: var(--m-disabled);
+      --m-button-color: var(--m-fg-muted);
+      --m-button-bg-color: var(--m-disabled);
+      --m-button-bg-hover-color: var(--m-disabled);
       cursor: var(--m-cursor-disabled);
+
+      &.m-button--text {
+        --m-button-bg-color: transparent;
+      }
+    }
+
+    &.m-button--loading {
+      cursor: var(--m-cursor-auto);
+    }
+  }
+
+  .m-button__label {
+    display: inline-block;
+  }
+
+  .m-button__spinner {
+    font-size: 1em;
+    animation: m-button-spin 1s linear infinite;
+  }
+
+  @keyframes m-button-spin {
+    to {
+      transform: rotate(360deg);
     }
   }
 }
 
-/* 水墨皮肤：笔触边框由 useBrushBorder 注入（见 ink/stroke/stroke.css），这里只处理墨晕 */
+/* 水墨皮肤：笔触边框由 useBrushBorder 注入（见 ink/stroke/stroke.css），
+   色块挪到 ::after 上按毛边遮罩填色并晕染，文字留在上层保持清晰 */
 @layer m.ink {
-  html.m-ink-ready .m-button {
-    filter: url(#m-ink-bleed-light);
+  html.m-ink-ready .m-button:not(.m-button--text) {
+    /* 自己成一个层叠上下文，色块才能用负 z-index 垫到笔触框和文字下面而不掉到父元素背景后 */
+    isolation: isolate;
+    border-color: transparent;
+    background: transparent;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-button-shape-pad, 0px) * -1);
+      z-index: -1;
+      background: var(--m-button-scale, none) 0 0 / var(--m-button-scale-size, 19px 9.5px) repeat
+        var(--m-button-bg-color);
+      border-radius: var(--m-radius);
+      mask: var(--m-button-shape, none) center / 100% 100% no-repeat;
+      filter: url(#m-ink-bleed-light);
+      pointer-events: none;
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+
+    &:hover:not(.m-button--disabled, .m-button--loading)::after {
+      background-color: var(--m-button-bg-hover-color);
+    }
   }
 
-  html.m-ink-ready .m-button--primary,
-  html.m-ink-ready .m-button--confirm {
-    --m-ink: var(--m-accent);
+  /* 禁用：笔触框随之褪成淡墨 */
+  html.m-ink-ready .m-button--disabled {
+    --m-ink: var(--m-fg-muted);
   }
 }

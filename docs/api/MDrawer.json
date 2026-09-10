@@ -1,0 +1,126 @@
+{
+  "name": "MDrawer",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MDrawer"
+  },
+  "attributes": [
+    {
+      "name": "mask",
+      "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | ModalMask | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "从哪条边滑出，默认 right",
+      "default": "\"right\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DrawerDirection | undefined"
+      }
+    },
+    {
+      "name": "size",
+      "description": "左右抽屉是宽度、上下抽屉是高度，数字按 px；默认 320px，也可覆盖 CSS 变量 --m-drawer-size",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "closeBtn",
+      "description": "显示关闭按钮，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "closeOnEsc",
+      "description": "按 ESC 关闭，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题；也可用 header 插槽",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "传送目标：true 到 body，字符串为选择器，false 原地渲染，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "边缘笔触线的随机种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "close",
+      "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
+    },
+    {
+      "name": "open",
+      "description": "变为显示"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "抽屉内容"
+    },
+    {
+      "name": "active",
+      "description": "触发元素：点一下就打开"
+    },
+    {
+      "name": "header",
+      "description": "头部，替代 title"
+    },
+    {
+      "name": "footer",
+      "description": "底部操作区"
+    }
+  ]
+}

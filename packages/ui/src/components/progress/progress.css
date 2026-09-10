@@ -1,0 +1,75 @@
+@layer m.component {
+  .m-progress {
+    /* 条本体的粗细（strokeWidth 写进来） */
+    --m-progress-h: 7px;
+    /* 条到框的留白；旧版框高 = 条高 + 10 */
+    --m-progress-pad: 5px;
+    /* 默认宽度沿用旧版：框高的 11 倍（7px 条 → 187×17） */
+    --m-progress-w: calc((var(--m-progress-h) + var(--m-progress-pad) * 2) * 11);
+    --m-progress-color: var(--m-ink);
+    display: inline-grid;
+    grid-template-areas: "bar";
+    align-items: center;
+    width: var(--m-progress-w);
+    max-width: 100%;
+    color: var(--m-fg);
+    font-size: 14px;
+    line-height: 1;
+    vertical-align: middle;
+
+    &.m-progress--success {
+      --m-progress-color: var(--m-success);
+    }
+    &.m-progress--warn {
+      --m-progress-color: var(--m-warn);
+    }
+    &.m-progress--danger {
+      --m-progress-color: var(--m-danger);
+    }
+  }
+
+  /* 一只手画的框（m.ink 层由 useBrushBorder 换成笔触），框里一段实墨 */
+  .m-progress__track {
+    position: relative;
+    grid-area: bar;
+    box-sizing: border-box;
+    height: calc(var(--m-progress-h) + var(--m-progress-pad) * 2);
+    /* 1px 边框算在留白里，框高正好 = 条高 + 2 × 留白 */
+    padding: calc(var(--m-progress-pad) - 1px);
+    border: 1px solid var(--m-border);
+    border-radius: 2px 3px 2px 3px / 3px 2px 3px 2px;
+  }
+
+  .m-progress__bar {
+    height: 100%;
+    max-width: 100%;
+    background: var(--m-progress-color);
+    transition:
+      width calc(var(--m-duration) * 1.5) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease);
+  }
+
+  /* 文字压在条上：纸色字 + 四向墨边，条没走到和走过去都看得清 */
+  .m-progress__info {
+    position: relative;
+    z-index: 1;
+    grid-area: bar;
+    justify-self: center;
+    padding: 0 var(--m-space-1);
+    color: var(--m-bg);
+    font-variant-numeric: tabular-nums;
+    text-shadow:
+      -1px -1px 0 var(--m-ink),
+      1px -1px 0 var(--m-ink),
+      -1px 1px 0 var(--m-ink),
+      1px 1px 0 var(--m-ink);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-progress__bar {
+    filter: url(#m-ink-bleed-light);
+  }
+}

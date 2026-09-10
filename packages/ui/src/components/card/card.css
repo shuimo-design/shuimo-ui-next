@@ -1,0 +1,222 @@
+@layer m.component {
+  .m-card {
+    --m-card-padding: 20px;
+    --m-card-bg: var(--m-bg);
+    --m-card-border: var(--m-border);
+    /* 双线框里外两条线的间距 */
+    --m-card-gap: 3px;
+    /* 柔和的墨色阴影；暗色下墨是浅色，阴影得换成真正的黑 */
+    --m-card-shadow: 0 2px 12px
+      light-dark(color-mix(in srgb, var(--m-ink) 12%, transparent), rgb(0 0 0 / 0.45));
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border: 1px solid var(--m-card-border);
+    border-radius: var(--m-radius);
+    background: var(--m-card-bg);
+    color: var(--m-fg);
+    transition:
+      box-shadow var(--m-duration) var(--m-ease),
+      border-color var(--m-duration) var(--m-ease);
+
+    /* 双线框：外线是 border，内线是 ::after 画在内缩 gap 处，内容再往里退一圈 */
+    &.m-card--double,
+    &.m-card--brush {
+      padding: calc(var(--m-card-gap) + 1px);
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: var(--m-card-gap);
+        z-index: 2;
+        border: 1px solid var(--m-card-border);
+        border-radius: calc(var(--m-radius) - 1px);
+        pointer-events: none;
+      }
+    }
+
+    &.m-card--borderless {
+      padding: 0;
+      border-color: transparent;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    &.m-card--shadow-always,
+    &.m-card--shadow-hover:hover {
+      box-shadow: var(--m-card-shadow);
+    }
+  }
+
+  /* 封面裁在框里：圆角跟着内线走 */
+  .m-card__cover {
+    overflow: hidden;
+    border-radius: calc(var(--m-radius) - 1px) calc(var(--m-radius) - 1px) 0 0;
+
+    & > img,
+    & > video {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  .m-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-3);
+    padding: var(--m-space-3) var(--m-card-padding);
+  }
+
+  .m-card__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--m-fg-strong);
+    font-weight: 600;
+  }
+
+  .m-card__extra {
+    flex: 0 0 auto;
+    color: var(--m-fg-muted);
+  }
+
+  /* 头部与内容之间的线：默认 1px 实线，m.ink 层换成按宽度生成的笔触 */
+  .m-card__divider {
+    flex: 0 0 auto;
+    height: 1px;
+    margin: 0 var(--m-card-padding);
+    background: var(--m-card-border);
+  }
+
+  .m-card__body {
+    flex: 1 1 auto;
+    padding: var(--m-card-padding);
+  }
+
+  .m-card__footer {
+    padding: var(--m-space-3) var(--m-card-padding);
+    border-top: 1px solid var(--m-divider);
+    color: var(--m-fg-muted);
+  }
+
+  /* 印：绝对定位在右下角，不占内容流，往右下探出 4px、歪 6°，像随手盖上去的 */
+  .m-card__seal {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    z-index: 2;
+    line-height: 0;
+    transform: rotate(-6deg);
+    transform-origin: center;
+  }
+}
+
+/* 册页：开了引擎后卡片是一页宣纸——纸色 + 纸纹 + 四边毛边（::after，垫在最底下），
+   框是一笔画出来的笔触（stroke.css 的 ::before，三种框型只差粗细），标题手写体、左侧压一笔朱批，
+   阴影是顺着纸缘洇开的墨影而不是方方正正的盒子影 */
+@layer m.ink {
+  html.m-ink-ready .m-card {
+    /* 纸色比页面底稍亮一点：只混变量，深色主题下混出来也是比底稍亮的一层 */
+    --m-card-paper: color-mix(in srgb, var(--m-bg) 92%, white);
+    /* 毛边纸缘探出框外的距离，量到尺寸、生成好遮罩后由组件写入；没写入时纸就是一块贴着框的方纸 */
+    --m-card-paper-out: 0px;
+    /* 洇开的墨影：近的一层贴着纸、远的一层散开；暗色下墨是浅色，影子得换成真正的黑 */
+    --m-card-ink-shadow-near: light-dark(
+      color-mix(in srgb, var(--m-ink) 16%, transparent),
+      rgb(0 0 0 / 0.5)
+    );
+    --m-card-ink-shadow-far: light-dark(
+      color-mix(in srgb, var(--m-ink) 10%, transparent),
+      rgb(0 0 0 / 0.4)
+    );
+    /* 内线撤了，双线框那圈内退也不要 */
+    padding: 0;
+    border-radius: 0;
+    /* 纸画在 ::after 上，元素本身透明；isolate 让 z-index:-1 的纸垫在自己底下而不是钻到父元素后面 */
+    background: transparent;
+    isolation: isolate;
+    box-shadow: none;
+  }
+
+  /* 纸：外扩一圈、套毛边遮罩。纸纹是白底的，正片叠底压在纸色上只留下颗粒和纤维的暗部 */
+  html.m-ink-ready .m-card::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--m-card-paper-out) * -1);
+    z-index: -1;
+    border: 0;
+    border-radius: 0;
+    background:
+      var(--m-ink-sheet-texture, none) center / 384px 384px repeat,
+      var(--m-card-paper);
+    background-blend-mode: multiply, normal;
+    mask: var(--m-card-paper-mask, none) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+
+  /* 墨影：drop-shadow 跟着纸的毛边轮廓走。静止时放两层零值影子，悬停时才有东西可过渡；
+     写在带 shadow 类的选择器上，压过 stroke.css 给 [data-ink-stroke] 定的过渡属性 */
+  html.m-ink-ready .m-card.m-card--shadow-hover,
+  html.m-ink-ready .m-card.m-card--shadow-always {
+    filter: drop-shadow(0 0 0 transparent) drop-shadow(0 0 0 transparent);
+    transition-property: filter, color, background-color, opacity, transform;
+    transition-duration: var(--m-duration);
+    transition-timing-function: var(--m-ease);
+  }
+
+  html.m-ink-ready .m-card.m-card--shadow-always,
+  html.m-ink-ready .m-card.m-card--shadow-hover:hover {
+    filter: drop-shadow(0 1px 2px var(--m-card-ink-shadow-near))
+      drop-shadow(0 8px 16px var(--m-card-ink-shadow-far));
+  }
+
+  /* 封面照旧裁在框里，只是纸没有圆角 */
+  html.m-ink-ready .m-card__cover {
+    border-radius: 0;
+  }
+
+  /* 标题：手写体、略大；左侧压一笔朱砂短竖，像书页上的朱批 */
+  html.m-ink-ready .m-card__title {
+    position: relative;
+    padding-left: 11px;
+    font-family: var(--m-font-brush);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+
+    /* 画幅比笔画宽（两侧是晕染余量），元素宽度按画幅设、往左挪半幅，3px 的笔画正好落在 0–3px */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: calc(1.5px - var(--m-ink-sheet-mark-band, 16px) / 2);
+      width: var(--m-ink-sheet-mark-band, 16px);
+      height: 1.1em;
+      background: var(--m-seal);
+      mask: var(--m-ink-sheet-mark, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+  }
+
+  html.m-ink-ready .m-card__divider {
+    height: var(--m-brush-line-band, 1px);
+    margin-top: calc((var(--m-brush-line-band, 1px) - 1px) / -2);
+    margin-bottom: calc((var(--m-brush-line-band, 1px) - 1px) / -2);
+    mask: var(--m-brush-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  /* 页脚：纸上不画硬线，靠弱一档的字色和留白分开 */
+  html.m-ink-ready .m-card__footer {
+    border-top: 0;
+    color: var(--m-fg-muted);
+  }
+
+  /* stroke.css 把 [data-ink-stroke] 的直接子元素都设成 relative / z-index 1，印得重新钉回右下角、压在框和内容之上 */
+  html.m-ink-ready .m-card > .m-card__seal {
+    position: absolute;
+    z-index: 2;
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "MAvatar",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MAvatar"
+  },
+  "attributes": [
+    {
+      "name": "src",
+      "description": "图片地址；不传或加载失败时显示默认插槽，插槽也没有就显示人形图标",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "alt",
+      "description": "图片替代文字，也作为兜底内容的无障碍名称",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "variant",
+      "description": "形状：circle 一笔墨圈（默认），square 笔触方框",
+      "default": "\"circle\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "AvatarVariant | undefined"
+      }
+    },
+    {
+      "name": "size",
+      "description": "尺寸：sm / md / lg 对应 24 / 40 / 50px，也可直接传像素数",
+      "default": "\"md\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "AvatarSize | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "墨圈 / 方框 / 毛边遮罩的随机种子，同一页多个头像可以各给一个",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "error",
+      "description": "图片加载失败"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "无图或图片加载失败时的兜底内容，例如文字缩写或图标"
+    }
+  ]
+}

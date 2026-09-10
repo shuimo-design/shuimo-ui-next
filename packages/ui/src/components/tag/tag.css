@@ -1,0 +1,120 @@
+@layer m.component {
+  .m-tag {
+    --m-tag-color: var(--m-ink);
+    --m-tag-fg: var(--m-bg);
+    --m-tag-h: 45px;
+    --m-tag-min-w: 80px;
+    /* 左右收口的宽高比，MTag.vue 从底图尺寸算出来写进来 */
+    --m-tag-cap-l: 0.2144;
+    --m-tag-cap-r: 0.215;
+    --m-tag-cap-w-l: calc(var(--m-tag-h) * var(--m-tag-cap-l));
+    --m-tag-cap-w-r: calc(var(--m-tag-h) * var(--m-tag-cap-r));
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: var(--m-tag-h);
+    min-width: var(--m-tag-min-w);
+    /* 内边距正好是两端收口的宽度，中段底图只铺在内容盒里；各退 0.5px 让接缝处叠上一点 */
+    padding: 0 calc(var(--m-tag-cap-w-r) - 0.5px) 0 calc(var(--m-tag-cap-w-l) - 0.5px);
+    background: var(--m-tag-color);
+    color: var(--m-tag-fg);
+    font-size: var(--m-font-size);
+    line-height: 1;
+    white-space: nowrap;
+    /* 三段底图拼成一张遮罩：两端收口贴左右边、按高度等比；中段横向平铺、只画在内容盒 */
+    mask:
+      var(--m-tag-left) left center / auto 100% no-repeat,
+      var(--m-tag-right) right center / auto 100% no-repeat,
+      var(--m-tag-body) center / auto 100% repeat-x;
+    mask-origin: border-box, border-box, content-box;
+    mask-clip: border-box, border-box, content-box;
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &.m-tag--sm {
+      --m-tag-h: 32px;
+      --m-tag-min-w: 60px;
+      font-size: 12px;
+    }
+
+    &.m-tag--lg {
+      --m-tag-h: 64px;
+      --m-tag-min-w: 110px;
+      font-size: 16px;
+    }
+
+    /* 彩色底一律白字；默认墨底用纸色，暗色下自动反过来 */
+    &.m-tag--primary {
+      --m-tag-color: var(--m-info);
+      --m-tag-fg: #fff;
+    }
+    &.m-tag--success {
+      --m-tag-color: var(--m-success);
+      --m-tag-fg: #fff;
+    }
+    &.m-tag--warn {
+      --m-tag-color: var(--m-warn);
+      --m-tag-fg: #fff;
+    }
+    &.m-tag--danger {
+      --m-tag-color: var(--m-danger);
+      --m-tag-fg: #fff;
+    }
+
+    &.m-tag--disabled {
+      --m-tag-color: var(--m-disabled);
+      --m-tag-fg: var(--m-fg-muted);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-tag__label {
+    padding: 0 6px;
+  }
+
+  .m-tag__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1em;
+    height: 1.1em;
+    margin: 0 4px 0 -2px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    opacity: 0.75;
+    cursor: var(--m-cursor-pointer);
+    transition: opacity var(--m-duration) var(--m-ease);
+
+    &:hover:not(:disabled) {
+      opacity: 1;
+    }
+
+    /* 整块都被遮罩裁掉了外沿，焦点环只能画在里面 */
+    &:focus-visible {
+      outline: 1px solid currentColor;
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 叉是素材库那一笔，颜色跟文字 */
+  .m-tag__cross {
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    mask: var(--m-tag-cross) center / contain no-repeat;
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-tag {
+    filter: url(#m-ink-bleed-light);
+  }
+}

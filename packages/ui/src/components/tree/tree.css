@@ -1,0 +1,152 @@
+@layer m.component {
+  .m-tree {
+    --m-tree-indent: 28px;
+    --m-tree-row-h: 32px;
+    --m-tree-arrow-size: 20px;
+    color: var(--m-fg);
+  }
+
+  .m-tree-node__row {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    min-height: var(--m-tree-row-h, 32px);
+    padding-right: var(--m-space-2);
+    padding-left: calc(var(--m-tree-indent, 28px) * var(--m-tree-level, 0));
+    color: var(--m-fg);
+    cursor: var(--m-cursor-pointer);
+    user-select: none;
+    transition: color var(--m-duration) var(--m-ease);
+
+    /* 行底色单独一层，方便水墨层只给底色上滤镜 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: var(--m-radius);
+      background: transparent;
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+
+    &:hover {
+      color: var(--m-accent);
+    }
+
+    &:hover::before {
+      background: color-mix(in srgb, var(--m-ink) 6%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  .m-tree-node--selected > .m-tree-node__row {
+    color: var(--m-accent);
+  }
+
+  .m-tree-node--selected > .m-tree-node__row::before {
+    background: color-mix(in srgb, var(--m-accent) 10%, transparent);
+  }
+
+  .m-tree-node--disabled > .m-tree-node__row {
+    color: var(--m-fg-muted);
+    cursor: var(--m-cursor-disabled);
+  }
+
+  .m-tree-node--disabled > .m-tree-node__row:hover::before {
+    background: transparent;
+  }
+
+  .m-tree-node__arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-tree-arrow-size, 20px);
+    height: var(--m-tree-arrow-size, 20px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-ink);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+  }
+
+  /* 展开箭头：一枚实心小三角（旧版 arrow.webp 的形状），收起时尖朝右，展开后转成朝下 */
+  .m-tree-node__arrow-shape {
+    display: block;
+    width: 9px;
+    height: 7px;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform: rotate(-90deg);
+    transition: transform var(--m-duration) var(--m-ease);
+  }
+
+  .m-tree-node--expanded > .m-tree-node__row .m-tree-node__arrow-shape {
+    transform: rotate(0deg);
+  }
+
+  .m-tree-node__checkbox {
+    flex-shrink: 0;
+  }
+
+  .m-tree-node__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 子节点高度动画：同 Collapse 的 grid 技巧 */
+  .m-tree-node__children {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--m-duration) var(--m-ease);
+  }
+
+  .m-tree-node--expanded > .m-tree-node__children {
+    grid-template-rows: 1fr;
+  }
+
+  /* 收起：动画结束后再 visibility:hidden，展开时立即可见 */
+  .m-tree-node__children-inner {
+    min-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: visibility 0s linear var(--m-duration);
+  }
+
+  .m-tree-node--expanded > .m-tree-node__children > .m-tree-node__children-inner {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+}
+
+@layer m.ink {
+  /* 三角换成毛边墨尖遮罩（MTree 按种子生成，尖朝上；这里先转半圈让它朝下再按展开态转向） */
+  html.m-ink-ready .m-tree-node__arrow-shape {
+    clip-path: none;
+    mask: var(--m-tree-tip-mask) center / contain no-repeat;
+    transform: rotate(90deg);
+  }
+
+  html.m-ink-ready .m-tree-node--expanded > .m-tree-node__row .m-tree-node__arrow-shape {
+    transform: rotate(180deg);
+  }
+
+  html.m-ink-ready .m-tree-node__row::before {
+    filter: url(#m-ink-bleed-light);
+  }
+}

@@ -1,0 +1,106 @@
+@layer m.component {
+  .m-list {
+    --m-list-marker-size: 10px;
+    --m-list-marker-ring: 20px;
+    --m-list-gap: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m-list-gap);
+    margin: 0;
+    /* 左边留出墨圈和投影的位置，不然激活项的圈会贴着容器边 */
+    padding: 0 0 0 var(--m-space-2);
+    list-style: none;
+  }
+
+  .m-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    /* 旧版行高 27px；这里跟字号走，同样留出比正文更松的行距 */
+    line-height: 1.8;
+    color: var(--m-fg);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &::marker {
+      content: "";
+    }
+
+    &.m-list-item--active {
+      color: var(--m-fg-strong);
+    }
+  }
+
+  .m-list-item__inner {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 符号占一个墨圈的宽、一行的高，点和圈都绝对定位在正中，切换激活态时文字不会跳 */
+  .m-list-item__marker {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--m-list-marker-ring);
+    height: 1lh;
+    /* 像蘸了墨点上去的：底下带一点投影 */
+    filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.4));
+    transition: filter var(--m-duration) var(--m-ease);
+
+    /* 外圈：只在激活时显出来 */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--m-list-marker-ring);
+      height: var(--m-list-marker-ring);
+      border-radius: 52% 48% 50% 50% / 50% 53% 47% 50%;
+      background: var(--m-ink);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+      transition:
+        opacity var(--m-duration) var(--m-ease),
+        transform var(--m-duration) var(--m-ease);
+    }
+
+    /* 内点：默认一粒墨，激活换朱砂 */
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--m-list-marker-size);
+      height: var(--m-list-marker-size);
+      border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+      background: var(--m-ink);
+      transform: translate(-50%, -50%);
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+  }
+
+  .m-list-item--active .m-list-item__marker {
+    filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.8));
+
+    &::before {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    &::after {
+      background: var(--m-accent);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 点和圈换成毛边墨团遮罩（MList 按种子生成；单独用 MListItem 时退回全局墨点） */
+  html.m-ink-ready .m-list-item__marker::before {
+    border-radius: 0;
+    mask: var(--m-list-blob-ring, var(--m-ink-dot)) center / contain no-repeat;
+  }
+
+  html.m-ink-ready .m-list-item__marker::after {
+    border-radius: 0;
+    mask: var(--m-list-blob-dot, var(--m-ink-dot)) center / contain no-repeat;
+  }
+}

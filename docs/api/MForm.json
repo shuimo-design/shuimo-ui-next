@@ -1,0 +1,112 @@
+{
+  "name": "MForm",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MForm"
+  },
+  "attributes": [
+    {
+      "name": "model",
+      "description": "表单数据对象，MFormItem 按 prop 从这里取值校验",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "FormModel | undefined"
+      }
+    },
+    {
+      "name": "rules",
+      "description": "按 prop 组织的校验规则；表单项自己的 rules 优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "FormRules | undefined"
+      }
+    },
+    {
+      "name": "inline",
+      "description": "行内排布：表单项横向排开",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "labelWidth",
+      "description": "标签宽度，数字按 px；默认 120px。labelPosition 为 top 时无效",
+      "default": "120",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "labelPosition",
+      "description": "标签位置：左对齐（默认）/ 右对齐 / 在控件上方",
+      "default": "\"left\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "FormLabelPosition | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "整表单禁用，所有表单项里的控件跟着禁用",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "submit",
+      "description": "允许原生 submit 真的提交跳转；默认 false，只发 submit 事件",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "showMessage",
+      "description": "是否显示错误文字，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "hideRequiredAsterisk",
+      "description": "不显示必填星号",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "submit",
+      "description": "表单提交（回车 / 提交按钮）；submit 为 false 时已阻止默认跳转"
+    },
+    {
+      "name": "validate",
+      "description": "任一表单项校验完成"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

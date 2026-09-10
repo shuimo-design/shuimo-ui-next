@@ -1,9 +1,44 @@
 @layer m.component {
   .m-border {
+    /* 内容贴边：旧版边框就是压在内容边缘上的一圈细线，要留白由使用方或 padding prop 给 */
+    --m-border-padding: 0px;
+    --m-border-mask-bg: rgb(var(--m-paper-rgb) / 0.4);
+    color: var(--m-fg);
     position: relative;
     box-sizing: border-box;
-    padding: var(--m-space-4);
-    border: 1px solid var(--m-border);
+    padding: var(--m-border-padding);
+    border: 1px solid var(--m-border-color, var(--m-border));
     border-radius: var(--m-radius);
+
+    /* 不画的边留透明而不是去掉：盒子尺寸不变，水墨层和退化层几何一致 */
+    &.m-border--no-top {
+      border-top-color: transparent;
+    }
+
+    &.m-border--no-right {
+      border-right-color: transparent;
+    }
+
+    &.m-border--no-bottom {
+      border-bottom-color: transparent;
+    }
+
+    &.m-border--no-left {
+      border-left-color: transparent;
+    }
+
+    /* 蒙层：半透明纸色 + 背景模糊，压在远山 / 图片上字才看得清 */
+    &.m-border--mask {
+      background: var(--m-border-mask-bg);
+      backdrop-filter: blur(6px);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 笔触压在内容之上（旧版线条元素排在内容后面），墨色可单独指定 */
+  html.m-ink-ready .m-border[data-ink-stroke]::before {
+    z-index: 2;
+    background: var(--m-border-color, var(--m-ink));
   }
 }

@@ -1,0 +1,68 @@
+{
+  "name": "MTabPane",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTabPane"
+  },
+  "attributes": [
+    {
+      "name": "name",
+      "description": "标签标识，写进 MTabs 的 v-model；不传则自动生成",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TabName | undefined"
+      }
+    },
+    {
+      "name": "label",
+      "description": "标签文字；label 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用后不能被选中",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "closable",
+      "description": "是否显示关闭按钮；不传则跟随 MTabs",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "lazy",
+      "description": "首次激活时才渲染内容，之后切走只是隐藏",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "面板内容"
+    },
+    {
+      "name": "label",
+      "description": "导航条上的标签内容，优先于 label"
+    }
+  ]
+}

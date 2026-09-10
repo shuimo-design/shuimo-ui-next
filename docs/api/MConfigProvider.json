@@ -1,0 +1,51 @@
+{
+  "name": "MConfigProvider",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MConfigProvider"
+  },
+  "attributes": [
+    {
+      "name": "size",
+      "description": "组件默认尺寸，组件自己没传 size 时用它",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ConfigSize | undefined"
+      }
+    },
+    {
+      "name": "locale",
+      "description": "语言标签（BCP 47，如 zh-CN / en-US），组件内置文案按它选",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "inkTier",
+      "description": "水墨效果档位 0 / 1 / 2；不传跟随 createInkEngine 的自动探测",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "InkTier | undefined"
+      }
+    },
+    {
+      "name": "theme",
+      "description": "主题：挂载后写到 html 的 data-theme；不传则不接管，交给 MDarkMode 或使用方自己写",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ConfigTheme | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

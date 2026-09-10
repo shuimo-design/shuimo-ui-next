@@ -1,0 +1,139 @@
+@layer m.component {
+  .m-form {
+    --m-form-item-gap: 18px;
+    display: block;
+    color: var(--m-fg);
+  }
+
+  .m-form--inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--m-space-2) var(--m-space-4);
+  }
+
+  .m-form--inline .m-form-item {
+    display: inline-flex;
+    margin-bottom: 0;
+  }
+
+  .m-form-item {
+    /* 控件高度 36px，标签行高对齐它 */
+    --m-form-item-h: 36px;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--m-form-item-gap, 18px);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+  }
+
+  .m-form-item--label-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .m-form-item__label {
+    flex: none;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    min-height: var(--m-form-item-h);
+    padding-right: var(--m-space-3);
+    color: var(--m-fg);
+    text-align: left;
+    cursor: default;
+  }
+
+  .m-form-item--label-right .m-form-item__label {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .m-form-item--label-top .m-form-item__label {
+    min-height: auto;
+    padding: 0 0 var(--m-space-1);
+  }
+
+  .m-form-item__asterisk {
+    color: var(--m-accent);
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .m-form-item__content {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--m-form-item-h);
+  }
+
+  .m-form-item--label-top .m-form-item__content {
+    min-height: auto;
+  }
+
+  .m-form-item__error {
+    display: grid;
+    gap: 2px;
+    margin-top: var(--m-space-1);
+    color: var(--m-accent);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* 默认皮肤：控件下面一条细朱砂线，从左往右画出来 */
+  .m-form-item__line {
+    display: block;
+    width: 100%;
+    max-width: var(--m-form-item-line-w, 320px);
+    height: 1px;
+    background: currentColor;
+    transform-origin: left center;
+    animation: m-form-item-draw calc(var(--m-duration) * 1.5) var(--m-ease) both;
+  }
+
+  .m-form-item-error-enter-active,
+  .m-form-item-error-leave-active {
+    transition:
+      opacity var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
+  }
+
+  .m-form-item-error-enter-from,
+  .m-form-item-error-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  @keyframes m-form-item-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 必填星号换成一点朱砂：素材库的毛边墨团做遮罩 */
+  html.m-ink-ready .m-form-item__asterisk {
+    width: 8px;
+    height: 8px;
+    margin-right: 2px;
+    color: transparent;
+    background: var(--m-accent);
+    mask: var(--m-ink-dot) center / contain no-repeat;
+    filter: url(#m-ink-bleed-light);
+  }
+
+  /* 出错那一笔换成笔触线：画幅比笔画高（留了晕染余量），高度按画幅铺满 */
+  html.m-ink-ready .m-form-item__line {
+    height: var(--m-form-item-line-band, 12px);
+    margin-top: -4px;
+    mask: var(--m-form-item-line-mask, var(--m-ink-line-h)) left center / 100% 100% no-repeat;
+  }
+}

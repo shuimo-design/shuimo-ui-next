@@ -1,0 +1,80 @@
+@layer m.component {
+  /* 壳本身不占盒子，插槽里的第一个元素就是参照元素 */
+  .m-tooltip {
+    display: contents;
+  }
+
+  .m-tooltip--wrap {
+    display: inline-block;
+  }
+
+  /* 提示被 Teleport 到 body，继承不到根上的变量，全部在这里声明 */
+  .m-tooltip__float {
+    --m-tooltip-pad: 3px var(--m-space-2);
+    --m-tooltip-max-w: 280px;
+    --m-tooltip-arrow-w: 12px;
+    --m-tooltip-arrow-h: 6px;
+    --m-tooltip-arrow-overlap: 1px;
+    position: relative;
+    max-width: var(--m-tooltip-max-w);
+    color: var(--m-fg);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .m-tooltip__float > .m-tooltip__panel {
+    padding: var(--m-tooltip-pad);
+    background: var(--m-bg);
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.1);
+    overflow-wrap: anywhere;
+  }
+
+  .m-tooltip__arrow {
+    position: absolute;
+    z-index: 1;
+    width: var(--m-tooltip-arrow-w);
+    height: var(--m-tooltip-arrow-h);
+    background: var(--m-border);
+    mask: var(--m-tooltip-tip) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+
+  .m-popper[data-placement^="bottom"] .m-tooltip__arrow {
+    top: 0;
+    left: var(--m-popper-arrow-x, 50%);
+    transform: translate(-50%, calc(-100% + var(--m-tooltip-arrow-overlap)));
+  }
+
+  .m-popper[data-placement^="top"] .m-tooltip__arrow {
+    top: 100%;
+    left: var(--m-popper-arrow-x, 50%);
+    transform: translate(-50%, calc(var(--m-tooltip-arrow-overlap) * -1)) rotate(180deg);
+  }
+
+  .m-popper[data-placement^="left"] .m-tooltip__arrow {
+    top: var(--m-popper-arrow-y, 50%);
+    left: 100%;
+    transform: translate(
+        calc(-50% + var(--m-tooltip-arrow-h) / 2 - var(--m-tooltip-arrow-overlap)),
+        -50%
+      )
+      rotate(90deg);
+  }
+
+  .m-popper[data-placement^="right"] .m-tooltip__arrow {
+    top: var(--m-popper-arrow-y, 50%);
+    right: 100%;
+    transform: translate(
+        calc(50% - var(--m-tooltip-arrow-h) / 2 + var(--m-tooltip-arrow-overlap)),
+        -50%
+      )
+      rotate(-90deg);
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-tooltip__arrow {
+    background: var(--m-ink);
+    filter: url(#m-ink-bleed-light);
+  }
+}

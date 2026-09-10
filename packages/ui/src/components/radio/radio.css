@@ -1,0 +1,128 @@
+@layer m.component {
+  .m-radio {
+    --m-radio-size: 20px;
+    --m-radio-dot: 8px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    color: var(--m-fg);
+    cursor: var(--m-cursor-pointer);
+    user-select: none;
+
+    &.m-radio--disabled {
+      color: var(--m-fg-muted);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 原生控件铺满整个 label 但透明：无障碍树、键盘、点击都走原生 */
+  .m-radio__input {
+    position: absolute;
+    inset: 0;
+    /* 圆圈为了画墨点带了定位，input 要压在它上面才接得到点击 */
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  .m-radio__dot {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--m-radio-size);
+    height: var(--m-radio-size);
+    border: 1.5px solid var(--m-border);
+    /* 不是正圆，像手画的圈 */
+    border-radius: 50% 48% 52% 50% / 49% 51% 49% 51%;
+    background: transparent;
+    transition: border-color var(--m-duration) var(--m-ease);
+
+    /* 中心的墨点，选中后从中心涨出来 */
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--m-radio-dot);
+      height: var(--m-radio-dot);
+      border-radius: 52% 48% 50% 50% / 50% 50% 48% 52%;
+      background: var(--m-ink);
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform var(--m-duration) var(--m-ease);
+    }
+  }
+
+  .m-radio--checked .m-radio__dot {
+    border-color: var(--m-ink);
+
+    &::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  .m-radio:hover:not(.m-radio--disabled) .m-radio__dot {
+    border-color: var(--m-accent);
+  }
+
+  .m-radio__input:focus-visible + .m-radio__dot {
+    outline: 2px solid var(--m-accent);
+    outline-offset: 2px;
+  }
+
+  .m-radio--disabled .m-radio__dot {
+    border-color: var(--m-disabled);
+    background: color-mix(in srgb, var(--m-disabled) 40%, transparent);
+
+    &::after {
+      background: var(--m-fg-muted);
+    }
+  }
+
+  .m-radio-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--m-space-2) var(--m-space-4);
+
+    &.m-radio-group--vertical {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 外圈换成一笔绕出的墨圈遮罩：藏掉 CSS 边框，::before 铺满整个圆当墨色 */
+  html.m-ink-ready .m-radio__dot {
+    border-color: transparent;
+    background: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -1.5px;
+      background: var(--m-ink);
+      mask: var(--m-radio-ring-mask) center / 100% 100% no-repeat;
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+
+    /* 墨点换成毛边墨团；素材里墨团只占画幅八成，盒子放大一点让实际墨点仍是 --m-radio-dot */
+    &::after {
+      width: calc(var(--m-radio-dot) * 1.25);
+      height: calc(var(--m-radio-dot) * 1.25);
+      border-radius: 0;
+      mask: var(--m-radio-dot-mask) center / 100% 100% no-repeat;
+    }
+  }
+
+  html.m-ink-ready .m-radio:hover:not(.m-radio--disabled) .m-radio__dot::before {
+    background: var(--m-accent);
+  }
+
+  html.m-ink-ready .m-radio--disabled .m-radio__dot::before {
+    background: var(--m-disabled);
+  }
+}

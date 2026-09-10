@@ -1,0 +1,158 @@
+@layer m.component {
+  .m-badge {
+    /* 默认朱砂印泥色；彩底一律白字，primary 走花青 */
+    --m-badge-color: var(--m-seal);
+    --m-badge-fg: #fff;
+    --m-badge-offset-x: 0px;
+    --m-badge-offset-y: 0px;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+
+    &.m-badge--primary {
+      --m-badge-color: var(--m-info);
+    }
+    &.m-badge--success {
+      --m-badge-color: var(--m-success);
+    }
+    &.m-badge--warn {
+      --m-badge-color: var(--m-warn);
+    }
+    &.m-badge--danger {
+      --m-badge-color: var(--m-seal);
+    }
+    &.m-badge--info {
+      --m-badge-color: var(--m-fg-muted);
+    }
+  }
+
+  /* 胶囊：18px 高、最少一个圆；定位到内容右上角，offset 叠在位移里 */
+  .m-badge__sup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 18px;
+    min-width: 18px;
+    padding: 0 6px;
+    border-radius: 9px;
+    background: var(--m-badge-color);
+    color: var(--m-badge-fg);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    white-space: nowrap;
+    transform: translate(calc(50% + var(--m-badge-offset-x)), calc(-50% + var(--m-badge-offset-y)));
+    transform-origin: center;
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  .m-badge--dot .m-badge__sup {
+    width: 8px;
+    height: 8px;
+    min-width: 0;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  /* 没有内容时独立显示：回到文档流 */
+  .m-badge--standalone .m-badge__sup {
+    position: static;
+    transform: none;
+  }
+
+  /* 数字变化时弹一下；用 scale 属性而不是 transform，免得和定位用的 translate 打架 */
+  .m-badge__sup--bump {
+    animation: m-badge-bump calc(var(--m-duration) * 1.5) var(--m-ease);
+  }
+
+  @keyframes m-badge-bump {
+    0% {
+      scale: 1;
+    }
+    45% {
+      scale: 1.3;
+    }
+    100% {
+      scale: 1;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 朱砂小印：sup 自己只管排字，印面放到 ::after 上。外形遮罩画幅比盒子大一圈（shape-pad），
+     ::after 按这个值往外撑，毛边和晕染都洇在字框外面，字不会被挤到边上。整枚微微歪着，像手按的 */
+  html.m-ink-ready .m-badge__sup {
+    --m-badge-fg: var(--m-bg);
+    /* 自己成一个层叠上下文，印面才能用负 z-index 垫到字底下而不掉到父元素背景后 */
+    isolation: isolate;
+    min-width: 18px;
+    padding: 0 5px;
+    border-radius: 0;
+    background: transparent;
+    font-weight: 600;
+    transform: translate(calc(50% + var(--m-badge-offset-x)), calc(-50% + var(--m-badge-offset-y)))
+      rotate(-4deg);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-badge-shape-pad, 0px) * -1);
+      z-index: -1;
+      /* 印泥蘸得厚的地方偏亮一点：一层很淡的径向高光压在印泥色上 */
+      background:
+        radial-gradient(ellipse at 40% 35%, rgb(255 255 255 / 0.14), transparent 65%),
+        var(--m-badge-color);
+      /* 外形 ∩ 印泥纹理：毛边方块里带厚薄不匀，薄处透出纸色 */
+      mask:
+        var(--m-badge-shape, none) center / 100% 100% no-repeat,
+        var(--m-badge-paste, none) 0 0 / var(--m-badge-paste-size, 48px) repeat;
+      mask-composite: intersect;
+      filter: url(#m-ink-bleed-light);
+      pointer-events: none;
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+  }
+
+  /* 小点：一滴洇开的朱砂。墨团只占画幅八成多，盒子给 10px 让看得见的点仍是 8px 上下 */
+  html.m-ink-ready .m-badge--dot .m-badge__sup {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+
+    &::after {
+      inset: 0;
+      background: var(--m-badge-color);
+      mask: var(--m-badge-dot, none) center / 100% 100% no-repeat;
+    }
+  }
+
+  /* 独立显示回到文档流，但 ::after 还要贴着它定位，所以是 relative 不是 static */
+  html.m-ink-ready .m-badge--standalone .m-badge__sup {
+    position: relative;
+    transform: rotate(-4deg);
+  }
+
+  /* 盖章：先略大地按下去，再落实 */
+  html.m-ink-ready .m-badge__sup--bump {
+    animation-name: m-badge-stamp;
+  }
+
+  @keyframes m-badge-stamp {
+    0% {
+      scale: 1.25;
+      opacity: 0.4;
+    }
+    55% {
+      scale: 0.96;
+      opacity: 1;
+    }
+    100% {
+      scale: 1;
+    }
+  }
+}

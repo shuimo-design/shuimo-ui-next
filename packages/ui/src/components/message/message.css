@@ -1,0 +1,208 @@
+@layer m.component {
+  /* 每个方向一个固定定位的列表；容器本身不接事件，只有消息接 */
+  .m-message-list {
+    --m-message-gap: 12px;
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m-message-gap);
+    max-height: 100vh;
+    padding: var(--m-space-4);
+    pointer-events: none;
+  }
+
+  .m-message-list--top-right {
+    top: 0;
+    right: 0;
+    align-items: flex-end;
+  }
+
+  .m-message-list--top-left {
+    top: 0;
+    left: 0;
+    align-items: flex-start;
+  }
+
+  .m-message-list--bottom-right {
+    right: 0;
+    bottom: 0;
+    align-items: flex-end;
+  }
+
+  .m-message-list--bottom-left {
+    bottom: 0;
+    left: 0;
+    align-items: flex-start;
+  }
+
+  .m-message-list--top-center {
+    top: 0;
+    left: 50%;
+    align-items: center;
+    transform: translateX(-50%);
+  }
+
+  .m-message-list--bottom-center {
+    bottom: 0;
+    left: 50%;
+    align-items: center;
+    transform: translateX(-50%);
+  }
+
+  .m-message {
+    --m-message-color: var(--m-info);
+    --m-message-icon: 24px;
+    --m-message-min-w: 280px;
+    --m-message-max-w: 420px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-3);
+    min-width: var(--m-message-min-w);
+    max-width: min(var(--m-message-max-w), calc(100vw - 32px));
+    min-height: 56px;
+    padding: var(--m-space-3) var(--m-space-4);
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: var(--m-bg);
+    color: var(--m-fg);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+    pointer-events: auto;
+    user-select: none;
+    touch-action: none;
+    transition:
+      transform var(--m-duration) var(--m-ease),
+      opacity var(--m-duration) var(--m-ease);
+
+    &.m-message--success {
+      --m-message-color: var(--m-success);
+    }
+
+    &.m-message--warning {
+      --m-message-color: var(--m-warn);
+    }
+
+    &.m-message--error {
+      --m-message-color: var(--m-danger);
+    }
+
+    &.m-message--info {
+      --m-message-color: var(--m-info);
+    }
+
+    /* 拖动中位移直接跟手，不要过渡 */
+    &.m-message--dragging {
+      transition: none;
+      cursor: grabbing;
+    }
+
+    /* 拖过阈值：淡掉提示松手就关 */
+    &.m-message--removing {
+      opacity: 0.3;
+    }
+  }
+
+  /* 内容压在墨底（::before / ::after）上面 */
+  .m-message > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 状态徽记：一团墨里挖出记号，颜色跟类型走 */
+  .m-message__icon {
+    flex: none;
+    width: var(--m-message-icon);
+    height: var(--m-message-icon);
+    background: var(--m-message-color);
+    mask: var(--m-message-badge) center / 100% 100% no-repeat;
+  }
+
+  .m-message__icon--custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    mask: none;
+    color: var(--m-message-color);
+    font-size: var(--m-message-icon);
+  }
+
+  .m-message__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .m-message__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    margin-right: -6px;
+    padding: 2px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 水墨皮肤：方框换成毛边墨纸——纸色打底、两端洇一点淡墨，右下角一抹远山 */
+  html.m-ink-ready .m-message {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-message-shape-pad, 0px) * -1);
+      z-index: 0;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--m-ink) 22%, var(--m-bg)) 0%,
+        var(--m-bg) 24%,
+        var(--m-bg) 76%,
+        color-mix(in srgb, var(--m-ink) 18%, var(--m-bg)) 100%
+      );
+      mask: var(--m-message-shape, none) center / 100% 100% no-repeat;
+      pointer-events: none;
+    }
+
+    /* 远山两侧用渐变遮罩化进纸里，不留硬边 */
+    &::after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      bottom: 3px;
+      z-index: 0;
+      width: 110px;
+      height: 18px;
+      background: var(--m-ink);
+      opacity: 0.22;
+      mask:
+        var(--m-message-ridge) center bottom / 100% 100% no-repeat,
+        linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent);
+      mask-composite: intersect;
+      pointer-events: none;
+    }
+  }
+
+  html.m-ink-ready .m-message__icon {
+    filter: url(#m-ink-bleed-light);
+  }
+}

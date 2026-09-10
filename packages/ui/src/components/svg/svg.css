@@ -1,0 +1,48 @@
+@layer m.component {
+  .m-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    vertical-align: -0.15em;
+    /* 图标跟随所在文字的颜色与字号；m.base 对根元素强设的 fg / font-size 在这里要退回继承 */
+    color: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    transform: rotate(var(--m-svg-rotate, 0deg));
+  }
+
+  .m-svg > .m-icon,
+  .m-svg > svg {
+    width: 100%;
+    height: 100%;
+    vertical-align: 0;
+  }
+
+  /* 笔触版：素材库的记号是 data URL，拿来当遮罩，颜色仍由 currentColor 决定 */
+  .m-svg__ink {
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    mask: var(--m-svg-mask) center / contain no-repeat;
+  }
+
+  /* 旋转角度落在根上，转圈动画落在内容上，两者互不覆盖 */
+  .m-svg--spin > * {
+    animation: m-svg-spin 1s linear infinite;
+  }
+
+  @keyframes m-svg-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .m-svg--spin > * {
+      animation-duration: 2s;
+    }
+  }
+}

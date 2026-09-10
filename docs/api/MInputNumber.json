@@ -1,0 +1,123 @@
+{
+  "name": "MInputNumber",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MInputNumber"
+  },
+  "attributes": [
+    {
+      "name": "min",
+      "description": "最小值，默认 -Infinity",
+      "default": "-Infinity",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "max",
+      "description": "最大值，默认 Infinity",
+      "default": "Infinity",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "step",
+      "description": "按钮 / 方向键每次增减的量，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "precision",
+      "description": "小数位数；不传则不限制",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "readonly",
+      "description": "只读：不能键入也不能用按钮增减",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "占位文字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "controls",
+      "description": "两侧显示减 / 加按钮，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "name",
+      "description": "原生 name",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "input",
+      "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）"
+    },
+    {
+      "name": "change",
+      "description": "值提交后（失焦、回车、按钮或方向键增减），参数是新值与旧值"
+    },
+    {
+      "name": "focus"
+    },
+    {
+      "name": "blur"
+    }
+  ],
+  "slots": []
+}

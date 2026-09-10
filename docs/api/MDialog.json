@@ -1,0 +1,125 @@
+{
+  "name": "MDialog",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MDialog"
+  },
+  "attributes": [
+    {
+      "name": "mask",
+      "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | ModalMask | undefined"
+      }
+    },
+    {
+      "name": "closeBtn",
+      "description": "显示右上角的挂牌关闭按钮，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "closeOnEsc",
+      "description": "按 ESC 关闭，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题；也可用 header 插槽",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "width",
+      "description": "宽度，数字按 px；默认 min(560px, 100vw - 32px)，也可覆盖 CSS 变量 --m-dialog-w",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "height",
+      "description": "高度，数字按 px；默认随内容，也可覆盖 CSS 变量 --m-dialog-h",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "传送目标：true 到 body，字符串为选择器，false 原地渲染（测试或受限容器用），默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触与角饰的随机种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "close",
+      "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
+    },
+    {
+      "name": "open",
+      "description": "变为显示"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "弹窗内容"
+    },
+    {
+      "name": "active",
+      "description": "触发元素：点一下就打开，省去自己维护 v-model"
+    },
+    {
+      "name": "header",
+      "description": "头部，替代 title"
+    },
+    {
+      "name": "footer",
+      "description": "底部操作区"
+    }
+  ]
+}

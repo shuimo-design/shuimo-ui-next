@@ -1,0 +1,114 @@
+@layer m.component {
+  .m-dark-mode {
+    --m-dark-mode-size: 30px;
+    /* 太极是黑白两仪，不随主题反色，所以不接 --m-ink / --m-bg（那两个在暗色下会互换） */
+    --m-dark-mode-yin: #1c1c1c;
+    --m-dark-mode-yang: #f7f4ec;
+    /* 两条鱼换姿势的时长 */
+    --m-dark-mode-morph: 1s;
+    display: inline-flex;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    line-height: 0;
+    cursor: var(--m-cursor-pointer);
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 4px;
+      border-radius: 50%;
+    }
+
+    &.m-dark-mode--disabled {
+      opacity: 0.4;
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-dark-mode__svg {
+    width: var(--m-dark-mode-size);
+    height: var(--m-dark-mode-size);
+    /* 光晕滤镜要越出画幅 */
+    overflow: visible;
+    transform-origin: center;
+  }
+
+  .m-dark-mode--rotate .m-dark-mode__svg {
+    animation: m-dark-mode-spin 5s linear infinite;
+  }
+
+  .m-dark-mode__yin,
+  .m-dark-mode__fins,
+  .m-dark-mode__eye--yin {
+    fill: var(--m-dark-mode-yin);
+  }
+
+  .m-dark-mode__yang,
+  .m-dark-mode__eye--yang {
+    fill: var(--m-dark-mode-yang);
+  }
+
+  /* CSS 的 d 盖过属性上的 d，切换时浏览器对两段结构相同的 path 做插值；
+     不支持 CSS d 的浏览器（Safari）忽略这里，直接用属性值跳变 */
+  .m-dark-mode__yin {
+    d: var(--m-dark-mode-path-hidden);
+    transition: d var(--m-dark-mode-morph) var(--m-ease);
+  }
+
+  .m-dark-mode__yang {
+    d: var(--m-dark-mode-path-fish);
+    transition: d var(--m-dark-mode-morph) var(--m-ease);
+  }
+
+  .m-dark-mode__fins {
+    d: var(--m-dark-mode-path-fins-light);
+    transition: d var(--m-dark-mode-morph) var(--m-ease);
+  }
+
+  .m-dark-mode--dark .m-dark-mode__yin {
+    d: var(--m-dark-mode-path-fish);
+  }
+
+  .m-dark-mode--dark .m-dark-mode__yang {
+    d: var(--m-dark-mode-path-hidden);
+  }
+
+  .m-dark-mode--dark .m-dark-mode__fins {
+    d: var(--m-dark-mode-path-fins-dark);
+  }
+
+  /* 光晕跟着"在动的那条鱼"：亮色时白鱼泛白光，暗色时墨鱼晕墨 */
+  .m-dark-mode__glow {
+    flood-color: var(--m-dark-mode-yang);
+    flood-opacity: 0.9;
+  }
+
+  .m-dark-mode--dark .m-dark-mode__glow {
+    flood-color: var(--m-dark-mode-yin);
+  }
+
+  @keyframes m-dark-mode-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .m-dark-mode--rotate .m-dark-mode__svg {
+      animation: none;
+    }
+
+    .m-dark-mode__yin,
+    .m-dark-mode__yang,
+    .m-dark-mode__fins {
+      transition: none;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 整枚太极再过一层轻晕染，边缘像蘸了水的墨 */
+  html.m-ink-ready .m-dark-mode__svg {
+    filter: url(#m-ink-bleed-light);
+  }
+}

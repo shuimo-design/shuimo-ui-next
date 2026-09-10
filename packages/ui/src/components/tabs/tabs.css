@@ -1,0 +1,481 @@
+@layer m.component {
+  .m-tabs {
+    --m-tabs-line-thickness: 2px;
+    --m-tabs-line-color: var(--m-border);
+    --m-tabs-indicator-color: var(--m-ink);
+    --m-tabs-tab-px: var(--m-space-4);
+    --m-tabs-tab-py: var(--m-space-2);
+    --m-tabs-content-gap: var(--m-space-3);
+    /* card 型未激活标签的底色：略灰一点，和激活项的纸色分开 */
+    --m-tabs-card-bg: color-mix(in srgb, var(--m-ink) 5%, var(--m-bg));
+    display: flex;
+    flex-direction: column;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+
+    &.m-tabs--bottom {
+      flex-direction: column-reverse;
+    }
+
+    &.m-tabs--left {
+      flex-direction: row;
+    }
+
+    &.m-tabs--right {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .m-tabs__nav {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: stretch;
+  }
+
+  .m-tabs--vertical .m-tabs__nav {
+    flex-direction: column;
+  }
+
+  /* 指示器相对它定位，标签的 offsetLeft / offsetTop 就是相对列表的 */
+  .m-tabs__list {
+    position: relative;
+    display: flex;
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .m-tabs--vertical .m-tabs__list {
+    flex-direction: column;
+  }
+
+  .m-tabs--stretch .m-tabs__list {
+    flex: 1 1 auto;
+  }
+
+  .m-tabs--stretch .m-tabs__tab {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  .m-tabs__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-1);
+    box-sizing: border-box;
+    padding: var(--m-tabs-tab-py) var(--m-tabs-tab-px);
+    color: var(--m-fg-muted);
+    white-space: nowrap;
+    cursor: var(--m-cursor-pointer);
+    user-select: none;
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-fg);
+    }
+
+    &.m-tabs__tab--active {
+      color: var(--m-ink);
+    }
+
+    &.m-tabs__tab--disabled {
+      color: var(--m-fg-muted);
+      opacity: 0.5;
+      cursor: var(--m-cursor-disabled);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  .m-tabs__label {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .m-tabs__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: calc(var(--m-space-1) * -1);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    opacity: 0.6;
+    cursor: var(--m-cursor-pointer);
+    transition: opacity var(--m-duration) var(--m-ease);
+
+    &:hover:not(:disabled) {
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-tabs__extra {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    margin-left: auto;
+    padding: 0 var(--m-space-2);
+  }
+
+  .m-tabs--vertical .m-tabs__extra {
+    margin-top: auto;
+    margin-left: 0;
+    padding: var(--m-space-2) 0;
+  }
+
+  /* 底线：默认皮肤一条实线贴着导航条外沿；m.ink 层换成按导航条长度生成的笔触线 */
+  .m-tabs__line {
+    position: absolute;
+    inset: auto 0 0;
+    height: var(--m-tabs-line-thickness);
+    border-radius: 3px 1px 2px 3px / 2px 3px 1px 2px;
+    background: var(--m-tabs-line-color);
+    pointer-events: none;
+  }
+
+  .m-tabs--bottom .m-tabs__line {
+    inset: 0 0 auto;
+  }
+
+  .m-tabs--left .m-tabs__line {
+    inset: 0 0 0 auto;
+    width: var(--m-tabs-line-thickness);
+    height: auto;
+  }
+
+  .m-tabs--right .m-tabs__line {
+    inset: 0 auto 0 0;
+    width: var(--m-tabs-line-thickness);
+    height: auto;
+  }
+
+  /* 指示器：压在底线上的一段墨线，尺寸和位移由 MTabs 量出来写进 style */
+  .m-tabs__indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: 0;
+    height: var(--m-tabs-line-thickness);
+    border-radius: 3px 1px 2px 3px / 2px 3px 1px 2px;
+    background: var(--m-tabs-indicator-color);
+    pointer-events: none;
+    transition:
+      transform var(--m-duration) var(--m-ease),
+      width var(--m-duration) var(--m-ease),
+      height var(--m-duration) var(--m-ease);
+  }
+
+  .m-tabs--bottom .m-tabs__indicator {
+    top: 0;
+    bottom: auto;
+  }
+
+  .m-tabs--left .m-tabs__indicator,
+  .m-tabs--right .m-tabs__indicator {
+    top: 0;
+    bottom: auto;
+    width: var(--m-tabs-line-thickness);
+    height: 0;
+  }
+
+  .m-tabs--left .m-tabs__indicator {
+    right: 0;
+    left: auto;
+  }
+
+  .m-tabs--disabled .m-tabs__indicator {
+    opacity: 0.5;
+  }
+
+  .m-tabs__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: var(--m-tabs-content-gap) 0;
+  }
+
+  .m-tabs--left .m-tabs__content {
+    padding: 0 0 0 var(--m-space-4);
+  }
+
+  .m-tabs--right .m-tabs__content {
+    padding: 0 var(--m-space-4) 0 0;
+  }
+
+  .m-tab-pane {
+    color: var(--m-fg);
+  }
+
+  /* ---- card 型：每个标签一个 CSS 双线框，激活项底色换纸色并把朝向内容区那一边的框断开 ---- */
+  .m-tabs--card .m-tabs__list {
+    gap: var(--m-space-1);
+  }
+
+  .m-tabs--card .m-tabs__tab {
+    margin-bottom: -1px;
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius) var(--m-radius) 0 0;
+    background: var(--m-tabs-card-bg);
+    transition:
+      color var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease);
+
+    /* 内框：离外框 2px 的一圈 1px 线 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border: 1px solid var(--m-border);
+      pointer-events: none;
+    }
+
+    &.m-tabs__tab--active {
+      z-index: 1;
+      border-bottom-color: transparent;
+      background: var(--m-bg);
+
+      &::before {
+        bottom: 0;
+        border-bottom: 0;
+      }
+    }
+  }
+
+  .m-tabs--card.m-tabs--bottom .m-tabs__tab {
+    margin-top: -1px;
+    margin-bottom: 0;
+    border-radius: 0 0 var(--m-radius) var(--m-radius);
+
+    &.m-tabs__tab--active {
+      border-top-color: transparent;
+      border-bottom-color: var(--m-border);
+
+      &::before {
+        top: 0;
+        bottom: 2px;
+        border-top: 0;
+        border-bottom: 1px solid var(--m-border);
+      }
+    }
+  }
+
+  .m-tabs--card.m-tabs--left .m-tabs__tab {
+    margin-right: -1px;
+    margin-bottom: 0;
+    border-radius: var(--m-radius) 0 0 var(--m-radius);
+
+    &.m-tabs__tab--active {
+      border-right-color: transparent;
+      border-bottom-color: var(--m-border);
+
+      &::before {
+        right: 0;
+        bottom: 2px;
+        border-right: 0;
+        border-bottom: 1px solid var(--m-border);
+      }
+    }
+  }
+
+  .m-tabs--card.m-tabs--right .m-tabs__tab {
+    margin-bottom: 0;
+    margin-left: -1px;
+    border-radius: 0 var(--m-radius) var(--m-radius) 0;
+
+    &.m-tabs__tab--active {
+      border-bottom-color: var(--m-border);
+      border-left-color: transparent;
+
+      &::before {
+        bottom: 2px;
+        left: 0;
+        border-bottom: 1px solid var(--m-border);
+        border-left: 0;
+      }
+    }
+  }
+
+  .m-tabs--card .m-tabs__content {
+    padding: var(--m-space-3) var(--m-space-4);
+    border: 1px solid var(--m-border);
+    background: var(--m-bg);
+  }
+}
+
+@layer m.ink {
+  /* 笔触画在 ::before 上、元素自己的盒子保持 2px 不变：画幅（含晕染余量）比笔画高，
+     若直接改元素高度，ResizeObserver 会在同一帧里再收到一次尺寸变化而报 loop 错误 */
+  html.m-ink-ready .m-tabs__line,
+  html.m-ink-ready .m-tabs__indicator {
+    background: transparent;
+    border-radius: 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      background: var(--m-tabs-line-color);
+    }
+  }
+
+  html.m-ink-ready .m-tabs__indicator::before {
+    background: var(--m-tabs-indicator-color);
+  }
+
+  /* 横排：画幅在粗细方向上以元素中线为轴居中铺满；还没量出长度时先用通用横线兜底 */
+  html.m-ink-ready .m-tabs--top .m-tabs__line::before,
+  html.m-ink-ready .m-tabs--bottom .m-tabs__line::before,
+  html.m-ink-ready .m-tabs--top .m-tabs__indicator::before,
+  html.m-ink-ready .m-tabs--bottom .m-tabs__indicator::before {
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: var(--m-brush-line-band, var(--m-tabs-line-thickness));
+    transform: translateY(-50%);
+    mask: var(--m-brush-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-tabs--vertical .m-tabs__line::before,
+  html.m-ink-ready .m-tabs--vertical .m-tabs__indicator::before {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: var(--m-brush-line-band, var(--m-tabs-line-thickness));
+    transform: translateX(-50%);
+    mask: var(--m-brush-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+  }
+
+  /* ---- line 型：标签全部换手写体（只换激活项会让文字宽度在切换时跳、指示器错位），
+     字面比正文字体小，放大一档才和 14px 正文等高；指示器换成朱砂 ---- */
+  html.m-ink-ready .m-tabs--line {
+    --m-tabs-indicator-color: var(--m-seal);
+  }
+
+  html.m-ink-ready .m-tabs--line .m-tabs__tab {
+    font-family: var(--m-font-brush);
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+
+    &.m-tabs__tab--active {
+      color: var(--m-fg-strong);
+    }
+  }
+
+  /* ---- card 型 = 签条：每条标签一张毛边宣纸底图（::after，MTabs 按实际尺寸生成遮罩），
+     签条之间留空、不共享边线；未激活的朝内容区缩 4px，激活的探出去 2px 压在内容区框线上，
+     像书签插进书里。三面笔触框由 MTabs 挂在激活项上（stroke.css 画在 ::before） ---- */
+  html.m-ink-ready .m-tabs--card .m-tabs__list {
+    gap: 5px;
+  }
+
+  html.m-ink-ready .m-tabs--card .m-tabs__tab {
+    /* 未激活：淡墨底；hover 加深；激活：纸色 */
+    --m-tabs-slip-bg: color-mix(in srgb, var(--m-ink) 8%, transparent);
+    z-index: 1;
+    margin: 0 0 4px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--m-fg-muted);
+    transition: color var(--m-duration) var(--m-ease);
+
+    /* 基础版的内框线画在 ::before 上：不是激活项时整个去掉，激活项的 ::before 归 stroke.css 画笔触框 */
+    &:not([data-ink-stroke])::before {
+      content: none;
+    }
+
+    &::before {
+      border: 0;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-tabs-slip-pad, 0px) * -1);
+      z-index: -1;
+      background: var(--m-tabs-slip-bg);
+      mask: var(--m-tabs-slip, none) center / 100% 100% no-repeat;
+      pointer-events: none;
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+
+    &:hover:not(.m-tabs__tab--disabled, .m-tabs__tab--active) {
+      --m-tabs-slip-bg: color-mix(in srgb, var(--m-ink) 14%, transparent);
+      color: var(--m-ink);
+    }
+
+    &.m-tabs__tab--active {
+      --m-tabs-slip-bg: var(--m-bg);
+      z-index: 2;
+      margin-bottom: -2px;
+      padding-bottom: calc(var(--m-tabs-tab-py) + 6px);
+      color: var(--m-fg-strong);
+    }
+  }
+
+  html.m-ink-ready .m-tabs--card.m-tabs--bottom .m-tabs__tab {
+    margin: 4px 0 0;
+
+    &.m-tabs__tab--active {
+      margin: -2px 0 0;
+      padding-top: calc(var(--m-tabs-tab-py) + 6px);
+      padding-bottom: var(--m-tabs-tab-py);
+    }
+  }
+
+  html.m-ink-ready .m-tabs--card.m-tabs--left .m-tabs__tab {
+    margin: 0 4px 0 0;
+
+    &.m-tabs__tab--active {
+      margin: 0 -2px 0 0;
+      padding-right: calc(var(--m-tabs-tab-px) + 6px);
+      padding-bottom: var(--m-tabs-tab-py);
+    }
+  }
+
+  html.m-ink-ready .m-tabs--card.m-tabs--right .m-tabs__tab {
+    margin: 0 0 0 4px;
+
+    &.m-tabs__tab--active {
+      margin: 0 0 0 -2px;
+      padding-bottom: var(--m-tabs-tab-py);
+      padding-left: calc(var(--m-tabs-tab-px) + 6px);
+    }
+  }
+
+  /* 内容区的 CSS 框让位给笔触框（stroke.css 画在 ::before） */
+  html.m-ink-ready .m-tabs--card .m-tabs__content {
+    border: 0;
+  }
+
+  /* 关闭按钮换成素材库一笔写出的叉 */
+  html.m-ink-ready .m-tabs__close .m-icon {
+    display: none;
+  }
+
+  html.m-ink-ready .m-tabs__close::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    background: currentColor;
+    mask: var(--m-ink-mark-cross) center / contain no-repeat;
+  }
+}

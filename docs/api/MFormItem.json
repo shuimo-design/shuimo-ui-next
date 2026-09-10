@@ -1,0 +1,97 @@
+{
+  "name": "MFormItem",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MFormItem"
+  },
+  "attributes": [
+    {
+      "name": "label",
+      "description": "标签文字；label 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "prop",
+      "description": "对应 model 里的字段名，校验、重置都靠它",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "rules",
+      "description": "只作用于本项的规则，优先于表单的 rules",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "FormRule | FormRule[] | undefined"
+      }
+    },
+    {
+      "name": "required",
+      "description": "必填快捷写法：等价于加一条 { required: true } 规则",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "labelWidth",
+      "description": "覆盖表单的标签宽度",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "showMessage",
+      "description": "覆盖表单的 showMessage",
+      "default": "undefined",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "error",
+      "description": "外部塞进来的错误信息（比如接口返回的），非空即显示为错误态",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "for",
+      "description": "指定 label 的 for / 控件的 id；不传自动生成",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default"
+    },
+    {
+      "name": "label",
+      "description": "自定义标签内容"
+    },
+    {
+      "name": "error",
+      "description": "自定义错误信息内容"
+    }
+  ]
+}

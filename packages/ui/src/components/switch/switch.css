@@ -1,0 +1,150 @@
+@layer m.component {
+  .m-switch {
+    /* 轨道盒子：旧版 67×33，这里去掉两侧留白 */
+    --m-switch-w: 60px;
+    --m-switch-h: 30px;
+    /* 轨道那一抹的起笔粗细（m.ink 层的笔触按它的画幅铺满） */
+    --m-switch-line: 9px;
+    /* 滑钮墨块的边长（转 45° 后对角线约 1.4 倍） */
+    --m-switch-core: 18px;
+    /* 滑钮连方框转起来占的方盒边长：对角线 + 方框出头 */
+    --m-switch-thumb: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-fg);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+
+    &:focus-visible .m-switch__track {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 4px;
+    }
+
+    &.m-switch--disabled {
+      color: var(--m-fg-muted);
+      cursor: var(--m-cursor-disabled);
+    }
+
+    &.m-switch--loading {
+      cursor: var(--m-cursor-auto);
+    }
+  }
+
+  /* 轨道是一抹墨：起笔在左、越往右越细（m.ink 层换成笔触遮罩）；滑钮是一枚套着手绘方框的菱形墨块 */
+  .m-switch__track {
+    position: relative;
+    display: inline-block;
+    width: var(--m-switch-w);
+    height: var(--m-switch-h);
+  }
+
+  .m-switch__track::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 2px;
+    left: 2px;
+    height: var(--m-switch-line);
+    /* 没有笔触时也做成左粗右细的一抹 */
+    clip-path: polygon(0 4%, 100% 32%, 100% 68%, 0 96%);
+    background: var(--m-ink);
+    transform: translateY(-50%);
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  /* 打开时滑钮在左（起笔处），关闭滑到右端收笔处：沿用旧版的方向 */
+  .m-switch__thumb {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-switch-thumb);
+    height: var(--m-switch-thumb);
+    transform: translate(calc(var(--m-switch-w) - var(--m-switch-thumb)), -50%);
+    transition: transform calc(var(--m-duration) * 3) var(--m-ease);
+  }
+
+  .m-switch--checked .m-switch__thumb {
+    transform: translate(0, -50%);
+  }
+
+  .m-switch__core {
+    position: relative;
+    display: block;
+    width: var(--m-switch-core);
+    height: var(--m-switch-core);
+    background: var(--m-fg-muted);
+    transform: rotate(45deg);
+    transition: background-color calc(var(--m-duration) * 2) var(--m-ease);
+  }
+
+  /* 方框：普通模式是一圈细边，m.ink 层换成四笔手绘 */
+  .m-switch__core::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border: 1.5px solid var(--m-ink);
+    border-radius: 1px 2px 1px 2px / 2px 1px 2px 1px;
+  }
+
+  /* 打开：蘸上朱砂 */
+  .m-switch--checked .m-switch__core {
+    background: var(--m-accent);
+  }
+
+  /* 加载中：整枚滑钮慢慢转，和旧版一样不另加图标 */
+  .m-switch--loading .m-switch__core {
+    animation: m-switch-spin 5s linear infinite;
+  }
+
+  /* 禁用：墨块留白、整体淡下去 */
+  .m-switch--disabled {
+    opacity: 0.4;
+  }
+
+  .m-switch--disabled .m-switch__core {
+    background: var(--m-bg);
+  }
+
+  .m-switch__text {
+    line-height: 1;
+  }
+
+  @keyframes m-switch-spin {
+    from {
+      transform: rotate(45deg);
+    }
+    to {
+      transform: rotate(405deg);
+    }
+  }
+}
+
+@layer m.ink {
+  /* 轨道换成素材库的一抹：起笔按、收笔飞白，颜色仍由 background 决定 */
+  html.m-ink-ready .m-switch__track::before {
+    /* 画幅比笔画高（留了晕染余量），按画幅高度铺满，笔画自然落在中线 */
+    height: var(--m-switch-line-band, 34px);
+    clip-path: none;
+    mask: var(--m-switch-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  /* 方框换成四笔手绘：画幅按 pad 外扩，用 SVG 当遮罩，墨色跟主题走 */
+  html.m-ink-ready .m-switch__core::before {
+    inset: calc(var(--m-switch-frame-pad, 6px) * -1);
+    border: 0;
+    border-radius: 0;
+    background: var(--m-ink);
+    mask: var(--m-switch-frame-mask) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-switch__core {
+    filter: url(#m-ink-bleed-light);
+  }
+}

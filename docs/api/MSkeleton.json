@@ -1,0 +1,80 @@
+{
+  "name": "MSkeleton",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSkeleton"
+  },
+  "attributes": [
+    {
+      "name": "loading",
+      "description": "是否显示骨架；为 false 时渲染 default 插槽里的真实内容",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "animated",
+      "description": "占位块上扫过一道淡墨晕（纯 CSS 动画，减弱动效时自动关掉）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "rows",
+      "description": "段落行数",
+      "default": "3",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "avatar",
+      "description": "段落左边画一个圆形头像占位",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "第一行短一些当标题",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "throttle",
+      "description": "loading 变 true 后延迟多少毫秒才露出骨架，请求很快回来就不会闪一下",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "真实内容，loading 为 false 时渲染"
+    },
+    {
+      "name": "template",
+      "description": "自定义骨架排布，用 MSkeletonItem 拼"
+    }
+  ]
+}

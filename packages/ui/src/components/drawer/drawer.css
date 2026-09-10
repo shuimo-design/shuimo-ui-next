@@ -1,0 +1,227 @@
+@layer m.component {
+  /* 根被 Teleport 到 body：变量全部声明在这里 */
+  .m-drawer {
+    --m-drawer-size: 320px;
+    /* 比浮层（1000）低：抽屉里的下拉要能浮在抽屉之上 */
+    --m-drawer-z: 900;
+    --m-drawer-mask-bg: rgb(0 0 0 / 0.3);
+    --m-drawer-duration: calc(var(--m-duration) * 1.5);
+    position: fixed;
+    inset: 0;
+    z-index: var(--m-drawer-z);
+    display: flex;
+    color: var(--m-fg);
+    font-family: var(--m-font-sans);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    /* 根自己不淡入淡出：根一半透明，里面的遮罩就被隔在一个独立的合成组里，磨砂（backdrop-filter）看不到页面，
+       要等根完全不透明那一刻才突然糊上。这条 transition 只是让 <Transition> 知道该等多久，真正的淡入淡出写在遮罩和面板上 */
+    transition: opacity var(--m-drawer-duration) var(--m-ease);
+  }
+
+  .m-drawer--right {
+    justify-content: flex-end;
+  }
+
+  .m-drawer--left {
+    justify-content: flex-start;
+  }
+
+  .m-drawer--top,
+  .m-drawer--bottom {
+    flex-direction: column;
+  }
+
+  .m-drawer--top {
+    justify-content: flex-start;
+  }
+
+  .m-drawer--bottom {
+    justify-content: flex-end;
+  }
+
+  .m-drawer__active {
+    display: inline-block;
+  }
+
+  .m-drawer__mask {
+    position: absolute;
+    inset: 0;
+    transition:
+      background-color var(--m-drawer-duration) var(--m-ease),
+      backdrop-filter var(--m-drawer-duration) var(--m-ease);
+  }
+
+  .m-drawer--masked .m-drawer__mask {
+    background: var(--m-drawer-mask-bg);
+    backdrop-filter: blur(8px);
+  }
+
+  .m-drawer__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--m-space-6);
+    border: 0 solid var(--m-border);
+    background: var(--m-bg);
+    box-shadow: 0 0 40px rgb(0 0 0 / 0.14);
+    outline: 0;
+    transition: transform var(--m-drawer-duration) var(--m-ease);
+  }
+
+  .m-drawer--left .m-drawer__panel,
+  .m-drawer--right .m-drawer__panel {
+    width: var(--m-drawer-size);
+    max-width: 100%;
+    height: 100%;
+  }
+
+  .m-drawer--top .m-drawer__panel,
+  .m-drawer--bottom .m-drawer__panel {
+    width: 100%;
+    height: var(--m-drawer-size);
+    max-height: 100%;
+  }
+
+  /* 贴着页面的那条边画一道细线（m.ink 层换成笔触线） */
+  .m-drawer--right .m-drawer__panel {
+    border-left-width: 1px;
+  }
+
+  .m-drawer--left .m-drawer__panel {
+    border-right-width: 1px;
+  }
+
+  .m-drawer--top .m-drawer__panel {
+    border-bottom-width: 1px;
+  }
+
+  .m-drawer--bottom .m-drawer__panel {
+    border-top-width: 1px;
+  }
+
+  .m-drawer__edge {
+    display: none;
+  }
+
+  .m-drawer__close {
+    position: absolute;
+    top: var(--m-space-3);
+    right: var(--m-space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font-size: 16px;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .m-drawer__header {
+    margin: 0 0 var(--m-space-4);
+    padding-right: var(--m-space-6);
+    color: var(--m-fg-strong);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .m-drawer__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .m-drawer__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--m-space-2);
+    margin-top: var(--m-space-4);
+  }
+
+  /* 开合：遮罩的底色和磨砂一起渐变（磨砂从 0 糊到 8px，不是最后一下突然出现），面板从自己那条边推进来 */
+  .m-drawer-enter-from .m-drawer__mask,
+  .m-drawer-leave-to .m-drawer__mask {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+
+  .m-drawer-enter-from.m-drawer--right .m-drawer__panel,
+  .m-drawer-leave-to.m-drawer--right .m-drawer__panel {
+    transform: translateX(100%);
+  }
+
+  .m-drawer-enter-from.m-drawer--left .m-drawer__panel,
+  .m-drawer-leave-to.m-drawer--left .m-drawer__panel {
+    transform: translateX(-100%);
+  }
+
+  .m-drawer-enter-from.m-drawer--top .m-drawer__panel,
+  .m-drawer-leave-to.m-drawer--top .m-drawer__panel {
+    transform: translateY(-100%);
+  }
+
+  .m-drawer-enter-from.m-drawer--bottom .m-drawer__panel,
+  .m-drawer-leave-to.m-drawer--bottom .m-drawer__panel {
+    transform: translateY(100%);
+  }
+}
+
+@layer m.ink {
+  /* 细边让位给笔触线：一笔按面板实际长度生成，骑在面板边缘上 */
+  html.m-ink-ready .m-drawer__panel {
+    border-color: transparent;
+  }
+
+  html.m-ink-ready .m-drawer__edge {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    background: var(--m-ink);
+    mask: var(--m-drawer-edge-mask) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+
+  html.m-ink-ready .m-drawer--right .m-drawer__edge {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--m-drawer-edge-band, 24px) / -2);
+    width: var(--m-drawer-edge-band, 24px);
+  }
+
+  html.m-ink-ready .m-drawer--left .m-drawer__edge {
+    top: 0;
+    bottom: 0;
+    right: calc(var(--m-drawer-edge-band, 24px) / -2);
+    width: var(--m-drawer-edge-band, 24px);
+  }
+
+  html.m-ink-ready .m-drawer--top .m-drawer__edge {
+    right: 0;
+    bottom: calc(var(--m-drawer-edge-band, 24px) / -2);
+    left: 0;
+    height: var(--m-drawer-edge-band, 24px);
+  }
+
+  html.m-ink-ready .m-drawer--bottom .m-drawer__edge {
+    top: calc(var(--m-drawer-edge-band, 24px) / -2);
+    right: 0;
+    left: 0;
+    height: var(--m-drawer-edge-band, 24px);
+  }
+}

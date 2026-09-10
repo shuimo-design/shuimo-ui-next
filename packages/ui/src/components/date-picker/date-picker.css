@@ -1,0 +1,356 @@
+@layer m.component {
+  .m-date-picker {
+    --m-date-picker-h: 36px;
+    --m-date-picker-px: var(--m-space-3);
+    --m-date-picker-border: var(--m-border);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    color: var(--m-fg);
+
+    &.m-date-picker--open {
+      --m-date-picker-border: var(--m-accent);
+    }
+
+    &.m-date-picker--disabled {
+      --m-date-picker-border: var(--m-disabled);
+      color: var(--m-fg-muted);
+    }
+  }
+
+  .m-date-picker__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    width: 100%;
+    height: var(--m-date-picker-h);
+    padding: 0 calc(var(--m-date-picker-px) + 20px) 0 var(--m-date-picker-px);
+    border: 1px solid var(--m-date-picker-border);
+    border-radius: var(--m-radius);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    text-align: left;
+    cursor: var(--m-cursor-pointer);
+    transition: border-color var(--m-duration) var(--m-ease);
+
+    &:focus-visible {
+      --m-date-picker-border: var(--m-accent);
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      background: color-mix(in srgb, var(--m-disabled) 40%, transparent);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-date-picker__icon {
+    flex: none;
+    color: var(--m-fg-muted);
+  }
+
+  .m-date-picker__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .m-date-picker__placeholder {
+    color: var(--m-fg-muted);
+    opacity: 0.8;
+  }
+
+  .m-date-picker__clear {
+    position: absolute;
+    top: 50%;
+    right: var(--m-date-picker-px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font: inherit;
+    transform: translateY(-50%);
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+  }
+
+  /* 面板被 Teleport 到 body，继承不到根上的变量，这里重新声明一份；
+     水墨素材（禅圈、箭头、分割线）由组件写成面板的行内变量 */
+  .m-date-picker__panel {
+    --m-date-picker-cell: 32px;
+    --m-date-picker-gap: 2px;
+    width: calc(
+      var(--m-date-picker-cell) * 7 + var(--m-date-picker-gap) * 6 + var(--m-space-3) * 2
+    );
+    padding: var(--m-space-2) var(--m-space-3) var(--m-space-3);
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: var(--m-bg);
+    color: var(--m-fg);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+    user-select: none;
+  }
+
+  /* 头部：年月居中、字号放大加粗，两侧是翻年（双箭头）和翻月（单箭头） */
+  .m-date-picker__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m-space-1);
+    margin-bottom: var(--m-space-2);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .m-date-picker__title {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m-space-2);
+  }
+
+  .m-date-picker__nav,
+  .m-date-picker__year,
+  .m-date-picker__month {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    border: 0;
+    border-radius: var(--m-radius);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+  }
+
+  .m-date-picker__nav {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  .m-date-picker__nav-ink {
+    display: none;
+  }
+
+  /* 周名：和日期同一字重、同一墨色，不再淡化 */
+  .m-date-picker__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, var(--m-date-picker-cell));
+    gap: var(--m-date-picker-gap);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 26px;
+    text-align: center;
+  }
+
+  /* 周名和日期之间的分割线：普通皮肤一条细线，水墨皮肤换成笔触线 */
+  .m-date-picker__divider {
+    height: 1px;
+    margin: var(--m-space-1) 0 var(--m-space-2);
+    border: 0;
+    background: var(--m-border);
+  }
+
+  .m-date-picker__row {
+    display: grid;
+    grid-template-columns: repeat(7, var(--m-date-picker-cell));
+    gap: var(--m-date-picker-gap);
+  }
+
+  /* 月 / 年面板：4 列 3 行，格子更高、字号更大 */
+  .m-date-picker__grid--month .m-date-picker__row,
+  .m-date-picker__grid--year .m-date-picker__row {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--m-space-1);
+  }
+
+  .m-date-picker__cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--m-date-picker-cell);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    /* 悬停只变墨色，不铺底，和旧版一样克制 */
+    &:hover:not(:disabled) {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+
+    &.m-date-picker__cell--month,
+    &.m-date-picker__cell--year {
+      height: 48px;
+      font-size: 15px;
+    }
+
+    &.m-date-picker__cell--outside {
+      color: var(--m-fg-muted);
+      font-weight: 400;
+    }
+
+    /* 今天：数字下一粒小墨点 */
+    &.m-date-picker__cell--today::before {
+      content: "";
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--m-fg-muted);
+      transform: translateX(-50%);
+    }
+
+    /* 选中：一圈朱砂色的墨圈套在数字外面，数字本身墨色不变 */
+    &.m-date-picker__cell--selected {
+      font-weight: 700;
+    }
+
+    &.m-date-picker__cell--selected::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border: 1.5px solid var(--m-accent);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    &.m-date-picker__cell--month.m-date-picker__cell--selected::after,
+    &.m-date-picker__cell--year.m-date-picker__cell--selected::after {
+      inset: 2px calc(50% - 22px);
+    }
+
+    &:disabled,
+    &.m-date-picker__cell--disabled {
+      color: var(--m-fg-muted);
+      opacity: 0.4;
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+}
+
+/* 水墨皮肤 */
+@layer m.ink {
+  /* 笔触边框挂在 trigger 上（useBrushBorder），打开 / 禁用只换墨色 */
+  html.m-ink-ready .m-date-picker--open .m-date-picker__trigger {
+    --m-ink: var(--m-accent);
+  }
+
+  html.m-ink-ready .m-date-picker--disabled .m-date-picker__trigger {
+    /* 禁用底色和 --m-disabled 几乎同色，笔触改成半透明灰墨才看得见 */
+    --m-ink: color-mix(in srgb, var(--m-fg-muted) 55%, transparent);
+  }
+
+  /* 面板：笔触边框也挂在面板容器上（useBrushBorder），去掉普通皮肤的投影，只靠一圈手绘线 */
+  html.m-ink-ready .m-date-picker__panel {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  /* 翻页箭头换成一笔写出的尖角：翻年双箭头、翻月单箭头 */
+  html.m-ink-ready .m-date-picker__nav-icon {
+    display: none;
+  }
+
+  html.m-ink-ready .m-date-picker__nav-ink {
+    display: block;
+    width: 1em;
+    height: 1em;
+    background: currentColor;
+    mask: var(--m-date-picker-nav-mark) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-date-picker__nav--prev-year {
+    --m-date-picker-nav-mark: var(--m-date-picker-mark-prev-year);
+  }
+
+  html.m-ink-ready .m-date-picker__nav--prev-month {
+    --m-date-picker-nav-mark: var(--m-date-picker-mark-prev-month);
+  }
+
+  html.m-ink-ready .m-date-picker__nav--next-month {
+    --m-date-picker-nav-mark: var(--m-date-picker-mark-next-month);
+  }
+
+  html.m-ink-ready .m-date-picker__nav--next-year {
+    --m-date-picker-nav-mark: var(--m-date-picker-mark-next-year);
+  }
+
+  /* 分割线换成按面板宽度生成的笔触线 */
+  html.m-ink-ready .m-date-picker__divider {
+    height: var(--m-date-picker-divider-band, 10px);
+    margin-block: 0 var(--m-space-1);
+    background: var(--m-ink);
+    mask: var(--m-date-picker-divider) center / 100% 100% no-repeat;
+  }
+
+  /* 选中的日子：CSS 圆环换成一笔画的禅圈，起笔重、收笔细、右上留口 */
+  html.m-ink-ready .m-date-picker__cell--selected::after {
+    inset: -3px;
+    border: 0;
+    border-radius: 0;
+    background: var(--m-accent);
+    /* 按高度取正方形居中：日格本来就是正方形，月 / 年格是横长的，圈只套住中间的文字 */
+    mask: var(--m-date-picker-ring) center / auto 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-date-picker__cell--month.m-date-picker__cell--selected::after,
+  html.m-ink-ready .m-date-picker__cell--year.m-date-picker__cell--selected::after {
+    inset: -5px 0;
+  }
+
+  /* 今天的小墨点换成毛边的 */
+  html.m-ink-ready .m-date-picker__cell--today::before {
+    width: 6px;
+    height: 6px;
+    border-radius: 0;
+    background: var(--m-fg-muted);
+    mask: var(--m-ink-dot) center / 100% 100% no-repeat;
+  }
+}

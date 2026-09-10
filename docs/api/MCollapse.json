@@ -1,0 +1,61 @@
+{
+  "name": "MCollapse",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MCollapse"
+  },
+  "attributes": [
+    {
+      "name": "accordion",
+      "description": "手风琴：同一时刻只展开一项；此时 v-model 是单个 name，否则是 name 数组",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "divider",
+      "description": "标题右侧画一条笔触线延伸到边缘（旧版的 line）；单项可用自己的 divider 覆盖",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "整组禁用",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CollapseName | CollapseName[] | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "展开项变化；accordion 下是单个 name（全部收起时为 undefined），否则是数组"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+@layer m.component {
+  .m-popper {
+    z-index: 1000;
+    box-sizing: border-box;
+    color: var(--m-fg);
+    font-family: var(--m-font-sans);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    transform-origin: top center;
+  }
+
+  .m-popper[data-placement^="top"] {
+    transform-origin: bottom center;
+  }
+
+  .m-popper-enter-active,
+  .m-popper-leave-active {
+    transition:
+      opacity var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
+  }
+
+  .m-popper-enter-from,
+  .m-popper-leave-to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}

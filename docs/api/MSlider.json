@@ -1,0 +1,109 @@
+{
+  "name": "MSlider",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSlider"
+  },
+  "attributes": [
+    {
+      "name": "min",
+      "description": "最小值，默认 0",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "max",
+      "description": "最大值，默认 100",
+      "default": "100",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "step",
+      "description": "步长，默认 1；值会对齐到步长格点",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "range",
+      "description": "范围选择：v-model 是 [起点, 终点]，显示两个滑块",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "showInfo",
+      "description": "在轨道上方显示 min、当前百分比、max 一行信息，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "showTooltip",
+      "description": "拖动或悬停时在滑块上方显示当前值，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "formatTooltip",
+      "description": "自定义气泡文字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "((value: number) => string) | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SliderValue | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "input",
+      "description": "拖动过程中每次值变化"
+    },
+    {
+      "name": "change",
+      "description": "松手 / 键盘调整后的最终值"
+    }
+  ],
+  "slots": []
+}

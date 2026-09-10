@@ -1,0 +1,63 @@
+@layer m.component {
+  .m-delete-icon {
+    --m-delete-icon-size: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-delete-icon-size);
+    height: var(--m-delete-icon-size);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-ink);
+    cursor: var(--m-cursor-pointer);
+    transition:
+      color var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
+
+    /* 悬停蘸朱砂，顺手把笔抬一下 */
+    &:hover:not(:disabled) {
+      color: var(--m-accent);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+      border-radius: var(--m-radius);
+    }
+
+    &.m-delete-icon--disabled {
+      color: var(--m-disabled);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-delete-icon__brush {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 笔杆上的一道高光：用纸色划开，让墨黑的杆子有个圆度 */
+  .m-delete-icon__gloss {
+    stroke: var(--m-bg);
+    opacity: 0.75;
+  }
+
+  .m-delete-icon__cross {
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    mask: var(--m-delete-icon-cross) center / contain no-repeat;
+  }
+}
+
+@layer m.ink {
+  html.m-ink-ready .m-delete-icon__brush {
+    filter: url(#m-ink-bleed-light);
+  }
+}

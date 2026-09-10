@@ -1,0 +1,176 @@
+{
+  "name": "MInput",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MInput"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "原生 type；textarea 时渲染多行文本框",
+      "default": "\"text\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "InputType | undefined"
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "占位文字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "readonly",
+      "description": "只读",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "clearable",
+      "description": "有内容时显示清空按钮",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "showPassword",
+      "description": "password 时显示\"看一眼\"切换按钮",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "maxlength",
+      "description": "最大字数（原生 maxlength）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "showCount",
+      "description": "显示字数统计；有 maxlength 时显示为 `n / max`",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "rows",
+      "description": "textarea 行数，默认 3",
+      "default": "3",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "resize",
+      "description": "textarea 能否拖拽改大小，默认 vertical",
+      "default": "\"vertical\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "InputResize | undefined"
+      }
+    },
+    {
+      "name": "name",
+      "description": "原生 name",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "autocomplete",
+      "description": "原生 autocomplete",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "autofocus",
+      "description": "挂载后自动聚焦",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "input",
+      "description": "每次输入"
+    },
+    {
+      "name": "change",
+      "description": "值提交（原生 change：失焦或回车）"
+    },
+    {
+      "name": "focus"
+    },
+    {
+      "name": "blur"
+    },
+    {
+      "name": "clear",
+      "description": "点了清空按钮"
+    }
+  ],
+  "slots": [
+    {
+      "name": "prefix",
+      "description": "输入框前的内容（图标、单位）"
+    },
+    {
+      "name": "suffix",
+      "description": "输入框后的内容"
+    }
+  ]
+}

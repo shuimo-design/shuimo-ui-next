@@ -1,0 +1,56 @@
+{
+  "name": "MSteps",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSteps"
+  },
+  "attributes": [
+    {
+      "name": "active",
+      "description": "当前步的序号，从 0 开始；序号小于它的步算完成，大于它的算等待",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "排列方向，默认横向",
+      "default": "\"horizontal\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "StepsDirection | undefined"
+      }
+    },
+    {
+      "name": "status",
+      "description": "当前步的状态，默认 process；出错时传 error",
+      "default": "\"process\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "StepStatus | undefined"
+      }
+    },
+    {
+      "name": "simple",
+      "description": "紧凑版：节点和标题排成一行，不显示描述",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MStep"
+    }
+  ]
+}

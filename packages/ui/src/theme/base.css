@@ -1,7 +1,13 @@
 @layer m.base {
+  /* 所有组件元素统一盒模型 */
   [class^="m-"],
   [class*=" m-"] {
     box-sizing: border-box;
+  }
+
+  /* 字体、颜色、光标只落在组件根元素上（BEM 里带 "__" 的是内部元素），
+     内部元素一律继承，否则主色按钮里的文字会被强制回默认墨色、小字号标签拿不到根上的字号 */
+  :where([class^="m-"], [class*=" m-"]):not([class*="__"]) {
     font-family: var(--m-font-sans);
     font-size: var(--m-font-size);
     line-height: var(--m-line-height);

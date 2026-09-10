@@ -1,0 +1,139 @@
+@layer m.component {
+  .m-collapse {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .m-collapse-item {
+    --m-collapse-header-py: var(--m-space-2);
+    --m-collapse-body-py: var(--m-space-2);
+    --m-collapse-line-thickness: 2px;
+    --m-collapse-line-color: var(--m-ink);
+  }
+
+  .m-collapse-item__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-3);
+    width: 100%;
+    padding: var(--m-collapse-header-py, var(--m-space-2)) 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-fg);
+    font: inherit;
+    text-align: left;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover:not(:disabled) {
+      color: var(--m-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      color: var(--m-fg-muted);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 标题只占自己的宽度，太长时省略，把剩下的都留给那条线 */
+  .m-collapse-item__title {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 标题后那一笔：默认皮肤是一条实墨，m.ink 层换成按实际长度生成的笔触线 */
+  .m-collapse-item__line {
+    flex: 1 1 auto;
+    /* 太短就只剩一个墨点，留出能看出是一笔的最小长度 */
+    min-width: 24px;
+    height: var(--m-collapse-line-thickness);
+    /* 两端略不对称的圆角，像一笔收住而不是切出来的 */
+    border-radius: 3px 1px 2px 3px / 2px 3px 1px 2px;
+    background: var(--m-collapse-line-color);
+    transition: opacity var(--m-duration) var(--m-ease);
+  }
+
+  .m-collapse-item--disabled .m-collapse-item__line {
+    opacity: 0.35;
+  }
+
+  /* 箭头：收起时朝右，展开后转成朝下 */
+  .m-collapse-item__arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    font-size: 8px;
+    color: var(--m-ink);
+    transform: rotate(-90deg);
+    transition:
+      transform var(--m-duration) var(--m-ease),
+      color var(--m-duration) var(--m-ease);
+  }
+
+  .m-collapse-item__header:hover:not(:disabled) .m-collapse-item__arrow {
+    color: var(--m-accent);
+  }
+
+  .m-collapse-item--active .m-collapse-item__arrow {
+    transform: rotate(0deg);
+  }
+
+  .m-collapse-item--disabled .m-collapse-item__arrow {
+    color: var(--m-fg-muted);
+  }
+
+  /* 高度动画：grid 行 0fr → 1fr，内容 min-height:0 才能被压到 0 */
+  .m-collapse-item__wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--m-duration) var(--m-ease);
+  }
+
+  .m-collapse-item--active > .m-collapse-item__wrap {
+    grid-template-rows: 1fr;
+  }
+
+  /* 收起：动画结束后再 visibility:hidden，展开时立即可见 */
+  .m-collapse-item__content {
+    min-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: visibility 0s linear var(--m-duration);
+  }
+
+  .m-collapse-item--active > .m-collapse-item__wrap > .m-collapse-item__content {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /* padding 放在 body 上：content 本身带 padding 会压不到 0 */
+  .m-collapse-item__body {
+    padding: var(--m-collapse-body-py, var(--m-space-2)) 0;
+    color: var(--m-fg);
+  }
+}
+
+@layer m.ink {
+  /* 画幅比笔画高（留了晕染余量），让画幅在粗细方向上居中铺满，笔画自然落在中线 */
+  html.m-ink-ready .m-collapse-item__line {
+    height: var(--m-brush-line-band, var(--m-collapse-line-thickness));
+    border-radius: 0;
+    /* 还没量出长度时先用通用横线兜底，量出来后换成按实际长度生成的那条 */
+    mask: var(--m-brush-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-collapse-item__arrow {
+    filter: url(#m-ink-bleed-light);
+  }
+}

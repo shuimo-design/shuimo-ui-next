@@ -1,0 +1,113 @@
+{
+  "name": "MSwitch",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSwitch"
+  },
+  "attributes": [
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "loading",
+      "description": "加载中：滑钮缓慢旋转且不可操作",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "activeValue",
+      "description": "打开时 v-model 取的值，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SwitchValue | undefined"
+      }
+    },
+    {
+      "name": "inactiveValue",
+      "description": "关闭时 v-model 取的值，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SwitchValue | undefined"
+      }
+    },
+    {
+      "name": "activeText",
+      "description": "打开态文字（显示在开关左侧）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "inactiveText",
+      "description": "关闭态文字（显示在开关右侧）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "controlled",
+      "description": "受控：点击只发 change，不自己改 v-model，由外部决定要不要切换",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "name",
+      "description": "原生 name",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SwitchValue | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "用户切换后，参数是（将要变成的）新值"
+    }
+  ],
+  "slots": [
+    {
+      "name": "active",
+      "description": "替代 activeText"
+    },
+    {
+      "name": "inactive",
+      "description": "替代 inactiveText"
+    }
+  ]
+}

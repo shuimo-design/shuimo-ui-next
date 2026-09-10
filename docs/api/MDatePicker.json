@@ -1,0 +1,113 @@
+{
+  "name": "MDatePicker",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MDatePicker"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "选日 / 选月 / 选年，默认 date",
+      "default": "\"date\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DatePickerType | undefined"
+      }
+    },
+    {
+      "name": "format",
+      "description": "输出格式，只认 YYYY / MM / DD；缺省按 type：YYYY-MM-DD / YYYY-MM / YYYY",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "占位文字，默认「请选择日期」",
+      "default": "\"请选择日期\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "clearable",
+      "description": "有值时显示清空按钮，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "disabledDate",
+      "description": "返回 true 的日期不可选",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "((date: Date) => boolean) | undefined"
+      }
+    },
+    {
+      "name": "firstDayOfWeek",
+      "description": "一周从周日（0）还是周一（1）开始，默认 0",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "0 | 1 | undefined"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "面板传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "modelValue",
+      "description": "进来可以是格式化字符串或 Date 对象，写回去一律是格式化字符串（和旧版一致）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | Date | null | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "值变化，参数是格式化后的字符串，清空为 null"
+    },
+    {
+      "name": "clear",
+      "description": "点了清空按钮"
+    },
+    {
+      "name": "visibleChange",
+      "description": "面板开合"
+    }
+  ],
+  "slots": []
+}

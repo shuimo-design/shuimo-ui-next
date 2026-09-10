@@ -1,0 +1,92 @@
+{
+  "name": "MSvg",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MSvg"
+  },
+  "attributes": [
+    {
+      "name": "name",
+      "description": "图标名；不传则渲染默认插槽里自己写的 svg",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SvgIconName | undefined"
+      }
+    },
+    {
+      "name": "ink",
+      "description": "用笔触写出的水墨版（check / close / chevron-down / chevron-right / dot / minus / plus 有），没有笔触版的名字回落到线性版",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触版的随机种子，默认 1（与全局素材一致）",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "size",
+      "description": "尺寸：数字按 px，字符串原样；默认 1em 跟随字号",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "color",
+      "description": "颜色，默认 currentColor",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "rotate",
+      "description": "顺时针旋转角度",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "spin",
+      "description": "持续转圈（配 loading 图标用）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "title",
+      "description": "无障碍名称；不传按纯装饰处理（aria-hidden）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "自定义 svg 内容，name 没传时渲染"
+    }
+  ]
+}

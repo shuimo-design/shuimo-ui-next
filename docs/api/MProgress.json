@@ -1,0 +1,66 @@
+{
+  "name": "MProgress",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MProgress"
+  },
+  "attributes": [
+    {
+      "name": "value",
+      "description": "当前值",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "max",
+      "description": "最大值；百分比 = value / max",
+      "default": "100",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "showInfo",
+      "description": "在条上居中显示百分比文字，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "status",
+      "description": "语义状态，决定条的颜色",
+      "default": "\"default\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ProgressStatus | undefined"
+      }
+    },
+    {
+      "name": "strokeWidth",
+      "description": "条的粗细（px），默认 7；框高 = 粗细 + 10",
+      "default": "7",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替代百分比文字；percent 是 0–100 之间、最多两位小数的数"
+    }
+  ]
+}

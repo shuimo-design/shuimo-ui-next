@@ -1,0 +1,34 @@
+{
+  "name": "MBreadcrumbItem",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MBreadcrumbItem"
+  },
+  "attributes": [
+    {
+      "name": "content",
+      "description": "文字；默认插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "href",
+      "description": "给了就渲染成 <a href> 链接",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "项内容，替代 content"
+    }
+  ]
+}

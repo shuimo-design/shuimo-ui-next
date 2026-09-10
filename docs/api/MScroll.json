@@ -1,0 +1,59 @@
+{
+  "name": "MScroll",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MScroll"
+  },
+  "attributes": [
+    {
+      "name": "height",
+      "description": "视口高度，数字按 px；不传则由外层容器（或自身 CSS）决定",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "maxHeight",
+      "description": "视口最大高度，数字按 px；内容不够高时不撑满",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "always",
+      "description": "一直显示滚动条；默认只在悬停、滚动、拖动时浮现",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "minThumb",
+      "description": "滑块最短长度 px，默认 20，内容极长时滑块也不会缩成一点",
+      "default": "20",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "scroll",
+      "description": "视口滚动时触发，参数是当前滚动位置"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "要滚动的内容"
+    }
+  ]
+}

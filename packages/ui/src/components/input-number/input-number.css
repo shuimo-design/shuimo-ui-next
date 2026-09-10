@@ -1,0 +1,165 @@
+@layer m.component {
+  .m-input-number {
+    --m-input-number-h: 36px;
+    --m-input-number-px: var(--m-space-3);
+    --m-input-number-border: var(--m-border);
+    /* 与输入框同一层比纸面略白的底 */
+    --m-input-number-bg: rgb(var(--m-paper-rgb) / 0.6);
+    --m-input-number-control-w: 28px;
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    max-width: 180px;
+    min-height: var(--m-input-number-h);
+    padding: 0;
+    border: 1px solid var(--m-input-number-border);
+    border-radius: var(--m-radius);
+    background: var(--m-input-number-bg);
+    color: var(--m-fg);
+    cursor: text;
+    transition: border-color var(--m-duration) var(--m-ease);
+
+    &.m-input-number--focused {
+      --m-input-number-border: var(--m-accent);
+    }
+
+    &.m-input-number--readonly {
+      cursor: default;
+    }
+
+    &.m-input-number--disabled {
+      --m-input-number-border: var(--m-disabled);
+      --m-input-number-bg: color-mix(in srgb, var(--m-disabled) 40%, transparent);
+      color: var(--m-fg-muted);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-input-number__native {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: calc(var(--m-input-number-h) - 2px);
+    padding: 0 var(--m-input-number-px);
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    text-align: left;
+
+    &::placeholder {
+      color: var(--m-fg-muted);
+      opacity: 0.8;
+    }
+
+    &:disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+
+    &:read-only {
+      cursor: default;
+    }
+  }
+
+  .m-input-number--controls .m-input-number__native {
+    padding: 0 var(--m-space-2);
+    text-align: center;
+  }
+
+  .m-input-number__decrease,
+  .m-input-number__increase {
+    position: relative;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-input-number-control-w);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover:not(:disabled) {
+      color: var(--m-accent);
+    }
+
+    &:disabled {
+      color: var(--m-disabled);
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-input-number__decrease {
+    border-right: 1px solid var(--m-divider);
+  }
+
+  .m-input-number__increase {
+    border-left: 1px solid var(--m-divider);
+  }
+
+  /* 一笔写出的加减号，只在水墨皮肤下露出；默认皮肤用线性图标 */
+  .m-input-number__glyph {
+    display: none;
+    width: 14px;
+    height: 14px;
+    background: currentColor;
+  }
+}
+
+@layer m.ink {
+  /* 笔触边框由 useBrushBorder 注入（见 ink/stroke/stroke.css），这里只换墨色 */
+  html.m-ink-ready .m-input-number--focused {
+    --m-ink: var(--m-accent);
+  }
+
+  html.m-ink-ready .m-input-number--disabled {
+    /* 禁用底色和 --m-disabled 几乎同色，笔触改成半透明灰墨才看得见 */
+    --m-ink: color-mix(in srgb, var(--m-fg-muted) 55%, transparent);
+  }
+
+  html.m-ink-ready .m-input-number__icon {
+    display: none;
+  }
+
+  html.m-ink-ready .m-input-number__glyph {
+    display: inline-block;
+  }
+
+  html.m-ink-ready .m-input-number__glyph--plus {
+    mask: var(--m-input-number-plus) center / contain no-repeat;
+  }
+
+  html.m-ink-ready .m-input-number__glyph--minus {
+    mask: var(--m-input-number-minus) center / contain no-repeat;
+  }
+
+  /* 分隔线换成按控件高度生成的短竖笔，直线边框在水墨皮肤下会显得太"硬" */
+  html.m-ink-ready .m-input-number__decrease,
+  html.m-ink-ready .m-input-number__increase {
+    border-color: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: var(--m-input-number-divider-band, 8px);
+      background: var(--m-divider);
+      mask: var(--m-input-number-divider) center / 100% 100% no-repeat;
+      pointer-events: none;
+    }
+  }
+
+  html.m-ink-ready .m-input-number__decrease::before {
+    right: calc(var(--m-input-number-divider-band, 8px) / -2);
+  }
+
+  html.m-ink-ready .m-input-number__increase::before {
+    left: calc(var(--m-input-number-divider-band, 8px) / -2);
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "name": "MVirtualList",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MVirtualList"
+  },
+  "attributes": [
+    {
+      "name": "list",
+      "description": "数据",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "T[] | undefined"
+      }
+    },
+    {
+      "name": "itemHeight",
+      "description": "每项固定高度 px；传了走定高模式，不量尺寸",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "estimatedItemHeight",
+      "description": "变高模式下没量过的项先按这个高度估，默认 40",
+      "default": "40",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "buffer",
+      "description": "可视区上下各多渲染几项做缓冲，默认 5",
+      "default": "5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    },
+    {
+      "name": "height",
+      "description": "容器高度，数字按 px，字符串原样用；不传时为 300px，也可以用 CSS 覆盖 --m-virtual-list-h",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      }
+    },
+    {
+      "name": "itemKey",
+      "description": "每项的 key；不传按下标",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "((item: T, index: number) => PropertyKey) | undefined"
+      }
+    },
+    {
+      "name": "divider",
+      "description": "项之间画一道分隔线",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "scroll",
+      "description": "滚动时，参数是 scrollTop"
+    },
+    {
+      "name": "reachBottom",
+      "description": "滚到了底"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "每一项"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "MTag",
+  "source": {
+    "module": "@shuimo-design/ui",
+    "symbol": "MTag"
+  },
+  "attributes": [
+    {
+      "name": "type",
+      "description": "语义色：default 墨黑、primary 花青、success 石绿、warn 藤黄、danger 朱砂",
+      "default": "\"default\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TagType | undefined"
+      }
+    },
+    {
+      "name": "size",
+      "description": "尺寸：sm / md / lg 对应 32 / 45 / 64px 高",
+      "default": "\"md\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TagSize | undefined"
+      }
+    },
+    {
+      "name": "color",
+      "description": "任意底色，优先于 type（等价于覆盖 --m-tag-color）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      }
+    },
+    {
+      "name": "closable",
+      "description": "显示关闭按钮",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用（灰底、关闭按钮不可点）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "关闭叉那一笔的随机种子",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "click"
+    },
+    {
+      "name": "close",
+      "description": "点了关闭按钮"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default"
+    }
+  ]
+}
