@@ -15,6 +15,13 @@
 | shuimo-core 体积与性能 | 未实测：一张 3000×800 山水的 SVG 生成耗时、SVG 节点数、`xuan-paper` worker 耗时都没有数字             | 第一周先做 benchmark，数字决定"实时生成"还是"构建期预生成 + 运行期只做视差"              |
 | Safari 兼容            | 旧站的 `-webkit-box-reflect`、新方案里的 scroll-driven animation、View Transitions 在 Safari 覆盖不齐 | 目标浏览器定为 Chrome/Edge 120+、Safari 17+、Firefox 128+，缺的能力做渐进降级            |
 
+**后续结论（2026-09-10）**：
+
+- 包名取 `@shuimo-design/ui`，不去争 `shuimo-ui`。尚未发布 npm（当前 `0.0.0`）。
+- 仓库定为 `shuimo-design/shuimo-ui-next`（公开）。文档站先上 Vercel，见文末「仓库与部署」。
+- shuimo-core 的体积与性能不用再测：整个依赖已移除，素材改成本仓库自己生成，见 §4。
+- 手写字体 wljh **仍未解决**：`--m-font-brush: "wljh"` 没有对应 `@font-face`，本机没装就退回黑体。授权与子集化都没做。
+
 ---
 
 ## 1. 目标
@@ -52,14 +59,16 @@
 ## 3. 仓库与目录
 
 ```
-shuimo-ui-next/                      # 仓库名待定
+shuimo-ui-next/                      # github.com/shuimo-design/shuimo-ui-next（公开）
 ├─ package.json                      # private，workspace 根；scripts 全走 vp
 ├─ pnpm-workspace.yaml               # catalog 锁 vite / vitest / vite-plus，与 shuimo-core 同写法
 ├─ vite.config.ts                    # vp 的 fmt / lint 根配置
 ├─ .changeset/
 ├─ .github/workflows/
-│   ├─ ci.yml                        # PR：install → vp check → typecheck → vp test → build → e2e(截图)
-│   └─ release.yml                   # main：changesets publish
+│   ├─ ci.yml                        # PR：install → vp check → typecheck → vp test → build → attw
+│   ├─ release.yml                   # main：changesets publish
+│   └─ deploy.yml                    # main：Vercel CLI 部署演练场（要 VERCEL_TOKEN，没配就跳过）
+├─ vercel.json                       # 构建先出库再打演练场，产物取 playground/dist
 ├─ packages/
 │   └─ ui/                           # 唯一发布的包（名字见阻塞项）
 │       ├─ package.json              # exports: ".", "./style.css", "./ink", "./nuxt", "./resolver"（产物 .js/.d.ts，ESM only）（产物 .js/.d.ts，ESM only）
@@ -86,11 +95,11 @@ shuimo-ui-next/                      # 仓库名待定
 │       ├─ scripts/
 │       │   └─ gen-meta.ts           # vue-component-meta → web-types.json + docs/api/*.json
 │       └─ e2e/                      # Playwright 截图回归，按组件 × light/dark × reduced-motion
-├─ playground/                       # Vite 8 + Vue，纯本地调试，不发布
-├─ docs/                             # Nuxt 4 + Content 文档站
-│   ├─ content/{zh,en}/components/*.md
-│   ├─ app/components/               # DemoBlock, ApiTable（读 gen-meta 产出）
-│   └─ nuxt.config.ts
+├─ playground/                       # 演练场：每组件一页 + 页底 API 表；现在**就是文档站**，发在 Vercel
+├─ docs/                             # Nuxt 4 + Content 文档站（**只有空壳**，正文还没写，见 §7）
+│   ├─ api/*.json                    # gen-meta 产出的组件 API 元数据，演练场直接读
+│   ├─ COMPONENT-CONVENTIONS.md      # 新增组件的写法约定
+│   └─ MIGRATION.md                  # 从 0.3.x 迁移
 └─ docs/PLAN.md                      # 本文
 ```
 
@@ -284,7 +293,13 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 - 视觉回归：Playwright 对 playground 每组件 × light/dark × reduced-motion 截图，`maxDiffPixelRatio: 0.002`；ink 引擎固定 seed 保证可比。
 - Lint/格式：`vp check`（oxlint + oxfmt），配置沿用 shuimo-core 根 `vite.config.ts` 的写法。
 - 提交：Conventional Commits，changesets 生成 CHANGELOG，`release.yml` 发 npm + GitHub Release。
-- 文档站：Nuxt 4 + Content，`<DemoBlock>` 用 MDC 语法嵌 `demos/*.vue` 并显示源码（shiki 内置于 Content），字体由 font-subset 插件在构建期出 woff2。部署先上 Vercel 预览，域名归属定了再切。
+- 文档站：Nuxt 4 + Content，`<DemoBlock>` 用 MDC 语法嵌 `demos/*.vue` 并显示源码（shiki 内置于 Content），字体由 font-subset 插件在构建期出 woff2。
+
+**2026-09-10 现状**：
+
+- 已做：`vp check`、`vue-tsc`、`gen-meta`（web-types + `docs/api/*.json`）、`check-style`、vitest 浏览器模式 364 条、changesets 与 `release.yml`。
+- **没做**：Playwright 视觉回归（`packages/ui/e2e/` 还不存在，CI 里也没有这一步）。
+- 文档站：Nuxt 那套只有 `app/app.vue` 和 `content/index.md` 两个空壳，正文一个字没写。**眼下的文档就是演练场**（每组件一页 + 页底自动生成的 Props / Events / Slots 表），已部署到 Vercel，见文末「仓库与部署」。Nuxt 站要不要继续做还没定。
 
 ---
 
@@ -300,6 +315,19 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 | M5 文档站上线（1 周）      | zh/en 全部组件页、色板页、ink 引擎调参页                                                                         | Lighthouse 性能 ≥ 90                                                                                                                                                                                                                                                                                                                                                                          |
 
 总计约 11 周单人节奏。
+
+**里程碑现状（2026-09-10）**
+
+| 阶段 | 状态                                                                                                                                                       |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M0   | 完成                                                                                                                                                       |
+| M1   | 完成（shuimo-core 已移除，改成本仓库自己的 `ink/`；山水与视差删过一轮又在弹窗题头小景里重做）                                                              |
+| M2   | 完成（base 16 个 + 17 个 Icon + MDivider / MLoading / MConfigProvider / MDarkMode 都在）                                                                   |
+| M3   | 完成（消息、模板、MScroll、MVirtualList 全部就位；Dialog / Drawer 走的是自写的 `useModal` + 笔触框，没接 View Transitions）                                |
+| M4   | **部分**：`./nuxt`、`./resolver`、web-types、attw 都有并进了 CI；**npm 还没发**（`0.0.0`，registry 上查不到），也还没有一个干净的 Nuxt / Vite 项目跑通验收 |
+| M5   | **未开始**：Nuxt 文档站是空壳；眼下由演练场代替，已上线 Vercel。Lighthouse 没测过                                                                          |
+
+组件数从计划的 41 涨到 59（多出来的是旧库没有、常规库必备的结构件，见下面各轮记录）。
 
 ## 第一批新组件（2026-09-09）
 
@@ -368,3 +396,20 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 发布包本身很小（全量 min+gz 约 100 KB，没有位图和字体），大头在运行时：每个实例的笔触框、毛边纸缘、笔触线都是现算的 SVG data URL 挂在元素 style 上，卡片页 12 张卡有 790 KB 内联 SVG。第一轮不改画面只改写法：坐标统一写成相对增量的 path（`compactPath`，十分之一像素整数做差、不漂移）、数字去掉多余的零、毛边纸缘的轮廓只写一次 `<defs>` 引用两次、洒金和纤维改相对坐标。结果：笔触框 16.8→7.9 KB、纸缘 20.4→12.4 KB、笔触线 4.5→2.8 KB、远山 26→12.5 KB、洒金 49→42.5 KB；卡片页 790→约 510 KB。卡片区域像素对比零差异。还能压的下一步是"同一份素材只写一次"：把 data URL 注册成一条样式规则、元素上只挂类名，同尺寸的实例就不再各带一份。
 
 - 第二轮"同一份素材只写一次"（`ink/registry.ts`）：现算的 data URL 登记成样式表里一条 `[data-ia-xxx="k…"]{--m-xxx:url(…)}` 规则，元素上只挂属性；用 data 属性不用 class 是因为 Vue 更新 class 会整体重写。笔触边框、笔触线、卡片纸缘走 `applyInkVar`，标签 / 表格 / 表单项 / 按钮 / 列表 / 虚拟列表 / 签条 / 角标走 `inkVarBindings`；SSR 或插不进规则时退回内联。效果（演练场各页，原本会内联的量 → 实际登记的量）：标签页 301→38 KB、表格页 197→30、按钮页 216→48、复选框页 119→28、表单页 239→86；卡片页 12 张卡尺寸各不相同所以只从 324 降到 293。页面 HTML 从 982 KB 降到约 380 KB。剩下每页固定的约 190 KB 内联是宣纸底（远山 4 层、洒金、纸纹），每页一份、不重复。
+
+## 仓库与部署（2026-09-10）
+
+代码进了 GitHub 组织：<https://github.com/shuimo-design/shuimo-ui-next>（公开，MIT）。之前的工作按四笔提交进去：workspace 与脚本、水墨引擎、组件全集、演练场与文档。
+
+文档站（也就是演练场）发在 Vercel：<https://shuimo-ui-next.vercel.app>。构建配置在仓库根 `vercel.json`——先 `pnpm build` 出库、再 `pnpm -C playground build`，产物取 `playground/dist`。演练场用 hash 路由，所以不需要 SPA 回退规则。
+
+先试了 GitHub Pages，能跑通，但按用户要求换成了 Vercel，`pages.yml` 已删、仓库的 Pages 功能已关。
+
+**为什么没用 Vercel 自带的 Git 集成**：那个集成已经装在 shuimo-design 组织上（installation `38495129`），但授权仓库只勾了 `shuimo-playground` 一个，`vercel git connect` 因此失败。改这个列表要组织管理员，而当前账号 `JobinJia` 在这个组织里只是成员（管理员是 higuaifan / qunbotop / youuss）。所以改走 `.github/workflows/deploy.yml`：push 到 main 用 Vercel CLI 部署，凭据是仓库自己的 `VERCEL_TOKEN`，不碰组织权限。
+
+**还差一步**：`VERCEL_TOKEN` 这个 secret 还没配，所以工作流每次都按设计跳过部署（不报错、不留红叉）。配上就自动了；在那之前更新文档要本地手动跑一次 `vercel deploy --prod`。
+
+踩坑记两条：
+
+- GitHub Actions 的 `if` 条件里**读不到 `secrets` 上下文**，job 层和 step 层都不行。要按「secret 配没配」分支，得先在 `env` 里接一道，再判断 `env.XXX != ''`。
+- Vercel 部署产生的那个带哈希的长域名默认受 SSO 保护（访客会被弹到登录页），但正式别名 `shuimo-ui-next.vercel.app` 是公开的。验证可访问性要认准后者。
