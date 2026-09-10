@@ -419,4 +419,4 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 仓库推上去之后 CI 和 Release 从第一次提交起就一直失败，和文档改动无关：
 
 - `MStamp.test.ts` 有一条断言比的是「serif 排出来的章宽 ≠ monospace 排出来的」。这要求机器上装了两套以上中文字体；GitHub 的 Ubuntu runner 只有 Playwright 带的 wqy-zenhei 一套，两个通用族落到同一个字面、宽度必然相等，于是假失败（本地 Mac 上过）。改成逐字体和 `createGlyphMeasurer(font)` 直接生成的结果对账——同样能判出「有没有拿真渲染的字体去量」，且不挑机器。
-- `release.yml` 每次推 main 都跑 `changeset publish`，而包还没发过、也没配 `NPM_TOKEN`，于是每次都 `ERR_PNPM_FAILED_TO_PUBLISH … 404`。改成和 `deploy.yml` 一样的写法：`NPM_TOKEN` 没配就跳过。真要发版时先在 npm 上建好 `@shuimo-design` scope，再配这个 secret。
+- `release.yml` 每次推 main 都跑 `changeset publish`，于是每次都 `ERR_PNPM_FAILED_TO_PUBLISH … 404`。先按 `deploy.yml` 的写法加「没配 `NPM_TOKEN` 就跳过」，**没拦住**——shuimo-design 组织有一个组织级的 `NPM_TOKEN`，本仓库自动继承，「有没有令牌」根本判不出来。真正的原因是 npm 上 `@shuimo-design` 这个 scope 还不存在（`npm view @shuimo-design/color` 也是 404；旧包是不带 scope 的 `shuimo-ui`），发一个不存在的 scope 下的新包就是 404。改成显式开关：仓库变量 `RELEASE_ENABLED` 不为 `"true"` 时整个 job 跳过，变量已设成 `false`。准备首发时先在 npm 建好组织、确认令牌有该 scope 的发布权，再把变量打开。
