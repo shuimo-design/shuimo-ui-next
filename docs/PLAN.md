@@ -405,9 +405,11 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 
 先试了 GitHub Pages，能跑通，但按用户要求换成了 Vercel，`pages.yml` 已删、仓库的 Pages 功能已关。
 
-**为什么没用 Vercel 自带的 Git 集成**：那个集成已经装在 shuimo-design 组织上（installation `38495129`），但授权仓库只勾了 `shuimo-playground` 一个，`vercel git connect` 因此失败。改这个列表要组织管理员，而当前账号 `JobinJia` 在这个组织里只是成员（管理员是 higuaifan / qunbotop / youuss）。所以改走 `.github/workflows/deploy.yml`：push 到 main 用 Vercel CLI 部署，凭据是仓库自己的 `VERCEL_TOKEN`，不碰组织权限。
+**接 Git 集成绕的弯**：Vercel 的 GitHub 应用早就装在 shuimo-design 上（installation `38495129`），但授权仓库只勾了 `shuimo-playground` 一个，`vercel git connect` 因此失败。改这个列表要组织管理员，当时 `JobinJia` 只是成员，所以先做了个过渡方案：`.github/workflows/deploy.yml` 用仓库自己的 `VERCEL_TOKEN` 调 Vercel CLI 部署，不碰组织权限。
 
-**还差一步**：`VERCEL_TOKEN` 这个 secret 还没配，所以工作流每次都按设计跳过部署（不报错、不留红叉）。配上就自动了；在那之前更新文档要本地手动跑一次 `vercel deploy --prod`。
+后来账号升成了组织管理员。注意用 `gh` 调 `PUT /user/installations/{id}/repositories/{repo_id}` 仍会 403——本地令牌的授权范围里没有 `admin:org`，跟角色无关。最后是在浏览器的组织设置页把 `shuimo-ui-next` 加进授权列表（保持 Only select repositories，没有放开成 All repositories），然后 `vercel git connect` 成功。过渡用的 `deploy.yml` 已删，`VERCEL_TOKEN` 也不需要了。
+
+现在推 main 由 Vercel 自己拉代码构建，开 PR 会自动出预览部署并在 PR 里留链接（`vercel.json` 里没有设 `github.silent`，就是要这条评论）。
 
 踩坑记两条：
 
