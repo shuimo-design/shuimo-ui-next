@@ -430,3 +430,36 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 发出去的包：222.7 KB（解包 972.9 KB），13 个文件，只有 `dist/` 和 `web-types.json`，没有位图也没有字体。`attw --profile esm-only` 全绿。
 
 踩坑：**`pnpm version` 跑不到 `package.json` 里的脚本**——pnpm 自带同名子命令，会把它截胡，报「A version argument is required」。得写 `pnpm run version`。`release.yml` 里原本就是 `pnpm version` / `pnpm release`，已一并改成 `pnpm run …`。
+
+**发包暂缓（2026-09-11）**
+
+`1.0.0-alpha.0` 的版本号、CHANGELOG、预发布模式状态都已提交进仓库，包也构建校验过，但**还没有推到 npm**，用户决定先缓一缓。当前进度和卡点：
+
+- 本机 `npm login` 后身份是 `binbinjia`，对 `@shuimo-design` 下已有的 5 个包（blocksuite-core、calendar-core、lunar、milkdown、shuimo-ui-nuxt）都是 read-write。
+- 发布时 **404 消失了**，说明这个账号有权在该 scope 下建新包；新的报错是 `ERR_PNPM_OTP_NON_INTERACTIVE`——账号对写操作开了两步验证，需要一次性验证码，非交互终端给不了。
+- 要接着发，手动跑：`cd packages/ui && npm publish --tag alpha --access public --otp=<6位码>`。发完记得补 git 标签 `@shuimo-design/ui@1.0.0-alpha.0`。
+- 想让 CI 自动发版，得在 npmjs.com 建一个 **Automation 类型**的令牌（这类令牌绕过两步验证）、给 `@shuimo-design` 写权限，替换组织里那个 `NPM_TOKEN`。组织现有的那个令牌发不了新包（一直 404）。
+- 仓库变量 `RELEASE_ENABLED` 现在是 `false`，工作流整体跳过，main 不会被红叉刷屏。
+
+## 抽屉改成和弹窗一套（2026-09-11）
+
+用户要抽屉「样式和 modal 一样，唯一区别是方向——那个带装饰的关闭按钮要按抽屉出现的位置调整」。原来的抽屉是一块白板加一条边线，和弹窗那张宣纸完全两回事。
+
+**外观抽出来共用**：纸框、四角回纹、题头小景、挂在框线上的石牌关闭钮，全部搬进 `src/internal/modal-ink.css`，选择器同时点名 `.m-dialog__*` 和 `.m-drawer__*`，变量统一改叫 `--m-modal-*`。两个组件各自的 css 里只留「摆在哪」。这样以后调弹窗，抽屉跟着变，不会各走各的。抽屉也跟着加了 `__frame` 包裹层（回纹和小景挂在它上面，面板被 clip-path 裁角不会连它一起裁），推拉动画从面板挪到包裹层。
+
+**几何上做不到完全一样的地方**：抽屉贴着屏幕边、满高（或满宽），
+
+- 上框线外头没有地方摆山，所以小景改画在面板里面靠上（弹窗是骑在上框线上）。面板上内边距相应加到 66px。
+- 四角回纹往框外探 12px，纸贴着屏幕边的话会被视口裁掉半个图案。水墨层给根节点加了 16px 内边距，纸离屏幕边留出一圈；推拉动画的位移也补上这 16px，否则收起时纸还露在边上。
+
+**挂牌按方向挂**（挂在朝着屏幕里那一侧的框线上）：右滑出挂左边、左滑出挂右边、上滑出挂底边、下滑出挂顶边。竖边照弹窗（牌顶离上框线 42px、横跨框线探出一半 11px）；横边是牌横跨那条横线探出一半 18px、离右端 72px。挂左边时牌身 `::before` 整块 `scaleX(-1)` 镜像，那道压在左沿的暗边和几粒小点才是背对面板的，坠子的弯向也跟着翻。右滑出时小景挪到右上角给挂牌让开。
+
+**踩的坑**：
+
+- 只含 `@layer m.ink` 的样式文件如果先于组件样式被加载，`m.ink` 就成了最先注册、优先级最低的层，反被 `m.component` 盖掉，水墨样式整个失效。单测只引组件自己的 css、不引 `theme/layers.css`，正好会踩到。解法是在 `modal-ink.css` 顶部把层顺序再声明一遍（重复声明无害，以第一次出现为准）。
+- 绝对定位元素宽高固定时 `top` 和 `bottom` 同时有值是 `top` 赢。基础层写死了 `top` / `right`，水墨层按方向摆挂牌时必须把没盖住的那一侧显式改回 `auto`，否则上滑出的牌挪不到底边。
+- `scripts/check-style.ts` 用正则找文件里第一个类名，注释里写个 `drawer.css`、或者 `@import "./x.css"`，都会被当成类名 `.css` 而误报。已改成先剥注释和 at 规则，剥完没有选择器的文件（比如只做转发的 `style.css`）直接跳过。之前 `style.css` 是靠注释里的 `.ts` 蒙混过关的。
+- 单测里没有全局重置样式，面板的盒模型算成 content-box，给定宽度加上厚内边距就对不上。面板自己声明了 `box-sizing: border-box`，不指望使用方一定引了重置。
+- 挂牌一直在摆，Playwright 等不到它「稳定」，抽屉测试的关闭点击也要加 `force: true`（弹窗早就这么干了）。
+
+**验证**：新增 `bench/modal-sample.browser.ts`，把抽屉四个方向和弹窗各渲染一张整屏图落盘。弹窗改动前后逐像素比，只有 0.05% 的像素不同、集中在挂牌那 29×50 一小块，是摆动动画的相位差，形状颜色位置全对得上，没有回归。

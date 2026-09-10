@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // 样式必须从 SFC 自己引：rolldown 会跳过只做转发的 index.ts，那里的副作用引入会被丢掉
+import "../../internal/modal-ink.css";
 import "./dialog.css";
 import { computed, ref, useId, useTemplateRef, watch } from "vue";
 import { IconClose } from "../../icons";
@@ -72,10 +73,10 @@ const px = (value: number | string | undefined) =>
 // 四角回纹是 SVG 遮罩，通过变量交给 m.ink 层；宽高覆盖也走变量，方便用户用 CSS 改
 const rootStyle = computed(() => {
   const style: Record<string, string> = {
-    "--m-dialog-splash": `url("${inkSplashUrl({ seed })}")`,
+    "--m-modal-splash": `url("${inkSplashUrl({ seed })}")`,
   };
   for (const corner of ["tl", "tr", "br", "bl"] as const)
-    style[`--m-dialog-lattice-${corner}`] =
+    style[`--m-modal-lattice-${corner}`] =
       `url("${inkLatticeUrl({ seed, corner, size: 64, strokeWidth: 2 })}")`;
   const w = px(width);
   const h = px(height);

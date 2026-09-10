@@ -57,8 +57,29 @@
     backdrop-filter: blur(8px);
   }
 
+  /* 面板外面包一层：尺寸就是面板的尺寸，回纹、小景、推拉动画都挂在它上面 */
+  .m-drawer__frame {
+    position: relative;
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform var(--m-drawer-duration) var(--m-ease);
+  }
+
+  .m-drawer--left .m-drawer__frame,
+  .m-drawer--right .m-drawer__frame {
+    height: 100%;
+  }
+
+  .m-drawer--top .m-drawer__frame,
+  .m-drawer--bottom .m-drawer__frame {
+    width: 100%;
+  }
+
   .m-drawer__panel {
     position: relative;
+    /* 自己声明盒模型：面板是"给定宽高 + 很厚的内边距"，不能指望使用方一定引了重置样式 */
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     padding: var(--m-space-6);
@@ -66,7 +87,6 @@
     background: var(--m-bg);
     box-shadow: 0 0 40px rgb(0 0 0 / 0.14);
     outline: 0;
-    transition: transform var(--m-drawer-duration) var(--m-ease);
   }
 
   .m-drawer--left .m-drawer__panel,
@@ -100,7 +120,9 @@
     border-top-width: 1px;
   }
 
-  .m-drawer__edge {
+  .m-drawer__scene,
+  .m-drawer__close-splash,
+  .m-drawer__close-tassel {
     display: none;
   }
 
@@ -161,67 +183,156 @@
     backdrop-filter: blur(0);
   }
 
-  .m-drawer-enter-from.m-drawer--right .m-drawer__panel,
-  .m-drawer-leave-to.m-drawer--right .m-drawer__panel {
+  .m-drawer-enter-from.m-drawer--right .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--right .m-drawer__frame {
     transform: translateX(100%);
   }
 
-  .m-drawer-enter-from.m-drawer--left .m-drawer__panel,
-  .m-drawer-leave-to.m-drawer--left .m-drawer__panel {
+  .m-drawer-enter-from.m-drawer--left .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--left .m-drawer__frame {
     transform: translateX(-100%);
   }
 
-  .m-drawer-enter-from.m-drawer--top .m-drawer__panel,
-  .m-drawer-leave-to.m-drawer--top .m-drawer__panel {
+  .m-drawer-enter-from.m-drawer--top .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--top .m-drawer__frame {
     transform: translateY(-100%);
   }
 
-  .m-drawer-enter-from.m-drawer--bottom .m-drawer__panel,
-  .m-drawer-leave-to.m-drawer--bottom .m-drawer__panel {
+  .m-drawer-enter-from.m-drawer--bottom .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--bottom .m-drawer__frame {
     transform: translateY(100%);
   }
 }
 
+/* 外观（纸框、回纹、小景、挂牌）在 ../../internal/modal-ink.css，和弹窗共用；这里只定抽屉自己的摆放。
+   和弹窗唯一的差别是方向：挂牌挂在"朝着屏幕里那一侧"的边上，四个 direction 各挂一条边 */
 @layer m.ink {
-  /* 细边让位给笔触线：一笔按面板实际长度生成，骑在面板边缘上 */
+  /* 纸要离屏幕边留出空隙：四角回纹往框外探 12px，贴边的话会被视口裁掉半个图案；
+     挂牌也要探出框外。留 16px 一圈，纸仍然明显靠着自己那条边 */
+  html.m-ink-ready .m-drawer {
+    padding: 16px;
+  }
+
+  html.m-ink-ready .m-drawer__frame {
+    position: relative;
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  html.m-ink-ready .m-drawer--left .m-drawer__frame,
+  html.m-ink-ready .m-drawer--right .m-drawer__frame {
+    height: 100%;
+  }
+
+  html.m-ink-ready .m-drawer--top .m-drawer__frame,
+  html.m-ink-ready .m-drawer--bottom .m-drawer__frame {
+    width: 100%;
+  }
+
   html.m-ink-ready .m-drawer__panel {
-    border-color: transparent;
+    /* 上边留给小景，左右和弹窗一致 */
+    padding: 66px 44px 40px;
+    /* 四个角各挖掉一块（和弹窗同一套回纹，尺寸也照抄）：
+       左上——竖杠右沿 19.5px 以左、横带底沿 25.8px 以上；右上——竖杠右 17.9px 以右、横带底 18.2px 以上；
+       右下——粗竖杠右 18.74px 以右、长横线底上 18px 以下；左下——粗竖杠 18.65px 以左、长横线底上 17.9px 以下。
+       弹窗左上角还多挖一个楔子让山脚露出上框线，抽屉的小景画在面板里面，不需要那个楔子 */
+    clip-path: polygon(
+      19.5px 25.8px,
+      19.5px -400px,
+      calc(100% - 17.9px) -400px,
+      calc(100% - 17.9px) 18.2px,
+      calc(100% + 100px) 18.2px,
+      calc(100% + 100px) calc(100% - 18px),
+      calc(100% - 18.74px) calc(100% - 18px),
+      calc(100% - 18.74px) calc(100% + 100px),
+      18.65px calc(100% + 100px),
+      18.65px calc(100% - 17.9px),
+      -100px calc(100% - 17.9px),
+      -100px 25.8px
+    );
   }
 
-  html.m-ink-ready .m-drawer__edge {
-    display: block;
-    position: absolute;
-    z-index: 1;
-    background: var(--m-ink);
-    mask: var(--m-drawer-edge-mask) center / 100% 100% no-repeat;
-    pointer-events: none;
+  /* 边线让位给整圈笔触纸框 */
+  html.m-ink-ready .m-drawer__panel {
+    border-width: 0;
   }
 
-  html.m-ink-ready .m-drawer--right .m-drawer__edge {
-    top: 0;
-    bottom: 0;
-    left: calc(var(--m-drawer-edge-band, 24px) / -2);
-    width: var(--m-drawer-edge-band, 24px);
+  /* 小景画在面板里面靠上：抽屉贴着屏幕边，上框线外头没有地方摆山。
+     横向抽屉（上/下滑出）满屏宽，山按百分比会拉得很长，给个上限。
+     默认摆左上角（和弹窗一致），右滑出的抽屉挂牌在左边，山挪到右边给它让开 */
+  html.m-ink-ready .m-drawer__frame > .m-drawer__scene {
+    top: 14px;
+    left: 8%;
+    width: min(52%, 220px);
   }
 
-  html.m-ink-ready .m-drawer--left .m-drawer__edge {
-    top: 0;
-    bottom: 0;
-    right: calc(var(--m-drawer-edge-band, 24px) / -2);
-    width: var(--m-drawer-edge-band, 24px);
+  html.m-ink-ready .m-drawer--right .m-drawer__frame > .m-drawer__scene {
+    right: 8%;
+    left: auto;
   }
 
-  html.m-ink-ready .m-drawer--top .m-drawer__edge {
-    right: 0;
-    bottom: calc(var(--m-drawer-edge-band, 24px) / -2);
-    left: 0;
-    height: var(--m-drawer-edge-band, 24px);
+  /* 挂牌：挂在朝着屏幕里那一侧的框线上。竖着的两条边照弹窗——牌顶离上框线 42px、
+     牌横跨框线（探出一半 11px）；横着的两条边改成牌横跨那条横线（探出一半 18px）、离右端 72px——
+     回纹画幅 64px、往框外探 12px，沿着框线往里占到 52px，离 42px 会压在回纹上。
+     基础层已经写死了 top / right，这里没盖住的那一侧必须显式改回 auto——
+     绝对定位的元素高宽固定时，top 和 bottom 同时有值是 top 赢，牌就挪不下去（2026-09-11 实测） */
+  html.m-ink-ready .m-drawer--left .m-drawer__panel > .m-drawer__close {
+    top: 42px;
+    right: -11px;
+    bottom: auto;
+    left: auto;
   }
 
-  html.m-ink-ready .m-drawer--bottom .m-drawer__edge {
-    top: calc(var(--m-drawer-edge-band, 24px) / -2);
-    right: 0;
-    left: 0;
-    height: var(--m-drawer-edge-band, 24px);
+  html.m-ink-ready .m-drawer--right .m-drawer__panel > .m-drawer__close {
+    top: 42px;
+    right: auto;
+    bottom: auto;
+    left: -11px;
+  }
+
+  html.m-ink-ready .m-drawer--top .m-drawer__panel > .m-drawer__close {
+    top: auto;
+    right: 72px;
+    bottom: -18px;
+    left: auto;
+  }
+
+  html.m-ink-ready .m-drawer--bottom .m-drawer__panel > .m-drawer__close {
+    top: -18px;
+    right: 72px;
+    bottom: auto;
+    left: auto;
+  }
+
+  /* 牌挂在左边时整块左右镜像：牌身那道暗边和几粒小点本来是压在左沿的，
+     镜像过来才是背对面板、朝着屏幕外，和挂右边时看着一致。坠子的弯向也跟着翻 */
+  html.m-ink-ready .m-drawer--right .m-drawer__close::before {
+    transform: scaleX(-1);
+  }
+
+  html.m-ink-ready .m-drawer--right .m-drawer__close-tassel::after {
+    transform: rotate(-12deg);
+  }
+
+  /* 推进来的距离要把留出的 16px 空隙也算上，否则收起时纸还露在屏幕边上 */
+  .m-drawer-enter-from.m-drawer--right .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--right .m-drawer__frame {
+    transform: translateX(calc(100% + 16px));
+  }
+
+  .m-drawer-enter-from.m-drawer--left .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--left .m-drawer__frame {
+    transform: translateX(calc(-100% - 16px));
+  }
+
+  .m-drawer-enter-from.m-drawer--top .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--top .m-drawer__frame {
+    transform: translateY(calc(-100% - 16px));
+  }
+
+  .m-drawer-enter-from.m-drawer--bottom .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--bottom .m-drawer__frame {
+    transform: translateY(calc(100% + 16px));
   }
 }

@@ -13,7 +13,12 @@ const files = globSync("src/**/*.css", { cwd: root }).sort();
 
 const missing: string[] = [];
 for (const file of files) {
-  const source = readFileSync(resolve(root, file), "utf8");
+  // 先剥掉注释和 @import / @layer 这类 at 规则再找选择器：
+  // 注释里写个 `drawer.css`、或者 `@import "./x.css"`，都会被当成类名 `.css` 白白报错。
+  // 剥完没有任何选择器的文件（例如只做转发的 style.css）下面会被跳过
+  const source = readFileSync(resolve(root, file), "utf8")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*@[\w-]+[^{;]*;/gm, "");
   // 第一个类名，例如 `.m-button` / `[data-ink-stroke]` 这类没有类名的文件用属性选择器兜底
   const probe = /\.([a-z][\w-]*)/.exec(source)?.[1] ?? /\[([a-z][\w-]*)/.exec(source)?.[1];
   if (!probe) continue;

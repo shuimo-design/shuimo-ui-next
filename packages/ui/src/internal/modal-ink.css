@@ -1,0 +1,234 @@
+/**
+ * 弹窗与抽屉共用的水墨外观：纸框、四角回纹、题头小景、挂在框线上的石牌关闭钮。
+ * 两个组件长得一模一样，差别只在"挂牌挂在哪条边"——那部分写在各自的 css 里。
+ * 改这里两边一起变；只想改一个的，去 dialog.css / drawer.css 的对应段落。
+ * 变量统一叫 --m-modal-*，由组件在根节点上赋值（回纹和墨花的遮罩是运行时生成的 data URL）。
+ */
+
+/* 层顺序在这里再声明一遍（重复声明无害，以第一次出现为准）：本文件只有 m.ink 一层，
+   如果它先于组件样式被加载，m.ink 就会成为最先注册、优先级最低的层，反被 m.component 盖掉。
+   单测里只引组件自己的 css、不引 theme/layers.css，正好会踩到这个（2026-09-11 实测）。 */
+@layer m.reset, m.tokens, m.base, m.component, m.ink;
+
+@layer m.ink {
+  /* 面板套一圈笔触纸框（useBrushBorder 的 ::before），原有细边、圆角、投影让位。
+     老版是一张平铺在蒙版上的纸，没有投影；而且面板下面有 clip-path 挖角，投影会被裁成一块硬边灰方块 */
+  html.m-ink-ready .m-dialog__panel,
+  html.m-ink-ready .m-drawer__panel {
+    --m-modal-lattice-size: 64px;
+    /* 挂牌的石板色：偏冷的灰，只带一点蓝（老素材牌底色 rgb(37 42 52)），不是暖墨色 */
+    --m-modal-slate: color-mix(in srgb, var(--m-ink) 86%, var(--m-info));
+    /* 绳、结、坠子的色：灰蓝掺纸色 */
+    --m-modal-cord: color-mix(in srgb, var(--m-modal-slate) 62%, var(--m-bg));
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    /* 挂牌探出框外 */
+    overflow: visible;
+  }
+
+  /* 四角回纹：一个伪元素叠四张角饰遮罩（四张图案各不相同），各摆一角；画幅 64px、往框外探 12px，留给探出框外的部分。
+     挂在包裹层上（面板被 clip-path 裁过，伪元素会跟着被裁） */
+  html.m-ink-ready .m-dialog__frame::after,
+  html.m-ink-ready .m-drawer__frame::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    z-index: 2;
+    background: var(--m-ink);
+    mask-image:
+      var(--m-modal-lattice-tl), var(--m-modal-lattice-tr), var(--m-modal-lattice-br),
+      var(--m-modal-lattice-bl);
+    mask-position:
+      left top,
+      right top,
+      right bottom,
+      left bottom;
+    mask-size: var(--m-modal-lattice-size) var(--m-modal-lattice-size);
+    mask-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  /* 标题用手写体，像题在画上的款 */
+  html.m-ink-ready .m-dialog__header,
+  html.m-ink-ready .m-drawer__header {
+    font-family: var(--m-font-brush);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+
+  /* 题头小景：软边远山、朱砂日、枯树、飞鸟，山脚踩在左上角回纹的竖杠上（山体是纸色实心，会把框线盖住），
+     山下三道水纹画在 viewBox 之外、落进框里。挂在包裹层上，压在面板之上。摆在哪由各自的 css 定 */
+  html.m-ink-ready .m-dialog__frame > .m-dialog__scene,
+  html.m-ink-ready .m-drawer__frame > .m-drawer__scene {
+    display: block;
+    position: absolute;
+    z-index: 3;
+    color: var(--m-ink);
+    pointer-events: none;
+
+    & > svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  /* 关闭按钮做成挂在框线上的石牌（照老素材 model-close.png 描的）：尖顶五边形的牌身、一根细绳吊着（绳头一个结钉在框线上）、
+     牌顶一团霜溅、牌底一枚坠子，整个慢慢晃。整套都是冷灰蓝一个色系——绳、结、坠子也是灰蓝，不是墨黑；
+     老素材是张位图，边缘都是软的，整个按钮加一圈很淡的同色投影把硬边糊掉。
+     按钮本身透明，牌身画在 ::before 上——clip-path 只裁牌身，不裁绳和坠子。
+     挂在哪条边、离边多远，由各自的 css 定 */
+  html.m-ink-ready .m-dialog__panel > .m-dialog__close,
+  html.m-ink-ready .m-drawer__panel > .m-drawer__close {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 22px;
+    height: 36px;
+    /* 叉心在牌高一半略下（老素材约 53%） */
+    padding: 13px 0 0;
+    border-radius: 0;
+    background: none;
+    color: color-mix(in srgb, var(--m-bg) 78%, var(--m-modal-slate));
+    filter: drop-shadow(0 0 0.8px color-mix(in srgb, var(--m-modal-slate) 40%, transparent));
+    /* 绕绳结摆：幅度和节奏照旧版（10° → 15° → 0 → -10° → -15° → 0，8 秒一圈，匀速） */
+    transform-origin: 50% -9px;
+    animation: m-modal-wave 8s linear infinite both;
+
+    /* 老版鼠标移上去不变色；这里只把牌身微微提亮当反馈，叉和小点不跟着换成主题色 */
+    &:hover {
+      color: color-mix(in srgb, var(--m-bg) 78%, var(--m-modal-slate));
+    }
+
+    /* 牌身：冷灰蓝的石板，尖顶占三成；上浅下深（不是斜向的），左沿压一道暗边；叉的左下方撒两三粒浅色小点 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      clip-path: polygon(50% 0, 100% 30%, 100% 100%, 0 100%, 0 30%);
+      background:
+        radial-gradient(circle 0.7px at 37% 62%, currentColor 90%, transparent),
+        radial-gradient(circle 0.5px at 31% 68%, currentColor 90%, transparent),
+        radial-gradient(circle 0.6px at 42% 72%, currentColor 90%, transparent),
+        linear-gradient(
+          178deg,
+          color-mix(in srgb, var(--m-modal-slate) 58%, var(--m-bg)),
+          color-mix(in srgb, var(--m-modal-slate) 82%, var(--m-bg)) 45%,
+          color-mix(in srgb, var(--m-modal-slate) 100%, var(--m-ink)) 100%
+        );
+      box-shadow: inset 1.5px 0 1px -0.5px color-mix(in srgb, var(--m-ink) 55%, transparent);
+      transition: filter var(--m-duration) var(--m-ease);
+    }
+
+    /* 绳：从牌尖往上一小段，绳头一个横着的结（老素材结心在牌尖上方约 9px，结上面还露一小截绳） */
+    &::after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      width: 8px;
+      height: 13px;
+      background:
+        radial-gradient(ellipse 3.5px 2px at 50% 4px, var(--m-modal-cord) 98%, transparent),
+        linear-gradient(var(--m-modal-cord), var(--m-modal-cord)) center / 1.5px 100% no-repeat;
+      transform: translateX(-50%);
+    }
+
+    /* 叉：小小一个（老素材约 9px），浅灰蓝、笔画偏粗，像用白粉笔在石板上画的 */
+    & > svg {
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
+      stroke: currentColor;
+      stroke-width: 5;
+    }
+
+    &:hover::before {
+      filter: brightness(1.18);
+    }
+  }
+
+  /* 牌顶的墨花：七八朵分开的浅灰蓝尖瓣墨花散在屋檐两侧和肩头（形状见生成器），压在屋檐线上、半透，
+     顶边放在牌尖上方 7px（生成器按这个画幅定的）。它在牌身之上、叉之下 */
+  html.m-ink-ready .m-dialog__close-splash,
+  html.m-ink-ready .m-drawer__close-splash {
+    display: block;
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    z-index: 1;
+    width: 44px;
+    height: 28px;
+    background: color-mix(in srgb, var(--m-modal-slate) 40%, var(--m-bg));
+    opacity: 0.9;
+    mask: var(--m-modal-splash) center / 100% 100% no-repeat;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  /* 牌底：先垂一小段绳，绳头一枚往右弯的小坠——都是半透的灰蓝 */
+  html.m-ink-ready .m-dialog__close-tassel,
+  html.m-ink-ready .m-drawer__close-tassel {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 1.5px;
+    height: 3px;
+    margin-left: -0.75px;
+    background: var(--m-modal-cord);
+    pointer-events: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 4.5px;
+      height: 11px;
+      margin-left: -2.25px;
+      border-radius: 50% 50% 50% 50% / 25% 25% 75% 75%;
+      background: var(--m-modal-slate);
+      opacity: 0.8;
+      transform: rotate(12deg);
+      transform-origin: 50% 0;
+    }
+  }
+
+  @keyframes m-modal-wave {
+    0%,
+    50%,
+    100% {
+      transform: rotate(0deg);
+    }
+
+    10% {
+      transform: rotate(10deg);
+    }
+
+    30% {
+      transform: rotate(15deg);
+    }
+
+    60% {
+      transform: rotate(-10deg);
+    }
+
+    80% {
+      transform: rotate(-15deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.m-ink-ready .m-dialog__panel > .m-dialog__close,
+    html.m-ink-ready .m-drawer__panel > .m-drawer__close {
+      animation: none;
+    }
+  }
+}

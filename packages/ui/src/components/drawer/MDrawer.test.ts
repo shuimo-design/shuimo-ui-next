@@ -51,7 +51,8 @@ describe("MDrawer", () => {
     expect(document.documentElement.style.overflow).toBe("hidden");
     await vi.waitFor(() => expect(drawer.element().contains(document.activeElement)).toBe(true));
 
-    await screen.getByRole("button", { name: "关闭" }).click();
+    // 挂牌一直在摆（rotate 动画），Playwright 等不到它"稳定"；人点得到，测试里跳过稳定性检查
+    await screen.getByRole("button", { name: "关闭" }).click({ force: true });
     // 关掉后是 v-show 藏起来（面板留着，边缘那一笔不用重画），角色查询找不到隐藏元素，直接看 display
     await vi.waitFor(() => expect(getComputedStyle(root).display).toBe("none"));
     expect(document.documentElement.style.overflow).toBe("");
@@ -92,7 +93,7 @@ describe("MDrawer", () => {
     ).toBe(false);
   });
 
-  it("sizes the panel per direction and draws the edge stroke along its real length", async () => {
+  it("sizes the panel per direction and draws the shared paper frame", async () => {
     const directions: DrawerDirection[] = ["left", "top", "bottom"];
     for (const direction of directions) {
       const screen = await render(Host, { props: { drawerProps: { direction, size: 200 } } });
@@ -103,8 +104,15 @@ describe("MDrawer", () => {
       if (direction === "left") expect(Math.round(rect.width)).toBe(200);
       else expect(Math.round(rect.height)).toBe(200);
       const root = screen.container.querySelector<HTMLElement>(".m-drawer")!;
+      // 四角回纹和牌顶墨花的遮罩都是运行时生成的 data URL，和弹窗同一套变量
+      for (const corner of ["tl", "tr", "br", "bl"] as const)
+        expect(root.style.getPropertyValue(`--m-modal-lattice-${corner}`)).toMatch(
+          /^url\("data:image\/svg/,
+        );
+      expect(root.style.getPropertyValue("--m-modal-splash")).toMatch(/^url\("data:image\/svg/);
+      // 纸框是 useBrushBorder 生成的，挂在面板上
       await vi.waitFor(() =>
-        expect(root.style.getPropertyValue("--m-drawer-edge-mask")).toMatch(
+        expect(getComputedStyle(panel.element()).getPropertyValue("--m-ink-stroke-border")).toMatch(
           /^url\("data:image\/svg/,
         ),
       );

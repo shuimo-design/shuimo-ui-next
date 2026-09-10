@@ -126,10 +126,10 @@ describe("MDialog", () => {
     await screen.getByRole("button", { name: "打开" }).click();
     const root = screen.container.querySelector<HTMLElement>(".m-dialog")!;
     for (const corner of ["tl", "tr", "br", "bl"])
-      expect(root.style.getPropertyValue(`--m-dialog-lattice-${corner}`)).toMatch(
+      expect(root.style.getPropertyValue(`--m-modal-lattice-${corner}`)).toMatch(
         /^url\("data:image\/svg/,
       );
-    expect(root.style.getPropertyValue("--m-dialog-splash")).toMatch(/^url\("data:image\/svg/);
+    expect(root.style.getPropertyValue("--m-modal-splash")).toMatch(/^url\("data:image\/svg/);
     const svg = root.querySelector(".m-dialog__scene svg")!;
     expect(svg).not.toBeNull();
     // 山体用纸色、墨用 currentColor：换主题时跟着变
