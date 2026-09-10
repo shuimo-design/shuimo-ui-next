@@ -1,0 +1,25 @@
+/* playground 示例页共用的小样式 */
+.demo {
+  display: grid;
+  gap: 20px;
+}
+.demo__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.demo__hint {
+  margin: 0;
+  color: var(--m-fg-muted);
+  font-size: 13px;
+}
+.demo__block {
+  display: grid;
+  gap: 12px;
+}
+.demo__caption {
+  margin: 0;
+  font-size: 13px;
+  color: var(--m-fg-muted);
+}

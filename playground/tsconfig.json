@@ -1,5 +1,5 @@
 {
   "extends": "../packages/ui/tsconfig.json",
   "compilerOptions": { "types": [] },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "env.d.ts", "vite.config.ts"]
 }
