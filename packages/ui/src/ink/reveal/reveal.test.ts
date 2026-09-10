@@ -18,6 +18,14 @@ describe("ink reveal", () => {
     expect(img.naturalWidth).toBe(img.naturalHeight * 2);
   });
 
+  it("wipe mask stretches to the element box instead of letterboxing", () => {
+    // mask-size 会把它拉成元素的 200%×100%；没有 none 就只盖住中间一条，两侧内容整段消失
+    for (const direction of ["right", "left", "down", "up"] as const) {
+      const svg = decodeURIComponent(wipeMaskUrl({ direction }).split(",")[1]!);
+      expect(svg).toContain('preserveAspectRatio="none"');
+    }
+  });
+
   it("animates mask-position and cleans up afterwards", async () => {
     const el = box();
     const done = revealElement(el, { duration: 120, reducedMotion: false });

@@ -31,10 +31,10 @@ it("dump brush border variants", async () => {
     { name: "2 brush w3 seed 12", o: { seed: 12 } },
     { name: "3 brush w4 rough.7", o: { seed: 7, strokeWidth: 4, roughness: 0.7 } },
     { name: "4 brush w2 (button-ish)", o: { seed: 7, strokeWidth: 2 } },
-    { name: "5 shanshui w3", o: { seed: 7, renderer: "shanshui" } },
+    { name: "5 brush w3 dry (flyingWhite .5)", o: { seed: 7, flyingWhite: 0.5 } },
     {
-      name: "6 shanshui w5 rough.9",
-      o: { seed: 7, renderer: "shanshui", strokeWidth: 5, roughness: 0.9 },
+      name: "6 brush w5 rough.9 wet",
+      o: { seed: 7, strokeWidth: 5, roughness: 0.9, flyingWhite: 0 },
     },
   ];
   const pad = 16;

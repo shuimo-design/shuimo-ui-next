@@ -11,7 +11,15 @@ describe("brush border", () => {
     expect(a.svg).not.toBe(c.svg);
     expect(a.svg.startsWith("<svg")).toBe(true);
     expect(a.width).toBe(200 + a.padding * 2);
-    expect(a.svg.match(/<polyline/g)?.length ?? 0).toBeGreaterThanOrEqual(4);
+    // 四条边，每边至少一条墨带
+    expect(a.svg.match(/<path /g)?.length ?? 0).toBeGreaterThanOrEqual(4);
+  });
+
+  it("more flying white means more broken ribbons", () => {
+    const dry = generateBrushBorder(300, 80, { seed: 2, flyingWhite: 0.6 });
+    const wet = generateBrushBorder(300, 80, { seed: 2, flyingWhite: 0 });
+    const count = (svg: string) => svg.match(/<path /g)?.length ?? 0;
+    expect(count(dry.svg)).toBeGreaterThan(count(wet.svg));
   });
 
   it("data url is CSS-safe and renders as an image", async () => {
@@ -24,10 +32,10 @@ describe("brush border", () => {
     expect([img.naturalWidth, img.naturalHeight]).toEqual([width, height]);
   });
 
-  it("caches by size bucket", async () => {
-    const a = await brushBorderUrl(101, 33, { seed: 1 });
-    const b = await brushBorderUrl(103, 35, { seed: 1 });
-    const c = await brushBorderUrl(120, 33, { seed: 1 });
+  it("caches by size bucket", () => {
+    const a = brushBorderUrl(101, 33, { seed: 1 });
+    const b = brushBorderUrl(103, 35, { seed: 1 });
+    const c = brushBorderUrl(120, 33, { seed: 1 });
     expect(a).toBe(b);
     expect(a).not.toBe(c);
   });

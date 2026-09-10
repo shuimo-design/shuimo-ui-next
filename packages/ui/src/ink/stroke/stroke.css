@@ -1,8 +1,12 @@
 /* 笔触边框：::before 外扩 pad，用生成的 SVG 当 alpha 遮罩，墨色来自 --m-ink */
 @layer m.ink {
   html.m-ink-ready [data-ink-stroke] {
+    /* 遮罩还没生成时用一张空 SVG 兜底：什么都不画，而不是一整块实心墨 */
+    --m-ink-stroke-border: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E");
     position: relative;
     border-color: transparent;
+    /* 边框颜色不参与过渡：一挂载就是透明，不要从墨色渐隐 */
+    transition-property: color, background-color, opacity, transform;
   }
 
   html.m-ink-ready [data-ink-stroke]::before {
@@ -13,6 +17,7 @@
     mask: var(--m-ink-stroke-border) center / 100% 100% no-repeat;
     pointer-events: none;
     z-index: 0;
+    transition: background-color var(--m-duration) var(--m-ease);
   }
 
   html.m-ink-ready [data-ink-stroke] > * {

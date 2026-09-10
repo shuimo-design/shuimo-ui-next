@@ -40,8 +40,10 @@ export function wipeMaskUrl(options: WipeMaskOptions = {}): string {
           ? `transform="translate(${H} 0) rotate(90)"`
           : `transform="translate(0 ${W}) rotate(-90)"`;
   const scale = (W * raggedness) / 100;
+  // 遮罩会被 mask-size 拉成元素的 200%×100%（或 100%×200%），宽高比和这张图完全不同：
+  // 必须 none，否则浏览器按 meet 等比缩放并居中，遮罩只盖住元素中间一条，两侧内容整段消失
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" ${size} viewBox="${viewBox}">` +
+    `<svg xmlns="http://www.w3.org/2000/svg" ${size} viewBox="${viewBox}" preserveAspectRatio="none">` +
     `<filter id="f" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">` +
     `<feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="3" seed="${seed}" result="n"/>` +
     `<feDisplacementMap in="SourceGraphic" in2="n" scale="${scale}" xChannelSelector="R" yChannelSelector="G" result="d"/>` +

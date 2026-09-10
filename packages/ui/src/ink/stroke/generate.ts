@@ -1,10 +1,20 @@
 /**
- * 笔触边框：沿矩形四边各走一笔 naturalBrushStroke，拼成一份 SVG 文档。
+ * 笔触边框：沿矩形四边各走一笔（assets/brush 的「一笔」原语），拼成一份 SVG 文档。
  * 颜色一律画黑，使用方当 alpha 遮罩（mask-image），墨色由 CSS 的 --m-ink 决定。
- * 这个文件会静态引 shuimo-core 的 drawing/foundation 子路径，只能被动态 import。
  */
-import { noise, prng } from "@jobinjia/shuimo-core/foundation";
-import { naturalBrushStroke, stroke as shanshuiStroke } from "@jobinjia/shuimo-core/drawing";
+import { createRng } from "../random";
+import {
+  bleedFilter,
+  fmt,
+  paintBrush,
+  samplePath,
+  svgDoc,
+  svgToDataUrl,
+  type BleedOptions,
+  type Point,
+} from "../assets/brush";
+
+export { svgToDataUrl };
 
 export interface BrushBorderOptions {
   seed?: number;
@@ -12,20 +22,31 @@ export interface BrushBorderOptions {
   strokeWidth?: number;
   /** 边缘噪声 0–1，默认 0.5 */
   roughness?: number;
-  /** 飞白 0–1，默认 0.25 */
+  /** 飞白 0–1，默认 0.12 */
   flyingWhite?: number;
   /** 拐角出头长度 px，默认 = strokeWidth */
   overshoot?: number;
   /** 手抖幅度 px，默认 strokeWidth * 0.25 */
   wobble?: number;
-  /** 笔锋纹理线数量（Brush 的 texture），默认 0：边框不要那条细描边 */
-  texture?: number;
-  /** 渲染器：brush = 书法笔（naturalBrushStroke），shanshui = 山水线（stroke），默认 brush */
-  renderer?: "brush" | "shanshui";
   /** 在 SVG 内嵌一层晕染滤镜（feTurbulence 位移 + 微模糊），默认开 */
-  bleed?: boolean | { frequency?: number; scale?: number; blur?: number };
+  bleed?: boolean | BleedOptions;
   /** 落墨：按笔顺沿路径描出（SMIL，图片加载即播放）。true = 1.2s */
   reveal?: boolean | { duration?: number; delay?: number };
+  /** 只画哪几条边，缺省的边不画；不传四边全画 */
+  sides?: { top?: boolean; right?: boolean; bottom?: boolean; left?: boolean };
+  /** 每条边在拐角处留空的长度 px，默认 0；角上要压角饰（回纹）时用，线在角饰处停笔。
+   *  一个数 = 四角八处都留这么多；四角各不相同的角饰用对象，每个角给 [横边留空, 竖边留空] */
+  cornerGap?: number | CornerGaps;
+  /** 沿线洒的细小墨点密度 0–2，默认 0；旧版底图框线边上那些干笔溅出的点 */
+  specks?: number;
+}
+
+/** 每个角上两条边各自的留空：横边（上 / 下）在前，竖边（左 / 右）在后 */
+export interface CornerGaps {
+  tl?: [horizontal: number, vertical: number];
+  tr?: [horizontal: number, vertical: number];
+  br?: [horizontal: number, vertical: number];
+  bl?: [horizontal: number, vertical: number];
 }
 
 export interface BrushBorder {
@@ -34,32 +55,6 @@ export interface BrushBorder {
   padding: number;
   width: number;
   height: number;
-}
-
-type Point = [number, number];
-
-function edge(from: Point, to: Point, wobble: number, overshoot: number): Point[] {
-  const dx = to[0] - from[0];
-  const dy = to[1] - from[1];
-  const length = Math.hypot(dx, dy) || 1;
-  const ux = dx / length;
-  const uy = dy / length;
-  // 法线方向，用来加手抖
-  const nx = -uy;
-  const ny = ux;
-  const steps = Math.max(6, Math.min(48, Math.round(length / 12)));
-  const start: Point = [from[0] - ux * overshoot, from[1] - uy * overshoot];
-  const total = length + overshoot * 2;
-  const phase = prng.random() * Math.PI * 2;
-  const freq = 1 + prng.random() * 1.5;
-  const points: Point[] = [];
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const d = t * total;
-    const w = (Math.sin(t * Math.PI * freq + phase) * 0.6 + (prng.random() - 0.5) * 0.8) * wobble;
-    points.push([start[0] + ux * d + nx * w, start[1] + uy * d + ny * w]);
-  }
-  return points;
 }
 
 export function generateBrushBorder(
@@ -72,67 +67,74 @@ export function generateBrushBorder(
   const wobble = options.wobble ?? strokeWidth * 0.25;
   const padding = Math.ceil(strokeWidth * 1.5 + overshoot + wobble);
   const seed = options.seed ?? 1;
-
-  prng.seed(seed);
-  noise.reset();
+  const roughness = options.roughness ?? 0.5;
+  const flyingWhite = options.flyingWhite ?? 0.12;
+  const rng = createRng(seed);
 
   const w = Math.max(1, Math.round(width));
   const h = Math.max(1, Math.round(height));
-  const corners: Point[] = [
-    [0, 0],
-    [w, 0],
-    [w, h],
-    [0, h],
+  // 拐角留空不能超过短边的三分之一，否则线就没了
+  const gapLimit = Math.min(w, h) / 3;
+  const gapOf = (corner: keyof CornerGaps, axis: 0 | 1) => {
+    const g = options.cornerGap ?? 0;
+    return Math.min(typeof g === "number" ? g : (g[corner]?.[axis] ?? 0), gapLimit);
+  };
+  // 笔顺：上、右、下、左；一律向右 / 向下画，方向一致便于描出动画
+  const sample = (a: Point, b: Point) => samplePath([a, b], rng, { wobble, overshoot });
+  // 四边都先采样再筛掉不画的：随机数消耗顺序不变，同 seed 下画出来的边和四边全画时一致
+  const sides = options.sides;
+  const all: { edge: ReturnType<typeof sample>; on: boolean }[] = [
+    { edge: sample([gapOf("tl", 0), 0], [w - gapOf("tr", 0), 0]), on: sides?.top ?? true },
+    { edge: sample([w, gapOf("tr", 1)], [w, h - gapOf("br", 1)]), on: sides?.right ?? true },
+    { edge: sample([gapOf("bl", 0), h], [w - gapOf("br", 0), h]), on: sides?.bottom ?? true },
+    { edge: sample([0, gapOf("tl", 1)], [0, h - gapOf("bl", 1)]), on: sides?.left ?? true },
   ];
-  const roughness = options.roughness ?? 0.5;
-  const renderer = options.renderer ?? "brush";
-  const draw = (points: Point[]): string =>
-    renderer === "shanshui"
-      ? shanshuiStroke(points, {
-          wid: strokeWidth,
-          col: "rgba(0,0,0,0.9)",
-          noi: roughness,
-          out: 1,
-          // 默认是 sin 梭形，边框要接近匀宽，只在两端收一点
-          fun: (x: number) => 0.7 + 0.3 * Math.sin(x * Math.PI) ** 0.4,
-        })
-      : naturalBrushStroke(points, {
-          width: strokeWidth,
-          color: "rgba(0,0,0,0.92)",
-          noise: roughness,
-          flyingWhite: options.flyingWhite ?? 0.12,
-          texture: options.texture ?? 0,
-          // 边框比正文淡会显得虚，墨量调高一档（默认 0.9 → 0.4）
-          inkStart: 1,
-          inkEnd: 0.65,
-        });
-  // 四条边一律向右 / 向下画。shuimo-core 的 Brush 对相邻两段方向角做算术平均，
-  // 向左的笔画方向角在 ±π 附近会平均成 0，法线翻转，画出串珠伪影（待上游修）。
-  const edges = [
-    edge(corners[0]!, corners[1]!, wobble, overshoot),
-    edge(corners[1]!, corners[2]!, wobble, overshoot),
-    edge(corners[3]!, corners[2]!, wobble, overshoot),
-    edge(corners[0]!, corners[3]!, wobble, overshoot),
-  ];
+  const edges = all.filter((e) => e.on).map((e) => e.edge);
   const reveal = options.reveal
-    ? revealMasks(edges, strokeWidth + wobble * 2, seed, options.reveal)
+    ? revealMasks(
+        edges.map((e) => e.center),
+        strokeWidth + wobble * 2,
+        seed,
+        options.reveal,
+      )
     : undefined;
   const strokes = edges
-    .map((points, index) => {
-      const body = draw(points);
+    .map((e, index) => {
+      const body = paintBrush(e, { strokeWidth, roughness, flyingWhite }, rng);
       return reveal ? `<g mask="url(#${reveal.ids[index]})">${body}</g>` : body;
     })
     .join("");
+  // 洒点：沿每条线随机撒一些小圆点，落在线的两侧一两个笔宽内，大小不一、浓淡不一
+  const specks = options.specks ?? 0;
+  let dots = "";
+  if (specks > 0)
+    for (const e of edges) {
+      const count = Math.round((e.length / 36) * specks);
+      for (let i = 0; i < count; i++) {
+        const idx = Math.min(e.center.length - 1, Math.floor(rng() * e.center.length));
+        const p = e.center[idx]!;
+        const n = e.normal[idx]!;
+        const off = (rng() - 0.5) * 2 * strokeWidth * 2.4;
+        const r = 0.35 + rng() * 0.9;
+        dots += `<circle cx="${fmt(p[0] + n[0] * off)}" cy="${fmt(p[1] + n[1] * off)}" r="${fmt(r)}" fill="#000" fill-opacity="${(0.45 + rng() * 0.45).toFixed(2)}"/>`;
+      }
+    }
 
   const bleed = options.bleed ?? true;
-  const bleedOpts = typeof bleed === "object" ? bleed : {};
   const filterId = `b${seed}`;
-  const filter = bleed
-    ? `<filter id="${filterId}" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="${bleedOpts.frequency ?? 0.06}" numOctaves="2" seed="${seed}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${bleedOpts.scale ?? 2.5}" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation="${bleedOpts.blur ?? 0.35}"/></filter>`
-    : "";
+  const filter = bleed ? bleedFilter(filterId, seed, typeof bleed === "object" ? bleed : {}) : "";
   const vw = w + padding * 2;
   const vh = h + padding * 2;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${vw}" height="${vh}" viewBox="${-padding} ${-padding} ${vw} ${vh}">${filter}${reveal?.defs ?? ""}<g${bleed ? ` filter="url(#${filterId})"` : ""}>${strokes}</g></svg>`;
+  // 元素尺寸按 8px 分桶，画幅宽高比和元素不完全一致：必须 none，否则浏览器等比缩放并居中，竖笔会被挤进内侧
+  const svg = svgDoc(
+    {
+      width: vw,
+      height: vh,
+      viewBox: `${-padding} ${-padding} ${vw} ${vh}`,
+      preserveAspectRatio: "none",
+    },
+    `${filter}${reveal?.defs ?? ""}<g${bleed ? ` filter="url(#${filterId})"` : ""}>${strokes}${dots}</g>`,
+  );
   return { svg, padding, width: vw, height: vh };
 }
 
@@ -165,30 +167,15 @@ function revealMasks(
     ids.push(id);
     const length = lengths[index]!;
     const duration = (total * length) / sum;
-    const d = points
-      .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`)
-      .join(" ");
+    const d = points.map(([x, y], i) => `${i === 0 ? "M" : "L"}${fmt(x)} ${fmt(y)}`).join(" ");
     const mask =
       `<mask id="${id}" maskUnits="userSpaceOnUse" x="-1000" y="-1000" width="4000" height="4000">` +
-      `<path d="${d}" fill="none" stroke="#fff" stroke-width="${(maskWidth * 2.5).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round" ` +
-      `stroke-dasharray="${length.toFixed(1)}" stroke-dashoffset="${length.toFixed(1)}">` +
-      `<animate attributeName="stroke-dashoffset" from="${length.toFixed(1)}" to="0" begin="${(begin / 1000).toFixed(3)}s" dur="${Math.max(0.05, duration / 1000).toFixed(3)}s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>` +
+      `<path d="${d}" fill="none" stroke="#fff" stroke-width="${fmt(maskWidth * 2.5)}" stroke-linecap="round" stroke-linejoin="round" ` +
+      `stroke-dasharray="${fmt(length)}" stroke-dashoffset="${fmt(length)}">` +
+      `<animate attributeName="stroke-dashoffset" from="${fmt(length)}" to="0" begin="${(begin / 1000).toFixed(3)}s" dur="${Math.max(0.05, duration / 1000).toFixed(3)}s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>` +
       `</path></mask>`;
     begin += duration;
     return mask;
   });
   return { defs: `<defs>${masks.join("")}</defs>`, ids };
-}
-
-/** 转成可放进 CSS url() 的 data URL（不用 base64，可读且更小） */
-export function svgToDataUrl(svg: string): string {
-  const encoded = svg
-    .replace(/\s+/g, " ")
-    .replace(/"/g, "'")
-    .replace(/%/g, "%25")
-    .replace(/#/g, "%23")
-    .replace(/</g, "%3C")
-    .replace(/>/g, "%3E")
-    .replace(/&/g, "%26");
-  return `data:image/svg+xml;charset=utf-8,${encoded}`;
 }

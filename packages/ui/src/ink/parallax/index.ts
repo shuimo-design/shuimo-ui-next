@@ -1,6 +1,6 @@
 /**
  * 视差：指针 / 滚动 → 目标偏移，rAF 里做阻尼插值，只写 CSS transform。
- * 不依赖 shuimo-core。尊重 prefers-reduced-motion（强度归零）。
+ * 尊重 prefers-reduced-motion（强度归零）。
  */
 export interface ParallaxLayerTarget {
   element: HTMLElement;
