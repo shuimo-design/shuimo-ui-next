@@ -28,12 +28,15 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
-      - uses: changesets/action@v1
-        with:
-          # 必须写 pnpm run：pnpm 自带 version 子命令，直接写 pnpm version 会跑内置的那个，
-          # 根本到不了 package.json 里的脚本（本地实测过）
-          publish: pnpm run release
-          version: pnpm run version
+      # 没用 changesets/action@v1：它内置的是旧版读取逻辑，而本仓库用的是 @changesets/cli 3.x，
+      # 预发布模式会把消费掉的 changeset 挪进 .changeset/pre/ 目录；旧逻辑把这个目录当成
+      # 老格式的 changeset，去找里面并不存在的 changes.md 然后崩掉（实测 ENOENT）。
+      # 直接用仓库自己的 CLI 发布，代价是暂时没有自动的 Version PR 和 GitHub Release。
+      # 注意写 pnpm run：pnpm 自带 version 子命令会把 pnpm version 截胡。
+      - run: pnpm run release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # changeset publish 会在本地打 tag，推上去
+      - run: git push --follow-tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
