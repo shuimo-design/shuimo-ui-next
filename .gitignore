@@ -13,3 +13,5 @@ packages/ui/e2e/__screenshots__/**/*-actual.png
 packages/ui/e2e/__screenshots__/**/*-diff.png
 **/bench/results/
 .vitest-attachments
+.vercel
+.env*
