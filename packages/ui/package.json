@@ -46,11 +46,11 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "vp pack && pnpm gen:meta",
+    "build": "vp pack && pnpm gen:meta && pnpm check:style",
+    "check:style": "tsx scripts/check-style.ts",
     "typecheck": "vue-tsc --noEmit",
     "test": "vp test",
-    "bench": "tsx bench/landscape.bench.ts",
-    "bench:paper": "BENCH=1 vp test bench/",
+    "bench": "BENCH=1 vp test bench/",
     "gen:meta": "tsx scripts/gen-meta.ts",
     "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
   },
@@ -60,7 +60,6 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@jobinjia/shuimo-core": "^2.0.3",
     "@nuxt/kit": "^4.5.2",
     "@nuxt/schema": "^4.5.2",
     "@types/node": "^26.1.1",
@@ -79,14 +78,10 @@
     "vue-tsc": "^3.3.11"
   },
   "peerDependencies": {
-    "@jobinjia/shuimo-core": "^2.0.3",
     "@nuxt/kit": "^4.0.0",
     "vue": "^3.5.0"
   },
   "peerDependenciesMeta": {
-    "@jobinjia/shuimo-core": {
-      "optional": true
-    },
     "@nuxt/kit": {
       "optional": true
     }

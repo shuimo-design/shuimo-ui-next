@@ -4,11 +4,51 @@
  *  - ../../docs/api/<name>.json（文档 API 表）
  * 同时校验 src/nuxt/components.ts 的清单与实际导出一致。
  */
-import { globSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, globSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 import { createChecker } from "vue-component-meta";
 import { COMPONENT_NAMES } from "../src/nuxt/components";
+
+/**
+ * 事件说明的兜底：vue-component-meta 拿不到事件的 JSDoc。
+ * `defineEmits<XxxEmits>()` 里接口成员上的注释，到了 meta.events 里 description 永远是空串，
+ * tags 也是空数组，getDeclarations() 指向 runtime-core.d.ts——事件在类型层被转成了函数重载，
+ * 接口成员上的注释这一步就丢了（3.3.11 实测）。所以直接解析 SFC 同目录的 types.ts，
+ * 找到 defineEmits 用的那个接口，把每个成员上方的 `/** … *\/` 按事件名对回去。
+ */
+function readEmitDocs(sfc: string): Map<string, string> {
+  const docs = new Map<string, string>();
+  const emitsName = /defineEmits<\s*(\w+)/.exec(readFileSync(sfc, "utf8"))?.[1];
+  const typesFile = resolve(dirname(sfc), "types.ts");
+  if (!emitsName || !existsSync(typesFile)) return docs;
+  const file = ts.createSourceFile(
+    typesFile,
+    readFileSync(typesFile, "utf8"),
+    ts.ScriptTarget.Latest,
+    true,
+  );
+  const decl = file.statements.find(
+    (s): s is ts.InterfaceDeclaration => ts.isInterfaceDeclaration(s) && s.name.text === emitsName,
+  );
+  if (!decl) {
+    console.warn(`${sfc}: defineEmits 用的 ${emitsName} 不在同目录的 types.ts 里，事件说明留空`);
+    return docs;
+  }
+  for (const member of decl.members) {
+    if (!ts.isPropertySignature(member)) continue;
+    const key = member.name;
+    if (!ts.isIdentifier(key) && !ts.isStringLiteral(key)) continue;
+    const text = ts
+      .getJSDocCommentsAndTags(member)
+      .filter(ts.isJSDoc)
+      .map((d) => ts.getTextOfJSDocComment(d.comment)?.trim())
+      .find(Boolean);
+    if (text) docs.set(key.text, text);
+  }
+  return docs;
+}
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pkgRoot = resolve(here, "..");
@@ -67,6 +107,7 @@ for (const name of exported) {
   }
   const meta = checker.getComponentMeta(sfc, "default");
   const props = meta.props.filter((p) => !p.global);
+  const emitDocs = readEmitDocs(sfc);
   const element: WebTypeElement = {
     name,
     source: { module: pkg.name, symbol: name },
@@ -77,7 +118,10 @@ for (const name of exported) {
       required: p.required,
       value: { kind: "expression", type: p.type },
     })),
-    events: meta.events.map((e) => ({ name: e.name, description: e.description || undefined })),
+    events: meta.events.map((e) => ({
+      name: e.name,
+      description: e.description || emitDocs.get(e.name) || undefined,
+    })),
     slots: meta.slots.map((s) => ({ name: s.name, description: s.description || undefined })),
   };
   elements.push(element);
