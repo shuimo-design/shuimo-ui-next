@@ -207,12 +207,6 @@
 /* 外观（纸框、回纹、小景、挂牌）在 ../../internal/modal-ink.css，和弹窗共用；这里只定抽屉自己的摆放。
    和弹窗唯一的差别是方向：挂牌挂在"朝着屏幕里那一侧"的边上，四个 direction 各挂一条边 */
 @layer m.ink {
-  /* 纸要离屏幕边留出空隙：四角回纹往框外探 12px，贴边的话会被视口裁掉半个图案；
-     挂牌也要探出框外。留 16px 一圈，纸仍然明显靠着自己那条边 */
-  html.m-ink-ready .m-drawer {
-    padding: 16px;
-  }
-
   html.m-ink-ready .m-drawer__frame {
     position: relative;
     display: flex;
@@ -233,29 +227,15 @@
   html.m-ink-ready .m-drawer__panel {
     /* 上边留给小景，左右和弹窗一致 */
     padding: 66px 44px 40px;
-    /* 四个角各挖掉一块（和弹窗同一套回纹，尺寸也照抄）：
-       左上——竖杠右沿 19.5px 以左、横带底沿 25.8px 以上；右上——竖杠右 17.9px 以右、横带底 18.2px 以上；
-       右下——粗竖杠右 18.74px 以右、长横线底上 18px 以下；左下——粗竖杠 18.65px 以左、长横线底上 17.9px 以下。
-       弹窗左上角还多挖一个楔子让山脚露出上框线，抽屉的小景画在面板里面，不需要那个楔子 */
-    clip-path: polygon(
-      19.5px 25.8px,
-      19.5px -400px,
-      calc(100% - 17.9px) -400px,
-      calc(100% - 17.9px) 18.2px,
-      calc(100% + 100px) 18.2px,
-      calc(100% + 100px) calc(100% - 18px),
-      calc(100% - 18.74px) calc(100% - 18px),
-      calc(100% - 18.74px) calc(100% + 100px),
-      18.65px calc(100% + 100px),
-      18.65px calc(100% - 17.9px),
-      -100px calc(100% - 17.9px),
-      -100px 25.8px
-    );
+    border-width: 0;
+    /* 不像弹窗那样把四角挖空：弹窗四角挖空是为了让回纹探出框外的那部分露在纸外头，
+       抽屉贴着屏幕边、回纹整个收在纸里面（见下），纸保持完整的长方形 */
   }
 
-  /* 边线让位给整圈笔触纸框 */
-  html.m-ink-ready .m-drawer__panel {
-    border-width: 0;
+  /* 四角回纹收进纸里面：弹窗是 inset -12px、让图案探出框外，抽屉三面顶着视口边，
+     探出去的部分会被裁掉半个图案，所以改成 inset 0，整块图案落在纸的四角内 */
+  html.m-ink-ready .m-drawer__frame::after {
+    inset: 0;
   }
 
   /* 小景画在面板里面靠上：抽屉贴着屏幕边，上框线外头没有地方摆山。
@@ -263,29 +243,31 @@
      默认摆左上角（和弹窗一致），右滑出的抽屉挂牌在左边，山挪到右边给它让开 */
   html.m-ink-ready .m-drawer__frame > .m-drawer__scene {
     top: 14px;
-    left: 8%;
+    /* 回纹现在收在纸里面、从纸角起往里占 64px，山要让开它。
+       横向抽屉满屏宽，8% 早就够了；竖向抽屉只有三百多宽，8% 才二十几像素，会压在回纹上，所以给个像素下限 */
+    left: max(8%, 76px);
     width: min(52%, 220px);
   }
 
   html.m-ink-ready .m-drawer--right .m-drawer__frame > .m-drawer__scene {
-    right: 8%;
+    right: max(8%, 76px);
     left: auto;
   }
 
-  /* 挂牌：挂在朝着屏幕里那一侧的框线上。竖着的两条边照弹窗——牌顶离上框线 42px、
+  /* 挂牌：挂在朝着屏幕里那一侧的框线上。竖着的两条边牌顶离上框线 58px（弹窗是 42px；抽屉的回纹收进纸里、往下占到 47px，42px 会贴上去）、
      牌横跨框线（探出一半 11px）；横着的两条边改成牌横跨那条横线（探出一半 18px）、离右端 72px——
      回纹画幅 64px、往框外探 12px，沿着框线往里占到 52px，离 42px 会压在回纹上。
      基础层已经写死了 top / right，这里没盖住的那一侧必须显式改回 auto——
      绝对定位的元素高宽固定时，top 和 bottom 同时有值是 top 赢，牌就挪不下去（2026-09-11 实测） */
   html.m-ink-ready .m-drawer--left .m-drawer__panel > .m-drawer__close {
-    top: 42px;
+    top: 58px;
     right: -11px;
     bottom: auto;
     left: auto;
   }
 
   html.m-ink-ready .m-drawer--right .m-drawer__panel > .m-drawer__close {
-    top: 42px;
+    top: 58px;
     right: auto;
     bottom: auto;
     left: -11px;
@@ -313,26 +295,5 @@
 
   html.m-ink-ready .m-drawer--right .m-drawer__close-tassel::after {
     transform: rotate(-12deg);
-  }
-
-  /* 推进来的距离要把留出的 16px 空隙也算上，否则收起时纸还露在屏幕边上 */
-  .m-drawer-enter-from.m-drawer--right .m-drawer__frame,
-  .m-drawer-leave-to.m-drawer--right .m-drawer__frame {
-    transform: translateX(calc(100% + 16px));
-  }
-
-  .m-drawer-enter-from.m-drawer--left .m-drawer__frame,
-  .m-drawer-leave-to.m-drawer--left .m-drawer__frame {
-    transform: translateX(calc(-100% - 16px));
-  }
-
-  .m-drawer-enter-from.m-drawer--top .m-drawer__frame,
-  .m-drawer-leave-to.m-drawer--top .m-drawer__frame {
-    transform: translateY(calc(-100% - 16px));
-  }
-
-  .m-drawer-enter-from.m-drawer--bottom .m-drawer__frame,
-  .m-drawer-leave-to.m-drawer--bottom .m-drawer__frame {
-    transform: translateY(calc(100% + 16px));
   }
 }
