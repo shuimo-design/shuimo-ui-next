@@ -30,7 +30,7 @@ const model = defineModel<boolean>({ default: false });
 
 const mask = computed(() => resolveMask(maskProp));
 const teleportTo = computed(() => (typeof teleport === "string" ? teleport : "body"));
-// 首次打开才渲染内容；之后用 v-show 留着，边缘那一笔不用每次重画
+// 首次打开才渲染内容；之后用 v-show 留着，笔触边框和面板尺寸不用每次重算
 const rendered = ref(model.value);
 watch(model, (open, was) => {
   if (open) rendered.value = true;
@@ -48,10 +48,9 @@ const { trapFocus } = useModal({
   close,
 });
 
-// 纸框、四角回纹、题头小景、挂牌都和弹窗同一套（外观见 internal/modal-ink.css）。
+// 纸框、四角回纹、挂牌都和弹窗同一套（外观见 internal/modal-ink.css）；只有题头小景抽屉不要。
 // 5px 一笔、边缘晕成干笔毛边；四角留空给回纹，实线在角饰第一根条处停笔（[横边, 竖边]，px）。
-// 留空的数值和弹窗一模一样：抽屉是把画框线的面板整体往里收 12px、回纹贴着纸边摆
-// （见 drawer.css 的说明），回纹和框线的相对位置没变，所以 cornerGap 不用动。
+// 留空的数值和弹窗一模一样：回纹那张图往框外探 12px、框角点落在框线的角上，两边关系和弹窗一致，cornerGap 不用动。
 // 左上角和其它三个角一样按回纹留空，不用像弹窗那样给山脚让路
 useBrushBorder(panel, {
   seed,

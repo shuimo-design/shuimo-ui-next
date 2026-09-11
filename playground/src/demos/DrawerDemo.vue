@@ -9,7 +9,7 @@ const directions: DrawerDirection[] = ["top", "right", "bottom", "left"];
 
 <template>
   <div class="demo">
-    <p class="demo__caption">普通抽屉：默认从右侧滑出，贴页面那条边是一笔按实际高度画的竖线</p>
+    <p class="demo__caption">普通抽屉：默认从右侧滑出，纸框、四角回纹、挂牌和弹窗是同一套</p>
     <div class="demo__row">
       <MDrawer title="抽屉">
         <template #active><MButton>点击显示抽屉</MButton></template>
@@ -21,7 +21,10 @@ const directions: DrawerDirection[] = ["top", "right", "bottom", "left"];
       </MDrawer>
     </div>
 
-    <p class="demo__caption">四个方向 + v-model + footer 插槽</p>
+    <p class="demo__caption">
+      四个方向 + v-model + footer
+      插槽：关闭挂牌永远横跨一条竖框线，左滑出挂右边线、右滑出挂左边线、上下滑出挂右边线的右上角
+    </p>
     <div class="demo__row">
       <MButton v-for="d in directions" :key="d" @click="((direction = d), (visible = true))">
         从{{ { top: "上", right: "右", bottom: "下", left: "左" }[d] }}滑出
