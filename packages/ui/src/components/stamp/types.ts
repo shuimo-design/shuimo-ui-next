@@ -41,7 +41,7 @@ export interface StampProps {
   carving?: number;
   /** 印泥 0 ~ 1：没压实的白斑和边缘起毛，默认 0.7 */
   bleed?: number;
-  /** 文字到边框的内边距（px），默认 size × 4% */
+  /** 文字到边框的内边距（px），默认 size × 1.5% */
   padding?: number;
   /** 字距和列距（px），默认 size × 1% */
   gap?: number;

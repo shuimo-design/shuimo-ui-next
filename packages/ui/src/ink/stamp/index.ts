@@ -49,6 +49,7 @@ export interface StampOptions {
   carving?: number;
   /** 印泥 0 ~ 1：没压实的白斑和边缘起毛 */
   bleed?: number;
+  /** 文字到边框的内边距（px），默认 size × 1.5% */
   padding?: number;
   gap?: number;
   rowGap?: number;
@@ -128,7 +129,8 @@ export function generateStamp(o: StampOptions): StampRender {
   const direction = o.direction ?? "ttb-rtl";
   const columns = splitColumns(o.text, o.columns);
   const thickness = o.border ?? Math.max(1.5, size * 0.035);
-  const padding = o.padding ?? size * 0.04;
+  // 印文到边框的留白：真印章上笔画几乎是抵着框走的，留 4% 看着像排版排出来的框，1.5% 才是刻出来的
+  const padding = o.padding ?? size * 0.015;
   const gap = o.gap ?? size * 0.01;
 
   const layout = layoutStamp({
