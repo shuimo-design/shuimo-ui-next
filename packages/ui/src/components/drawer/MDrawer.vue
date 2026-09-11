@@ -5,7 +5,6 @@ import "./drawer.css";
 import { computed, ref, useId, useTemplateRef, watch } from "vue";
 import { IconClose } from "../../icons";
 import { inkLatticeUrl } from "../../ink/assets/lattice";
-import { inkSceneSvg } from "../../ink/assets/scene";
 import { inkSplashUrl } from "../../ink/assets/splash";
 import { useBrushBorder } from "../../ink/stroke";
 import { resolveMask, useModal } from "../../internal/modal";
@@ -51,7 +50,7 @@ const { trapFocus } = useModal({
 
 // 纸框、四角回纹、题头小景、挂牌都和弹窗同一套（外观见 internal/modal-ink.css）。
 // 5px 一笔、边缘晕成干笔毛边；四角留空给回纹，实线在角饰第一根条处停笔（[横边, 竖边]，px）。
-// 抽屉贴着屏幕边，装饰不能探出纸外（会被视口裁掉），所以回纹整块收进纸里、小景也画在纸里面：
+// 抽屉贴着屏幕边，装饰不能探出纸外（会被视口裁掉），所以回纹整块收进纸里：
 // 回纹比弹窗往里挪了 12px（弹窗的角饰是 inset -12px，抽屉是 inset 0），留空跟着 +12px。
 // 左上角也和其它三个角一样按回纹留空，不用像弹窗那样给山脚让路
 useBrushBorder(panel, {
@@ -65,10 +64,6 @@ useBrushBorder(panel, {
   cornerGap: { tl: [31.5, 38], tr: [29.9, 29.5], br: [30, 29.5], bl: [30, 29.5] },
   specks: 1,
 });
-// 小景是内联 SVG，滤镜 / 渐变 id 要全页唯一（同一页可能同时开着弹窗和抽屉）
-const uid = useId().replace(/[^\w-]/g, "-");
-const scene = computed(() => inkSceneSvg({ seed, id: `m-drawer-scene-${seed}-${uid}` }));
-
 const rootStyle = computed(() => {
   const style: Record<string, string> = {
     "--m-modal-splash": `url("${inkSplashUrl({ seed })}")`,
@@ -105,11 +100,8 @@ function onMaskClick() {
         :style="rootStyle"
       >
         <div class="m-drawer__mask" @click="onMaskClick" />
-        <!-- 和弹窗一样包一层：面板要用 clip-path 挖掉四角（那里没纸、透出遮罩），
-             回纹和小景挂在这一层上才不会被一起裁掉 -->
+        <!-- 和弹窗一样包一层：四角回纹挂在这一层上，推拉动画也在这一层 -->
         <div class="m-drawer__frame">
-          <!-- 小景是自己生成的可信标记，不含用户内容 -->
-          <span class="m-drawer__scene" aria-hidden="true" v-html="scene" />
           <div
             ref="panel"
             class="m-drawer__panel"

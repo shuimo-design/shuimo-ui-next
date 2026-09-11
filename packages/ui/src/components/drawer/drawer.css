@@ -120,7 +120,6 @@
     border-top-width: 1px;
   }
 
-  .m-drawer__scene,
   .m-drawer__close-splash,
   .m-drawer__close-tassel {
     display: none;
@@ -238,25 +237,8 @@
     inset: 0;
   }
 
-  /* 小景画在面板里面靠上：抽屉贴着屏幕边，上框线外头没有地方摆山。
-     横向抽屉（上/下滑出）满屏宽，山按百分比会拉得很长，给个上限。
-     默认摆左上角（和弹窗一致），右滑出的抽屉挂牌在左边，山挪到右边给它让开 */
-  html.m-ink-ready .m-drawer__frame > .m-drawer__scene {
-    top: 14px;
-    /* 回纹现在收在纸里面、从纸角起往里占 64px，山要让开它。
-       横向抽屉满屏宽，8% 早就够了；竖向抽屉只有三百多宽，8% 才二十几像素，会压在回纹上，所以给个像素下限 */
-    left: max(8%, 76px);
-    width: min(52%, 220px);
-  }
-
-  html.m-ink-ready .m-drawer--right .m-drawer__frame > .m-drawer__scene {
-    right: max(8%, 76px);
-    left: auto;
-  }
-
   /* 挂牌：挂在朝着屏幕里那一侧的框线上。竖着的两条边牌顶离上框线 58px（弹窗是 42px；抽屉的回纹收进纸里、往下占到 47px，42px 会贴上去）、
-     牌横跨框线（探出一半 11px）；横着的两条边改成牌横跨那条横线（探出一半 18px）、离右端 72px——
-     回纹画幅 64px、往框外探 12px，沿着框线往里占到 52px，离 42px 会压在回纹上。
+     牌横跨框线（探出一半 11px）；横着的两条边见下面各自的注释。
      基础层已经写死了 top / right，这里没盖住的那一侧必须显式改回 auto——
      绝对定位的元素高宽固定时，top 和 bottom 同时有值是 top 赢，牌就挪不下去（2026-09-11 实测） */
   html.m-ink-ready .m-drawer--left .m-drawer__panel > .m-drawer__close {
@@ -273,16 +255,19 @@
     left: -11px;
   }
 
+  /* 上 / 下滑出的都贴右上角。下滑出的上框线是朝屏幕内的自由边，牌照常横跨它（探出一半 18px）；
+     上滑出的上框线顶着视口，横跨会被裁掉半个牌，所以整块收进纸里，只留 14px 让牌尖上那截绳子露出来。
+     离右端 76px：回纹收进纸里之后从纸角起往里占 64px，再留一点空 */
   html.m-ink-ready .m-drawer--top .m-drawer__panel > .m-drawer__close {
-    top: auto;
-    right: 72px;
-    bottom: -18px;
+    top: 14px;
+    right: 76px;
+    bottom: auto;
     left: auto;
   }
 
   html.m-ink-ready .m-drawer--bottom .m-drawer__panel > .m-drawer__close {
     top: -18px;
-    right: 72px;
+    right: 76px;
     bottom: auto;
     left: auto;
   }
