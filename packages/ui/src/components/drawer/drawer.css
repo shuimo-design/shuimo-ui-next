@@ -206,33 +206,50 @@
 /* 外观（纸框、回纹、小景、挂牌）在 ../../internal/modal-ink.css，和弹窗共用；这里只定抽屉自己的摆放。
    和弹窗唯一的差别是方向：挂牌挂在"朝着屏幕里那一侧"的边上，四个 direction 各挂一条边 */
 @layer m.ink {
+  /* 纸铺满到屏幕边，墨框（笔触边框 + 四角回纹）画在纸里面 12px 处。
+     为什么是 12px：回纹那张图里画的"框角"不在图的角上，而在离图边 12px 的地方
+     （ink/assets/lattice.ts 的坐标画在 32 格网格上、框角在离外沿 6 格 = 12px 处）。
+     弹窗用 inset: -12px 让整张图探出框外，那个框角点正好落在面板角上，图案就骑在框线上、
+     和边框线首尾相接。抽屉三面顶着视口，图案不能探到纸外，于是反过来做：
+     图案贴着纸边（下面的 inset: 0），把画框线的面板整体往里收 12px，
+     框角点照样落在面板角上，接口关系和弹窗完全一致。
+     纸色因此从面板挪到这一层，面板自己透明 */
   html.m-ink-ready .m-drawer__frame {
     position: relative;
+    box-sizing: border-box;
     display: flex;
     max-width: 100%;
     max-height: 100%;
+    padding: 12px;
+    background: var(--m-bg);
   }
 
   html.m-ink-ready .m-drawer--left .m-drawer__frame,
   html.m-ink-ready .m-drawer--right .m-drawer__frame {
+    width: var(--m-drawer-size);
+    max-width: 100%;
     height: 100%;
   }
 
   html.m-ink-ready .m-drawer--top .m-drawer__frame,
   html.m-ink-ready .m-drawer--bottom .m-drawer__frame {
     width: 100%;
+    height: var(--m-drawer-size);
+    max-height: 100%;
   }
 
   html.m-ink-ready .m-drawer__panel {
-    /* 上边留给小景，左右和弹窗一致 */
-    padding: 66px 44px 40px;
+    width: 100%;
+    height: 100%;
+    /* 内边距比弹窗各少 12px：外面那 12px 已经由包裹层的 padding 出了 */
+    padding: 54px 32px 28px;
     border-width: 0;
-    /* 不像弹窗那样把四角挖空：弹窗四角挖空是为了让回纹探出框外的那部分露在纸外头，
-       抽屉贴着屏幕边、回纹整个收在纸里面（见下），纸保持完整的长方形 */
+    background: transparent;
+    /* 不像弹窗那样把四角挖空：弹窗挖角是为了露出回纹探到纸外的那一截，
+       抽屉的回纹最远只到纸边，没有露到纸外的部分，纸保持完整长方形 */
   }
 
-  /* 四角回纹收进纸里面：弹窗是 inset -12px、让图案探出框外，抽屉三面顶着视口边，
-     探出去的部分会被裁掉半个图案，所以改成 inset 0，整块图案落在纸的四角内 */
+  /* 回纹整张图贴着纸边摆，图里那个"框角"点就落在面板（墨框）的角上 */
   html.m-ink-ready .m-drawer__frame::after {
     inset: 0;
   }

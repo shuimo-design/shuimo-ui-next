@@ -50,9 +50,9 @@ const { trapFocus } = useModal({
 
 // 纸框、四角回纹、题头小景、挂牌都和弹窗同一套（外观见 internal/modal-ink.css）。
 // 5px 一笔、边缘晕成干笔毛边；四角留空给回纹，实线在角饰第一根条处停笔（[横边, 竖边]，px）。
-// 抽屉贴着屏幕边，装饰不能探出纸外（会被视口裁掉），所以回纹整块收进纸里：
-// 回纹比弹窗往里挪了 12px（弹窗的角饰是 inset -12px，抽屉是 inset 0），留空跟着 +12px。
-// 左上角也和其它三个角一样按回纹留空，不用像弹窗那样给山脚让路
+// 留空的数值和弹窗一模一样：抽屉是把画框线的面板整体往里收 12px、回纹贴着纸边摆
+// （见 drawer.css 的说明），回纹和框线的相对位置没变，所以 cornerGap 不用动。
+// 左上角和其它三个角一样按回纹留空，不用像弹窗那样给山脚让路
 useBrushBorder(panel, {
   seed,
   strokeWidth: 5,
@@ -61,7 +61,7 @@ useBrushBorder(panel, {
   overshoot: 0,
   wobble: 0.8,
   bleed: { scale: 2.5, blur: 0.6 },
-  cornerGap: { tl: [31.5, 38], tr: [29.9, 29.5], br: [30, 29.5], bl: [30, 29.5] },
+  cornerGap: { tl: [19.5, 26], tr: [17.9, 17.5], br: [18, 17.5], bl: [18, 17.5] },
   specks: 1,
 });
 const rootStyle = computed(() => {

@@ -93,14 +93,16 @@ describe("MDrawer", () => {
     ).toBe(false);
   });
 
-  it("sizes the panel per direction and draws the shared paper frame", async () => {
+  it("sizes the sheet per direction and draws the shared paper frame", async () => {
     const directions: DrawerDirection[] = ["left", "top", "bottom"];
     for (const direction of directions) {
       const screen = await render(Host, { props: { drawerProps: { direction, size: 200 } } });
       await screen.getByRole("button", { name: "打开" }).click();
       const panel = screen.getByRole("dialog");
       await expect.element(panel).toBeVisible();
-      const rect = panel.element().getBoundingClientRect();
+      // size 是整张纸的宽 / 高，量包裹层：水墨层里纸铺满包裹层，画框线的面板还往里收 12px
+      const frame = screen.container.querySelector<HTMLElement>(".m-drawer__frame")!;
+      const rect = frame.getBoundingClientRect();
       if (direction === "left") expect(Math.round(rect.width)).toBe(200);
       else expect(Math.round(rect.height)).toBe(200);
       const root = screen.container.querySelector<HTMLElement>(".m-drawer")!;
