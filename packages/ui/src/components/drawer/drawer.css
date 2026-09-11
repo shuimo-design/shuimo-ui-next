@@ -258,9 +258,10 @@
     );
   }
 
-  /* 挂牌：左右滑出的挂在朝屏幕里那条竖框线上，牌横跨框线（探出一半 11px）、牌顶离上框线 58px（弹窗是 42px，
-     但弹窗挂的是右边、右上角回纹小；抽屉左上角那套回纹往下挂到 35px，42px 会让牌顶的墨花蹭上去）；上下滑出的都贴右上角（用户要求），牌整块收在纸里、留 14px 让牌尖上那截绳子露出来，
-     离右端 72px 避开右上角回纹（回纹画幅 64px、探出框外 12px，沿框线往里占到 52px）。
+  /* 挂牌一律横跨一条竖框线（牌探出框外一半，11px），只是挂哪条边随方向变：
+     左右滑出的挂在朝屏幕里那一条（左抽屉挂右边线、右抽屉挂左边线），牌顶离上框线 58px——弹窗是 42px，
+     但弹窗只挂右边、右上角那套回纹小；抽屉右滑时挂的是左边线，左上角那套回纹往下挂到 35px，42px 会让牌顶的墨花蹭上去。
+     上下滑出的挂右边线、贴着右上角（用户要求），牌顶离上框线 42px，和弹窗同一个数——右上角回纹只往下挂到 29.5px，不会打架。
      基础层已经写死了 top / right，这里没盖住的那一侧必须显式改回 auto——
      绝对定位元素宽高固定时 top 和 bottom 同时有值是 top 赢，牌就挪不动（2026-09-11 实测） */
   html.m-ink-ready .m-drawer--left .m-drawer__panel > .m-drawer__close {
@@ -279,8 +280,8 @@
 
   html.m-ink-ready .m-drawer--top .m-drawer__panel > .m-drawer__close,
   html.m-ink-ready .m-drawer--bottom .m-drawer__panel > .m-drawer__close {
-    top: 14px;
-    right: 72px;
+    top: 42px;
+    right: -11px;
     bottom: auto;
     left: auto;
   }
