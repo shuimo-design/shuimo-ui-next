@@ -205,59 +205,64 @@
 
 /* 外观（纸框、回纹、小景、挂牌）在 ../../internal/modal-ink.css，和弹窗共用；这里只定抽屉自己的摆放。
    和弹窗唯一的差别是方向：挂牌挂在"朝着屏幕里那一侧"的边上，四个 direction 各挂一条边 */
+
+/* 外观（纸框、回纹、挂牌）在 ../../internal/modal-ink.css，和弹窗共用；这里只定抽屉自己的摆放。
+   和弹窗唯一的差别是方向：挂牌挂在朝着屏幕里那一侧，四个 direction 各不相同 */
 @layer m.ink {
-  /* 纸铺满到屏幕边，墨框（笔触边框 + 四角回纹）画在纸里面 12px 处。
-     为什么是 12px：回纹那张图里画的"框角"不在图的角上，而在离图边 12px 的地方
-     （ink/assets/lattice.ts 的坐标画在 32 格网格上、框角在离外沿 6 格 = 12px 处）。
-     弹窗用 inset: -12px 让整张图探出框外，那个框角点正好落在面板角上，图案就骑在框线上、
-     和边框线首尾相接。抽屉三面顶着视口，图案不能探到纸外，于是反过来做：
-     图案贴着纸边（下面的 inset: 0），把画框线的面板整体往里收 12px，
-     框角点照样落在面板角上，接口关系和弹窗完全一致。
-     纸色因此从面板挪到这一层，面板自己透明 */
+  /* 纸要离屏幕边留出一圈：回纹那张图里画的"框角"在离图边 12px 处
+     （ink/assets/lattice.ts 的坐标画在 32 格网格、框角在第 6 格 = 12px），
+     共用样式用 inset: -12px 让整张图探出框外，那个框角点才正好落在框线的角上、
+     图案骑在框线上和边框首尾相接。纸要是贴着屏幕边，探出去那 12px 就被视口裁掉半个图案。
+     留 16px，纸仍然明显靠着自己那条边 */
+  html.m-ink-ready .m-drawer {
+    padding: 16px;
+  }
+
   html.m-ink-ready .m-drawer__frame {
     position: relative;
-    box-sizing: border-box;
     display: flex;
     max-width: 100%;
     max-height: 100%;
-    padding: 12px;
-    background: var(--m-bg);
   }
 
   html.m-ink-ready .m-drawer--left .m-drawer__frame,
   html.m-ink-ready .m-drawer--right .m-drawer__frame {
-    width: var(--m-drawer-size);
-    max-width: 100%;
     height: 100%;
   }
 
   html.m-ink-ready .m-drawer--top .m-drawer__frame,
   html.m-ink-ready .m-drawer--bottom .m-drawer__frame {
     width: 100%;
-    height: var(--m-drawer-size);
-    max-height: 100%;
   }
 
   html.m-ink-ready .m-drawer__panel {
-    width: 100%;
-    height: 100%;
-    /* 内边距比弹窗各少 12px：外面那 12px 已经由包裹层的 padding 出了 */
-    padding: 54px 32px 28px;
+    padding: 52px 44px 40px;
     border-width: 0;
-    background: transparent;
-    /* 不像弹窗那样把四角挖空：弹窗挖角是为了露出回纹探到纸外的那一截，
-       抽屉的回纹最远只到纸边，没有露到纸外的部分，纸保持完整长方形 */
+    /* 四个角各挖掉一块（和弹窗同一套回纹，尺寸也照抄）：
+       左上——竖杠右沿 19.5px 以左、横带底沿 25.8px 以上；右上——竖杠右 17.9px 以右、横带底 18.2px 以上；
+       右下——粗竖杠右 18.74px 以右、长横线底上 18px 以下；左下——粗竖杠 18.65px 以左、长横线底上 17.9px 以下。
+       弹窗左上角还多挖一个楔子让山脚露出上框线，抽屉没有题头小景，不需要那个楔子 */
+    clip-path: polygon(
+      19.5px 25.8px,
+      19.5px -400px,
+      calc(100% - 17.9px) -400px,
+      calc(100% - 17.9px) 18.2px,
+      calc(100% + 100px) 18.2px,
+      calc(100% + 100px) calc(100% - 18px),
+      calc(100% - 18.74px) calc(100% - 18px),
+      calc(100% - 18.74px) calc(100% + 100px),
+      18.65px calc(100% + 100px),
+      18.65px calc(100% - 17.9px),
+      -100px calc(100% - 17.9px),
+      -100px 25.8px
+    );
   }
 
-  /* 回纹整张图贴着纸边摆，图里那个"框角"点就落在面板（墨框）的角上 */
-  html.m-ink-ready .m-drawer__frame::after {
-    inset: 0;
-  }
-
-  /* 挂牌：挂在朝着屏幕里那一侧的框线上。竖着的两条边牌顶离上框线 58px（弹窗是 42px；抽屉的回纹收进纸里、往下占到 47px，42px 会贴上去）、
-     牌横跨框线（探出一半 11px）；横着的两条边见下面各自的注释。
+  /* 挂牌：左右滑出的挂在朝屏幕里那条竖框线上，牌横跨框线（探出一半 11px）、牌顶离上框线 58px（弹窗是 42px，
+     但弹窗挂的是右边、右上角回纹小；抽屉左上角那套回纹往下挂到 35px，42px 会让牌顶的墨花蹭上去）；上下滑出的都贴右上角（用户要求），牌整块收在纸里、留 14px 让牌尖上那截绳子露出来，
+     离右端 72px 避开右上角回纹（回纹画幅 64px、探出框外 12px，沿框线往里占到 52px）。
      基础层已经写死了 top / right，这里没盖住的那一侧必须显式改回 auto——
-     绝对定位的元素高宽固定时，top 和 bottom 同时有值是 top 赢，牌就挪不下去（2026-09-11 实测） */
+     绝对定位元素宽高固定时 top 和 bottom 同时有值是 top 赢，牌就挪不动（2026-09-11 实测） */
   html.m-ink-ready .m-drawer--left .m-drawer__panel > .m-drawer__close {
     top: 58px;
     right: -11px;
@@ -272,19 +277,10 @@
     left: -11px;
   }
 
-  /* 上 / 下滑出的都贴右上角。下滑出的上框线是朝屏幕内的自由边，牌照常横跨它（探出一半 18px）；
-     上滑出的上框线顶着视口，横跨会被裁掉半个牌，所以整块收进纸里，只留 14px 让牌尖上那截绳子露出来。
-     离右端 76px：回纹收进纸里之后从纸角起往里占 64px，再留一点空 */
-  html.m-ink-ready .m-drawer--top .m-drawer__panel > .m-drawer__close {
-    top: 14px;
-    right: 76px;
-    bottom: auto;
-    left: auto;
-  }
-
+  html.m-ink-ready .m-drawer--top .m-drawer__panel > .m-drawer__close,
   html.m-ink-ready .m-drawer--bottom .m-drawer__panel > .m-drawer__close {
-    top: -18px;
-    right: 76px;
+    top: 14px;
+    right: 72px;
     bottom: auto;
     left: auto;
   }
@@ -297,5 +293,26 @@
 
   html.m-ink-ready .m-drawer--right .m-drawer__close-tassel::after {
     transform: rotate(-12deg);
+  }
+
+  /* 推进来的距离要把留出的 16px 空隙也算上，否则收起时纸还露在屏幕边上 */
+  .m-drawer-enter-from.m-drawer--right .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--right .m-drawer__frame {
+    transform: translateX(calc(100% + 16px));
+  }
+
+  .m-drawer-enter-from.m-drawer--left .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--left .m-drawer__frame {
+    transform: translateX(calc(-100% - 16px));
+  }
+
+  .m-drawer-enter-from.m-drawer--top .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--top .m-drawer__frame {
+    transform: translateY(calc(-100% - 16px));
+  }
+
+  .m-drawer-enter-from.m-drawer--bottom .m-drawer__frame,
+  .m-drawer-leave-to.m-drawer--bottom .m-drawer__frame {
+    transform: translateY(calc(100% + 16px));
   }
 }
