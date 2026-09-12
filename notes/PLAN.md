@@ -468,3 +468,33 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 - 挂牌一直在摆，Playwright 等不到它「稳定」，抽屉测试的关闭点击也要加 `force: true`（弹窗早就这么干了）。
 
 **验证**：新增 `bench/modal-sample.browser.ts`，把抽屉四个方向和弹窗各渲染一张整屏图落盘。弹窗改动前后逐像素比，只有 0.05% 的像素不同、集中在挂牌那 29×50 一小块，是摆动动画的相位差，形状颜色位置全对得上，没有回归。
+
+## 拆成 Vue + React 双框架（2026-09-12 起）
+
+用户要求同时支持 Vue 3 和 React，**且不允许两边各写一份实现**。定下来的做法是**无头核心 + 两层薄壳**：逻辑、样式、墨迹全部下沉成纯 TS 的 `@shuimo-design/core`，`@shuimo-design/vue` 和 `@shuimo-design/react` 各写一层只管模板和绑定的封装。旧包名 `@shuimo-design/ui` 直接弃用（还没发过 npm，没有外部用户要迁）。
+
+之所以可行，是因为这个库本来就分了层：`ink/` 5933 行里只有 2 个文件依赖 Vue，7036 行 CSS 零 scoped、零 `:deep()`，真正的框架耦合收敛在 `internal/` 四个文件加一个浮层原语。
+
+### 已经做完的
+
+- **`packages/core` 立起来了**：41 个墨迹生成器原样搬入，加上 `runtime/`（`createStore`、`Controller` 契约、`observeSize`、DOM 小工具）。
+- **`useBrushBorder` 去 Vue 化**（15 个组件的接入点）：函数体本来就是纯命令式的，改成 `createBrushBorder` 控制器 + `observeSize`。顺手把「每个组件实例一个 ResizeObserver」改成**全库两个**（border-box / content-box 各一）。两个框架各包十几行 hook。
+- **55 份样式全部归 core**，由 `src/styles/index.css` 一份显式清单汇总。**规矩是任何 `.ts` 都不许 import `.css`** —— 纯 Node 跑服务端渲染时框架包是 external 的，Node 会真的去 import 那个 css 然后崩。层叠顺序也从「打包器遍历模块图的顺序」变成了这份可 review 的清单。vue / react 的 `dist/style.css` 是构建时从 core 复制的，各自的 `check-style.ts` 断言字节一致。
+- **17 个图标 SFC 收成几何数据**（`core/src/icons`）+ 两边各一个十几行的组件，同一条 path 不会再各自漂移。
+- **`packages/react` 立起来了**，`MButton` 两端打通：除了模板，其余（笔触参数、毛边色块派生、种子化素材 URL、class 列表、禁用时吞点击）全部来自 core。
+- **`scripts/check-architecture.ts` 进 CI**：core 里不许出现任何框架；两边都已落地的组件，壳里不许出现 `document.` / `setTimeout` / `ResizeObserver` / `Math.` 这类 token。它同时是迁移进度看板。
+- **顺手修掉的**：`inkVarBindings()` 原来靠探测 `document` 决定形态，服务端出内联 style、客户端首帧出 data 属性，一上 SSR 必然水合报错（MTabs 和 MVirtualList 都在渲染期调它）；改成显式的 `registered` 入参。
+- **顺手修掉的**：playground 原来走 `dist`，clone 后不先 `pnpm build` 跑不起来。现在三个包的 exports 带一个自定义条件 `@shuimo-design/source`，开发和测试直接吃源码。不用标准的 `development` 条件——那个任何第三方的 dev 构建都会命中，而发布包里没有 `src`。
+
+### 踩过的两个坑（记下来别再踩）
+
+1. **`resolve.conditions` 是替换默认值，不是追加。** 只写自己那一条，Vue 自己的 exports 就会退回 CJS 入口，一个进程里同时出现两份 Vue，`useTemplateRef` 报 `Cannot define property row, object is not extensible`。默认那几条（`module` / `browser` / `development|production`）必须原样带上。
+2. **浏览器测试的默认视口只有 414px 宽。** 以前每个测试只加载组件自己那份 CSS、没有主题 token，分页比现在窄，正好放得下；换成加载真实的整份样式之后，尺寸下拉框被挤到 x = −134，Playwright 点不到。给了 1280×800。
+
+### 验证
+
+墨迹逐像素回归：弹窗、左抽屉、下抽屉、印章**0 个像素不同**；右抽屉和上抽屉差 0.02%，范围就是那枚一直在摆的挂牌，是动画相位差。测试数量也对得上：改造前 364 条，现在 core 52 + Vue 312 = 364，一条不差。
+
+### 还没做的
+
+46 个组件的 React 版、`internal/` 四个文件改成控制器、命令式 API（message / confirm / loading）改成 store + 出口组件、三处 `compareDocumentPosition` 改成传数据、过渡类名 runner、文档站并排两边 demo、API 文档改成从 core 的类型生成。
