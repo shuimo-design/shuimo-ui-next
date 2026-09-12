@@ -11,8 +11,6 @@
     "typecheck": "pnpm -r --filter \"./packages/**\" typecheck",
     "test": "pnpm -C packages/ui test",
     "bench": "pnpm -C packages/ui bench",
-    "docs:dev": "pnpm -C docs dev",
-    "docs:build": "pnpm -C docs build",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish"

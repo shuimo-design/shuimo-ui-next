@@ -13,7 +13,7 @@
 - **水墨改成算出来的**：所有纹理和笔触是运行时生成的 SVG，给定 seed 可复现，暗色主题下自动换调子，不再有需要 `invert(1)` 的贴图。
 - **双向绑定统一 `v-model`**：旧的 `visible` / `checked` / `isActive` 这类各自为政的开关 prop 都并进去了。
 
-破坏性改动逐条见 [docs/MIGRATION.md](./docs/MIGRATION.md)。
+破坏性改动逐条见 [notes/MIGRATION.md](./notes/MIGRATION.md)。
 
 ## 用法
 
@@ -61,14 +61,15 @@ packages/ui/src/
 ├─ theme/            # 传统色、语义 token、@layer 声明
 ├─ icons/  internal/  nuxt/  resolver.ts
 playground/          # 演练场，每个组件一页，页底自动渲染 API 表
-docs/                # 方案、写法约定、迁移说明、组件 API 元数据
+notes/               # 方案、写法约定、迁移说明
+docs/api/            # 组件 API 元数据（构建生成）
 ```
 
 ## 文档
 
-- [docs/PLAN.md](./docs/PLAN.md) — 重写方案、水墨引擎设计、每一轮返工的记录
-- [docs/COMPONENT-CONVENTIONS.md](./docs/COMPONENT-CONVENTIONS.md) — 新增组件时照着写
-- [docs/MIGRATION.md](./docs/MIGRATION.md) — 从 0.3.x 迁移
+- [notes/PLAN.md](./notes/PLAN.md) — 重写方案、水墨引擎设计、每一轮返工的记录
+- [notes/COMPONENT-CONVENTIONS.md](./notes/COMPONENT-CONVENTIONS.md) — 新增组件时照着写
+- [notes/MIGRATION.md](./notes/MIGRATION.md) — 从 0.3.x 迁移
 
 ## 许可
 

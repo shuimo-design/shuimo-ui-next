@@ -1,7 +1,6 @@
 packages:
   - packages/*
   - playground
-  - docs
 
 # 版本统一在 catalog 里锁，各包只写 "catalog:"
 catalog:
