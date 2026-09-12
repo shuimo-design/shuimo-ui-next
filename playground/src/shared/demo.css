@@ -23,3 +23,24 @@
   font-size: 13px;
   color: var(--m-fg-muted);
 }
+
+/*
+ * 示例站自带一份篆体（峄山碑篆体，仅示例用）；MStamp 默认字体栈第一项就是它。
+ * 必须放在这里而不是某个示例的 <style> 里：那样只有 Vue 版声明得出来，
+ * React 版没有对等写法，同一页印章会退回衬线体，两版长得不一样。
+ */
+@font-face {
+  font-family: "峄山碑篆体";
+  src: url("/fonts/yishanbeizhuanti.woff2") format("woff2");
+  font-display: swap;
+}
+
+.stamp-demo__controls {
+  gap: 16px;
+  font-size: 13px;
+}
+.stamp-demo__controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

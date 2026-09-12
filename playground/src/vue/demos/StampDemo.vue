@@ -132,22 +132,3 @@ function roll() {
     </div>
   </div>
 </template>
-
-<style>
-/* 示例站自带一份篆体（峄山碑篆体，仅示例用）；组件默认字体栈第一项就是它 */
-@font-face {
-  font-family: "峄山碑篆体";
-  src: url("/fonts/yishanbeizhuanti.woff2") format("woff2");
-  font-display: swap;
-}
-
-.stamp-demo__controls {
-  gap: 16px;
-  font-size: 13px;
-}
-.stamp-demo__controls label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-</style>

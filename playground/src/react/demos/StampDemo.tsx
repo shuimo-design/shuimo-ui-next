@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { MButton, MStamp } from "@shuimo-design/react";
 
-const CONTROLS: React.CSSProperties = { gap: 16, fontSize: 13 };
-const LABEL: React.CSSProperties = { display: "inline-flex", alignItems: "center", gap: 6 };
-
 export default function StampDemo() {
   const [seed, setSeed] = useState(7);
   const [mode, setMode] = useState<"yang" | "yin">("yang");
@@ -73,18 +70,18 @@ export default function StampDemo() {
         <p className="demo__caption">
           质感旋钮：磨损 roughness / 刀刻 carving / 印泥 bleed，全 0 就是干净的矢量章
         </p>
-        <div className="demo__row" style={CONTROLS}>
-          <label style={LABEL}>
+        <div className="demo__row stamp-demo__controls">
+          <label>
             印文 <input value={text} onChange={(e) => setText(e.target.value)} />
           </label>
-          <label style={LABEL}>
+          <label>
             模式
             <select value={mode} onChange={(e) => setMode(e.target.value as "yang" | "yin")}>
               <option value="yang">阳文</option>
               <option value="yin">阴文</option>
             </select>
           </label>
-          <label style={LABEL}>
+          <label>
             磨损
             <input
               type="range"
@@ -96,7 +93,7 @@ export default function StampDemo() {
             />
             {roughness}
           </label>
-          <label style={LABEL}>
+          <label>
             刀刻
             <input
               type="range"
@@ -108,7 +105,7 @@ export default function StampDemo() {
             />
             {carving}
           </label>
-          <label style={LABEL}>
+          <label>
             印泥
             <input
               type="range"
