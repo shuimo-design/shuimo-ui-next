@@ -1,0 +1,70 @@
+{
+  "name": "@shuimo-design/react",
+  "version": "1.0.0-alpha.0",
+  "description": "水墨风 React 组件库（next）—— 程序化宣纸、山水、墨晕与笔触",
+  "keywords": [
+    "component-library",
+    "ink",
+    "react",
+    "shuimo",
+    "ui"
+  ],
+  "homepage": "https://shuimo.design",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shuimo-design/shuimo-ui-next.git",
+    "directory": "packages/react"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "@shuimo-design/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./ink": {
+      "@shuimo-design/source": "./src/ink/index.ts",
+      "types": "./dist/ink.d.ts",
+      "import": "./dist/ink.js"
+    },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vp pack && pnpm check:style",
+    "check:style": "tsx scripts/check-style.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vp test",
+    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
+  },
+  "dependencies": {
+    "@shuimo-design/core": "workspace:^"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@types/node": "^26.4.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "@vitest/browser-playwright": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsx": "^4.21.1",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "^2.3.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
+}

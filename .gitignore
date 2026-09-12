@@ -8,7 +8,7 @@ coverage
 .DS_Store
 .vite
 .vite-plus
-packages/ui/web-types.json
+packages/vue/web-types.json
 **/bench/results/
 .vitest-attachments
 .vercel

@@ -14,11 +14,13 @@
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
-    "attw": "pnpm -r --filter \"./packages/**\" attw"
+    "attw": "pnpm -r --filter \"./packages/**\" attw",
+    "check:arch": "tsx scripts/check-architecture.ts"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^3.0.2",
+    "tsx": "^4.21.1",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",

@@ -24,3 +24,15 @@ export {
   type Unsubscribe,
 } from "./runtime";
 export { detectInkTier, type InkTier } from "./ink/tier";
+export { ICONS, iconComponentName, type IconDef, type IconName, type IconShape } from "./icons";
+export {
+  buttonBrush,
+  buttonClasses,
+  buttonInert,
+  buttonInk,
+  isSolidButton,
+  type ButtonInk,
+  type ButtonProps,
+  type ButtonType,
+} from "./components/button";
+export type { ButtonEmits, ButtonSlots } from "./components/button/types";

@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from "vue";
-import { useElementSize } from "@vueuse/core";
+import { computed, onMounted, ref, useTemplateRef } from "vue";
+import {
+  buttonBrush,
+  buttonClasses,
+  buttonInert,
+  buttonInk,
+  isSolidButton,
+  type ButtonEmits,
+  type ButtonProps,
+  type ButtonSlots,
+} from "@shuimo-design/core";
+import { observeSize } from "@shuimo-design/core";
 import { IconLoading } from "../../icons";
-import { inkScaleUrl } from "../../ink";
-import { inkShapeUrl } from "../../ink";
-import { inkVarBindings } from "../../ink";
 import { useBrushBorder } from "../../ink";
-import type { ButtonEmits, ButtonProps, ButtonSlots } from "./types";
 
 defineOptions({ name: "MButton" });
 
+const props = defineProps<ButtonProps>();
 const {
   type = "default",
   text = "",
@@ -17,43 +24,33 @@ const {
   loading = false,
   href,
   nativeType = "button",
-} = defineProps<ButtonProps>();
+} = props;
 const emit = defineEmits<ButtonEmits>();
 defineSlots<ButtonSlots>();
 
-const tag = computed(() => (href ? "a" : "button"));
 const root = useTemplateRef<HTMLElement>("root");
-const solid = computed(() => type !== "text");
-// 文字型按钮没有边框，不落笔；其余类型套一圈深墨笔触边框，对应旧库的手绘 border-image。
-// 旧框四角是收住的，不出头，所以把拐角出头压到最小
-useBrushBorder(root, { strokeWidth: 3, seed: 3, overshoot: 0.5, wobble: 0.6, enabled: solid });
+const solid = computed(() => isSolidButton(type));
+useBrushBorder(root, buttonBrush(solid.value));
 
-// 色块本身也撕成毛边：按按钮实际尺寸生成遮罩（8px 分桶缓存），色块边缘在笔触框下若隐若现
-const { width, height } = useElementSize(root, undefined, { box: "border-box" });
-const shape = computed(() =>
-  solid.value && width.value && height.value
-    ? inkShapeUrl(width.value, height.value, { seed: 3, raggedness: 0.4, corner: 0.06 })
-    : undefined,
-);
-// 旧库色块上那层鱼鳞纹，固定瓦片，整个模块只生成一次
-const scale = inkScaleUrl();
-// 鱼鳞纹瓦片全局一张、毛边遮罩按尺寸分桶：走素材登记，同一张图在样式表里只写一次，元素上只挂属性；
-// 登记不了（SSR）才内联。文字型按钮不铺鱼鳞纹，"none" 不是图，仍旧内联
+// 毛边色块要按按钮实际尺寸生成，只能挂载后量；服务端和水合首帧都是 0×0，渲染出的是没有色块的朴素版
+const size = ref({ width: 0, height: 0 });
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+  if (root.value) observeSize(root.value, (box) => (size.value = box), "border-box");
+});
+
 const ink = computed(() =>
-  inkVarBindings({
-    "--m-button-scale": solid.value ? scale.url : undefined,
-    "--m-button-shape": shape.value?.url,
+  buttonInk({
+    solid: solid.value,
+    width: size.value.width,
+    height: size.value.height,
+    registered: mounted.value,
   }),
 );
-const style = computed(() => ({
-  ...ink.value.style,
-  ...(solid.value ? {} : { "--m-button-scale": "none" }),
-  "--m-button-scale-size": `${scale.width}px ${scale.height}px`,
-  "--m-button-shape-pad": shape.value ? `${shape.value.padding}px` : undefined,
-}));
 
 function onClick(event: MouseEvent) {
-  if (disabled || loading) {
+  if (buttonInert(props)) {
     event.preventDefault();
     return;
   }
@@ -63,11 +60,10 @@ function onClick(event: MouseEvent) {
 
 <template>
   <component
-    :is="tag"
+    :is="href ? 'a' : 'button'"
     ref="root"
-    class="m-button"
-    :class="[`m-button--${type}`, { 'm-button--disabled': disabled, 'm-button--loading': loading }]"
-    :style="style"
+    :class="buttonClasses(props)"
+    :style="ink.style"
     v-bind="ink.attrs"
     :href="href"
     :type="href ? undefined : nativeType"

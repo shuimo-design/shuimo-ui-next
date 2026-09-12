@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["node", "@vitest/browser-playwright/context"]
+  },
+  "include": ["src", "scripts", "test", "vite.config.ts"]
+}

@@ -95,14 +95,23 @@ export interface InkVarBindings {
 
 /**
  * 给模板用：一组"变量 → data URL"，能登记的变成属性、登记不了的落回 style，两边一起绑到同一个元素上。
- * 值为 undefined 的跳过（比如没开引擎时不生成）。放在 computed 里用，url 不变时登记是纯查表。
+ * 值为 undefined 的跳过（比如没开引擎时不生成）。渲染期调用，url 不变时登记是纯查表。
+ *
+ * `registered` 决定走哪种形态，**服务端渲染必须传 false**：
+ * 服务端没有 document，登记拿不到样式表、只能退回内联 style；客户端首帧却能登记成功、
+ * 挂出 data 属性。两边输出对不上，水合就会报属性不匹配。
+ * 所以规矩是：服务端和水合首帧一律 false（内联），挂载之后再传 true 升级成属性。
+ * 默认 true 是为了照顾还没接 SSR 的调用方，行为和以前一致。
  */
-export function inkVarBindings(vars: Record<string, string | undefined>): InkVarBindings {
+export function inkVarBindings(
+  vars: Record<string, string | undefined>,
+  registered = true,
+): InkVarBindings {
   const attrs: Record<string, string> = {};
   const style: Record<string, string> = {};
   for (const [variable, url] of Object.entries(vars)) {
     if (url === undefined) continue;
-    const entry = registerInkVar(variable, url);
+    const entry = registered ? registerInkVar(variable, url) : null;
     if (entry) attrs[entry.attr] = entry.token;
     else style[variable] = `url("${url}")`;
   }

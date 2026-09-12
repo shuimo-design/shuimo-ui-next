@@ -15,9 +15,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - run: pnpm check:arch
       - run: pnpm typecheck
       - run: pnpm exec playwright install --with-deps chromium
-        working-directory: packages/ui
       - run: pnpm test
       - run: pnpm build
-      - run: pnpm -C packages/ui attw
+      - run: pnpm attw
