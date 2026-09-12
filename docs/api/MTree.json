@@ -97,10 +97,7 @@
       },
       "react": {
         "name": "expandedKeys",
-        "extra": [
-          "defaultExpandedKeys",
-          "onExpandedKeysChange"
-        ]
+        "extra": ["defaultExpandedKeys", "onExpandedKeysChange"]
       }
     },
     {
@@ -113,10 +110,7 @@
       },
       "react": {
         "name": "checkedKeys",
-        "extra": [
-          "defaultCheckedKeys",
-          "onCheckedKeysChange"
-        ]
+        "extra": ["defaultCheckedKeys", "onCheckedKeysChange"]
       }
     },
     {
@@ -128,10 +122,7 @@
       },
       "react": {
         "name": "selectedKey",
-        "extra": [
-          "defaultSelectedKey",
-          "onSelectedKeyChange"
-        ]
+        "extra": ["defaultSelectedKey", "onSelectedKeyChange"]
       }
     }
   ],

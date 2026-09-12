@@ -163,10 +163,7 @@
       },
       "react": {
         "name": "show",
-        "extra": [
-          "defaultShow",
-          "onShowChange"
-        ]
+        "extra": ["defaultShow", "onShowChange"]
       }
     }
   ],

@@ -125,10 +125,7 @@
       },
       "react": {
         "name": "current",
-        "extra": [
-          "defaultCurrent",
-          "onCurrentChange"
-        ]
+        "extra": ["defaultCurrent", "onCurrentChange"]
       }
     },
     {
@@ -141,9 +138,7 @@
       },
       "react": {
         "name": "pageSize",
-        "extra": [
-          "defaultPageSize"
-        ]
+        "extra": ["defaultPageSize"]
       }
     }
   ],

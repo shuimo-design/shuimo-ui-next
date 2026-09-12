@@ -69,10 +69,7 @@
       },
       "react": {
         "name": "checked",
-        "extra": [
-          "defaultChecked",
-          "onCheckedChange"
-        ]
+        "extra": ["defaultChecked", "onCheckedChange"]
       }
     }
   ],

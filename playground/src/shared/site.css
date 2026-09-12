@@ -1,0 +1,180 @@
+/*
+ * 文档站外壳的样式。两版（/vue/ 和 /react/）共用这一份，所以左边栏、正文、API 表
+ * 长得一模一样，翻框架只换示例不换皮。
+ *
+ * 注意这里是**全局**样式，不是 Vue 的 scoped —— scoped 靠给元素打 data 属性生效，
+ * React 那边没有对等物。类名统一 pg__ / api__ 前缀，不会和组件库的 m- 撞。
+ */
+
+/* 整页定高、外层不滚，左右两栏各自竖向滚动；宣纸和远山留在底下当固定背景 */
+.pg {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  height: 100vh;
+}
+.pg__aside {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 24px 16px;
+  border-right: 1px solid var(--m-divider);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.pg__logo {
+  margin: 0 8px 8px;
+  font-family: var(--m-font-brush);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+.pg__logo span {
+  font-family: var(--m-font-sans);
+  font-size: 12px;
+  color: var(--m-fg-muted);
+  letter-spacing: 0.2em;
+  vertical-align: middle;
+}
+
+/* 当前是哪一版，以及去另一版的入口（同一个组件页，换框架不丢位置） */
+.pg__flavor {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 8px 16px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+.pg__flavor-cur {
+  padding: 2px 6px;
+  border: 1px solid var(--m-seal);
+  border-radius: var(--m-radius);
+  color: var(--m-seal);
+  text-transform: uppercase;
+}
+.pg__flavor-alt {
+  color: var(--m-fg-muted);
+  text-decoration: none;
+}
+.pg__flavor-alt:hover {
+  color: var(--m-fg-strong);
+  text-decoration: underline;
+}
+
+.pg__nav {
+  flex: 1;
+}
+.pg__group {
+  margin: 12px 8px 4px;
+  font-size: 12px;
+  color: var(--m-fg-muted);
+  letter-spacing: 0.2em;
+}
+.pg__item {
+  padding: 6px 8px;
+  border-radius: var(--m-radius);
+  cursor: var(--m-cursor-pointer);
+  transition: background-color var(--m-duration) var(--m-ease);
+}
+/* MListItem 把子节点包进 __inner，左右分开要在这一层做，写在 li 上不生效 */
+.pg__item .m-list-item__inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+.pg__item:hover {
+  background: color-mix(in srgb, var(--m-ink) 6%, transparent);
+}
+/* 当前页：淡墨底 + 左侧一道朱砂，正文加重 */
+.pg__item--active,
+.pg__item--active:hover {
+  background: color-mix(in srgb, var(--m-ink) 10%, transparent);
+  box-shadow: inset 3px 0 0 var(--m-seal);
+  color: var(--m-fg-strong);
+  font-weight: 500;
+}
+.pg__item-name {
+  font-size: 11px;
+  color: var(--m-fg-muted);
+  opacity: 0.7;
+}
+.pg__tools {
+  display: flex;
+  gap: 8px;
+  padding-top: 16px;
+}
+.pg__main {
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 32px 40px;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.pg__page {
+  max-width: 880px;
+}
+.pg__header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.pg__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+.pg__code {
+  font-size: 13px;
+  color: var(--m-fg-muted);
+}
+
+/* ── 页底的 API 表：接在示例下面，隔一道分割线；三张表之间留一点气口 ── */
+.api {
+  display: grid;
+  gap: 20px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--m-divider);
+}
+.api__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+.api__block {
+  display: grid;
+  gap: 10px;
+}
+.api__sub {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--m-fg-muted);
+  letter-spacing: 0.1em;
+}
+/* 组件库没有等宽字体变量，用系统等宽栈 */
+.api__code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  word-break: break-word;
+}
+.api__required {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--m-seal);
+}
+/* 受控属性配套的 defaultXxx / onXxxChange，压在属性名下面小一号 */
+.api__extra {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--m-fg-muted);
+}
+.api__none {
+  color: var(--m-fg-muted);
+}

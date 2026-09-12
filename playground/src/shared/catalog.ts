@@ -1,50 +1,27 @@
-import type { Component } from "vue";
-import type { ComponentType } from "react";
-
 /**
- * 组件清单：只写 id / 标题 / 组件名三样，demo 本身按 id 从目录里查。
- * Vue 的 demo 在 demos/，React 的在 demos-react/，文件名都是 <Pascal>Demo。
- * React 那边还没搬到的组件，页面上显示占位，站照常构建 —— 这也是迁移进度看板。
+ * 组件清单：只有 id / 标题 / 组件名三样数据，**不引任何框架**。
+ *
+ * 两版文档站（Vue 版在 /vue/，React 版在 /react/）共用这一份清单，所以左边栏的分组、
+ * 顺序、标题永远一致；各自再按 id 去自己的 demos/ 目录里取示例。
  */
-export interface DemoEntry {
+export interface DemoMeta {
+  /** 页面的 hash 路由，也用来拼 demo 文件名 */
   id: string;
   title: string;
   /** M 开头的组件名，用来查 API 表 */
   name: string;
-  vue?: Component;
-  react?: ComponentType;
 }
 
 export interface DemoGroup {
   group: string;
-  items: DemoEntry[];
+  items: DemoMeta[];
 }
 
-const vueDemos = import.meta.glob<{ default: Component }>("./demos/*Demo.vue", {
-  eager: true,
-  import: "default",
-}) as unknown as Record<string, Component>;
-const reactDemos = import.meta.glob<{ default: ComponentType }>("./demos-react/*Demo.tsx", {
-  eager: true,
-  import: "default",
-}) as unknown as Record<string, ComponentType>;
-
-/** delete-icon → DeleteIconDemo */
-function fileOf(id: string): string {
-  return `${id.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase())}Demo`;
+function entry(id: string, title: string, name: string): DemoMeta {
+  return { id, title, name };
 }
 
-function entry(id: string, title: string, name: string): DemoEntry {
-  return {
-    id,
-    title,
-    name,
-    vue: vueDemos[`./demos/${fileOf(id)}.vue`],
-    react: reactDemos[`./demos-react/${fileOf(id)}.tsx`],
-  };
-}
-
-export const DEMOS: DemoGroup[] = [
+export const CATALOG: DemoGroup[] = [
   {
     group: "特效",
     items: [
@@ -119,15 +96,22 @@ export const DEMOS: DemoGroup[] = [
   },
 ];
 
-export const ALL_DEMOS = DEMOS.flatMap((g) => g.items);
+export const ALL_DEMOS: DemoMeta[] = CATALOG.flatMap((g) => g.items);
 
-/** 清单里写了但 demos/ 下没有对应文件的，立刻炸出来，不要静默少一页 */
-for (const demo of ALL_DEMOS) {
-  if (!demo.vue) throw new Error(`registry: 找不到 demos/${fileOf(demo.id)}.vue`);
+/** delete-icon → DeleteIconDemo */
+export function fileOf(id: string): string {
+  return `${id.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase())}Demo`;
 }
 
-/** React 侧的迁移进度，印在导航栏顶上 */
-export const REACT_PROGRESS = {
-  done: ALL_DEMOS.filter((d) => d.react).length,
-  total: ALL_DEMOS.length,
-};
+/** 清单里写了但目录下没有对应文件的，启动就炸，不要静默少一页 */
+export function assertComplete(found: Record<string, unknown>, dir: string, ext: string): void {
+  for (const demo of ALL_DEMOS) {
+    if (!found[demo.id]) throw new Error(`catalog: 找不到 ${dir}/${fileOf(demo.id)}${ext}`);
+  }
+}
+
+/** 当前 hash 对应的组件 id，没有或认不出就回到第一个 */
+export function readHash(): string {
+  const id = location.hash.replace(/^#\/?/, "");
+  return ALL_DEMOS.some((d) => d.id === id) ? id : ALL_DEMOS[0]!.id;
+}

@@ -3,7 +3,8 @@ import { createApp } from "vue";
 // 这里引 core 而不是 @shuimo-design/vue/style.css：那份是构建时复制过去的副本，
 // 只有 dist 里才有；引 core 的话开发时直接吃源码清单，不用先构建。
 import "@shuimo-design/core/style.css";
-import "./demo.css";
+import "../shared/site.css";
+import "../shared/demo.css";
 import { createShuimo } from "@shuimo-design/vue";
 import { createInkEngine } from "@shuimo-design/core/ink";
 import App from "./App.vue";

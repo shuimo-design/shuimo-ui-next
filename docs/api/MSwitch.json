@@ -122,10 +122,7 @@
       },
       "react": {
         "name": "value",
-        "extra": [
-          "defaultValue",
-          "onValueChange"
-        ]
+        "extra": ["defaultValue", "onValueChange"]
       }
     }
   ],

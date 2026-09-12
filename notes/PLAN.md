@@ -95,7 +95,7 @@ shuimo-ui-next/                      # github.com/shuimo-design/shuimo-ui-next�
 │       ├─ scripts/
 │       │   └─ gen-meta.ts           # vue-component-meta → web-types.json + docs/api/*.json
 │       └─ e2e/                      # Playwright 截图回归，按组件 × light/dark × reduced-motion
-├─ playground/                       # 演练场：每组件一页 + 页底 API 表；现在**就是文档站**，发在 Vercel
+├─ playground/                       # 文档站：/vue/ 和 /react/ 两版，每组件一页 + 页底 API 表，发在 Vercel
 ├─ docs/                             # Nuxt 4 + Content 文档站（**只有空壳**，正文还没写，见 §7）
 │   ├─ api/*.json                    # gen-meta 产出的组件 API 元数据，演练场直接读
 │   ├─ COMPONENT-CONVENTIONS.md      # 新增组件的写法约定
@@ -249,7 +249,7 @@ shuimo-ui-next/                      # github.com/shuimo-design/shuimo-ui-next�
 - 印章边框（2026-09-09 用户反馈「边框的效果没有出来」）：shuimo-core 的磨损幅度按 480px 参考尺寸缩放，120px 的章上只剩 0.1px；改成幅度按边框厚度算（起伏最大厚度的一半）、再挖几个咬进边框的缺口（外圈往里、内圈往外，深的会咬断），默认边框加粗到 size × 3.5%、roughness 0.5。全是几何点位，运行时零开销。
 - 印章留白收紧（2026-09-11 用户反馈「印章的内边距太大了」）：印文到边框的默认 `padding` 从 `size × 4%` 降到 `1.5%`。真印章上笔画几乎是抵着框走的，4% 那版看着像排版排出来的框、不像刻出来的。定死外形（方 / 圆 / 多边形）的章是字跟着变大，贴文外形（auto）的章是框跟着收窄。排版里另有一层固定留白（格子只让字占 96%），那层不动——留一点余地，笔画才不会和边框糊成一片。新增 `bench/stamp-sample.browser.ts` 渲染一张整屏图，改这类留白时拿它肉眼比。
 - 印章性能实测（2026-09-09，playground 23 枚，M 系列 Mac，Chrome）：`generateStamp` 每枚约 1.1ms、24 个字的 canvas 度量 3ms、23 枚从挂载到画完 42ms、静止时 CPU 为 0、滚动时 Chrome 总 CPU 15 ~ 30%；**每帧都改印泥色逼着重绘**时 Chrome 总 CPU 约 170%（不带滤镜 70%），开销和滤镜原语个数成正比、和像素面积基本无关（把作用区域从外扩 36% 改成绝对坐标几乎没变化）。因此把边框位移并进印泥滤镜、崩口和石屑共用一层噪声，每枚从 3 组滤镜 / 6 个 feTurbulence / 24 个原语减到 2 组 / 2 个 / 15 个，重绘 CPU 降到约 150%；再加 `content-visibility: auto`，屏幕外的章不栅格化。结论：别给印章做逐帧动画（颜色过渡、滤镜参数动画），静态展示和滚动都不贵。
-- playground 已改为「左侧组件菜单 + 右侧单组件示例」布局（`playground/src/registry.ts` 登记，`demos/*.vue` 一个组件一个示例，hash 路由，MInkTransition 切换）。新组件要在 registry 里加一条。
+- playground 已改为「左侧组件菜单 + 右侧单组件示例」布局（hash 路由，一个组件一个示例）。**2026-09-13 起拆成两版**：`/vue/` 和 `/react/` 各是一个独立的单框架应用（各自的 `index.html` 和外壳），组件清单、API 数据整形、外壳样式放在 `playground/src/shared/`，示例分别在 `src/vue/demos/*.vue` 和 `src/react/demos/*.tsx`。新组件要在 `src/shared/catalog.ts` 里加一条，并且两边各补一个示例（缺哪边启动就报错，不会静默少一页）。
 
 ## 5. 组件清单（41 → 42）
 
@@ -381,7 +381,7 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 - 霜领第三版（定稿）：用户指出正常大小下老图明显是"花瓣"——七八朵分开的浅灰蓝尖瓣墨花散在屋檐两侧和肩头，彼此挨着、压在屋檐线上、有空隙，不是连成片的领子。生成器改成 12 朵 5–7 瓣的肥瓣星形花沿两条屋檐线排过去（肩头那朵最大、牌尖上方两朵小），瓣尖长短随 seed 浮动、瓣根收到一半，再撒几粒小点；画在牌身之上、叉之下，半透。
 - 霜领第四版（定稿）：用户指出老图的花是"包着牌的上半截"、不是飘在旁边——花心改成落在两条屋檐线上（往外偏 1px），一半盖在牌身里、一半探到外面，从左肩绕过牌尖到右肩，肩头那朵最大、肩外侧和肩下各补一朵，左右镜像加随机抖动。
 - 霜领第五版：花改成菱形——每朵四个尖，长轴 r、短轴五到七成，四条边往里收腰成四角星，整朵随机转角；落点不变（箍在屋檐线上）。
-- 演练场每个组件页底下加了「接口」区（`playground/src/ApiDoc.vue`）：属性 / 事件 / 插槽三张 MTable，数据是 `docs/api/<组件名>.json`（`packages/ui/scripts/gen-meta.ts` 构建时用 vue-component-meta 生成），用 `import.meta.glob` 一次打进来按组件名取；defineModel 产出的属性和 update:xxx 事件合并成一行 v-model。生成器补了事件说明：vue-component-meta 的 event 上 description / tags 都是空的（事件被转成函数重载，接口成员的注释丢了），改成解析同目录 `types.ts` 里 defineEmits 用的 `*Emits` 接口，按事件名把成员上方的 JSDoc 对回去。
+- 文档站每个组件页底下加了「接口」区（数据与挑列逻辑在 `playground/src/shared/api.ts`，两版各有一个只管画表的 ApiDoc）：属性 / 事件 / 插槽三张 MTable，数据是 `docs/api/<组件名>.json`（`packages/ui/scripts/gen-meta.ts` 构建时用 vue-component-meta 生成），用 `import.meta.glob` 一次打进来按组件名取；defineModel 产出的属性和 update:xxx 事件合并成一行 v-model。生成器补了事件说明：vue-component-meta 的 event 上 description / tags 都是空的（事件被转成函数重载，接口成员的注释丢了），改成解析同目录 `types.ts` 里 defineEmits 用的 `*Emits` 接口，按事件名把成员上方的 JSDoc 对回去。
 
 ## 卡片 / 角标 / 标签页 水墨重做（2026-09-10）
 
@@ -402,7 +402,7 @@ Web Component 版（MWCBorder / MWCRicePaper）不做：旧版在 import 时就 
 
 代码进了 GitHub 组织：<https://github.com/shuimo-design/shuimo-ui-next>（公开，MIT）。之前的工作按四笔提交进去：workspace 与脚本、水墨引擎、组件全集、演练场与文档。
 
-文档站（也就是演练场）发在 Vercel：<https://shuimo-ui-next.vercel.app>。构建配置在仓库根 `vercel.json`——先 `pnpm build` 出库、再 `pnpm -C playground build`，产物取 `playground/dist`。演练场用 hash 路由，所以不需要 SPA 回退规则。
+文档站发在 Vercel：<https://shuimo-ui-next.vercel.app>。构建配置在仓库根 `vercel.json`——先 `pnpm build` 出库、再 `pnpm -C playground build`，产物取 `playground/dist`。三个入口：`/` 是一张静态分岔页，`/vue/` 和 `/react/` 各是一个独立应用（Vite 多入口，模块图分开，Vue 版产物里没有一行 React，反之亦然）。页内用 hash 路由，所以不需要 SPA 回退规则。
 
 先试了 GitHub Pages，能跑通，但按用户要求换成了 Vercel，`pages.yml` 已删、仓库的 Pages 功能已关。
 

@@ -124,10 +124,7 @@
       },
       "react": {
         "name": "open",
-        "extra": [
-          "defaultOpen",
-          "onOpenChange"
-        ]
+        "extra": ["defaultOpen", "onOpenChange"]
       }
     }
   ],

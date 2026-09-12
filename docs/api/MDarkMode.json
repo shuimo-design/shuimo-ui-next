@@ -85,10 +85,7 @@
       },
       "react": {
         "name": "dark",
-        "extra": [
-          "defaultDark",
-          "onDarkChange"
-        ]
+        "extra": ["defaultDark", "onDarkChange"]
       }
     }
   ],

@@ -1,6 +1,6 @@
 /**
  * 组件 API 元数据生成器：从 core 的类型定义里读出 Props / Emits / Slots，产出
- *  - docs/api/<组件名>.json（演练场的 API 表，playground/src/ApiDoc.vue 直接消费）
+ *  - docs/api/<组件名>.json（两版文档站的 API 表，playground/src/shared/api.ts 直接消费）
  *  - packages/vue/web-types.json（JetBrains 系 IDE 的模板提示，只有 Vue 有这个协议）
  *
  * 为什么重写：以前这个脚本在 packages/ui 里，用 vue-component-meta 去解析 .vue 文件，
@@ -16,6 +16,7 @@
  *  3. React 侧的对应叫法 —— 双向绑定在 React 是 `x` / `defaultX` / `onXChange` 三件套。
  * 这三样都按"读实际代码"来，读不到就不写，绝不猜（React 壳还在迁移，缺的组件很正常）。
  */
+import { execFileSync } from "node:child_process";
 import { existsSync, globSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -26,7 +27,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const VUE_MODULE = "@shuimo-design/vue";
 const REACT_MODULE = "@shuimo-design/react";
 
-/* ── 输出结构（字段名沿用 web-types 的口径，ApiDoc.vue 按这些字段取数） ── */
+/* ── 输出结构（字段名沿用 web-types 的口径，playground/src/shared/api.ts 按这些字段取数） ── */
 
 /** 某个属性 / 事件 / 插槽在 React 壳里的叫法；extra 是双向绑定多出来的那两个 */
 interface ReactBinding {
@@ -589,7 +590,7 @@ for (const name of COMPONENT_NAMES) {
     });
   }
 
-  /* 事件：v-model 的 update:x 排在前面（ApiDoc.vue 会把它并进属性表），再是声明的事件 */
+  /* 事件：v-model 的 update:x 排在前面（文档站会把它并进属性表），再是声明的事件 */
   const events: ApiNamed[] = models.map((model) => ({ name: `update:${model.name}` }));
   for (const symbol of membersOf(`${stem}Emits`)) {
     events.push({
@@ -666,6 +667,16 @@ writeFileSync(
   resolve(root, "packages/vue/web-types.json"),
   JSON.stringify(webTypes, null, 2) + "\n",
 );
+
+/* ── 排版：生成的 JSON 交给仓库的格式化器再走一遍 ── */
+
+// JSON.stringify 会把短数组拆成多行，而 oxfmt 要它们写成一行。两边不统一的话，每跑一次
+// build 就把 `pnpm check` 打回红色。根 vite.config.ts 的 fmt.ignore 对这些 JSON 不生效
+// （glob 换了四种写法、连精确文件名都试过），所以反过来做：让产出直接符合仓库的排版。
+execFileSync("pnpm", ["exec", "vp", "fmt", "docs/api", "packages/vue/web-types.json"], {
+  cwd: root,
+  stdio: "ignore",
+});
 
 /* ── 报告：失败之外的都是进度和技术债，打出来但不挡构建 ── */
 

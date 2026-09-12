@@ -3,15 +3,123 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>shuimo-ui next · playground</title>
+    <title>水墨 next · 文档</title>
+    <!--
+      分岔口：往下是两版独立的文档站。
+      这一页不引组件库、不引任何框架，就是一张静态纸，所以颜色只能写死。
+    -->
     <style>
+      :root {
+        color-scheme: light;
+      }
       body {
         margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        box-sizing: border-box;
+        background: #f2ece1;
+        color: #2f2b26;
+        font-family:
+          "PingFang SC",
+          "Hiragino Sans GB",
+          "Microsoft YaHei",
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      main {
+        max-width: 620px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 40px;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+      }
+      h1 small {
+        font-size: 13px;
+        color: #8a8074;
+        letter-spacing: 0.28em;
+        vertical-align: middle;
+      }
+      p.lead {
+        margin: 0 0 36px;
+        color: #6f665b;
+        font-size: 14px;
+        line-height: 1.9;
+      }
+      .picks {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 560px) {
+        .picks {
+          grid-template-columns: 1fr;
+        }
+      }
+      a.pick {
+        display: block;
+        padding: 26px 20px;
+        border: 1px solid #d8cfc0;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.42);
+        color: inherit;
+        text-decoration: none;
+        transition:
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+      a.pick:hover {
+        border-color: #a5442f;
+        transform: translateY(-2px);
+      }
+      a.pick b {
+        display: block;
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+      }
+      a.pick span {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #8a8074;
+      }
+      footer {
+        margin-top: 32px;
+        font-size: 12px;
+        line-height: 1.9;
+        color: #8a8074;
+      }
+      code {
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 11.5px;
       }
     </style>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <main>
+      <h1>水墨 <small>NEXT</small></h1>
+      <p class="lead">一套水墨风组件库，两个框架各一版文档。</p>
+      <div class="picks">
+        <a class="pick" href="vue/#/button">
+          <b>Vue 版</b>
+          <span>@shuimo-design/vue</span>
+        </a>
+        <a class="pick" href="react/#/button">
+          <b>React 版</b>
+          <span>@shuimo-design/react</span>
+        </a>
+      </div>
+      <footer>
+        两版的状态机、几何计算、墨迹生成和全部样式都来自同一个
+        <code>@shuimo-design/core</code>，<br />
+        上面那两个包只有模板和绑定。每个组件页里的 API 表也是同一份数据，各自挑自己那一列。
+      </footer>
+    </main>
   </body>
 </html>
