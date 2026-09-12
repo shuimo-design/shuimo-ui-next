@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>水墨 next · Vue 版</title>
+    <!-- 印章要量每个字的墨迹框才排得出版式，字体越早到越好：这一行让浏览器在解析 JS 之前就开拉，
+         main 里的 preloadStampFont() 再把它真正"用"起来（光有 @font-face 浏览器是不会下载的） -->
+    <link
+      rel="preload"
+      href="/fonts/yishanbeizhuanti.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <style>
       body {
         margin: 0;

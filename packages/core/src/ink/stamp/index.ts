@@ -253,7 +253,14 @@ function clamp01(v: number): number {
   return v < 0 ? 0 : v > 1 ? 1 : v;
 }
 
-export { createGlyphMeasurer, loadStampFont } from "./measure";
+export {
+  createGlyphMeasurer,
+  getGlyphMeasurer,
+  isStampFontReady,
+  loadStampFont,
+  preloadStampFont,
+  type PreloadStampFontOptions,
+} from "./measure";
 export {
   FALLBACK_METRIC,
   PROBE_SIZE,

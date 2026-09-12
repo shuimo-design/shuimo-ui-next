@@ -52,6 +52,40 @@ Vue 的 `v-model` 在 React 侧是**受控 / 非受控两套都支持**的一组
 
 Vue 独有的两个入口留着：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`@shuimo-design/vue/resolver`（按需引入）。纯 ESM。
 
+### 印章换字体
+
+印章（`MStamp`）的版式是**量出来的**：每个字的墨迹框要靠 canvas 现场量，才知道这一枚章有多宽、字怎么摆。所以字体到得早不早，直接决定你会不会看到「先排一版、字体到了再跳一下」。
+
+换成自己的篆体，两步，不用逐枚传属性：
+
+```css
+@font-face {
+  font-family: "我的篆体";
+  src: url("/fonts/my-seal.woff2") format("woff2");
+  font-display: swap;
+}
+:root {
+  --m-font-seal: "我的篆体", serif;
+}
+```
+
+单枚要不一样就传 `font` 属性（`<MStamp text="闲章" font="'Kaiti SC', serif" />`），它只覆盖这一枚。
+
+然后在启动时拉一次字体：
+
+```ts
+import { createInkEngine, preloadStampFont } from "@shuimo-design/core/ink";
+
+createInkEngine();
+void preloadStampFont(); // 不传参数就读 :root 上的 --m-font-seal
+```
+
+**这一步不能省。** 浏览器只在「真有元素用到某个字体」时才会去下载它，光写 `@font-face` 是不会下载的 —— 不调这个函数，字体就要等第一枚印章画出来之后才开始下载，于是必然跳一次。调了之后，等印章要画时字体已经就位，第一眼看到的就是最终版式。
+
+字体按 `unicode-range` 切过子集的话，把会用到的字传进去：`preloadStampFont({ text: "水墨丹青" })`，否则只会拉到探针字所在的那一份。想更早，再在 HTML 里加一行 `<link rel="preload" as="font" crossorigin href="...">`，让下载在 JS 解析之前就开始。
+
+中文字体动辄几 MB，**建议按印文子集化**再发布。
+
 ### 关掉水墨皮肤
 
 样式分两层：`m.component` 是骨架（盒模型、间距、状态），`m.ink` 是水墨皮（毛边、笔触、印泥），后者由根元素上的 `m-ink-ready` 类开关。不调 `createInkEngine()` 就只剩骨架；想自己改皮就覆盖 `@layer m.ink`，不用堆选择器抢优先级。

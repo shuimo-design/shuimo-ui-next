@@ -27,7 +27,11 @@ export interface StampProps {
   seed?: number;
   /** 印泥色，默认 --m-seal（朱砂） */
   color?: string;
-  /** 字体族，默认 --m-font-seal；要篆体自己 @font-face 引好再传名字 */
+  /**
+   * 这一枚的字体族，默认跟随 `--m-font-seal`。
+   * 换全局的字体不用逐枚传：自己 `@font-face` 引好，再把 `--m-font-seal` 指过去就行。
+   * 无论哪种，启动时调一次 `preloadStampFont()`，第一枚印章才不会先排一版兜底再跳。
+   */
   font?: string;
   /** 边框厚度（px），默认 size × 3.5% */
   border?: number;

@@ -5,7 +5,7 @@
  * 印章的几何本身早就在 core 的 ink/stamp 里了，这里只补两个壳共用的那层薄派生。
  */
 import { generateStamp, type StampOptions, type StampRender } from "../../ink/stamp";
-import { createGlyphMeasurer, loadStampFont } from "../../ink/stamp/measure";
+import { getGlyphMeasurer, isStampFontReady, loadStampFont } from "../../ink/stamp/measure";
 import type { GlyphMeasurer } from "../../ink/stamp/layout";
 import { sanitizeId } from "../../runtime/id";
 import { createStore } from "../../runtime/store";
@@ -111,7 +111,9 @@ export interface StampFontController extends Controller<StampFontState, StampFon
 }
 
 /**
- * 字的墨迹框要等字体到了才量得准：先用兜底比例排一版，字体加载完再换成真度量重排。
+ * 字的墨迹框要等字体到了才量得准。字体已经在了就当场量完（第一眼就是对的）；
+ * 还没到才先用兜底比例排一版、等它到了再换成真度量重排 —— 后一种会看到跳一下，
+ * 启动时调一次 `preloadStampFont()` 就能把它变成前一种。
  *
  * 必须量 **svg 上生效的字体**：根元素继承的是页面正文字体，拿它量出来的框对不上篆体。
  * 服务端没有 document，快照永远是 `{ measure: undefined }` —— 引用恒定，
@@ -132,11 +134,21 @@ export function createStampFont(initial: StampFontOptions = { text: "" }): Stamp
     const family = getComputedStyle(el).fontFamily;
     const key = `${family}|${options.text}`;
     if (key === measured) return;
+    // 字体已经在了（系统字体，或者启动时 preloadStampFont 过、或者同页别的印章已经等过）：
+    // 当场量完。这一步在挂载副作用里同步完成、还没到绘制，所以第一眼看到的就是对的版式，
+    // 不会先按兜底比例排一版再跳一下
+    if (isStampFontReady(family, options.text)) {
+      measured = key;
+      // 作废在飞的那次异步，免得它回来又把快照改回去
+      ticket++;
+      store.set({ measure: getGlyphMeasurer(family) });
+      return;
+    }
     const mine = ++ticket;
     await loadStampFont(family, options.text);
     if (mine !== ticket || !connected) return;
     measured = key;
-    store.set({ measure: createGlyphMeasurer(family) });
+    store.set({ measure: getGlyphMeasurer(family) });
   }
 
   return {

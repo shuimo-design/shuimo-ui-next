@@ -6,8 +6,11 @@ import "@shuimo-design/core/style.css";
 import "../shared/site.css";
 import "../shared/demo.css";
 import { createShuimo } from "@shuimo-design/vue";
-import { createInkEngine } from "@shuimo-design/core/ink";
+import { createInkEngine, preloadStampFont } from "@shuimo-design/core/ink";
 import App from "./App.vue";
 
 createInkEngine();
+// 示例站自带的篆体（@font-face 在 shared/demo.css 里）先拉下来：
+// 印章要量每个字的墨迹框才能排版，字体没到就会先按兜底比例排一版、到了再跳一下
+void preloadStampFont();
 createApp(App).use(createShuimo()).mount("#app");
