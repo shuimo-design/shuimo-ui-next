@@ -1,6 +1,6 @@
 /**
  * 抽屉四个方向 + 弹窗各渲染一张整屏图落盘，供人眼检查挂牌挂在哪条边、山景和挂牌有没有打架。
- * 两者的水墨外观是同一份（src/internal/modal-ink.css），改那里之后拿弹窗这张做逐像素回归：
+ * 两者的水墨外观是同一份（@shuimo-design/core 的 internal/modal-ink.css），改那里之后拿弹窗这张做逐像素回归：
  * BENCH=1 vp test bench/modal-sample
  * 落盘是 base64，看之前先解码：base64 -d < bench/results/drawer-right.png.b64 > /tmp/x.png
  */
@@ -11,7 +11,7 @@ import { render } from "vitest-browser-vue";
 import { h } from "vue";
 import { MDialog } from "../src/components/dialog";
 import { MDrawer } from "../src/components/drawer";
-import type { DrawerDirection } from "../src/components/drawer/types";
+import type { DrawerDirection } from "@shuimo-design/core";
 import { createInkEngine } from "../src/ink";
 
 createInkEngine();

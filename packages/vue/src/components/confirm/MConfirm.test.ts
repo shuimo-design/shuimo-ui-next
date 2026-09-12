@@ -1,7 +1,8 @@
 import { page, userEvent } from "vitest/browser";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-vue";
-import { MConfirm, useConfirm } from ".";
+import { MOverlayOutlet } from "../overlay-outlet";
+import { MConfirm } from ".";
 
 describe("MConfirm", () => {
   afterEach(async () => {
@@ -11,19 +12,21 @@ describe("MConfirm", () => {
   });
 
   it("resolves true when the confirm button is clicked", async () => {
+    await render(MOverlayOutlet);
     const pending = MConfirm.show("确定要删吗");
     await expect.element(page.getByRole("alertdialog")).toHaveTextContent("确定要删吗");
     await page.getByRole("button", { name: "确定" }).click();
     await expect(pending).resolves.toBe(true);
   });
 
-  it("resolves false on cancel and unmounts the host afterwards", async () => {
-    const pending = useConfirm().show({ content: "取消试试", title: "提示" });
+  it("resolves false on cancel and takes the panel off the page afterwards", async () => {
+    await render(MOverlayOutlet);
+    const pending = MConfirm.show({ content: "取消试试", title: "提示" });
     await expect.element(page.getByRole("alertdialog", { name: "提示" })).toBeVisible();
     await page.getByRole("button", { name: "取消" }).click();
     await expect(pending).resolves.toBe(false);
     await vi.waitFor(() => {
-      expect(document.querySelector(".m-confirm-host")).toBeNull();
+      expect(document.querySelector(".m-confirm")).toBeNull();
     });
   });
 

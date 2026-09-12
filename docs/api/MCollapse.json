@@ -1,8 +1,14 @@
 {
   "name": "MCollapse",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MCollapse"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCollapse"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCollapse"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "accordion"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "divider"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -41,6 +56,13 @@
       "value": {
         "kind": "expression",
         "type": "CollapseName | CollapseName[] | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -50,12 +72,18 @@
     },
     {
       "name": "change",
-      "description": "展开项变化；accordion 下是单个 name（全部收起时为 undefined），否则是数组"
+      "description": "展开项变化；accordion 下是单个 name（全部收起时为 undefined），否则是数组",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

@@ -1,58 +1,37 @@
 <script setup lang="ts">
-// 某个方向的消息队列容器；由 api.ts 按需挂到 body 上，不对外导出
-import { ref, type ComponentPublicInstance } from "vue";
+// 某个方向的消息列表容器。由 MOverlayOutlet 渲染，不对外导出
+import {
+  messageListClasses,
+  MESSAGE_LIST_LABEL,
+  type MessageDirection,
+  type MessageEntry,
+} from "@shuimo-design/core";
 import MMessage from "./MMessage.vue";
-import type { MessageEntry, MessageListExposed } from "./internal";
-import type { MessageDirection } from "./types";
 
 defineOptions({ name: "MMessageList" });
 
-const { direction } = defineProps<{ direction: MessageDirection }>();
-
-const items = ref<MessageEntry[]>([]);
-/** 每条消息的组件实例，用来从外面触发它的离场动画 */
-const instances = new Map<number, InstanceType<typeof MMessage>>();
-
-function setInstance(id: number, el: Element | ComponentPublicInstance | null) {
-  if (el && !(el instanceof Element)) instances.set(id, el as InstanceType<typeof MMessage>);
-  else instances.delete(id);
-}
-
-function add(entry: MessageEntry) {
-  items.value.push(entry);
-}
-
-function close(id: number) {
-  instances.get(id)?.close();
-}
-
-function closeAll() {
-  for (const item of items.value) close(item.id);
-}
-
-function onClose(entry: MessageEntry) {
-  items.value = items.value.filter((item) => item.id !== entry.id);
-  entry.onClosed();
-}
-
-defineExpose<MessageListExposed>({ add, close, closeAll });
+const { direction, items } = defineProps<{
+  direction: MessageDirection;
+  items: readonly MessageEntry[];
+  /** 某条的离场动画走完了 */
+  onRemove: (id: number) => void;
+}>();
 </script>
 
 <template>
   <div
-    class="m-message-list"
-    :class="`m-message-list--${direction}`"
+    :class="messageListClasses(direction)"
     role="region"
     aria-live="polite"
-    aria-label="消息"
+    :aria-label="MESSAGE_LIST_LABEL"
   >
     <MMessage
-      v-for="item in items"
-      :key="item.id"
-      :ref="(el) => setInstance(item.id, el)"
-      v-bind="item.props"
+      v-for="entry in items"
+      :key="entry.id"
+      v-bind="entry.props"
       :direction="direction"
-      @close="onClose(item)"
+      :closing="entry.closing"
+      @close="onRemove(entry.id)"
     />
   </div>
 </template>

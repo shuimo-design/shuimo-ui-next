@@ -1,34 +1,53 @@
 <script setup lang="ts">
 import {
   computed,
-  inject,
   onBeforeUnmount,
   onMounted,
   useId,
   useTemplateRef,
   type FunctionalComponent,
 } from "vue";
+import {
+  treeCheckState,
+  treeNodeClasses,
+  TREE_COLLAPSE_LABEL,
+  TREE_EXPAND_LABEL,
+  type TreeLabelScope,
+  type TreeNode,
+} from "@shuimo-design/core";
 import { MCheckbox } from "../checkbox";
-import { treeKey } from "./context";
-import type { TreeLabelScope, TreeNode } from "./types";
+import { useTreeContext } from "./context";
 
 defineOptions({ name: "TreeNode" });
 
 const { node } = defineProps<{ node: TreeNode }>();
 
-const tree = inject(treeKey);
-if (!tree) throw new Error("TreeNode 只能放在 MTree 里用");
+const tree = useTreeContext();
 
 const labelId = useId();
 const row = useTemplateRef<HTMLElement>("row");
 
 const hasChildren = computed(() => node.children.length > 0);
-const expanded = computed(() => hasChildren.value && tree.isExpanded(node.key));
-const selected = computed(() => tree.selectedKey.value === node.key);
-const check = computed(() => tree.checkState(node.key));
+const expanded = computed(() => hasChildren.value && tree.expanded.has(node.key));
+const selected = computed(() => tree.selectedKey === node.key);
+const check = computed(() => treeCheckState(tree.checkStates, node.key));
+// 类名由 core 派生，两个壳输出的字符串才一模一样（顺序也一样）
+const classes = computed(() =>
+  treeNodeClasses({
+    expanded: expanded.value,
+    selected: selected.value,
+    disabled: node.disabled,
+    leaf: !hasChildren.value,
+  }),
+);
 
 /** 用函数组件把上下文里的插槽渲染出来，递归层级里不用逐层转发插槽 */
 const Label: FunctionalComponent<TreeLabelScope> = (scope) => tree.renderLabel(scope);
+
+function onKeydown(event: KeyboardEvent) {
+  // selfTarget 由壳算：core 那边拿不到可靠的 currentTarget（见 context/tree.ts 的说明）
+  tree.keydown(node, event, event.target === event.currentTarget);
+}
 
 onMounted(() => tree.registerRow(node.key, row.value));
 onBeforeUnmount(() => tree.registerRow(node.key, null));
@@ -36,13 +55,7 @@ onBeforeUnmount(() => tree.registerRow(node.key, null));
 
 <template>
   <div
-    class="m-tree-node"
-    :class="{
-      'm-tree-node--expanded': expanded,
-      'm-tree-node--selected': selected,
-      'm-tree-node--disabled': node.disabled,
-      'm-tree-node--leaf': !hasChildren,
-    }"
+    :class="classes"
     :style="{ '--m-tree-level': node.level }"
     role="treeitem"
     :aria-expanded="hasChildren ? expanded : undefined"
@@ -56,14 +69,14 @@ onBeforeUnmount(() => tree.registerRow(node.key, null));
       class="m-tree-node__row"
       tabindex="0"
       @click="tree.select(node, $event)"
-      @keydown="tree.onKeydown(node, $event)"
+      @keydown="onKeydown"
     >
       <button
         v-if="hasChildren"
         type="button"
         class="m-tree-node__arrow"
         tabindex="-1"
-        :aria-label="expanded ? '收起' : '展开'"
+        :aria-label="expanded ? TREE_COLLAPSE_LABEL : TREE_EXPAND_LABEL"
         @click.stop="tree.toggleExpand(node)"
       >
         <!-- 实心小三角，形状全靠 CSS（m.ink 层换成毛边墨尖遮罩），转向也在它身上 -->
@@ -71,7 +84,7 @@ onBeforeUnmount(() => tree.registerRow(node.key, null));
       </button>
       <span v-else class="m-tree-node__arrow m-tree-node__arrow--placeholder" aria-hidden="true" />
       <MCheckbox
-        v-if="tree.checkable.value"
+        v-if="tree.checkable"
         class="m-tree-node__checkbox"
         :model-value="check.checked"
         :indeterminate="check.indeterminate"

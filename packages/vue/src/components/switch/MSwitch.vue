@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { brushLineUrl } from "../../ink";
-import { brushPolygonUrl } from "../../ink";
+import {
+  switchChecked,
+  switchClasses,
+  switchInert,
+  switchInk,
+  switchNextValue,
+  type SwitchEmits,
+  type SwitchProps,
+  type SwitchSlots,
+  type SwitchValue,
+} from "@shuimo-design/core";
 import { useDisabled, useFormItem } from "../../internal/form-item";
-import type { SwitchEmits, SwitchProps, SwitchSlots, SwitchValue } from "./types";
 
 defineOptions({ name: "MSwitch" });
 
@@ -21,59 +29,32 @@ const emit = defineEmits<SwitchEmits>();
 const slots = defineSlots<SwitchSlots>();
 const model = defineModel<SwitchValue>({ default: false });
 
+// 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水
 const formItem = useFormItem();
 const disabled = useDisabled(() => disabledProp);
-const checked = computed(() => model.value === activeValue);
-
-/** 轨道长度 / 滑钮边长，要和 switch.css 里的默认变量一致；用户改了变量，遮罩会按 100% 跟着拉伸 */
-const TRACK_LENGTH = 56;
-const CORE_SIZE = 18;
-/** 方框比墨块每边多出 2px，像旧版那张手绘边框浮在色块外面 */
-const FRAME_OUT = 2;
-
-// 轨道是一抹：起笔按住、向右越写越细，收笔飞白。按轨道实际长度生成，通用长线横向硬压会糊成发丝
-// 画幅两端只留 3px：默认留白是按笔宽算的，56px 的短线会被吃掉一大半
-const line = brushLineUrl({ seed: 5, length: TRACK_LENGTH, thickness: 10, taper: true, endPad: 3 });
-// 滑钮外那圈手画的方框：四边各一笔，拐角出头
-const frame = brushPolygonUrl(
-  [
-    [-FRAME_OUT, -FRAME_OUT],
-    [CORE_SIZE + FRAME_OUT, -FRAME_OUT],
-    [CORE_SIZE + FRAME_OUT, CORE_SIZE + FRAME_OUT],
-    [-FRAME_OUT, CORE_SIZE + FRAME_OUT],
-  ],
-  CORE_SIZE,
-  CORE_SIZE,
-  { seed: 11, strokeWidth: 2, roughness: 0.6, flyingWhite: 0.08, overshoot: 1.5 },
+const checked = computed(() => switchChecked(model.value, activeValue));
+const classes = computed(() =>
+  switchClasses({ checked: checked.value, disabled: disabled.value, loading }),
 );
-const inkStyle = {
-  "--m-switch-line-mask": `url("${line.url}")`,
-  "--m-switch-line-band": `${line.height}px`,
-  "--m-switch-frame-mask": `url("${frame.url}")`,
-  "--m-switch-frame-pad": `${frame.padding}px`,
-};
-const inert = computed(() => disabled.value || loading);
+const inert = computed(() => switchInert({ disabled: disabled.value, loading }));
+// 轨道那"一抹"和滑钮外的手画方框都在 core 里生成，两个壳共用同一份遮罩
+const inkStyle = switchInk();
 
 function toggle() {
   if (inert.value) return;
-  const next = checked.value ? inactiveValue : activeValue;
+  const next = switchNextValue(checked.value, activeValue, inactiveValue);
   // 受控模式只把"将要变成的值"报出去，改不改 v-model 由外部决定
   if (!controlled) model.value = next;
   emit("change", next);
-  formItem?.validate("change");
+  formItem.value.validate("change");
 }
 </script>
 
 <template>
   <button
-    :id="formItem?.id.value"
+    :id="formItem.id"
     type="button"
-    class="m-switch"
-    :class="{
-      'm-switch--checked': checked,
-      'm-switch--disabled': disabled,
-      'm-switch--loading': loading,
-    }"
+    :class="classes"
     :style="inkStyle"
     role="switch"
     :aria-checked="checked"

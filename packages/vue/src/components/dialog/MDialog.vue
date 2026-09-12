@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { computed, ref, useId, useTemplateRef, watch } from "vue";
+import {
+  DIALOG_TRANSITION,
+  createModal,
+  dialogBrush,
+  dialogScene,
+  dialogStyle,
+  resolveMask,
+  type DialogEmits,
+  type DialogProps,
+  type DialogSlots,
+} from "@shuimo-design/core";
 import { IconClose } from "../../icons";
-import { inkLatticeUrl } from "../../ink";
-import { inkSceneSvg } from "../../ink";
-import { inkSplashUrl } from "../../ink";
 import { useBrushBorder } from "../../ink";
-import { resolveMask, useModal } from "../../internal/modal";
-import type { DialogEmits, DialogProps, DialogSlots } from "./types";
+import { useController } from "../../runtime";
 
 // 根是多个节点（触发器 + Teleport），class / style 这类透传属性手动落到面板上
 defineOptions({ name: "MDialog", inheritAttrs: false });
@@ -39,48 +46,26 @@ watch(model, (open, was) => {
 
 const titleId = useId();
 const panel = useTemplateRef<HTMLElement>("panel");
-const { trapFocus } = useModal({
-  open: () => model.value,
-  panel,
-  closeOnEsc: () => closeOnEsc,
-  close,
-});
-// 纸框：5px 一笔，边缘晕成干笔毛边、粗细缓慢起伏（旧版底图就是这样的软边）；
-// 拐角留空给回纹：四角各是一套老图描下来的图案，实线在角饰第一根条处停笔，每个角的两条边各自留（[横边, 竖边]，px）：
-// 左上的上边线整段藏在山下面，左边线从横带底沿（26px）起笔；右上的上边线停在竖杠（右 17.9px）、右边线从横带底（17.5px）起笔；
-// 左下、右下的下边线在粗竖杠（离侧边 18px）处停笔、侧边线在长横线（底上 17.5px）处停笔；沿线洒少许溅点
-useBrushBorder(panel, {
-  seed,
-  strokeWidth: 5,
-  roughness: 0.6,
-  flyingWhite: 0.1,
-  overshoot: 0,
-  wobble: 0.8,
-  bleed: { scale: 2.5, blur: 0.6 },
-  cornerGap: { tl: [40, 26], tr: [17.9, 17.5], br: [18, 17.5], bl: [18, 17.5] },
-  specks: 1,
-});
-// 题头小景是内联 SVG，滤镜 / 渐变 id 要全页唯一：组件 id 保证同一个应用里不撞；
-// 页面上有多个 Vue 应用时 useId 会重复，再把 seed 编进去——同 seed 撞了也是同一份定义，画出来一样
-const uid = useId().replace(/[^\w-]/g, "-");
-const scene = computed(() => inkSceneSvg({ seed, id: `m-dialog-scene-${seed}-${uid}` }));
+// 滚动锁、模态栈、ESC、焦点存还、Tab 循环全在 core 的控制器里，抽屉和确认框共用同一份
+const { controller: modal } = useController(createModal, () => ({
+  closeOnEsc,
+  onRequestClose: close,
+}));
+// flush: "post" —— 要等面板真的渲染出来再交给控制器，它拿到元素才好聚焦
+watch(
+  [model, panel],
+  () => {
+    modal.setPanel(panel.value);
+    modal.setOpen(model.value);
+  },
+  { immediate: true, flush: "post" },
+);
 
-const px = (value: number | string | undefined) =>
-  typeof value === "number" ? `${value}px` : value;
-// 四角回纹是 SVG 遮罩，通过变量交给 m.ink 层；宽高覆盖也走变量，方便用户用 CSS 改
-const rootStyle = computed(() => {
-  const style: Record<string, string> = {
-    "--m-modal-splash": `url("${inkSplashUrl({ seed })}")`,
-  };
-  for (const corner of ["tl", "tr", "br", "bl"] as const)
-    style[`--m-modal-lattice-${corner}`] =
-      `url("${inkLatticeUrl({ seed, corner, size: 64, strokeWidth: 2 })}")`;
-  const w = px(width);
-  const h = px(height);
-  if (w) style["--m-dialog-w"] = w;
-  if (h) style["--m-dialog-h"] = h;
-  return style;
-});
+useBrushBorder(panel, dialogBrush(seed));
+
+const uid = useId();
+const scene = computed(() => dialogScene(seed, uid));
+const rootStyle = computed(() => dialogStyle({ seed, width, height }));
 
 function open() {
   model.value = true;
@@ -98,7 +83,7 @@ function onMaskClick() {
     <slot name="active" />
   </span>
   <Teleport :to="teleportTo" :disabled="teleport === false">
-    <Transition name="m-dialog">
+    <Transition :name="DIALOG_TRANSITION">
       <div
         v-if="rendered"
         v-show="model"
@@ -119,7 +104,7 @@ function onMaskClick() {
             aria-modal="true"
             :aria-labelledby="slots.header || title ? titleId : undefined"
             tabindex="-1"
-            @keydown="trapFocus"
+            @keydown="modal.trapFocus"
           >
             <button
               v-if="closeBtn"

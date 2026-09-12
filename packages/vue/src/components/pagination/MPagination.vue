@@ -1,18 +1,34 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import {
+  buildPagers,
+  clampPage,
+  PAGINATION_FOLD_TEXT,
+  PAGINATION_JUMPER_LABEL,
+  PAGINATION_JUMPER_PREFIX,
+  PAGINATION_JUMPER_SUFFIX,
+  PAGINATION_LABEL,
+  PAGINATION_NEXT_LABEL,
+  PAGINATION_PREV_LABEL,
+  PAGINATION_SIZES_LABEL,
+  paginationClasses,
+  paginationFoldLabel,
+  paginationInkStyle,
+  paginationPageCount,
+  paginationPageLabel,
+  paginationSections,
+  paginationSizeOptions,
+  paginationTotalText,
+  paginationVisible,
+  parseJumpPage,
+  type PaginationEmits,
+  type PaginationProps,
+  type PaginationSlots,
+} from "@shuimo-design/core";
 import { IconChevronLeft, IconChevronRight } from "../../icons";
-import { inkMarkUrl } from "../../ink";
-import { inkShapeUrl } from "../../ink";
 import { useDisabled } from "../../internal/form-item";
 import { MInput } from "../input";
-import { MSelect, type SelectOption, type SelectValue } from "../select";
-import { buildPagers } from "./pager";
-import type {
-  PaginationEmits,
-  PaginationLayoutKey,
-  PaginationProps,
-  PaginationSlots,
-} from "./types";
+import { MSelect, type SelectValue } from "../select";
 
 defineOptions({ name: "MPagination" });
 
@@ -27,12 +43,13 @@ const {
   disabled: disabledProp = false,
 } = defineProps<PaginationProps>();
 const emit = defineEmits<PaginationEmits>();
-const slots = defineSlots<PaginationSlots>();
+defineSlots<PaginationSlots>();
 const current = defineModel<number>("current", { default: 1 });
 const pageSize = defineModel<number>("pageSize", { default: 10 });
 
 const disabled = useDisabled(() => disabledProp);
-const pageCount = computed(() => Math.max(1, Math.ceil(total / Math.max(pageSize.value, 1))));
+const pageCount = computed(() => paginationPageCount(total, pageSize.value));
+// 页码折叠是纯函数，和 React 那边同一份
 const pagers = computed(() =>
   buildPagers({
     pageCount: pageCount.value,
@@ -42,43 +59,27 @@ const pagers = computed(() =>
     showEdge: showEdgePageNum,
   }),
 );
-const sections = computed(() =>
-  layout
-    .split(",")
-    .map((key) => key.trim())
-    .filter((key): key is PaginationLayoutKey =>
-      ["prev", "pager", "next", "jumper", "sizes", "total"].includes(key),
-    ),
-);
-const sizeOptions = computed<SelectOption[]>(() =>
-  pageSizes.map((size) => ({ label: `${size} 条/页`, value: size })),
-);
-const visible = computed(() => !(hideOnSinglePage && pageCount.value <= 1));
+const sections = computed(() => paginationSections(layout));
+const sizeOptions = computed(() => paginationSizeOptions(pageSizes));
+const visible = computed(() => paginationVisible(hideOnSinglePage, pageCount.value));
 
 // 跳页输入框的内容是自己的：敲一半时不能反过来改 current
 const jumpText = ref("");
 
-// 水墨皮肤：当前页衬一枚毛边朱砂印，翻页箭头换成细笔一撇；箭头笔宽比通用记号细，贴近旧版位图
-const seal = inkShapeUrl(28, 28, { seed: 7, raggedness: 0.6, corner: 0.14 });
-const inkStyle = {
-  "--m-pagination-seal": `url("${seal.url}")`,
-  "--m-pagination-seal-pad": `${seal.padding}px`,
-  "--m-pagination-chevron-left": `url("${inkMarkUrl("chevronLeft", { seed: 3, strokeWidth: 1.8 })}")`,
-  "--m-pagination-chevron-right": `url("${inkMarkUrl("chevronRight", { seed: 3, strokeWidth: 1.8 })}")`,
-};
+const inkStyle = paginationInkStyle();
 
 function goTo(page: number) {
   if (disabled.value) return;
-  const next = Math.min(Math.max(Math.trunc(page), 1), pageCount.value);
+  const next = clampPage(page, pageCount.value);
   if (next === current.value) return;
   current.value = next;
   emit("change", next);
 }
 
 function onJump() {
-  const page = Number.parseInt(jumpText.value, 10);
+  const page = parseJumpPage(jumpText.value);
   jumpText.value = "";
-  if (Number.isNaN(page)) return;
+  if (page === undefined) return;
   goTo(page);
 }
 
@@ -97,21 +98,22 @@ watch(pageCount, (count) => {
 <template>
   <nav
     v-if="visible"
-    class="m-pagination"
-    :class="{ 'm-pagination--disabled': disabled }"
+    :class="paginationClasses(disabled)"
     :style="inkStyle"
-    aria-label="分页"
+    :aria-label="PAGINATION_LABEL"
   >
     <template v-for="section in sections" :key="section">
       <span v-if="section === 'total'" class="m-pagination__total">
-        <slot name="total" :total="total" :page-count="pageCount">共 {{ total }} 条</slot>
+        <slot name="total" :total="total" :page-count="pageCount">{{
+          paginationTotalText(total)
+        }}</slot>
       </span>
 
       <button
         v-else-if="section === 'prev'"
         type="button"
         class="m-pagination__arrow m-pagination__arrow--prev"
-        aria-label="上一页"
+        :aria-label="PAGINATION_PREV_LABEL"
         :disabled="disabled || current <= 1"
         @click="goTo(current - 1)"
       >
@@ -126,7 +128,7 @@ watch(pageCount, (count) => {
             class="m-pagination__page"
             :class="{ 'm-pagination__page--current': pager.page === current }"
             :aria-current="pager.page === current ? 'page' : undefined"
-            :aria-label="`第 ${pager.page} 页`"
+            :aria-label="paginationPageLabel(pager.page)"
             :disabled="disabled"
             @click="goTo(pager.page)"
           >
@@ -136,15 +138,11 @@ watch(pageCount, (count) => {
             v-else
             type="button"
             class="m-pagination__page m-pagination__fold"
-            :aria-label="
-              pager.direction === 'prev'
-                ? `向前 ${current - pager.page} 页`
-                : `向后 ${pager.page - current} 页`
-            "
+            :aria-label="paginationFoldLabel(pager, current)"
             :disabled="disabled"
             @click="goTo(pager.page)"
           >
-            ···
+            {{ PAGINATION_FOLD_TEXT }}
           </button>
         </li>
       </ul>
@@ -153,7 +151,7 @@ watch(pageCount, (count) => {
         v-else-if="section === 'next'"
         type="button"
         class="m-pagination__arrow m-pagination__arrow--next"
-        aria-label="下一页"
+        :aria-label="PAGINATION_NEXT_LABEL"
         :disabled="disabled || current >= pageCount"
         @click="goTo(current + 1)"
       >
@@ -161,18 +159,18 @@ watch(pageCount, (count) => {
       </button>
 
       <label v-else-if="section === 'jumper'" class="m-pagination__jumper">
-        <span>前往</span>
+        <span>{{ PAGINATION_JUMPER_PREFIX }}</span>
         <MInput
           v-model="jumpText"
           class="m-pagination__input"
           type="number"
           :disabled="disabled"
-          aria-label="跳转页码"
+          :aria-label="PAGINATION_JUMPER_LABEL"
           :min="1"
           :max="pageCount"
           @change="onJump"
         />
-        <span>页</span>
+        <span>{{ PAGINATION_JUMPER_SUFFIX }}</span>
       </label>
 
       <MSelect
@@ -181,7 +179,7 @@ watch(pageCount, (count) => {
         :options="sizeOptions"
         :model-value="pageSize"
         :disabled="disabled"
-        aria-label="每页条数"
+        :aria-label="PAGINATION_SIZES_LABEL"
         @update:model-value="onSizeChange"
       />
     </template>

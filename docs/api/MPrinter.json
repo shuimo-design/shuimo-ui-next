@@ -1,8 +1,14 @@
 {
   "name": "MPrinter",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MPrinter"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MPrinter"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MPrinter"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "text"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "speed"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "loop"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "pause"
       }
     },
     {
@@ -53,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "cursor"
       }
     },
     {
@@ -63,13 +84,19 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "autoplay"
       }
     }
   ],
   "events": [
     {
       "name": "end",
-      "description": "一段文字全部打完时触发；循环时每一轮都会触发"
+      "description": "一段文字全部打完时触发；循环时每一轮都会触发",
+      "react": {
+        "name": "onEnd"
+      }
     }
   ],
   "slots": []

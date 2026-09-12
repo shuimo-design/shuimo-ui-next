@@ -1,3 +1,16 @@
 export { default as MTable } from "./MTable.vue";
 export { default as MTableColumn } from "./MTableColumn.vue";
-export type * from "./types";
+export type { VueTableColumn } from "./collect";
+export type {
+  TableAlign,
+  TableCellScope,
+  TableColumnConfig,
+  TableColumnProps,
+  TableColumnSlots,
+  TableEmits,
+  TableHeadScope,
+  TableProps,
+  TableRow,
+  TableRowKey,
+  TableSlots,
+} from "@shuimo-design/core";

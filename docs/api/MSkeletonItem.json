@@ -1,8 +1,14 @@
 {
   "name": "MSkeletonItem",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSkeletonItem"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSkeletonItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSkeletonItem"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "SkeletonItemVariant | undefined"
+      },
+      "react": {
+        "name": "variant"
       }
     }
   ],

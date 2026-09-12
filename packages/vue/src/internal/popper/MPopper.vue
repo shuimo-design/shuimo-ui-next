@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import {
-  arrow as arrowMiddleware,
-  autoUpdate,
-  flip,
-  offset,
-  shift,
-  size,
-  useFloating,
-  type Placement,
-} from "@floating-ui/vue";
-import { onClickOutside } from "@vueuse/core";
-import { computed, toRef, useTemplateRef } from "vue";
+import { computed, useTemplateRef, watch } from "vue";
+import { createFloating, floatingStyle, observeOutside, type Placement } from "@shuimo-design/core";
+import { onScopeDispose } from "vue";
+import { useController } from "../../runtime";
 
 export interface PopperProps {
   /** 是否显示 */
@@ -49,60 +41,38 @@ const emit = defineEmits<{
 
 defineSlots<{ default?: () => unknown }>();
 
-const floating = useTemplateRef<HTMLElement>("floating");
-const referenceRef = toRef(() => reference ?? null);
-const arrowRef = toRef(() => arrow ?? null);
+const floatingEl = useTemplateRef<HTMLElement>("floating");
 
-const {
-  floatingStyles,
-  isPositioned,
-  middlewareData,
-  placement: resolvedPlacement,
-} = useFloating(referenceRef, floating, {
-  placement: toRef(() => placement),
-  strategy: "fixed",
-  // 用 top/left 摆位置而不是 transform：入场动画要用 transform 做缩放，
-  // 两者同属性会让"从 (0,0) 到目标位置"的定位变化被当成动画，浮层从左上角飞过来。
-  // 算出坐标前用 opacity 0 藏住（不用 visibility：那会让面板里的格子接不住焦点）
-  transform: false,
-  open: toRef(() => open),
-  whileElementsMounted: autoUpdate,
-  middleware: computed(() => [
-    offset(gap),
-    flip(),
-    shift({ padding: 8 }),
-    // 箭头要避开圆角，离浮层边缘至少留 6px
-    ...(arrow ? [arrowMiddleware({ element: arrowRef, padding: 6 })] : []),
-    ...(matchWidth
-      ? [
-          size({
-            apply({ rects, elements }) {
-              elements.floating.style.width = `${rects.reference.width}px`;
-            },
-          }),
-        ]
-      : []),
-  ]),
-});
-
-/** 箭头沿交叉轴的位置；没有箭头时变量为空，等于不声明 */
-const arrowStyle = computed(() => {
-  const data = middlewareData.value.arrow;
-  return {
-    "--m-popper-arrow-x": data?.x != null ? `${data.x}px` : "",
-    "--m-popper-arrow-y": data?.y != null ? `${data.y}px` : "",
-  };
-});
-
-onClickOutside(
-  floating,
-  (event) => {
-    if (open) emit("clickOutside", event);
+// 定位全在 core 的控制器里（底下是框架无关的 @floating-ui/dom），React 那边用的是同一份
+const { controller, state } = useController(createFloating, () => ({
+  placement,
+  offset: gap,
+  matchWidth,
+  open,
+}));
+watch(
+  [floatingEl, () => reference, () => arrow],
+  () => {
+    controller.setFloating(floatingEl.value);
+    controller.setReference(reference ?? null);
+    controller.setArrow(arrow ?? null);
   },
-  { ignore: [referenceRef] },
+  { immediate: true, flush: "post" },
 );
 
-defineExpose({ floating });
+const style = computed(() => floatingStyle(state.value));
+
+onScopeDispose(
+  observeOutside(
+    () => floatingEl.value,
+    (event) => {
+      if (open) emit("clickOutside", event);
+    },
+    { ignore: () => [reference ?? null] },
+  ),
+);
+
+defineExpose({ floating: floatingEl });
 </script>
 
 <template>
@@ -112,8 +82,8 @@ defineExpose({ floating });
         v-if="open"
         ref="floating"
         class="m-popper"
-        :style="[floatingStyles, arrowStyle, isPositioned ? undefined : { opacity: 0 }]"
-        :data-placement="resolvedPlacement"
+        :style="style"
+        :data-placement="state.placement"
         :role="role"
       >
         <slot />

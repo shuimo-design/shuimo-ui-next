@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { defineComponent, h, ref, type PropType } from "vue";
-import { MTabPane, MTabs, type TabName } from ".";
+import { MTabPane, MTabs, type TabName, type VueTabPane } from ".";
 
 afterEach(() => document.documentElement.classList.remove("m-ink-ready"));
 
@@ -211,6 +211,34 @@ describe("MTabs", () => {
     const tabs = screen.getByRole("tab").elements();
     expect(tabs[0]?.querySelector("em")?.textContent).toBe("斜体甲");
     expect(tabs[1]?.textContent).toContain("乙");
+  });
+
+  it("takes panes as data and keeps the array order", async () => {
+    const panes: VueTabPane[] = [
+      { name: "shan", label: "山", content: "山的内容" },
+      { name: "shui", label: "水", content: "水的内容" },
+      { name: "yun", label: "云", disabled: true, closable: true, content: "云的内容" },
+    ];
+    const screen = await render(MTabs, { props: { modelValue: "shui", panes } });
+    const tabs = screen.getByRole("tab").elements();
+    expect(tabs.map((tab) => tab.textContent?.trim())).toEqual(["山", "水", "云"]);
+    await expect.element(screen.getByText("水的内容")).toBeVisible();
+    await expect.element(screen.getByText("山的内容")).not.toBeVisible();
+    // 单页的 closable 覆盖整组（整组没开）
+    expect(screen.container.querySelectorAll(".m-tabs__close")).toHaveLength(1);
+    await screen.getByRole("tab", { name: "山" }).click();
+    await expect.element(screen.getByText("山的内容")).toBeVisible();
+  });
+
+  it("renders a VNode-returning content / labelNode from the panes array", async () => {
+    const panes: VueTabPane[] = [
+      { name: "a", labelNode: () => h("em", "斜体甲"), content: () => h("p", "壹") },
+      { name: "b", label: "乙", content: "贰" },
+    ];
+    const screen = await render(MTabs, { props: { panes } });
+    const tabs = screen.getByRole("tab").elements();
+    expect(tabs[0]?.querySelector("em")?.textContent).toBe("斜体甲");
+    expect(screen.container.querySelector(".m-tab-pane p")?.textContent).toBe("壹");
   });
 
   it("moves the indicator under the active tab and draws both lines with brush masks", async () => {

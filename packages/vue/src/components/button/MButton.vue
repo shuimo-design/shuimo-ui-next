@@ -16,7 +16,8 @@ import { useBrushBorder } from "../../ink";
 
 defineOptions({ name: "MButton" });
 
-const props = defineProps<ButtonProps>();
+// 必须直接解构 defineProps：先存成变量再解构，编译出来是 setup 期的一次性快照，
+// props 改了不会重渲染（@vue/compiler-sfc 3.5.42 实测）
 const {
   type = "default",
   text = "",
@@ -24,7 +25,7 @@ const {
   loading = false,
   href,
   nativeType = "button",
-} = props;
+} = defineProps<ButtonProps>();
 const emit = defineEmits<ButtonEmits>();
 defineSlots<ButtonSlots>();
 
@@ -50,7 +51,7 @@ const ink = computed(() =>
 );
 
 function onClick(event: MouseEvent) {
-  if (buttonInert(props)) {
+  if (buttonInert({ disabled, loading })) {
     event.preventDefault();
     return;
   }
@@ -62,7 +63,7 @@ function onClick(event: MouseEvent) {
   <component
     :is="href ? 'a' : 'button'"
     ref="root"
-    :class="buttonClasses(props)"
+    :class="buttonClasses({ type, disabled, loading })"
     :style="ink.style"
     v-bind="ink.attrs"
     :href="href"

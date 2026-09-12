@@ -1,8 +1,14 @@
 {
   "name": "MTree",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MTree"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTree"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTree"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "TreeNodeData[]"
+      },
+      "react": {
+        "name": "data"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "TreeFieldNames | undefined"
+      },
+      "react": {
+        "name": "fieldNames"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "checkable"
       }
     },
     {
@@ -41,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "checkStrictly"
       }
     },
     {
@@ -51,6 +69,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "defaultExpandAll"
       }
     },
     {
@@ -61,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "selectable"
       }
     },
     {
@@ -70,6 +94,13 @@
       "value": {
         "kind": "expression",
         "type": "TreeKey[] | undefined"
+      },
+      "react": {
+        "name": "expandedKeys",
+        "extra": [
+          "defaultExpandedKeys",
+          "onExpandedKeysChange"
+        ]
       }
     },
     {
@@ -79,6 +110,13 @@
       "value": {
         "kind": "expression",
         "type": "TreeKey[] | undefined"
+      },
+      "react": {
+        "name": "checkedKeys",
+        "extra": [
+          "defaultCheckedKeys",
+          "onCheckedKeysChange"
+        ]
       }
     },
     {
@@ -87,6 +125,13 @@
       "value": {
         "kind": "expression",
         "type": "TreeKey | undefined"
+      },
+      "react": {
+        "name": "selectedKey",
+        "extra": [
+          "defaultSelectedKey",
+          "onSelectedKeyChange"
+        ]
       }
     }
   ],
@@ -102,15 +147,24 @@
     },
     {
       "name": "nodeClick",
-      "description": "点击节点行（禁用节点不触发）；键盘回车 / 空格也算"
+      "description": "点击节点行（禁用节点不触发）；键盘回车 / 空格也算",
+      "react": {
+        "name": "onNodeClick"
+      }
     },
     {
       "name": "check",
-      "description": "勾选态变化，带上变化后的全部已勾选 key"
+      "description": "勾选态变化，带上变化后的全部已勾选 key",
+      "react": {
+        "name": "onCheck"
+      }
     },
     {
       "name": "expand",
-      "description": "展开 / 收起"
+      "description": "展开 / 收起",
+      "react": {
+        "name": "onExpand"
+      }
     }
   ],
   "slots": [

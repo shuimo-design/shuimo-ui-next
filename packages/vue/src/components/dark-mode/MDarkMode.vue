@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { onMounted, useId, watch } from "vue";
-import { TAIJI_FINS_DARK, TAIJI_FINS_LIGHT, TAIJI_FISH, TAIJI_HIDDEN } from "./paths";
-import type { DarkModeEmits, DarkModeProps } from "./types";
-import { DARK_MODE_STORAGE_KEY, useDarkMode } from "./use-dark-mode";
+import { computed, onMounted, useId, watch } from "vue";
+import {
+  createDarkMode,
+  darkModeClasses,
+  darkModeFish,
+  darkModeGlowId,
+  darkModeLabel,
+  darkModePathVars,
+  DARK_MODE_STORAGE_KEY,
+  type DarkModeEmits,
+  type DarkModeProps,
+} from "@shuimo-design/core";
+import { useController } from "../../runtime";
 
 defineOptions({ name: "MDarkMode" });
 
@@ -18,30 +27,30 @@ const emit = defineEmits<DarkModeEmits>();
 // undefined 表示使用方没绑 v-model，初始状态要从本地记录 / 系统偏好推
 const model = defineModel<boolean | undefined>({ default: undefined });
 
-const { isDark, init, set, toggle } = useDarkMode({
-  storageKey: () => storageKey,
-  autoMode: () => autoMode,
-  transition: () => transition,
-});
+// 读 localStorage、问 matchMedia、监听系统偏好、改 html[data-theme]、整页墨迹擦过
+// 全在 core 的控制器里，和 React 那边是同一份
+const { controller, state } = useController(createDarkMode, () => ({
+  storageKey,
+  autoMode,
+  transition,
+  value: model.value,
+}));
+const isDark = computed(() => state.value.isDark);
+
 // 同页多个实例时 SVG 滤镜 id 不能撞
-const glowId = `${useId()}-glow`;
+const glowId = darkModeGlowId(useId());
+const fish = computed(() => darkModeFish(isDark.value, glowId));
+const pathVars = darkModePathVars();
 
-// 路径同时给 d 属性（Safari 兜底）和 CSS 变量（Chromium / Firefox 用 transition 对 d 插值）
-const pathVars = {
-  "--m-dark-mode-path-hidden": `path("${TAIJI_HIDDEN}")`,
-  "--m-dark-mode-path-fish": `path("${TAIJI_FISH}")`,
-  "--m-dark-mode-path-fins-light": `path("${TAIJI_FINS_LIGHT}")`,
-  "--m-dark-mode-path-fins-dark": `path("${TAIJI_FINS_DARK}")`,
-};
-
+// connect() 已经在 useController 的 onMounted 里跑完，这时 state 是真实主题：
+// 使用方绑了 v-model 但没给初值时，把推出来的结果补回去
 onMounted(() => {
-  init(model.value);
   if (model.value !== isDark.value) model.value = isDark.value;
 });
 
 // 外部改 v-model → 落到 html；系统偏好变了 → 回写 v-model
 watch(model, (value) => {
-  if (value !== undefined && value !== isDark.value) void set(value);
+  if (value !== undefined && value !== isDark.value) void controller.set(value);
 });
 watch(isDark, (value) => {
   model.value = value;
@@ -49,7 +58,7 @@ watch(isDark, (value) => {
 
 async function onClick() {
   if (disabled) return;
-  await toggle();
+  await controller.toggle();
   emit("change", isDark.value);
 }
 </script>
@@ -57,16 +66,11 @@ async function onClick() {
 <template>
   <button
     type="button"
-    class="m-dark-mode"
-    :class="{
-      'm-dark-mode--dark': isDark,
-      'm-dark-mode--rotate': rotate,
-      'm-dark-mode--disabled': disabled,
-    }"
+    :class="darkModeClasses({ isDark, rotate, disabled })"
     :style="pathVars"
     role="switch"
     :aria-checked="isDark"
-    :aria-label="isDark ? '切换到亮色' : '切换到深色'"
+    :aria-label="darkModeLabel(isDark)"
     :disabled="disabled"
     @click="onClick"
   >
@@ -77,19 +81,15 @@ async function onClick() {
         </filter>
       </defs>
       <!-- 墨鱼：亮色收着，转暗摆尾 -->
-      <path
-        class="m-dark-mode__yin"
-        :d="isDark ? TAIJI_FISH : TAIJI_HIDDEN"
-        :filter="isDark ? `url(#${glowId})` : undefined"
-      />
+      <path class="m-dark-mode__yin" :d="fish.yin.d" :filter="fish.yin.filter" />
       <!-- 白鱼：转 180° 与墨鱼咬合，姿势和墨鱼相反 -->
       <path
         class="m-dark-mode__yang"
         transform="rotate(180 250 250)"
-        :d="isDark ? TAIJI_HIDDEN : TAIJI_FISH"
-        :filter="isDark ? undefined : `url(#${glowId})`"
+        :d="fish.yang.d"
+        :filter="fish.yang.filter"
       />
-      <path class="m-dark-mode__fins" :d="isDark ? TAIJI_FINS_DARK : TAIJI_FINS_LIGHT" />
+      <path class="m-dark-mode__fins" :d="fish.fins.d" />
       <circle class="m-dark-mode__eye m-dark-mode__eye--yin" cx="250" cy="375" r="40" />
       <circle class="m-dark-mode__eye m-dark-mode__eye--yang" cx="250" cy="125" r="40" />
     </svg>

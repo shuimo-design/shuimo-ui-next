@@ -1,2 +1,2 @@
 export { default as MDrawer } from "./MDrawer.vue";
-export type * from "./types";
+export type { DrawerDirection, DrawerEmits, DrawerProps, DrawerSlots } from "@shuimo-design/core";

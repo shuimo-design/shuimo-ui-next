@@ -1,19 +1,10 @@
 import { computed, inject, type ComputedRef, type InjectionKey } from "vue";
-import type { ConfigSize, ConfigTheme } from "../components/config-provider/types";
-import type { InkTier } from "../ink";
+import { DEFAULT_CONFIG, type ConfigContext } from "@shuimo-design/core";
 
-/** 全局配置的解析结果；MConfigProvider 注入，组件用 useConfig() 读 */
-export interface ConfigContext {
-  size: ConfigSize;
-  locale: string;
-  /** undefined = 跟随 ink 引擎自动探测 */
-  inkTier?: InkTier;
-  /** undefined = 没人接管 html 的 data-theme */
-  theme?: ConfigTheme;
-}
-
-export const DEFAULT_CONFIG: ConfigContext = { size: "md", locale: "zh-CN" };
-
+/**
+ * 全局配置的形状、默认值和合并规则都在 core（`context/config.ts`），这里只剩 Vue 的注入钥匙
+ * 和读它的组合式函数。定义放在 internal 而不是组件目录，因为别的组件也从这里读配置。
+ */
 export const configKey: InjectionKey<ComputedRef<ConfigContext>> = Symbol("m-config");
 
 // 没有 MConfigProvider 时所有组件共用这一份默认值，不必每个实例各建一个 computed

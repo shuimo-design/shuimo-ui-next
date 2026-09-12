@@ -1,8 +1,14 @@
 {
   "name": "MFormItem",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MFormItem"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MFormItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MFormItem"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "label"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "prop"
       }
     },
     {
@@ -30,6 +42,9 @@
       "value": {
         "kind": "expression",
         "type": "FormRule | FormRule[] | undefined"
+      },
+      "react": {
+        "name": "rules"
       }
     },
     {
@@ -40,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "required"
       }
     },
     {
@@ -49,16 +67,21 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "labelWidth"
       }
     },
     {
       "name": "showMessage",
       "description": "覆盖表单的 showMessage",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showMessage"
       }
     },
     {
@@ -68,6 +91,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "error"
       }
     },
     {
@@ -77,21 +103,33 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "for"
       }
     }
   ],
   "events": [],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "label",
-      "description": "自定义标签内容"
+      "description": "自定义标签内容",
+      "react": {
+        "name": "label"
+      }
     },
     {
       "name": "error",
-      "description": "自定义错误信息内容"
+      "description": "自定义错误信息内容",
+      "react": {
+        "name": "renderError"
+      }
     }
   ]
 }

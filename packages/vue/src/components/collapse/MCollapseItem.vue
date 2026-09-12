@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import { computed, inject, useId, useTemplateRef } from "vue";
+import {
+  collapseItemActive,
+  collapseItemClasses,
+  collapseItemDisabled,
+  collapseItemDivider,
+  collapseItemIds,
+  collapseItemName,
+  collapseLineOptions,
+  type CollapseItemEmits,
+  type CollapseItemProps,
+  type CollapseItemSlots,
+} from "@shuimo-design/core";
 import { IconBrushChevronDown } from "../../icons";
 import { useBrushLine } from "../divider/use-brush-line";
 import { collapseKey } from "./context";
-import type { CollapseItemEmits, CollapseItemProps, CollapseItemSlots } from "./types";
 
 defineOptions({ name: "MCollapseItem" });
 
@@ -20,24 +31,32 @@ defineSlots<CollapseItemSlots>();
 const model = defineModel<boolean>({ default: false });
 
 const collapse = inject(collapseKey, undefined);
-const id = useId();
-const headerId = `${id}-header`;
-const contentId = `${id}-content`;
+const uid = useId();
+const { headerId, contentId } = collapseItemIds(uid);
 /** 没给 name 时用生成的 id 顶上，放进组里也能被区分 */
-const key = computed(() => name ?? id);
+const key = computed(() => collapseItemName(name, uid));
 
-const active = computed(() => (collapse ? collapse.isActive(key.value) : model.value));
-const divider = computed(() => dividerProp ?? collapse?.divider.value ?? true);
-const disabled = computed(() => disabledProp || (collapse?.disabled.value ?? false));
+const active = computed(() =>
+  collapseItemActive({ collapse: collapse?.value, name: key.value, own: model.value }),
+);
+const divider = computed(() =>
+  collapseItemDivider({ collapse: collapse?.value, own: dividerProp }),
+);
+const disabled = computed(() =>
+  collapseItemDisabled({ collapse: collapse?.value, own: disabledProp }),
+);
+const classes = computed(() =>
+  collapseItemClasses({ active: active.value, disabled: disabled.value, divider: divider.value }),
+);
 
 // 标题右侧那一笔按剩余宽度单独生成：标题长短不同，线的长度就不同，拿通用长线硬压会糊
 const line = useTemplateRef<HTMLElement>("line");
-useBrushLine(line, { thickness: 2, vertical: () => false, seed: 3 });
+useBrushLine(line, collapseLineOptions());
 
 function onClick() {
   if (disabled.value) return;
   if (collapse) {
-    collapse.toggle(key.value);
+    collapse.value.toggle(key.value);
     return;
   }
   const next = !model.value;
@@ -47,14 +66,7 @@ function onClick() {
 </script>
 
 <template>
-  <div
-    class="m-collapse-item"
-    :class="{
-      'm-collapse-item--active': active,
-      'm-collapse-item--disabled': disabled,
-      'm-collapse-item--divider': divider,
-    }"
-  >
+  <div :class="classes">
     <button
       :id="headerId"
       type="button"

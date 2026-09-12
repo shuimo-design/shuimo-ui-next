@@ -1,8 +1,14 @@
 {
   "name": "MDarkMode",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MDarkMode"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDarkMode"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDarkMode"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "autoMode"
       }
     },
     {
@@ -33,16 +45,22 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "rotate"
       }
     },
     {
       "name": "storageKey",
       "description": "记住选择用的 localStorage 键，默认 \"shuimo-theme\"（值是 dark / light）；false 不记",
-      "default": "DARK_MODE_STORAGE_KEY",
+      "default": "\"shuimo-theme\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "string | false | undefined"
+      },
+      "react": {
+        "name": "storageKey"
       }
     },
     {
@@ -53,15 +71,24 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "transition"
       }
     },
     {
       "name": "modelValue",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "dark",
+        "extra": [
+          "defaultDark",
+          "onDarkChange"
+        ]
       }
     }
   ],
@@ -71,7 +98,10 @@
     },
     {
       "name": "change",
-      "description": "用户点击切换后，参数是切换后是否为深色"
+      "description": "用户点击切换后，参数是切换后是否为深色",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": []

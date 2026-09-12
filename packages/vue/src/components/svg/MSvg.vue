@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { inkMarkUrl } from "../../ink";
-import { SVG_ICONS, SVG_INK_MARKS } from "./icons";
-import type { SvgProps, SvgSlots } from "./types";
+import {
+  svgClasses,
+  svgInkKind,
+  svgStyle,
+  type SvgProps,
+  type SvgSlots,
+} from "@shuimo-design/core";
+import { SVG_ICONS } from "./icons";
 
 defineOptions({ name: "MSvg" });
 
@@ -18,22 +23,15 @@ const {
 } = defineProps<SvgProps>();
 defineSlots<SvgSlots>();
 
-// 只有素材库里有对应记号的名字才走笔触版，其余静默回落到线性版
-const inkKind = computed(() => (ink && name ? SVG_INK_MARKS[name] : undefined));
+const inkKind = computed(() => svgInkKind({ name, ink }));
+// 名字 → 线性图标组件的那张表值是 Vue 组件，下沉不了，两个壳各有一份
 const icon = computed(() => (name ? SVG_ICONS[name] : undefined));
-
-const style = computed(() => ({
-  fontSize: typeof size === "number" ? `${size}px` : size,
-  color,
-  "--m-svg-rotate": rotate ? `${rotate}deg` : undefined,
-  "--m-svg-mask": inkKind.value ? `url("${inkMarkUrl(inkKind.value, { seed })}")` : undefined,
-}));
+const style = computed(() => svgStyle({ size, color, rotate, seed, inkKind: inkKind.value }));
 </script>
 
 <template>
   <span
-    class="m-svg"
-    :class="{ 'm-svg--spin': spin, 'm-svg--ink': inkKind }"
+    :class="svgClasses({ spin, inkKind })"
     :style="style"
     :role="title ? 'img' : undefined"
     :aria-label="title"

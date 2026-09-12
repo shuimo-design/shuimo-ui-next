@@ -1,8 +1,14 @@
 {
   "name": "MInput",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MInput"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MInput"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MInput"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "InputType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -22,15 +31,22 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "placeholder"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -41,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "readonly"
       }
     },
     {
@@ -51,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "clearable"
       }
     },
     {
@@ -61,6 +83,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showPassword"
       }
     },
     {
@@ -70,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "maxlength"
       }
     },
     {
@@ -80,6 +108,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showCount"
       }
     },
     {
@@ -90,6 +121,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "rows"
       }
     },
     {
@@ -100,6 +134,9 @@
       "value": {
         "kind": "expression",
         "type": "InputResize | undefined"
+      },
+      "react": {
+        "name": "resize"
       }
     },
     {
@@ -109,6 +146,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -118,6 +158,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "autocomplete"
       }
     },
     {
@@ -128,6 +171,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "autofocus"
       }
     },
     {
@@ -137,6 +183,13 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -146,31 +199,52 @@
     },
     {
       "name": "input",
-      "description": "每次输入"
+      "description": "每次输入",
+      "react": {
+        "name": "onInput"
+      }
     },
     {
       "name": "change",
-      "description": "值提交（原生 change：失焦或回车）"
+      "description": "值提交（原生 change：失焦或回车）",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
-      "name": "focus"
+      "name": "focus",
+      "react": {
+        "name": "onFocus"
+      }
     },
     {
-      "name": "blur"
+      "name": "blur",
+      "react": {
+        "name": "onBlur"
+      }
     },
     {
       "name": "clear",
-      "description": "点了清空按钮"
+      "description": "点了清空按钮",
+      "react": {
+        "name": "onClear"
+      }
     }
   ],
   "slots": [
     {
       "name": "prefix",
-      "description": "输入框前的内容（图标、单位）"
+      "description": "输入框前的内容（图标、单位）",
+      "react": {
+        "name": "prefix"
+      }
     },
     {
       "name": "suffix",
-      "description": "输入框后的内容"
+      "description": "输入框后的内容",
+      "react": {
+        "name": "suffix"
+      }
     }
   ]
 }

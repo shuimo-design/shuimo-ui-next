@@ -1,17 +1,27 @@
 {
   "name": "MSwitch",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSwitch"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSwitch"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSwitch"
+    }
   },
   "attributes": [
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -22,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "loading"
       }
     },
     {
@@ -32,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "SwitchValue | undefined"
+      },
+      "react": {
+        "name": "activeValue"
       }
     },
     {
@@ -42,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "SwitchValue | undefined"
+      },
+      "react": {
+        "name": "inactiveValue"
       }
     },
     {
@@ -51,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "activeText"
       }
     },
     {
@@ -60,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "inactiveText"
       }
     },
     {
@@ -70,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "controlled"
       }
     },
     {
@@ -79,6 +107,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -88,6 +119,13 @@
       "value": {
         "kind": "expression",
         "type": "SwitchValue | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -97,17 +135,26 @@
     },
     {
       "name": "change",
-      "description": "用户切换后，参数是（将要变成的）新值"
+      "description": "用户切换后，参数是（将要变成的）新值",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": [
     {
       "name": "active",
-      "description": "替代 activeText"
+      "description": "替代 activeText",
+      "react": {
+        "name": "active"
+      }
     },
     {
       "name": "inactive",
-      "description": "替代 inactiveText"
+      "description": "替代 inactiveText",
+      "react": {
+        "name": "inactive"
+      }
     }
   ]
 }

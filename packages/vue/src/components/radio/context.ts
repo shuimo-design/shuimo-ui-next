@@ -1,12 +1,9 @@
-import type { InjectionKey, Ref } from "vue";
-import type { RadioValue } from "./types";
+import type { ComputedRef, InjectionKey } from "vue";
+import type { RadioGroupContextValue } from "@shuimo-design/core";
 
-export interface RadioGroupContext {
-  modelValue: Ref<RadioValue | undefined>;
-  disabled: Ref<boolean>;
-  /** 组内共用的原生 name */
-  name: Ref<string>;
-  select: (value: RadioValue) => void;
-}
-
-export const radioGroupKey: InjectionKey<RadioGroupContext> = Symbol("m-radio-group");
+/**
+ * 上下文的形状和取值规则都在 core（`context/radio.ts`），这里只剩 Vue 的注入钥匙。
+ * 装的是一个 computed：组里选中的值、禁用态、共用的 name 变了，读它的子项自然重渲染。
+ */
+export const radioGroupKey: InjectionKey<ComputedRef<RadioGroupContextValue>> =
+  Symbol("m-radio-group");

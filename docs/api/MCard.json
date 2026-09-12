@@ -1,8 +1,14 @@
 {
   "name": "MCard",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MCard"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCard"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCard"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "CardShadow | undefined"
+      },
+      "react": {
+        "name": "shadow"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "bordered"
       }
     },
     {
@@ -42,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "CardFrame | undefined"
+      },
+      "react": {
+        "name": "frame"
       }
     },
     {
@@ -52,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "padding"
       }
     },
     {
@@ -62,6 +83,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
@@ -69,27 +93,45 @@
   "slots": [
     {
       "name": "default",
-      "description": "内容"
+      "description": "内容",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "header",
-      "description": "头部（替代 title）"
+      "description": "头部（替代 title）",
+      "react": {
+        "name": "header"
+      }
     },
     {
       "name": "extra",
-      "description": "头部右侧"
+      "description": "头部右侧",
+      "react": {
+        "name": "extra"
+      }
     },
     {
       "name": "cover",
-      "description": "顶部封面（图片区），裁在边框内"
+      "description": "顶部封面（图片区），裁在边框内",
+      "react": {
+        "name": "cover"
+      }
     },
     {
       "name": "footer",
-      "description": "底部"
+      "description": "底部",
+      "react": {
+        "name": "footer"
+      }
     },
     {
       "name": "seal",
-      "description": "印：盖在卡片右下角，不占内容流，微微探出框外 4px、歪 6°；放一枚 MStamp 就是落款章。插槽为空不渲染任何节点"
+      "description": "印：盖在卡片右下角，不占内容流，微微探出框外 4px、歪 6°；放一枚 MStamp 就是落款章。插槽为空不渲染任何节点",
+      "react": {
+        "name": "seal"
+      }
     }
   ]
 }

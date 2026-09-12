@@ -1,80 +1,69 @@
 <script setup lang="ts">
-import { computed, reactive, useTemplateRef, watch } from "vue";
+import { computed, reactive, useTemplateRef, watch, watchEffect } from "vue";
+import {
+  borderClasses,
+  borderSides,
+  borderStroke,
+  borderStyle,
+  type BorderProps,
+  type BorderSlots,
+} from "@shuimo-design/core";
 import { useBrushBorder } from "../../ink";
-import type { BorderProps, BorderSides, BorderSlots } from "./types";
 
 defineOptions({ name: "MBorder" });
 
 const {
-  seed = 1,
-  strokeWidth = 2,
-  roughness = 0.35,
-  flyingWhite = 0.06,
   tag = "div",
+  // border 和四个单边开关必须直接从 defineProps() 上解构、并写出默认值：
+  // 类型里带 boolean 的 prop，Vue 会做 Boolean 转型——不传会变成 false。
+  // border 的"不传"要当 true，四个单边开关的"不传"要保持 undefined（表示听 border 的）。
   border = true,
-  // 显式 default undefined 是为了绕开 Boolean 转型（不传会变 false），不传要听 border 的
   top = undefined,
   right = undefined,
   bottom = undefined,
   left = undefined,
-  mask = false,
+  // 剩下这些原样递给 core，默认值（seed / 笔宽 / 粗糙度 / 飞白）由 core 归一化，两个壳共用一份
+  mask,
+  seed,
+  strokeWidth,
+  roughness,
+  flyingWhite,
   color,
   padding,
 } = defineProps<BorderProps>();
 defineSlots<BorderSlots>();
 
-/** 单边开关优先，其次是 border 对象里的值，最后是 border 布尔值 */
-const sides = computed<Required<BorderSides>>(() => {
-  const fallback = typeof border === "boolean" ? border : undefined;
-  const pick = (own: boolean | undefined, key: keyof BorderSides) =>
-    own ?? (typeof border === "object" ? (border[key] ?? true) : (fallback ?? true));
-  return {
-    top: pick(top, "top"),
-    right: pick(right, "right"),
-    bottom: pick(bottom, "bottom"),
-    left: pick(left, "left"),
-  };
-});
+/** 转型过的这份 props 才是 core 的输入 */
+const props = computed<BorderProps>(() => ({
+  tag,
+  border,
+  top,
+  right,
+  bottom,
+  left,
+  mask,
+  seed,
+  strokeWidth,
+  roughness,
+  flyingWhite,
+  color,
+  padding,
+}));
+const sides = computed(() => borderSides(props.value));
+const stroke = computed(() => borderStroke(props.value, sides.value));
 
 const root = useTemplateRef<HTMLElement>("root");
-// 用 reactive 包一层：useBrushBorder 每次落笔时才读这些字段，props 改了下一次 update 就能拿到新值
-const strokeOptions = reactive({
-  seed: computed(() => seed),
-  strokeWidth: computed(() => strokeWidth),
-  roughness: computed(() => roughness),
-  flyingWhite: computed(() => flyingWhite),
-  sides: sides,
-});
+// useBrushBorder 内部用 watchEffect 读这个对象，所以它必须是响应式的：
+// 把 core 算出来的笔触参数同步进一个 reactive，props 一变控制器就能读到新值
+const strokeOptions = reactive({ ...stroke.value });
+watchEffect(() => Object.assign(strokeOptions, stroke.value));
 const { update } = useBrushBorder(root, strokeOptions);
-watch(
-  () => [seed, strokeWidth, roughness, flyingWhite, sides.value] as const,
-  () => update(),
-  { flush: "post" },
-);
-
-const style = computed(() => {
-  const s: Record<string, string> = {};
-  if (color) s["--m-border-color"] = color;
-  if (padding !== undefined)
-    s["--m-border-padding"] = typeof padding === "number" ? `${padding}px` : padding;
-  return s;
-});
+// 参数变了要强制重画：元素尺寸没变，控制器不会自己重新落笔
+watch(stroke, () => update(), { flush: "post" });
 </script>
 
 <template>
-  <component
-    :is="tag"
-    ref="root"
-    class="m-border"
-    :class="{
-      'm-border--mask': mask,
-      'm-border--no-top': !sides.top,
-      'm-border--no-right': !sides.right,
-      'm-border--no-bottom': !sides.bottom,
-      'm-border--no-left': !sides.left,
-    }"
-    :style="style"
-  >
+  <component :is="tag" ref="root" :class="borderClasses(props, sides)" :style="borderStyle(props)">
     <slot />
   </component>
 </template>

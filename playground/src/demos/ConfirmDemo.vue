@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MConfirm, useConfirm } from "@shuimo-design/vue";
+// useConfirm() 已经删掉：确认框现在由树里的 <MOverlayOutlet>（App.vue 放了一个）渲染，
+// 不用再借应用上下文，直接调 MConfirm.show 就行
+import { MButton, MConfirm } from "@shuimo-design/vue";
 
-const confirm = useConfirm();
 const result = ref<string>("");
 const open = ref(false);
 
@@ -13,7 +14,7 @@ async function showConfirm() {
 }
 
 async function showNoMask() {
-  const ok = await confirm.show({
+  const ok = await MConfirm.show({
     title: "无遮罩",
     content: "后面的页面还能点",
     mask: { show: false },

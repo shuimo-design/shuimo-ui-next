@@ -9,10 +9,16 @@
   },
   "dependencies": {
     "@shuimo-design/core": "workspace:*",
+    "@shuimo-design/react": "workspace:*",
     "@shuimo-design/vue": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "vue": "catalog:"
   },
   "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "typescript": "catalog:",
     "vite": "catalog:",

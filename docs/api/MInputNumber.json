@@ -1,8 +1,14 @@
 {
   "name": "MInputNumber",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MInputNumber"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MInputNumber"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MInputNumber"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "min"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "max"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "step"
       }
     },
     {
@@ -42,15 +57,22 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "precision"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -61,6 +83,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "readonly"
       }
     },
     {
@@ -70,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "placeholder"
       }
     },
     {
@@ -80,6 +108,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "controls"
       }
     },
     {
@@ -89,6 +120,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -97,6 +131,13 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -105,18 +146,30 @@
       "name": "update:modelValue"
     },
     {
-      "name": "input",
-      "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）"
-    },
-    {
       "name": "change",
-      "description": "值提交后（失焦、回车、按钮或方向键增减），参数是新值与旧值"
+      "description": "值提交后（失焦、回车、按钮或方向键增减），参数是新值与旧值",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
-      "name": "focus"
+      "name": "input",
+      "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）",
+      "react": {
+        "name": "onInput"
+      }
     },
     {
-      "name": "blur"
+      "name": "focus",
+      "react": {
+        "name": "onFocus"
+      }
+    },
+    {
+      "name": "blur",
+      "react": {
+        "name": "onBlur"
+      }
     }
   ],
   "slots": []

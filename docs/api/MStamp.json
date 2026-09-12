@@ -1,8 +1,14 @@
 {
   "name": "MStamp",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MStamp"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MStamp"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MStamp"
+    }
   },
   "attributes": [
     {
@@ -12,26 +18,33 @@
       "value": {
         "kind": "expression",
         "type": "string | string[]"
+      },
+      "react": {
+        "name": "text"
       }
     },
     {
       "name": "size",
       "description": "印章高度（px），宽度按印文和形状算出来",
-      "default": "120",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "size"
       }
     },
     {
       "name": "mode",
       "description": "阳文（朱文，红字红框）还是阴文（白文，红底白字）",
-      "default": "\"yang\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "StampMode | undefined"
+      },
+      "react": {
+        "name": "mode"
       }
     },
     {
@@ -42,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "StampShape | undefined"
+      },
+      "react": {
+        "name": "shape"
       }
     },
     {
@@ -51,36 +67,45 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "aspect"
       }
     },
     {
       "name": "sides",
       "description": "多边形边数（3 起），默认 6",
-      "default": "6",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "sides"
       }
     },
     {
       "name": "orientation",
       "description": "多边形朝向：flat-top 一条边在上，point-top 一个角在上",
-      "default": "\"flat-top\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "PolygonOrientation | undefined"
+      },
+      "react": {
+        "name": "orientation"
       }
     },
     {
       "name": "seed",
       "description": "随机种子：四角半径、边框磨损、印泥白斑都由它决定，同种子同章",
-      "default": "1",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -90,6 +115,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "color"
       }
     },
     {
@@ -99,6 +127,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "font"
       }
     },
     {
@@ -108,16 +139,21 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "border"
       }
     },
     {
       "name": "corner",
       "description": "圆角：round 带一点随机的圆角，none 直角",
-      "default": "\"round\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "StampCorner | undefined"
+      },
+      "react": {
+        "name": "corner"
       }
     },
     {
@@ -127,36 +163,45 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "cornerRadius"
       }
     },
     {
       "name": "roughness",
       "description": "边框磨损 0 ~ 1：一圈起伏加几个咬进边框的缺口，默认 0.5",
-      "default": "0.5",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "roughness"
       }
     },
     {
       "name": "carving",
       "description": "刀刻 0 ~ 1：文字边缘的崩口和石屑，默认 0.8",
-      "default": "0.8",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "carving"
       }
     },
     {
       "name": "bleed",
       "description": "印泥 0 ~ 1：没压实的白斑和边缘起毛，默认 0.7",
-      "default": "0.7",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "bleed"
       }
     },
     {
@@ -166,6 +211,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "padding"
       }
     },
     {
@@ -175,6 +223,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "gap"
       }
     },
     {
@@ -184,6 +235,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "rowGap"
       }
     },
     {
@@ -193,6 +247,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "columnGap"
       }
     },
     {
@@ -202,6 +259,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "columns"
       }
     },
     {
@@ -211,56 +271,69 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "stretch"
       }
     },
     {
       "name": "cellHeightMode",
       "description": "行高分配：uniform 等分，fit 按各行最高的字分（矮字不留空）",
-      "default": "\"uniform\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "\"uniform\" | \"fit\" | undefined"
+      },
+      "react": {
+        "name": "cellHeightMode"
       }
     },
     {
       "name": "offsetX",
       "description": "文字在框内左右偏移，-1 贴右、0 居中、1 贴左",
-      "default": "0",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "offsetX"
       }
     },
     {
       "name": "offsetY",
       "description": "文字在框内上下偏移，-1 贴上、0 居中、1 贴下",
-      "default": "0",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "offsetY"
       }
     },
     {
       "name": "direction",
       "description": "ttb-rtl 竖排；circular 沿圆周排（圆章用）",
-      "default": "\"ttb-rtl\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "StampDirection | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
       "name": "gridLines",
       "description": "阴章的界格：列与列、行与行之间抠一道纸色",
-      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "gridLines"
       }
     },
     {
@@ -270,16 +343,21 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "gridLineWidth"
       }
     },
     {
       "name": "rotate",
       "description": "盖章的歪斜角度（deg）",
-      "default": "0",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "rotate"
       }
     }
   ],

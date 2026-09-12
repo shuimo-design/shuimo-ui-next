@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MMessage, MSelect, useMessage, type MessageDirection } from "@shuimo-design/vue";
+// useMessage() 已经删掉：消息现在由树里的 <MOverlayOutlet>（App.vue 放了一个）渲染，
+// 不用再借应用上下文，直接调 MMessage.* 就行
+import { MButton, MMessage, MSelect, type MessageDirection } from "@shuimo-design/vue";
 
-const message = useMessage();
 const direction = ref<MessageDirection>("top-right");
 const directions: { label: string; value: MessageDirection }[] = [
   { label: "右上", value: "top-right" },
@@ -22,20 +23,24 @@ function callAll() {
 }
 
 function callAt() {
-  message.show({ content: `这是一条 ${direction.value} 的消息`, direction: direction.value });
+  MMessage.show({ content: `这是一条 ${direction.value} 的消息`, direction: direction.value });
 }
 
 // 旧文档示例：拖拽关闭
 function callDraggable() {
-  message.show({ content: "往上拖我，拖过三分之一松手就关", direction: "top-center", duration: 0 });
+  MMessage.show({
+    content: "往上拖我，拖过三分之一松手就关",
+    direction: "top-center",
+    duration: 0,
+  });
 }
 
 function callSticky() {
-  message.warning({ content: "我不会自己走，点右边的叉", duration: 0, closable: true });
+  MMessage.warning({ content: "我不会自己走，点右边的叉", duration: 0, closable: true });
 }
 
 function callLong() {
-  message.info(
+  MMessage.info(
     "君不见，黄河之水天上来，奔流到海不复回。君不见，高堂明镜悲白发，朝如青丝暮成雪。",
     6000,
   );
@@ -51,7 +56,7 @@ function callLong() {
         <MButton @click="callDraggable">拖拽关闭</MButton>
         <MButton @click="callSticky">不自动关闭</MButton>
         <MButton @click="callLong">长文本</MButton>
-        <MButton type="text" @click="message.closeAll()">全部关掉</MButton>
+        <MButton type="text" @click="MMessage.closeAll()">全部关掉</MButton>
       </div>
     </div>
 

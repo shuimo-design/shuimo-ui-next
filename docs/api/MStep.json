@@ -1,8 +1,14 @@
 {
   "name": "MStep",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MStep"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MStep"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MStep"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "description"
       }
     },
     {
@@ -30,6 +42,9 @@
       "value": {
         "kind": "expression",
         "type": "StepStatus | undefined"
+      },
+      "react": {
+        "name": "status"
       }
     }
   ],
@@ -37,15 +52,24 @@
   "slots": [
     {
       "name": "icon",
-      "description": "节点里的内容，替换掉序号 / 勾 / 叉"
+      "description": "节点里的内容，替换掉序号 / 勾 / 叉",
+      "react": {
+        "name": "icon"
+      }
     },
     {
       "name": "title",
-      "description": "标题"
+      "description": "标题",
+      "react": {
+        "name": "title"
+      }
     },
     {
       "name": "description",
-      "description": "描述"
+      "description": "描述",
+      "react": {
+        "name": "description"
+      }
     }
   ]
 }

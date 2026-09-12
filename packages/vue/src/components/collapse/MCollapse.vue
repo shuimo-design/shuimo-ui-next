@@ -1,48 +1,45 @@
 <script setup lang="ts">
-import { provide, toRef } from "vue";
+import { computed, provide } from "vue";
+import {
+  collapseActiveNames,
+  collapseClasses,
+  collapseNextModel,
+  type CollapseContextValue,
+  type CollapseEmits,
+  type CollapseName,
+  type CollapseProps,
+  type CollapseSlots,
+} from "@shuimo-design/core";
 import { collapseKey } from "./context";
-import type { CollapseEmits, CollapseName, CollapseProps, CollapseSlots } from "./types";
 
 defineOptions({ name: "MCollapse" });
 
 const { accordion = false, divider = true, disabled = false } = defineProps<CollapseProps>();
 const emit = defineEmits<CollapseEmits>();
 defineSlots<CollapseSlots>();
+// 手风琴下是单个 name，普通模式下是 name 数组；两种形状的换算在 core 里
 const model = defineModel<CollapseName | CollapseName[]>();
 
-/** 统一成数组读，单值 / 未设置都能处理 */
-function activeNames(): CollapseName[] {
-  const value = model.value;
-  if (value === undefined) return [];
-  return Array.isArray(value) ? value : [value];
-}
-
-function isActive(name: CollapseName): boolean {
-  return activeNames().includes(name);
-}
-
 function toggle(name: CollapseName) {
-  const active = isActive(name);
-  let next: CollapseName | CollapseName[] | undefined;
-  if (accordion) {
-    next = active ? undefined : name;
-  } else {
-    next = active ? activeNames().filter((n) => n !== name) : [...activeNames(), name];
-  }
+  const next = collapseNextModel(model.value, name, accordion);
   model.value = next;
   emit("change", next);
 }
 
-provide(collapseKey, {
-  isActive,
-  toggle,
-  divider: toRef(() => divider),
-  disabled: toRef(() => disabled),
-});
+// 上下文装成 computed：展开项 / divider / 禁用任一变了，读它的子项跟着重渲染
+provide(
+  collapseKey,
+  computed<CollapseContextValue>(() => ({
+    active: collapseActiveNames(model.value),
+    divider,
+    disabled,
+    toggle,
+  })),
+);
 </script>
 
 <template>
-  <div class="m-collapse" :class="{ 'm-collapse--disabled': disabled }">
+  <div :class="collapseClasses({ disabled })">
     <slot />
   </div>
 </template>

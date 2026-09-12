@@ -1,10 +1,28 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, useAttrs, useTemplateRef } from "vue";
+import {
+  inputBrush,
+  inputClasses,
+  inputCount,
+  inputCountText,
+  inputHasSuffix,
+  inputIsTextarea,
+  inputNativeType,
+  inputRedirectFocus,
+  inputShowClear,
+  inputShowEye,
+  inputStyle,
+  inputText,
+  INPUT_CLEAR_LABEL,
+  INPUT_PASSWORD_HIDE_LABEL,
+  INPUT_PASSWORD_SHOW_LABEL,
+  type InputEmits,
+  type InputProps,
+  type InputSlots,
+} from "@shuimo-design/core";
 import { IconClose, IconEye, IconEyeOff } from "../../icons";
-import { FIELD_STROKE } from "../../internal/field-stroke";
 import { useDisabled, useFormItem } from "../../internal/form-item";
 import { useBrushBorder } from "../../ink";
-import type { InputEmits, InputProps, InputSlots } from "./types";
 
 defineOptions({ name: "MInput", inheritAttrs: false });
 
@@ -33,6 +51,7 @@ const nativeAttrs = computed(() => {
   const { class: _c, style: _s, ...rest } = attrs;
   return rest;
 });
+// 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水
 const formItem = useFormItem();
 const disabled = useDisabled(() => disabledProp);
 const focused = ref(false);
@@ -40,27 +59,41 @@ const passwordVisible = ref(false);
 const native = useTemplateRef<HTMLInputElement | HTMLTextAreaElement>("native");
 const root = useTemplateRef<HTMLElement>("root");
 // 水墨皮肤：外框换成一笔细笔触（参数与其他表单控件共用），聚焦 / 禁用只换墨色（见 input.css 的 m.ink 层）
-useBrushBorder(root, FIELD_STROKE);
+useBrushBorder(root, inputBrush());
 
-// 模板里不带类型地绑一个数字很常见，显示前统一转成字符串，免得 .length 之类在数字上炸掉
-const text = computed(() => String(model.value));
-/** 按字符（码点）数，emoji 这类算一个字 */
-const count = computed(() => Array.from(text.value).length);
-const isTextarea = computed(() => type === "textarea");
-const nativeType = computed(() => {
-  if (type === "password" && passwordVisible.value) return "text";
-  return isTextarea.value ? undefined : type;
-});
-const showClear = computed(
-  () => clearable && !disabled.value && !readonly && text.value.length > 0,
+const text = computed(() => inputText(model.value));
+const count = computed(() => inputCount(text.value));
+const isTextarea = computed(() => inputIsTextarea(type));
+const nativeType = computed(() => inputNativeType(type, passwordVisible.value));
+const showClear = computed(() =>
+  inputShowClear({ clearable, disabled: disabled.value, readonly, text: text.value }),
 );
-const showEye = computed(() => type === "password" && showPassword && !disabled.value);
-const hasSuffix = computed(
-  () => showClear.value || showEye.value || !!slots.suffix || (showCount && !isTextarea.value),
+const showEye = computed(() => inputShowEye({ type, showPassword, disabled: disabled.value }));
+const hasSuffix = computed(() =>
+  inputHasSuffix({
+    showClear: showClear.value,
+    showEye: showEye.value,
+    hasSuffixSlot: !!slots.suffix,
+    showCount,
+    isTextarea: isTextarea.value,
+  }),
 );
+const classes = computed(() =>
+  inputClasses({
+    type,
+    disabled: disabled.value,
+    readonly,
+    focused: focused.value,
+    isTextarea: isTextarea.value,
+    hasPrefix: !!slots.prefix,
+    hasSuffix: hasSuffix.value,
+    showCount,
+  }),
+);
+const countText = computed(() => inputCountText(count.value, maxlength));
 const rootStyle = computed(() => [
   attrs.style as string | Record<string, string> | undefined,
-  { "--m-input-resize": resize },
+  inputStyle(resize),
 ]);
 
 function onInput(event: Event) {
@@ -71,7 +104,7 @@ function onInput(event: Event) {
 
 function onChange(event: Event) {
   emit("change", (event.target as HTMLInputElement).value);
-  formItem?.validate("change");
+  formItem.value.validate("change");
 }
 
 function onFocus(event: FocusEvent) {
@@ -82,7 +115,7 @@ function onFocus(event: FocusEvent) {
 function onBlur(event: FocusEvent) {
   focused.value = false;
   emit("blur", event);
-  formItem?.validate("blur");
+  formItem.value.validate("blur");
 }
 
 function clear() {
@@ -90,15 +123,18 @@ function clear() {
   emit("input", "");
   emit("change", "");
   emit("clear");
-  formItem?.validate("change");
+  formItem.value.validate("change");
   native.value?.focus();
 }
 
 /** 点在外框空白处也把焦点送进输入框，和点在文字上一样 */
 function onRootMousedown(event: MouseEvent) {
-  if (event.target === native.value || disabled.value) return;
-  const target = event.target as HTMLElement;
-  if (target.closest(".m-input__action")) return;
+  const redirect = inputRedirectFocus({
+    target: event.target as HTMLElement | null,
+    native: native.value,
+    disabled: disabled.value,
+  });
+  if (!redirect) return;
   event.preventDefault();
   native.value?.focus();
 }
@@ -121,30 +157,12 @@ defineExpose({ focus, blur, select });
 </script>
 
 <template>
-  <div
-    ref="root"
-    class="m-input"
-    :class="[
-      `m-input--${type}`,
-      {
-        'm-input--disabled': disabled,
-        'm-input--readonly': readonly,
-        'm-input--focused': focused,
-        'm-input--textarea': isTextarea,
-        'm-input--with-prefix': !!slots.prefix,
-        'm-input--with-suffix': hasSuffix,
-        'm-input--with-count': showCount,
-      },
-      $attrs.class,
-    ]"
-    :style="rootStyle"
-    @mousedown="onRootMousedown"
-  >
+  <div ref="root" :class="[classes, $attrs.class]" :style="rootStyle" @mousedown="onRootMousedown">
     <span v-if="slots.prefix" class="m-input__prefix"><slot name="prefix" /></span>
     <component
       :is="isTextarea ? 'textarea' : 'input'"
       v-bind="nativeAttrs"
-      :id="formItem?.id.value"
+      :id="formItem.id"
       ref="native"
       class="m-input__native"
       :type="nativeType"
@@ -166,7 +184,7 @@ defineExpose({ focus, blur, select });
         v-if="showClear"
         type="button"
         class="m-input__action"
-        aria-label="清空"
+        :aria-label="INPUT_CLEAR_LABEL"
         tabindex="-1"
         @mousedown.prevent
         @click="clear"
@@ -177,7 +195,7 @@ defineExpose({ focus, blur, select });
         v-if="showEye"
         type="button"
         class="m-input__action"
-        :aria-label="passwordVisible ? '隐藏密码' : '显示密码'"
+        :aria-label="passwordVisible ? INPUT_PASSWORD_HIDE_LABEL : INPUT_PASSWORD_SHOW_LABEL"
         :aria-pressed="passwordVisible"
         tabindex="-1"
         @mousedown.prevent
@@ -188,12 +206,12 @@ defineExpose({ focus, blur, select });
       </button>
       <slot name="suffix" />
       <span v-if="showCount && !isTextarea" class="m-input__count" aria-live="polite">
-        {{ count }}<template v-if="maxlength"> / {{ maxlength }}</template>
+        {{ countText }}
       </span>
     </span>
     <!-- 多行时字数落在右下角，不占一行 -->
     <span v-if="showCount && isTextarea" class="m-input__count" aria-live="polite">
-      {{ count }}<template v-if="maxlength"> / {{ maxlength }}</template>
+      {{ countText }}
     </span>
   </div>
 </template>

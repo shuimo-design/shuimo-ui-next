@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { provide, toRef } from "vue";
-import { inkMarkUrl } from "../../ink";
+import { computed, provide } from "vue";
+import {
+  BREADCRUMB_LABEL,
+  breadcrumbStyle,
+  type BreadcrumbContextValue,
+  type BreadcrumbProps,
+  type BreadcrumbSlots,
+} from "@shuimo-design/core";
 import { breadcrumbKey } from "./context";
 import MBreadcrumbItem from "./MBreadcrumbItem.vue";
-import type { BreadcrumbProps, BreadcrumbSlots } from "./types";
 
 defineOptions({ name: "MBreadcrumb" });
 
@@ -11,18 +16,16 @@ const { separator, options = [] } = defineProps<BreadcrumbProps>();
 const slots = defineSlots<BreadcrumbSlots>();
 
 provide(breadcrumbKey, {
-  separator: toRef(() => separator),
+  value: computed<BreadcrumbContextValue>(() => ({ separator })),
   separatorSlot: () => slots.separator,
 });
 
 // 分隔符那一笔斜杠：子项不 Teleport，变量声明在根上就够了
-const inkStyle = {
-  "--m-breadcrumb-slash": `url("${inkMarkUrl("slash", { seed: 2, strokeWidth: 2.2 })}")`,
-};
+const inkStyle = breadcrumbStyle();
 </script>
 
 <template>
-  <nav class="m-breadcrumb" aria-label="面包屑" :style="inkStyle">
+  <nav class="m-breadcrumb" :aria-label="BREADCRUMB_LABEL" :style="inkStyle">
     <ol class="m-breadcrumb__list">
       <template v-if="options.length">
         <MBreadcrumbItem

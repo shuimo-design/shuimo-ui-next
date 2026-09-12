@@ -1,8 +1,14 @@
 {
   "name": "MBorder",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MBorder"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MBorder"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MBorder"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "strokeWidth"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "roughness"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "flyingWhite"
       }
     },
     {
@@ -53,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "tag"
       }
     },
     {
@@ -63,56 +84,69 @@
       "value": {
         "kind": "expression",
         "type": "boolean | BorderSides | undefined"
+      },
+      "react": {
+        "name": "border"
       }
     },
     {
       "name": "top",
       "description": "单独控制上边，不传则听 border 的",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "top"
       }
     },
     {
       "name": "right",
       "description": "单独控制右边，不传则听 border 的",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "right"
       }
     },
     {
       "name": "bottom",
       "description": "单独控制下边，不传则听 border 的",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "bottom"
       }
     },
     {
       "name": "left",
       "description": "单独控制左边，不传则听 border 的",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "left"
       }
     },
     {
       "name": "mask",
       "description": "内容蒙层：半透明纸色加背景模糊，压在远山或图片上时字更清楚。默认 false",
-      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "mask"
       }
     },
     {
@@ -122,6 +156,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "color"
       }
     },
     {
@@ -131,13 +168,19 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "padding"
       }
     }
   ],
   "events": [],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

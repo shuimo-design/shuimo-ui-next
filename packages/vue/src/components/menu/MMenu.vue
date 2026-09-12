@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import { computed, provide, useTemplateRef, type VNodeChild } from "vue";
-import { useElementSize } from "@vueuse/core";
-import { brushLineUrl } from "../../ink";
-import { menuKey, menuParentKey, type MenuFocusTarget, type MenuTreeNode } from "./context";
+import { useSize } from "../../runtime";
+import {
+  addMenuKey,
+  buildMenuNodes,
+  menuInkStyle,
+  moveMenuFocus,
+  resolveMenuFields,
+  toggleMenuKey,
+  MENU_ROOT_PARENT,
+  type MenuEmits,
+  type MenuFocusTarget,
+  type MenuItem,
+  type MenuKey,
+  type MenuLabelScope,
+  type MenuProps,
+  type MenuSlots,
+} from "@shuimo-design/core";
+import { menuKey, menuParentKey } from "./context";
 import MenuNode from "./MenuNode.vue";
-import type {
-  MenuEmits,
-  MenuItem,
-  MenuItemData,
-  MenuKey,
-  MenuLabelScope,
-  MenuProps,
-  MenuSlots,
-} from "./types";
 
 defineOptions({ name: "MMenu" });
 
@@ -24,57 +30,22 @@ const expandedKeys = defineModel<MenuKey[]>("expandedKeys", { default: () => [] 
 
 const root = useTemplateRef<HTMLElement>("root");
 
-/* ---------- 数据整理 ---------- */
-
-const fields = computed(() => ({
-  key: fieldNames?.key ?? "key",
-  label: fieldNames?.label ?? "label",
-  children: fieldNames?.children ?? "children",
-  disabled: fieldNames?.disabled ?? "disabled",
-}));
-
-function isDataList(value: unknown): value is MenuItemData[] {
-  return Array.isArray(value);
-}
-
-/** 没 key 的项按路径补一个，保证展开态和当前项都能记住 */
-function build(items: MenuItemData[], path: string): MenuTreeNode[] {
-  const f = fields.value;
-  return items.map((raw, index) => {
-    const rawKey = raw[f.key];
-    const key =
-      typeof rawKey === "string" || typeof rawKey === "number" ? rawKey : `${path}${index}`;
-    const children = raw[f.children];
-    return {
-      key,
-      label: String(raw[f.label] ?? ""),
-      disabled: Boolean(raw[f.disabled]),
-      children: isDataList(children) ? build(children, `${key}-`) : [],
-      data: raw,
-    };
-  });
-}
-
-const nodes = computed(() => (data ? build(data, "") : []));
+const fields = computed(() => resolveMenuFields(fieldNames));
+const nodes = computed(() => (data ? buildMenuNodes(data, fields.value) : []));
 
 /* ---------- 展开 ---------- */
 
 const expandedSet = computed(() => new Set(expandedKeys.value));
 
-function isExpanded(key: MenuKey): boolean {
-  return expandedSet.value.has(key);
-}
-
+/** 程序性展开（跟随当前项、初始全展开）：已经展开时 addMenuKey 原样返回，引用相同就不写回 */
 function expand(key: MenuKey) {
-  if (isExpanded(key)) return;
-  expandedKeys.value = [...expandedKeys.value, key];
+  const next = addMenuKey(expandedKeys.value, key);
+  if (next !== expandedKeys.value) expandedKeys.value = next;
 }
 
 function toggleExpand(item: MenuItem) {
-  const expanded = isExpanded(item.key);
-  expandedKeys.value = expanded
-    ? expandedKeys.value.filter((k) => k !== item.key)
-    : [...expandedKeys.value, item.key];
+  const expanded = expandedSet.value.has(item.key);
+  expandedKeys.value = toggleMenuKey(expandedKeys.value, item.key);
   emit("expand", item, !expanded);
 }
 
@@ -94,33 +65,9 @@ function activate(item: MenuItem, hasChildren: boolean, event: MouseEvent | Keyb
 
 /* ---------- 键盘 ---------- */
 
-/** 看得见的菜单项行，按屏幕顺序；收起的子菜单带 inert，整支跳过 */
-function visibleRows(): HTMLElement[] {
-  const el = root.value;
-  if (!el) return [];
-  return [...el.querySelectorAll<HTMLElement>('[role="menuitem"]')].filter(
-    (row) => !row.closest("[inert]"),
-  );
-}
-
+// 看得见的行靠查 DOM 找（手写的 MMenuItem 根组件手里没有那棵树），整段在 core 里
 function moveFocus(from: HTMLElement, target: MenuFocusTarget) {
-  if (target === "parent") {
-    // 自己所在的 li 往上找到父项的 li，再取它自己那一行
-    const parentItem = from.closest(".m-menu-item")?.parentElement?.closest(".m-menu-item");
-    parentItem?.querySelector<HTMLElement>(':scope > [role="menuitem"]')?.focus();
-    return;
-  }
-  const rows = visibleRows();
-  const index = rows.indexOf(from);
-  const at =
-    target === "first"
-      ? 0
-      : target === "last"
-        ? rows.length - 1
-        : target === "next"
-          ? index + 1
-          : index - 1;
-  rows[at]?.focus();
+  moveMenuFocus(root.value, from, target);
 }
 
 /* ---------- 文字 ---------- */
@@ -131,21 +78,21 @@ function renderLabel(scope: MenuLabelScope): VNodeChild {
 
 /* ---------- 竖线 ---------- */
 
-// 左侧那一笔按菜单实际高度生成：高度按 32px 分桶，避免每变一像素就重画一张 SVG
-const { height } = useElementSize(root);
-const lineLength = computed(() => Math.max(64, Math.ceil(height.value / 32) * 32));
-const line = computed(() =>
-  brushLineUrl({ seed: 3, vertical: true, length: lineLength.value, thickness: 2, wobble: 1 }),
-);
-const inkStyle = computed(() => ({
-  "--m-menu-line-mask": `url("${line.value.url}")`,
-  "--m-menu-line-band": `${line.value.width}px`,
-}));
+// 左侧那一笔按菜单实际高度生成；分桶和画幅计算都在 core 的 menuInkStyle 里
+const { height } = useSize(root);
+const inkStyle = computed(() => menuInkStyle(height.value));
 
+// 值字段写成 getter：Vue 要在子组件读的那一刻才建立依赖，存好的普通值追不到更新
 provide(menuKey, {
-  current: model,
-  defaultExpandAll,
-  isExpanded,
+  get current() {
+    return model.value;
+  },
+  get defaultExpandAll() {
+    return defaultExpandAll;
+  },
+  get expanded() {
+    return expandedSet.value;
+  },
   toggleExpand,
   expand,
   activate,
@@ -153,7 +100,7 @@ provide(menuKey, {
   renderLabel,
 });
 // 根层：一级项的 level 是 0；根不用记后代
-provide(menuParentKey, { level: 0, register: () => {}, unregister: () => {} });
+provide(menuParentKey, MENU_ROOT_PARENT);
 </script>
 
 <template>

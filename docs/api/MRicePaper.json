@@ -1,8 +1,14 @@
 {
   "name": "MRicePaper",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MRicePaper"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MRicePaper"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MRicePaper"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "InkTier | undefined"
+      },
+      "react": {
+        "name": "tier"
       }
     },
     {
@@ -30,6 +42,9 @@
       "value": {
         "kind": "expression",
         "type": "PaperPreset | [number, number, number] | undefined"
+      },
+      "react": {
+        "name": "paper"
       }
     },
     {
@@ -40,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "grain"
       }
     },
     {
@@ -50,6 +68,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | Omit<GoldFleckOptions, \"seed\"> | undefined"
+      },
+      "react": {
+        "name": "goldFlecks"
       }
     },
     {
@@ -60,6 +81,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "fibers"
       }
     },
     {
@@ -70,6 +94,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "particles"
       }
     },
     {
@@ -80,6 +107,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "deckleEdge"
       }
     },
     {
@@ -90,6 +120,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "landscape"
       }
     },
     {
@@ -100,6 +133,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "parallax"
       }
     },
     {
@@ -110,17 +146,26 @@
       "value": {
         "kind": "expression",
         "type": "\"auto\" | \"full-screen\" | undefined"
+      },
+      "react": {
+        "name": "layout"
       }
     }
   ],
   "events": [
     {
-      "name": "ready"
+      "name": "ready",
+      "react": {
+        "name": "onReady"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

@@ -1,8 +1,14 @@
 {
   "name": "MEmpty",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MEmpty"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MEmpty"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MEmpty"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "description"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "imageSize"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "EmptyImage | undefined"
+      },
+      "react": {
+        "name": "image"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
@@ -50,15 +68,24 @@
   "slots": [
     {
       "name": "image",
-      "description": "自定义插图，替换内置的"
+      "description": "自定义插图，替换内置的",
+      "react": {
+        "name": "image"
+      }
     },
     {
       "name": "description",
-      "description": "说明文字，优先于 description"
+      "description": "说明文字，优先于 description",
+      "react": {
+        "name": "description"
+      }
     },
     {
       "name": "default",
-      "description": "说明下面的操作区（按钮等）"
+      "description": "说明下面的操作区（按钮等）",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

@@ -45,3 +45,4 @@ export * from "./badge";
 export * from "./alert";
 export * from "./empty";
 export * from "./tabs";
+export * from "./overlay-outlet";

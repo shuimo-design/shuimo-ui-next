@@ -1,8 +1,14 @@
 {
   "name": "MMenu",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MMenu"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MMenu"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MMenu"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "MenuItemData[] | undefined"
+      },
+      "react": {
+        "name": "data"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "MenuFieldNames | undefined"
+      },
+      "react": {
+        "name": "fieldNames"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "defaultExpandAll"
       }
     },
     {
@@ -39,6 +54,13 @@
       "value": {
         "kind": "expression",
         "type": "MenuKey | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     },
     {
@@ -48,6 +70,13 @@
       "value": {
         "kind": "expression",
         "type": "MenuKey[] | undefined"
+      },
+      "react": {
+        "name": "expandedKeys",
+        "extra": [
+          "defaultExpandedKeys",
+          "onExpandedKeysChange"
+        ]
       }
     }
   ],
@@ -56,29 +85,44 @@
       "name": "update:modelValue"
     },
     {
-      "name": "change",
-      "description": "当前项变化（点叶子项），参数是新 key"
-    },
-    {
       "name": "update:expandedKeys"
     },
     {
       "name": "nodeClick",
-      "description": "点击菜单项（禁用项不触发）；键盘回车 / 空格也算"
+      "description": "点击菜单项（禁用项不触发）；键盘回车 / 空格也算",
+      "react": {
+        "name": "onNodeClick"
+      }
+    },
+    {
+      "name": "change",
+      "description": "当前项变化（点叶子项），参数是新 key",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
       "name": "expand",
-      "description": "子菜单展开 / 收起"
+      "description": "子菜单展开 / 收起",
+      "react": {
+        "name": "onExpand"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "手写的 MMenuItem"
+      "description": "手写的 MMenuItem",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "label",
-      "description": "传 data 时自定义每项文字，作用域 { item, level }"
+      "description": "传 data 时自定义每项文字，作用域 { item, level }",
+      "react": {
+        "name": "renderLabel"
+      }
     }
   ]
 }

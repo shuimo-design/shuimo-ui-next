@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { computed, useId, useTemplateRef, watch } from "vue";
-import { inkTipUrl } from "../../ink";
-import { usePopoverTrigger } from "../../internal/popover-trigger";
+import {
+  createPopoverTrigger,
+  tooltipClasses,
+  tooltipTipStyle,
+  TOOLTIP_BORDER_STROKE,
+  type TooltipEmits,
+  type TooltipProps,
+  type TooltipSlots,
+} from "@shuimo-design/core";
 import MPopper from "../../internal/popper/MPopper.vue";
 import { MBorder } from "../border";
-import type { TooltipEmits, TooltipProps, TooltipSlots } from "./types";
+import { useController } from "../../runtime";
 
 defineOptions({ name: "MTooltip", inheritAttrs: false });
 
@@ -30,21 +37,38 @@ const wrapper = useTemplateRef<HTMLElement>("wrapper");
 const float = useTemplateRef<HTMLElement>("float");
 const arrowEl = useTemplateRef<HTMLElement>("arrowEl");
 
-const tooltip = usePopoverTrigger({
-  trigger: () => trigger,
-  disabled: () => disabled,
-  openDelay: () => openDelay,
-  closeDelay: () => closeDelay,
-  disableClickAway: () => disableClickAway,
-  show,
-  wrapper,
-  panel: float,
-  onChange: (open) => emit("visibleChange", open),
-});
-const { reference, wrapOnly, open } = tooltip;
+// 开合时序（延时、hover / click / focus、Escape、点外面）全在 core 的控制器里，
+// React 那边用的是同一份；显隐状态仍归 v-model 持有，控制器只负责请求改变
+const { controller: tooltip, state } = useController(createPopoverTrigger, () => ({
+  trigger,
+  disabled,
+  openDelay,
+  closeDelay,
+  disableClickAway,
+  show: show.value,
+  onChange: (open: boolean) => {
+    show.value = open;
+    emit("visibleChange", open);
+  },
+}));
+watch(
+  [wrapper, float],
+  () => {
+    tooltip.setWrapper(wrapper.value);
+    tooltip.setPanel(float.value);
+  },
+  { immediate: true, flush: "post" },
+);
+// 壳里的内容换了要重新挑参照元素
+watch(
+  () => [show.value, content],
+  () => tooltip.refresh(),
+  { flush: "post" },
+);
 
-const tip = computed(() => inkTipUrl({ seed, width: 12, height: 6 }));
-const floatStyle = computed(() => ({ "--m-tooltip-tip": `url("${tip.value}")` }));
+const open = computed(() => show.value && !disabled);
+const reference = computed(() => state.value.reference);
+const floatStyle = computed(() => tooltipTipStyle({ seed }));
 
 // 提示打开时挂到参照元素的 aria-describedby 上，读屏聚焦到它就会读出提示
 watch([reference, open], ([el, isOpen], [prevEl]) => {
@@ -64,12 +88,7 @@ defineExpose({
 <template>
   <span
     ref="wrapper"
-    class="m-tooltip"
-    :class="{
-      'm-tooltip--wrap': wrapOnly,
-      'm-tooltip--open': open,
-      'm-tooltip--disabled': disabled,
-    }"
+    :class="tooltipClasses({ wrapOnly: state.wrapOnly, open, disabled })"
     v-bind="$attrs"
     @mouseenter="tooltip.onTriggerEnter"
     @mouseleave="tooltip.onTriggerLeave"
@@ -98,7 +117,7 @@ defineExpose({
       @mouseleave="tooltip.onPanelLeave"
       @focusout="tooltip.onPanelFocusout"
     >
-      <MBorder class="m-tooltip__panel" :seed="seed" :stroke-width="1.5">
+      <MBorder class="m-tooltip__panel" :seed="seed" :stroke-width="TOOLTIP_BORDER_STROKE">
         <slot name="content">{{ content }}</slot>
       </MBorder>
       <span v-if="arrow" ref="arrowEl" class="m-tooltip__arrow" aria-hidden="true" />

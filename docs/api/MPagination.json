@@ -1,8 +1,14 @@
 {
   "name": "MPagination",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MPagination"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MPagination"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MPagination"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "total"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number[] | undefined"
+      },
+      "react": {
+        "name": "pageSizes"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "layout"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "foldedMaxPageBtn"
       }
     },
     {
@@ -53,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "maxPageBtn"
       }
     },
     {
@@ -63,6 +84,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showEdgePageNum"
       }
     },
     {
@@ -73,15 +97,22 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "hideOnSinglePage"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -91,6 +122,13 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "current",
+        "extra": [
+          "defaultCurrent",
+          "onCurrentChange"
+        ]
       }
     },
     {
@@ -100,19 +138,28 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "pageSize",
+        "extra": [
+          "defaultPageSize"
+        ]
       }
     }
   ],
   "events": [
     {
-      "name": "change",
-      "description": "当前页变化"
-    },
-    {
       "name": "update:current"
     },
     {
       "name": "update:pageSize"
+    },
+    {
+      "name": "change",
+      "description": "当前页变化",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
       "name": "sizeChange",
@@ -122,7 +169,10 @@
   "slots": [
     {
       "name": "total",
-      "description": "替代「共 N 条」"
+      "description": "替代「共 N 条」",
+      "react": {
+        "name": "renderTotal"
+      }
     }
   ]
 }

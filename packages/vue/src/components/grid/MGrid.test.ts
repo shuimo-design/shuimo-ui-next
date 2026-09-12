@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-vue";
 import { defineComponent, h } from "vue";
-import { MCell, MGrid } from ".";
-import { quadPoints, resolveAngles } from "./quad";
+import { quadPoints, resolveAngles } from "@shuimo-design/core";
+import { MCell, MGrid, type VueGridCell } from ".";
 
-/** 用渲染函数拼一个栅格，免得每个用例都写 template 字符串 */
+/** 用渲染函数拼一个栅格（子组件写法），免得每个用例都写 template 字符串 */
 function grid(
   props: InstanceType<typeof MGrid>["$props"],
   cells: Array<{ props?: InstanceType<typeof MCell>["$props"]; text: string }>,
@@ -15,6 +15,15 @@ function grid(
         h("div", { style: "width: 600px" }, [
           h(MGrid, props, () => cells.map((cell) => h(MCell, cell.props, () => cell.text))),
         ]);
+    },
+  });
+}
+
+/** 同一个栅格，改用 cells 数据数组 */
+function dataGrid(props: InstanceType<typeof MGrid>["$props"], cells: VueGridCell[]) {
+  return defineComponent({
+    setup() {
+      return () => h("div", { style: "width: 600px" }, [h(MGrid, { ...props, cells })]);
     },
   });
 }
@@ -66,6 +75,18 @@ describe("MGrid / MCell", () => {
     ).toBeCloseTo(20, 0);
   });
 
+  it("takes cells as data and lays them out the same way", async () => {
+    const screen = await render(
+      dataGrid({ gap: 20 }, [{ content: "甲" }, { content: "乙" }, { w: 100, content: "丙" }]),
+    );
+    await frame();
+    const cells = screen.container.querySelectorAll<HTMLElement>(".m-cell");
+    expect(cells).toHaveLength(3);
+    expect([...cells].map((cell) => cell.textContent?.trim())).toEqual(["甲", "乙", "丙"]);
+    expect(cells[0]!.getBoundingClientRect().width).toBeCloseTo(230, 0);
+    expect(cells[2]!.getBoundingClientRect().width).toBeCloseTo(100, 0);
+  });
+
   it("passes h down to cells and stacks in column direction", async () => {
     const screen = await render(
       grid({ direction: "column", h: 40, gap: "8px" }, [{ text: "甲" }, { text: "乙" }]),
@@ -93,6 +114,17 @@ describe("MGrid / MCell", () => {
     expect(clip.startsWith("polygon(")).toBe(true);
     // 左边 45°："/"，左上角右移 100px
     expect(clip).toContain("polygon(100px 0px");
+  });
+
+  it("splits gapRotate by array position when cells come as data", async () => {
+    const screen = await render(
+      dataGrid({ h: 100, gap: 10, gapRotate: [45] }, [{ content: "甲" }, { content: "乙" }]),
+    );
+    await frame();
+    await frame();
+    const [first, second] = Array.from(screen.container.querySelectorAll<HTMLElement>(".m-cell"));
+    expect(first!.classList.contains("m-cell--tilted")).toBe(true);
+    expect(second!.style.marginLeft).toBe("-100px");
   });
 
   it("draws a border only when asked", async () => {
@@ -137,5 +169,18 @@ describe("MGrid / MCell", () => {
       0,
     );
     expect(shifted!.getBoundingClientRect().top).toBeGreaterThan(wide!.getBoundingClientRect().top);
+  });
+
+  it("renders a standalone MCell outside any grid", async () => {
+    const screen = await render(MCell, {
+      props: { w: 140, h: 90, border: true, points: "0 12" },
+      slots: { default: () => "独" },
+    });
+    await frame();
+    await frame();
+    const cell = screen.container.querySelector<HTMLElement>(".m-cell")!;
+    expect(cell.classList.contains("m-cell--tilted")).toBe(true);
+    expect(cell.style.getPropertyValue("--m-cell-w")).toBe("140px");
+    expect(cell.querySelector("svg.m-cell__outline polygon")).not.toBeNull();
   });
 });

@@ -1,8 +1,14 @@
 {
   "name": "MCheckbox",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MCheckbox"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCheckbox"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCheckbox"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "CheckboxValue | undefined"
+      },
+      "react": {
+        "name": "value"
       }
     },
     {
@@ -21,15 +30,22 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "label"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -40,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "indeterminate"
       }
     },
     {
@@ -49,6 +68,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -58,6 +80,13 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "checked",
+        "extra": [
+          "defaultChecked",
+          "onCheckedChange"
+        ]
       }
     }
   ],
@@ -67,12 +96,18 @@
     },
     {
       "name": "change",
-      "description": "用户操作导致勾选态变化"
+      "description": "用户操作导致勾选态变化",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

@@ -1,17 +1,27 @@
 {
   "name": "MCheckboxGroup",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MCheckboxGroup"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCheckboxGroup"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCheckboxGroup"
+    }
   },
   "attributes": [
     {
       "name": "disabled",
       "description": "整组禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -21,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "min"
       }
     },
     {
@@ -30,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "max"
       }
     },
     {
@@ -40,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "\"horizontal\" | \"vertical\" | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
@@ -49,6 +68,13 @@
       "value": {
         "kind": "expression",
         "type": "CheckboxValue[] | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -57,12 +83,18 @@
       "name": "update:modelValue"
     },
     {
-      "name": "change"
+      "name": "change",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

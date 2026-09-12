@@ -28,6 +28,8 @@ export const COMPONENT_NAMES = [
   "MDrawer",
   "MMessage",
   "MConfirm",
+  // 函数式弹层的渲染出口；MConfigProvider 自带一个，单独用也可以
+  "MOverlayOutlet",
   "MForm",
   "MFormItem",
   "MScroll",

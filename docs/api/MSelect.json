@@ -1,8 +1,14 @@
 {
   "name": "MSelect",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSelect"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSelect"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSelect"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "SelectOptionLike[]"
+      },
+      "react": {
+        "name": "options"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "optionParam"
       }
     },
     {
@@ -30,6 +42,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "valueParam"
       }
     },
     {
@@ -39,6 +54,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "inputParam"
       }
     },
     {
@@ -48,6 +66,9 @@
       "value": {
         "kind": "expression",
         "type": "((option: SelectOptionLike, value: SelectValue) => boolean) | undefined"
+      },
+      "react": {
+        "name": "toMatch"
       }
     },
     {
@@ -58,15 +79,22 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "placeholder"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -77,6 +105,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "clearable"
       }
     },
     {
@@ -87,6 +118,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "multiple"
       }
     },
     {
@@ -97,6 +131,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "filterable"
       }
     },
     {
@@ -106,6 +143,9 @@
       "value": {
         "kind": "expression",
         "type": "((option: SelectOptionLike, query: string) => boolean) | undefined"
+      },
+      "react": {
+        "name": "filter"
       }
     },
     {
@@ -116,6 +156,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "loading"
       }
     },
     {
@@ -125,6 +168,9 @@
       "value": {
         "kind": "expression",
         "type": "(() => Promise<void>) | undefined"
+      },
+      "react": {
+        "name": "fetch"
       }
     },
     {
@@ -135,6 +181,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "emptyText"
       }
     },
     {
@@ -145,6 +194,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "maxHeight"
       }
     },
     {
@@ -155,15 +207,24 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
       }
     },
     {
       "name": "modelValue",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "SelectValue | SelectValue[] | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -172,48 +233,81 @@
       "name": "update:modelValue"
     },
     {
-      "name": "input",
-      "description": "过滤框里的文字变化"
-    },
-    {
       "name": "change",
-      "description": "选中值变化"
-    },
-    {
-      "name": "focus"
-    },
-    {
-      "name": "blur"
-    },
-    {
-      "name": "clear",
-      "description": "点了清空按钮"
+      "description": "选中值变化",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
       "name": "select",
-      "description": "点选了某个选项，参数是原始选项（多选时取消勾选也会触发）"
+      "description": "点选了某个选项，参数是原始选项（多选时取消勾选也会触发）",
+      "react": {
+        "name": "onSelect"
+      }
+    },
+    {
+      "name": "input",
+      "description": "过滤框里的文字变化",
+      "react": {
+        "name": "onInput"
+      }
     },
     {
       "name": "visibleChange",
-      "description": "下拉开合"
+      "description": "下拉开合",
+      "react": {
+        "name": "onVisibleChange"
+      }
     },
     {
       "name": "removeTag",
-      "description": "多选时点了 Tag 的关闭"
+      "description": "多选时点了 Tag 的关闭",
+      "react": {
+        "name": "onRemoveTag"
+      }
+    },
+    {
+      "name": "clear",
+      "description": "点了清空按钮",
+      "react": {
+        "name": "onClear"
+      }
+    },
+    {
+      "name": "focus",
+      "react": {
+        "name": "onFocus"
+      }
+    },
+    {
+      "name": "blur",
+      "react": {
+        "name": "onBlur"
+      }
     }
   ],
   "slots": [
     {
       "name": "option",
-      "description": "自定义选项内容；option 是原始选项，label 是按 optionParam 取出的显示文字"
+      "description": "自定义选项内容；option 是原始选项，label 是按 optionParam 取出的显示文字",
+      "react": {
+        "name": "renderOption"
+      }
     },
     {
       "name": "empty",
-      "description": "无数据时的内容"
+      "description": "无数据时的内容",
+      "react": {
+        "name": "empty"
+      }
     },
     {
       "name": "prefix",
-      "description": "触发区前的内容（图标）"
+      "description": "触发区前的内容（图标）",
+      "react": {
+        "name": "prefix"
+      }
     }
   ]
 }

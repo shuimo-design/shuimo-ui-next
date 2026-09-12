@@ -1,8 +1,14 @@
 {
   "name": "MProgress",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MProgress"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MProgress"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MProgress"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "value"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "max"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showInfo"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "ProgressStatus | undefined"
+      },
+      "react": {
+        "name": "status"
       }
     },
     {
@@ -53,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "strokeWidth"
       }
     }
   ],
@@ -60,7 +81,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "替代百分比文字；percent 是 0–100 之间、最多两位小数的数"
+      "description": "替代百分比文字；percent 是 0–100 之间、最多两位小数的数",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

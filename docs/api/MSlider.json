@@ -1,8 +1,14 @@
 {
   "name": "MSlider",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSlider"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSlider"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSlider"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "min"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "max"
       }
     },
     {
@@ -33,15 +45,22 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "step"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -52,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "range"
       }
     },
     {
@@ -62,6 +84,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showInfo"
       }
     },
     {
@@ -72,6 +97,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showTooltip"
       }
     },
     {
@@ -81,6 +109,9 @@
       "value": {
         "kind": "expression",
         "type": "((value: number) => string) | undefined"
+      },
+      "react": {
+        "name": "formatTooltip"
       }
     },
     {
@@ -89,6 +120,13 @@
       "value": {
         "kind": "expression",
         "type": "SliderValue | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -97,12 +135,18 @@
       "name": "update:modelValue"
     },
     {
-      "name": "input",
-      "description": "拖动过程中每次值变化"
+      "name": "change",
+      "description": "松手 / 键盘调整后的最终值",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
-      "name": "change",
-      "description": "松手 / 键盘调整后的最终值"
+      "name": "input",
+      "description": "拖动过程中每次值变化",
+      "react": {
+        "name": "onInput"
+      }
     }
   ],
   "slots": []

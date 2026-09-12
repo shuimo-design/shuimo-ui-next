@@ -48,18 +48,16 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "vp pack && pnpm gen:meta && pnpm check:style",
+    "build": "vp pack && pnpm check:style",
     "check:style": "tsx scripts/check-style.ts",
     "typecheck": "vue-tsc --noEmit",
     "test": "vp test",
     "bench": "BENCH=1 vp test bench/",
-    "gen:meta": "tsx scripts/gen-meta.ts",
     "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
   },
   "dependencies": {
     "@floating-ui/vue": "^2.0.1",
-    "@shuimo-design/core": "workspace:^",
-    "@vueuse/core": "^14.4.0"
+    "@shuimo-design/core": "workspace:^"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",

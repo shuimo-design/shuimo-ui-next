@@ -1,54 +1,54 @@
 <script setup lang="ts" generic="T">
-import { provide, toRef } from "vue";
-import { inkBlobUrl } from "../../ink";
-import { inkVarBindings } from "../../ink";
+import { computed, onMounted, provide, ref } from "vue";
+import {
+  listInk,
+  listItemActive,
+  listItemText,
+  type ListContextValue,
+  type ListItemScope,
+  type ListProps,
+  type ListSlots,
+} from "@shuimo-design/core";
 import { listKey } from "./context";
 import MListItem from "./MListItem.vue";
-import type { ListItemScope, ListProps, ListSlots } from "./types";
 
 defineOptions({ name: "MList" });
 
+// 必须直接解构 defineProps：先存成变量再解构，编译出来是 setup 期的一次性快照
 const { data, marker = true, autoActive = false } = defineProps<ListProps<T>>();
 defineSlots<ListSlots<T>>();
 
-provide(listKey, { marker: toRef(() => marker) });
+provide(
+  listKey,
+  computed<ListContextValue>(() => ({ marker })),
+);
 
 /**
- * 项目符号的两团墨：外圈和内点各用一个种子，毛边才不会一模一样。
- * 旧版是一张 34×34 的墨圈精灵图，这里改用素材库按种子生成，写成 CSS 变量给 m.ink 层当遮罩。
- * 两团都是固定素材：走素材登记，样式表里只写一次，列表元素上只挂属性；登记不了（SSR）才内联。
+ * 两团墨走素材登记，登记要往样式表插规则、服务端没有：
+ * 首帧一律内联（registered=false），挂载后才升级成 data 属性，否则水合会报属性不匹配。
  */
-const ink = inkVarBindings({
-  "--m-list-blob-ring": inkBlobUrl({ seed: 3, raggedness: 0.2 }),
-  "--m-list-blob-dot": inkBlobUrl({ seed: 7, raggedness: 0.16 }),
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
 });
+const ink = computed(() => listInk(mounted.value));
 
 /**
  * 没有 data 时默认插槽不带作用域（使用者自己放 MListItem，不会去读 item）。
  * 插槽类型只声明了一种签名，这里用空对象顶上，免得模板类型检查报缺参。
  */
 const emptyScope = {} as ListItemScope<T>;
-
-/** 没给插槽时的兜底文字：基础类型直出，对象转 JSON */
-function fallbackText(item: T): string {
-  return typeof item === "object" && item !== null ? JSON.stringify(item) : String(item);
-}
-
-/** 数据项是对象且带 active 字段时听它的，否则看 autoActive（旧版 `d.active ?? autoActive`） */
-function isActive(item: T): boolean {
-  if (typeof item === "object" && item !== null && "active" in item) {
-    const own = (item as { active?: unknown }).active;
-    if (typeof own === "boolean") return own;
-  }
-  return autoActive;
-}
 </script>
 
 <template>
   <ul class="m-list" :style="ink.style" v-bind="ink.attrs">
     <template v-if="data">
-      <MListItem v-for="(item, index) in data" :key="index" :active="isActive(item)">
-        <slot :item="item" :index="index">{{ fallbackText(item) }}</slot>
+      <MListItem
+        v-for="(item, index) in data"
+        :key="index"
+        :active="listItemActive(item, autoActive)"
+      >
+        <slot :item="item" :index="index">{{ listItemText(item) }}</slot>
       </MListItem>
     </template>
     <slot v-else v-bind="emptyScope" />

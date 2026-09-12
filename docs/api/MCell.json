@@ -1,8 +1,14 @@
 {
   "name": "MCell",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MCell"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCell"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCell"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "w"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "h"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "border"
       }
     },
     {
@@ -40,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "CellAngle | undefined"
+      },
+      "react": {
+        "name": "points"
       }
     },
     {
@@ -49,6 +67,9 @@
       "value": {
         "kind": "expression",
         "type": "CellAngle | undefined"
+      },
+      "react": {
+        "name": "a"
       }
     },
     {
@@ -58,6 +79,9 @@
       "value": {
         "kind": "expression",
         "type": "CellAngle | undefined"
+      },
+      "react": {
+        "name": "b"
       }
     },
     {
@@ -67,6 +91,9 @@
       "value": {
         "kind": "expression",
         "type": "CellAngle | undefined"
+      },
+      "react": {
+        "name": "c"
       }
     },
     {
@@ -76,6 +103,9 @@
       "value": {
         "kind": "expression",
         "type": "CellAngle | undefined"
+      },
+      "react": {
+        "name": "d"
       }
     },
     {
@@ -85,6 +115,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "span"
       }
     },
     {
@@ -94,13 +127,19 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "offset"
       }
     }
   ],
   "events": [],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

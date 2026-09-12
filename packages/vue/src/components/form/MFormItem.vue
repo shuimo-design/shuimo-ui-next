@@ -1,36 +1,20 @@
 <script setup lang="ts">
+import { computed, onMounted, onScopeDispose, ref, useId } from "vue";
 import {
-  computed,
-  inject,
-  onBeforeUnmount,
-  onMounted,
-  provide,
-  ref,
-  toRef,
-  useId,
-  watch,
-} from "vue";
-import { brushLineUrl } from "../../ink";
-import { inkVarBindings } from "../../ink";
-import { formItemKey } from "../../internal/form-item";
-import { formKey, type FormField } from "./context";
-import type {
-  FormFieldError,
-  FormItemExpose,
-  FormItemProps,
-  FormItemSlots,
-  FormItemValidateState,
-  FormRule,
-  FormTrigger,
-} from "./types";
-import {
-  cloneValue,
-  getByPath,
-  normalizeRules,
-  rulesForTrigger,
-  runRules,
-  setByPath,
-} from "./validate";
+  createFormItem,
+  formItemClasses,
+  formItemInk,
+  formItemLabelStyle,
+  formItemRules,
+  formItemShowError,
+  formItemState,
+  type FormItemExpose,
+  type FormItemProps,
+  type FormItemSlots,
+} from "@shuimo-design/core";
+import { useController } from "../../runtime";
+import { provideFormItem } from "../../internal/form-item";
+import { useForm } from "./context";
 
 defineOptions({ name: "MFormItem" });
 
@@ -47,141 +31,86 @@ const {
 } = defineProps<FormItemProps>();
 const slots = defineSlots<FormItemSlots>();
 
-const form = inject(formKey, undefined);
+const form = useForm();
 const generatedId = useId();
 const controlId = computed(() => forProp ?? generatedId);
 const errorId = computed(() => `${controlId.value}-error`);
 
-const validateState = ref<FormItemValidateState>("");
-const validateMessage = ref("");
-// 每次 validate 递增，慢的 async 校验回来时发现号不对就丢掉，避免旧结果盖住新结果
-let validateSeq = 0;
-// 挂载时的值，resetField 用；表单项后来才出现的字段以出现时为准
-let initialValue: unknown;
+// 校验状态机（含 async 校验的竞态票据、resetField 的初值）整份在 core
+const { controller, state: snapshot } = useController(createFormItem, () => ({
+  prop,
+  ownRules,
+  required,
+  error,
+  formModel: form.value.model,
+  formRules: form.value.rules,
+  onValidate: form.value.onFieldValidate,
+}));
 
-const rules = computed<FormRule[]>(() => {
-  const list = normalizeRules(ownRules ?? (prop ? form?.rules.value?.[prop] : undefined));
-  if (required && !list.some((rule) => rule.required)) return [{ required: true }, ...list];
-  return list;
-});
-const isRequired = computed(() => rules.value.some((rule) => rule.required));
-const showAsterisk = computed(() => isRequired.value && !form?.hideRequiredAsterisk.value);
-const shouldShowMessage = computed(() => showMessage ?? form?.showMessage.value ?? true);
-const showError = computed(
-  () => validateState.value === "error" && shouldShowMessage.value && validateMessage.value !== "",
+// 外部 error 走渲染期派生，两边都不用 watch（为什么见 core 的 formItemState 注释）
+const display = computed(() => formItemState(snapshot.value, error));
+
+const rules = computed(() =>
+  formItemRules({ prop, ownRules, required, formRules: form.value.rules }),
 );
-const labelPosition = computed(() => form?.labelPosition.value ?? "left");
-const labelStyle = computed(() => {
-  if (labelPosition.value === "top") return undefined;
-  const width = labelWidth ?? form?.labelWidth.value ?? 120;
-  return { width: typeof width === "number" ? `${width}px` : width };
-});
-
-// 出错时控件下方那一笔朱砂：按内容区最大宽度生成，短于它时只缩不拉
-const line = brushLineUrl({ seed: 11, length: 320, thickness: 2, flyingWhite: 0.1 });
-// 这一笔是固定素材，每个表单项都一样：走素材登记，样式表里只写一次，元素上只挂属性；登记不了（SSR）才内联
-const ink = inkVarBindings({ "--m-form-item-line-mask": line.url });
-const inkStyle = {
-  ...ink.style,
-  "--m-form-item-line-band": `${line.height}px`,
-  "--m-form-item-line-w": `${line.width}px`,
-};
-
-function currentValue(): unknown {
-  return prop ? getByPath(form?.model.value, prop) : undefined;
-}
-
-async function validate(trigger?: FormTrigger): Promise<FormFieldError | undefined> {
-  // 外部塞的 error 优先，控件交互不会把它冲掉
-  if (error) return prop ? { prop, message: error } : undefined;
-  // 已经在报错的项，任何时机都全量复核：否则 blur 只跑 blur 规则一通过，就把 change 规则报的错清掉了
-  const list =
-    validateState.value === "error" ? rules.value : rulesForTrigger(rules.value, trigger);
-  if (!prop || list.length === 0) return undefined;
-  const seq = ++validateSeq;
-  validateState.value = "validating";
-  const message = await runRules(list, currentValue(), form?.model.value ?? {});
-  if (seq !== validateSeq) return undefined;
-  validateState.value = message === undefined ? "success" : "error";
-  validateMessage.value = message ?? "";
-  const result = message === undefined ? undefined : { prop, message };
-  form?.onFieldValidate(prop, result);
-  return result;
-}
-
-function clearValidate() {
-  validateSeq++;
-  validateState.value = "";
-  validateMessage.value = "";
-}
-
-function resetField() {
-  if (prop && form?.model.value) setByPath(form.model.value, prop, cloneValue(initialValue));
-  clearValidate();
-}
-
-watch(
-  () => error,
-  (message) => {
-    if (message) {
-      validateSeq++;
-      validateState.value = "error";
-      validateMessage.value = message;
-    } else if (validateState.value === "error") {
-      clearValidate();
-    }
-  },
-  { immediate: true },
+const showAsterisk = computed(
+  () => rules.value.some((rule) => rule.required) && !form.value.hideRequiredAsterisk,
+);
+const showError = computed(() =>
+  formItemShowError({
+    state: display.value.state,
+    message: display.value.message,
+    showMessage: showMessage ?? form.value.showMessage,
+  }),
+);
+const labelPosition = computed(() => form.value.labelPosition);
+const labelStyle = computed(() =>
+  formItemLabelStyle({
+    labelPosition: labelPosition.value,
+    labelWidth: labelWidth ?? form.value.labelWidth,
+  }),
+);
+const classes = computed(() =>
+  formItemClasses({
+    labelPosition: labelPosition.value,
+    asterisk: showAsterisk.value,
+    state: display.value.state,
+    hasLabel: Boolean(label || slots.label),
+  }),
 );
 
-const field: FormField = {
-  prop: toRef(() => prop),
-  validate,
-  resetField,
-  clearValidate,
-};
+// 那一笔朱砂走素材登记：挂载前一律内联（服务端登记不了），挂载后才升级成 data 属性，否则水合报不匹配
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+});
+const ink = computed(() => formItemInk(mounted.value));
 
 onMounted(() => {
-  initialValue = cloneValue(currentValue());
-  form?.addField(field);
-});
-onBeforeUnmount(() => {
-  form?.removeField(field);
+  // 登记的是控制器持有的那个句柄对象，引用恒定；prop 变了由控制器原地改它的字段
+  const off = form.value.addField(controller.field);
+  onScopeDispose(off);
 });
 
-provide(formItemKey, {
-  id: controlId,
-  disabled: computed(() => form?.disabled.value ?? false),
-  validate(trigger) {
-    void validate(trigger);
-  },
-});
+provideFormItem(
+  computed(() => ({
+    id: controlId.value,
+    disabled: form.value.disabled,
+    validate(trigger) {
+      void controller.validate(trigger);
+    },
+  })),
+);
 
 defineExpose<FormItemExpose>({
-  validate: () => validate(),
-  resetField,
-  clearValidate,
-  validateState,
-  validateMessage,
+  validate: () => controller.validate(),
+  resetField: controller.resetField,
+  clearValidate: controller.clearValidate,
 });
 </script>
 
 <template>
-  <div
-    class="m-form-item"
-    :class="[
-      `m-form-item--label-${labelPosition}`,
-      {
-        'm-form-item--required': showAsterisk,
-        'm-form-item--error': validateState === 'error',
-        'm-form-item--validating': validateState === 'validating',
-        'm-form-item--success': validateState === 'success',
-        'm-form-item--no-label': !label && !slots.label,
-      },
-    ]"
-    :style="inkStyle"
-    v-bind="ink.attrs"
-  >
+  <div :class="classes" :style="ink.style" v-bind="ink.attrs">
     <label
       v-if="label || slots.label"
       class="m-form-item__label"
@@ -197,7 +126,7 @@ defineExpose<FormItemExpose>({
         <div v-if="showError" class="m-form-item__error" role="alert" :id="errorId">
           <span class="m-form-item__line" aria-hidden="true" />
           <span class="m-form-item__message">
-            <slot name="error" :message="validateMessage">{{ validateMessage }}</slot>
+            <slot name="error" :message="display.message">{{ display.message }}</slot>
           </span>
         </div>
       </Transition>

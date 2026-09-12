@@ -1,8 +1,14 @@
 {
   "name": "MSkeleton",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSkeleton"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSkeleton"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSkeleton"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "loading"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "animated"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "rows"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "avatar"
       }
     },
     {
@@ -53,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
@@ -63,6 +84,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "throttle"
       }
     }
   ],
@@ -70,11 +94,17 @@
   "slots": [
     {
       "name": "default",
-      "description": "真实内容，loading 为 false 时渲染"
+      "description": "真实内容，loading 为 false 时渲染",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "template",
-      "description": "自定义骨架排布，用 MSkeletonItem 拼"
+      "description": "自定义骨架排布，用 MSkeletonItem 拼",
+      "react": {
+        "name": "template"
+      }
     }
   ]
 }

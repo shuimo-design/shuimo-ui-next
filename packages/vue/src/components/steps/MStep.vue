@@ -1,70 +1,57 @@
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, useId, useTemplateRef } from "vue";
-import { inkBlobUrl } from "../../ink";
-import { inkEnsoUrl } from "../../ink";
-import { inkMarkUrl } from "../../ink";
+import { computed, inject, useTemplateRef } from "vue";
+import {
+  STEP_INDEX_DEFAULT,
+  stepAriaCurrent,
+  stepClasses,
+  stepIsLast,
+  stepIsVertical,
+  stepLineOptions,
+  stepOrdinal,
+  stepStatus,
+  stepStyle,
+  type StepProps,
+  type StepSlots,
+} from "@shuimo-design/core";
 import { useBrushLine } from "../divider/use-brush-line";
-import { stepsKey } from "./context";
-import type { StepProps, StepSlots, StepStatus } from "./types";
+import { stepIndexKey, stepsKey } from "./context";
 
 defineOptions({ name: "MStep" });
 
-const { title, description, status: statusProp = undefined } = defineProps<StepProps>();
+const { title, description, status: own = undefined } = defineProps<StepProps>();
 defineSlots<StepSlots>();
 
 const steps = inject(stepsKey, undefined);
-const id = useId();
-if (steps) onBeforeUnmount(steps.register(id));
+const position = inject(stepIndexKey, undefined);
 
-/** 单独使用（不在 MSteps 里）时序号是 0，也没有后面的连接线 */
-const index = computed(() => (steps ? steps.indexOf(id) : 0));
-const isLast = computed(() => !steps || index.value >= steps.count.value - 1);
-const vertical = computed(() => steps?.direction.value === "vertical");
+/** 单独使用（不在 MSteps 里）时就是唯一的一步：序号 0，也没有后面的连接线 */
+const index = computed(() => position?.value.index ?? STEP_INDEX_DEFAULT.index);
+const count = computed(() => position?.value.count ?? STEP_INDEX_DEFAULT.count);
+const isLast = computed(() => stepIsLast(index.value, count.value));
+const vertical = computed(() => stepIsVertical(steps?.value));
+const status = computed(() => stepStatus({ own, index: index.value, group: steps?.value }));
 
-// 状态优先取自己的 status；没传就按序号和 active 的关系推断，当前步用 MSteps 的 status
-const status = computed<StepStatus>(() => {
-  if (statusProp) return statusProp;
-  if (!steps) return "wait";
-  const active = steps.active.value;
-  if (index.value < active) return "finish";
-  if (index.value === active) return steps.status.value;
-  return "wait";
-});
-
-// 节点后那段连接线按实际长度单独生成；种子跟序号走，几段等长的线也不会一模一样。
-// 照老库的线画：笔直不抖（抖了像手写的歪线），细而干，靠飞白的断口和丝缕出枯笔的质感
+// 节点后那段连接线按实际长度单独生成；笔触参数（含跟序号走的种子）在 core，
+// 方向是响应式的，交给 hook 的取值函数
 const line = useTemplateRef<HTMLElement>("line");
-useBrushLine(line, {
-  thickness: 2,
-  wobble: 0,
-  roughness: 0.35,
-  flyingWhite: 0.4,
-  vertical: () => vertical.value,
-  seed: 2 + index.value,
-});
+useBrushLine(line, { ...stepLineOptions(index.value), vertical: () => vertical.value });
 
-// 勾、叉是素材库一笔写出的记号，不开 ink 引擎也能用；墨团和一笔圆只在 m.ink 层出场
-const inkStyle = {
-  "--m-step-check": `url("${inkMarkUrl("check", { seed: 2, strokeWidth: 3 })}")`,
-  "--m-step-cross": `url("${inkMarkUrl("cross", { seed: 2, strokeWidth: 3 })}")`,
-  "--m-step-blob": `url("${inkBlobUrl({ seed: 4, size: 36, radius: 0.4, raggedness: 0.08 })}")`,
-  "--m-step-enso": `url("${inkEnsoUrl({ seed: 3, size: 40, strokeWidth: 3, gap: 0.6 })}")`,
-};
+// 勾、叉、墨团、一笔圆四张素材挂在根上，节点的伪元素拿它们当遮罩
+const inkStyle = stepStyle();
 </script>
 
 <template>
   <div
-    class="m-step"
-    :class="[`m-step--${status}`, { 'm-step--last': isLast }]"
+    :class="stepClasses({ status, last: isLast })"
     :style="inkStyle"
     role="listitem"
-    :aria-current="status === 'process' ? 'step' : undefined"
+    :aria-current="stepAriaCurrent(status)"
   >
     <div class="m-step__node" aria-hidden="true">
       <slot name="icon">
         <span v-if="status === 'finish'" class="m-step__mark m-step__mark--check" />
         <span v-else-if="status === 'error'" class="m-step__mark m-step__mark--cross" />
-        <span v-else class="m-step__number">{{ index + 1 }}</span>
+        <span v-else class="m-step__number">{{ stepOrdinal(index) }}</span>
       </slot>
     </div>
     <!-- 到下一步的连接线，最后一步没有；横向放节点右侧，纵向放节点下方 -->

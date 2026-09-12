@@ -1,8 +1,14 @@
 {
   "name": "MScroll",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MScroll"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MScroll"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MScroll"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "height"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "maxHeight"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "always"
       }
     },
     {
@@ -41,19 +56,28 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "minThumb"
       }
     }
   ],
   "events": [
     {
       "name": "scroll",
-      "description": "视口滚动时触发，参数是当前滚动位置"
+      "description": "视口滚动时触发，参数是当前滚动位置",
+      "react": {
+        "name": "onScroll"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "要滚动的内容"
+      "description": "要滚动的内容",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

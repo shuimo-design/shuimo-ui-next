@@ -1,8 +1,14 @@
 {
   "name": "MSvg",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSvg"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSvg"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSvg"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "SvgIconName | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "ink"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -41,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "size"
       }
     },
     {
@@ -50,6 +68,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "color"
       }
     },
     {
@@ -60,6 +81,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "rotate"
       }
     },
     {
@@ -70,6 +94,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "spin"
       }
     },
     {
@@ -79,6 +106,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     }
   ],
@@ -86,7 +116,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "自定义 svg 内容，name 没传时渲染"
+      "description": "自定义 svg 内容，name 没传时渲染",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

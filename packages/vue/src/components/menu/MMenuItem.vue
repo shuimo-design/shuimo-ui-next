@@ -3,14 +3,24 @@ import {
   computed,
   onBeforeUnmount,
   onMounted,
+  onScopeDispose,
   provide,
-  shallowReactive,
+  shallowRef,
   useId,
   useTemplateRef,
   watch,
 } from "vue";
+import {
+  createMenuDescendants,
+  menuDescendantUid,
+  menuHasDescendant,
+  menuItemClasses,
+  menuKeyAction,
+  type MenuItem,
+  type MenuItemProps,
+  type MenuItemSlots,
+} from "@shuimo-design/core";
 import { menuParentKey, useMenuContext, useMenuParent } from "./context";
-import type { MenuItem, MenuItemProps, MenuItemSlots, MenuKey } from "./types";
 
 defineOptions({ name: "MMenuItem" });
 
@@ -26,26 +36,26 @@ const row = useTemplateRef<HTMLElement>("row");
 
 const item = computed<MenuItem>(() => ({ key: name, label, disabled, level, data }));
 const hasChildren = computed(() => Boolean(slots.default));
-const expanded = computed(() => hasChildren.value && menu.isExpanded(name));
-const current = computed(() => menu.current.value === name);
+const expanded = computed(() => hasChildren.value && menu.expanded.has(name));
+const current = computed(() => menu.current === name);
 
 /* ---------- 后代登记 ---------- */
 
-// 子项在 setup 时登记到这里并一路往上报，父项 onMounted 时就已知道自己下面有哪些 key
-const descendants = shallowReactive(new Set<MenuKey>());
-const containsCurrent = computed(() => {
-  const cur = menu.current.value;
-  return cur !== undefined && descendants.has(cur);
-});
+// 子项在 setup 时登记到这张表并一路往上报，父项 onMounted 时就已知道自己下面有哪些 key。
+// 用 core 的登记表而不是一个响应式 Set：两个框架共用同一份，React 那边靠订阅重渲染
+const descendants = createMenuDescendants();
+const snapshot = shallowRef(descendants.getSnapshot());
+onScopeDispose(descendants.subscribe(() => (snapshot.value = descendants.getSnapshot())));
+const containsCurrent = computed(() => menuHasDescendant(snapshot.value, menu.current));
 
 provide(menuParentKey, {
   level: level + 1,
   register(key) {
-    descendants.add(key);
+    descendants.register({ uid: menuDescendantUid(key) });
     parent.register(key);
   },
   unregister(key) {
-    descendants.delete(key);
+    descendants.unregister(menuDescendantUid(key));
     parent.unregister(key);
   },
 });
@@ -63,6 +73,16 @@ watch(containsCurrent, (inside) => {
 
 /* ---------- 交互 ---------- */
 
+const classes = computed(() =>
+  menuItemClasses({
+    root: level === 0,
+    current: current.value,
+    active: current.value || containsCurrent.value,
+    expanded: expanded.value,
+    disabled,
+  }),
+);
+
 function onClick(event: MouseEvent) {
   menu.activate(item.value, hasChildren.value, event);
 }
@@ -70,57 +90,20 @@ function onClick(event: MouseEvent) {
 function onKeydown(event: KeyboardEvent) {
   const el = row.value;
   if (!el) return;
-  switch (event.key) {
-    case "ArrowDown":
-      event.preventDefault();
-      menu.moveFocus(el, "next");
-      break;
-    case "ArrowUp":
-      event.preventDefault();
-      menu.moveFocus(el, "prev");
-      break;
-    case "Home":
-      event.preventDefault();
-      menu.moveFocus(el, "first");
-      break;
-    case "End":
-      event.preventDefault();
-      menu.moveFocus(el, "last");
-      break;
-    case "ArrowRight":
-      if (!hasChildren.value) return;
-      event.preventDefault();
-      if (expanded.value) menu.moveFocus(el, "next");
-      else if (!disabled) menu.toggleExpand(item.value);
-      break;
-    case "ArrowLeft":
-      event.preventDefault();
-      if (expanded.value && !disabled) menu.toggleExpand(item.value);
-      else menu.moveFocus(el, "parent");
-      break;
-    case "Enter":
-    case " ":
-      event.preventDefault();
-      menu.activate(item.value, hasChildren.value, event);
-      break;
-    default:
-  }
+  const action = menuKeyAction(event.key, {
+    hasChildren: hasChildren.value,
+    expanded: expanded.value,
+    disabled,
+  });
+  if (action.prevent) event.preventDefault();
+  if (action.kind === "focus" && action.target) menu.moveFocus(el, action.target);
+  else if (action.kind === "toggle") menu.toggleExpand(item.value);
+  else if (action.kind === "activate") menu.activate(item.value, hasChildren.value, event);
 }
 </script>
 
 <template>
-  <li
-    class="m-menu-item"
-    :class="{
-      'm-menu-item--root': level === 0,
-      'm-menu-item--current': current,
-      'm-menu-item--active': current || containsCurrent,
-      'm-menu-item--expanded': expanded,
-      'm-menu-item--disabled': disabled,
-    }"
-    :style="{ '--m-menu-level': level }"
-    role="none"
-  >
+  <li :class="classes" :style="{ '--m-menu-level': level }" role="none">
     <div
       ref="row"
       class="m-menu-item__row"

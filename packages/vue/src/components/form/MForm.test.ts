@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-vue";
 import { defineComponent, h, reactive, ref } from "vue";
 import { MInput } from "../input";
+import { isEmptyValue, runRule } from "@shuimo-design/core";
 import { MForm, MFormItem, type FormRules, type FormValidateResult } from ".";
-import { isEmptyValue, runRule } from "./validate";
 
 const rules: FormRules = {
   name: [
@@ -144,6 +144,25 @@ describe("MForm", () => {
     await userEvent.tab();
     await expect.element(screen.getByRole("alert")).toHaveTextContent("得先同意");
     expect(onValidate).toHaveBeenCalledWith("agree", false, "得先同意");
+  });
+
+  it("shows an external error prop as an error state", async () => {
+    const Host = defineComponent({
+      setup() {
+        return () =>
+          h(MForm, { model: { title: "" } }, () => [
+            h(MFormItem, { label: "标题", prop: "title", error: "接口说这个标题重复了" }, () =>
+              h(MInput, { modelValue: "" }),
+            ),
+          ]);
+      },
+    });
+    const screen = await render(Host);
+    // 外部 error 是渲染期派生的，不用等 watch：首帧就是错误态
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("接口说这个标题重复了");
+    expect(
+      screen.container.querySelector(".m-form-item")?.classList.contains("m-form-item--error"),
+    ).toBe(true);
   });
 });
 

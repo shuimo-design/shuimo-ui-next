@@ -1,26 +1,39 @@
 {
   "name": "MTableColumn",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MTableColumn"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTableColumn"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTableColumn"
+    }
   },
   "attributes": [
     {
-      "name": "param",
-      "description": "列对应的字段名，取值 row[param]",
+      "name": "prop",
+      "description": "列对应的字段名，取值 row[prop]",
       "required": true,
       "value": {
         "kind": "expression",
         "type": "string"
+      },
+      "react": {
+        "name": "prop"
       }
     },
     {
       "name": "label",
       "description": "列名；head 插槽优先",
+      "default": "\"\"",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "label"
       }
     },
     {
@@ -30,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "width"
       }
     },
     {
@@ -39,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "TableAlign | undefined"
+      },
+      "react": {
+        "name": "align"
       }
     }
   ],
@@ -50,7 +69,10 @@
     },
     {
       "name": "head",
-      "description": "表头内容"
+      "description": "表头内容，作用域 { column }",
+      "react": {
+        "name": "renderHead"
+      }
     }
   ]
 }

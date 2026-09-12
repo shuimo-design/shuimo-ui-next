@@ -1,8 +1,14 @@
 {
   "name": "MInkTransition",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MInkTransition"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MInkTransition"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MInkTransition"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "duration"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "leaveDuration"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "appear"
       }
     },
     {
@@ -52,6 +67,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "reducedMotion"
       }
     },
     {
@@ -60,6 +78,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -69,6 +90,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "raggedness"
       }
     },
     {
@@ -78,6 +102,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "softness"
       }
     },
     {
@@ -88,13 +115,19 @@
       "value": {
         "kind": "expression",
         "type": "\"right\" | \"left\" | \"down\" | \"up\" | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     }
   ],
   "events": [],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

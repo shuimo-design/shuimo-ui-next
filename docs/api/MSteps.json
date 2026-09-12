@@ -1,8 +1,14 @@
 {
   "name": "MSteps",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MSteps"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSteps"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSteps"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "active"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "StepsDirection | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "StepStatus | undefined"
+      },
+      "react": {
+        "name": "status"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "simple"
       }
     }
   ],
@@ -50,7 +68,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "放 MStep"
+      "description": "放 MStep",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

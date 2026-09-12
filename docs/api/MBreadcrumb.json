@@ -1,8 +1,14 @@
 {
   "name": "MBreadcrumb",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MBreadcrumb"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MBreadcrumb"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MBreadcrumb"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "separator"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "BreadcrumbItemProps[] | undefined"
+      },
+      "react": {
+        "name": "options"
       }
     }
   ],
@@ -29,11 +41,17 @@
   "slots": [
     {
       "name": "default",
-      "description": "放 MBreadcrumbItem"
+      "description": "放 MBreadcrumbItem",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "separator",
-      "description": "自定义分隔符内容"
+      "description": "自定义分隔符内容",
+      "react": {
+        "name": "separator"
+      }
     }
   ]
 }

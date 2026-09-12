@@ -1,8 +1,14 @@
 {
   "name": "MAlert",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MAlert"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MAlert"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MAlert"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "AlertType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "description"
       }
     },
     {
@@ -41,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closable"
       }
     },
     {
@@ -51,6 +69,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showIcon"
       }
     },
     {
@@ -61,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "center"
       }
     },
     {
@@ -71,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "AlertEffect | undefined"
+      },
+      "react": {
+        "name": "effect"
       }
     },
     {
@@ -81,31 +108,49 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
   "events": [
     {
       "name": "close",
-      "description": "点了关闭按钮；随后组件自己隐藏"
+      "description": "点了关闭按钮；随后组件自己隐藏",
+      "react": {
+        "name": "onClose"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "说明文字，优先于 description"
+      "description": "说明文字，优先于 description",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "title",
-      "description": "标题，优先于 title"
+      "description": "标题，优先于 title",
+      "react": {
+        "name": "title"
+      }
     },
     {
       "name": "icon",
-      "description": "替换状态徽记"
+      "description": "替换状态徽记",
+      "react": {
+        "name": "icon"
+      }
     },
     {
       "name": "action",
-      "description": "右侧操作区（按钮、链接）"
+      "description": "右侧操作区（按钮、链接）",
+      "react": {
+        "name": "action"
+      }
     }
   ]
 }

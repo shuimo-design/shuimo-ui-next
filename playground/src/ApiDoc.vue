@@ -109,48 +109,48 @@ const slots = computed<ApiNamed[]>(() => doc.value?.slots ?? []);
     <div v-if="props.length" class="api__block">
       <h4 class="api__sub">Props</h4>
       <MTable :data="props" align="left">
-        <MTableColumn param="name" label="名称" :width="180">
+        <MTableColumn prop="name" label="名称" :width="180">
           <template #default="{ data: row }">
             <code class="api__code">{{ row.name }}</code>
             <span v-if="row.required" class="api__required">必填</span>
           </template>
         </MTableColumn>
-        <MTableColumn param="type" label="类型">
+        <MTableColumn prop="type" label="类型">
           <template #default="{ data: row }">
             <code class="api__code">{{ row.type }}</code>
           </template>
         </MTableColumn>
-        <MTableColumn param="default" label="默认值" :width="110">
+        <MTableColumn prop="default" label="默认值" :width="110">
           <template #default="{ data: row }">
             <code v-if="row.default" class="api__code">{{ row.default }}</code>
             <span v-else class="api__none">—</span>
           </template>
         </MTableColumn>
-        <MTableColumn param="description" label="说明" />
+        <MTableColumn prop="description" label="说明" />
       </MTable>
     </div>
 
     <div v-if="events.length" class="api__block">
       <h4 class="api__sub">Events</h4>
       <MTable :data="events" align="left">
-        <MTableColumn param="name" label="名称" :width="180">
+        <MTableColumn prop="name" label="名称" :width="180">
           <template #default="{ data: row }">
             <code class="api__code">{{ row.name }}</code>
           </template>
         </MTableColumn>
-        <MTableColumn param="description" label="说明" />
+        <MTableColumn prop="description" label="说明" />
       </MTable>
     </div>
 
     <div v-if="slots.length" class="api__block">
       <h4 class="api__sub">Slots</h4>
       <MTable :data="slots" align="left">
-        <MTableColumn param="name" label="名称" :width="180">
+        <MTableColumn prop="name" label="名称" :width="180">
           <template #default="{ data: row }">
             <code class="api__code">{{ row.name }}</code>
           </template>
         </MTableColumn>
-        <MTableColumn param="description" label="说明" />
+        <MTableColumn prop="description" label="说明" />
       </MTable>
     </div>
   </section>

@@ -1,8 +1,14 @@
 {
   "name": "MDeleteIcon",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MDeleteIcon"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDeleteIcon"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDeleteIcon"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "DeleteIconKind | undefined"
+      },
+      "react": {
+        "name": "kind"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "size"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "label"
       }
     },
     {
@@ -53,13 +71,19 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
   "events": [
     {
       "name": "click",
-      "description": "点了图标（禁用时不触发）"
+      "description": "点了图标（禁用时不触发）",
+      "react": {
+        "name": "onClick"
+      }
     }
   ],
   "slots": []

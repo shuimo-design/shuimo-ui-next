@@ -1,8 +1,14 @@
 {
   "name": "MTag",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MTag"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTag"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTag"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "TagType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "TagSize | undefined"
+      },
+      "react": {
+        "name": "size"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "color"
       }
     },
     {
@@ -42,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closable"
       }
     },
     {
@@ -52,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -62,21 +83,33 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
   "events": [
     {
-      "name": "click"
+      "name": "close",
+      "description": "点了关闭按钮",
+      "react": {
+        "name": "onClose"
+      }
     },
     {
-      "name": "close",
-      "description": "点了关闭按钮"
+      "name": "click",
+      "react": {
+        "name": "onClick"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

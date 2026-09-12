@@ -1,13 +1,9 @@
-import type { InjectionKey, Ref } from "vue";
-import type { CheckboxValue } from "./types";
+import type { ComputedRef, InjectionKey } from "vue";
+import type { CheckboxGroupContextValue } from "@shuimo-design/core";
 
-export interface CheckboxGroupContext {
-  modelValue: Ref<CheckboxValue[]>;
-  disabled: Ref<boolean>;
-  /** 当前能否再勾选 / 取消（min/max 限制） */
-  canCheck: (value: CheckboxValue) => boolean;
-  canUncheck: (value: CheckboxValue) => boolean;
-  toggle: (value: CheckboxValue, checked: boolean) => void;
-}
-
-export const checkboxGroupKey: InjectionKey<CheckboxGroupContext> = Symbol("m-checkbox-group");
+/**
+ * 上下文的形状和取值规则都在 core（`context/checkbox.ts`），这里只剩 Vue 的注入钥匙。
+ * 装的是一个 computed：组里的值、禁用态、min/max 变了，读它的子项自然重渲染。
+ */
+export const checkboxGroupKey: InjectionKey<ComputedRef<CheckboxGroupContextValue>> =
+  Symbol("m-checkbox-group");

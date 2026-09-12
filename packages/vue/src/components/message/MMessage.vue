@@ -1,25 +1,16 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
-import { useElementSize } from "@vueuse/core";
-import { IconClose } from "../../icons";
-import { inkBadgeUrl, type InkBadgeKind } from "../../ink";
-import { inkRidgeUrl } from "../../ink";
-import { inkShapeUrl } from "../../ink";
-import { revealElement, type WipeMaskOptions } from "../../ink";
+import { computed, useTemplateRef, watch } from "vue";
 import {
-  animateMessage,
-  enterKeyframes,
-  leaveKeyframes,
-  type MessageMotionBox,
-  type MessageShift,
-} from "./animate";
-import type {
-  MessageDirection,
-  MessageEmits,
-  MessageProps,
-  MessageSlots,
-  MessageType,
-} from "./types";
+  createMessageItem,
+  messageClasses,
+  messageStyle,
+  MESSAGE_CLOSE_LABEL,
+  type MessageEmits,
+  type MessageProps,
+  type MessageSlots,
+} from "@shuimo-design/core";
+import { IconClose } from "../../icons";
+import { useController } from "../../runtime";
 
 defineOptions({ name: "MMessage" });
 
@@ -31,165 +22,70 @@ const {
   dragAllow = true,
   closable = false,
   seed = 1,
-} = defineProps<MessageProps>();
+  closing = false,
+} = defineProps<
+  MessageProps & {
+    /** 渲染出口推下来的"请你离场"信号；手写 <MMessage> 时不用管它 */
+    closing?: boolean;
+  }
+>();
 const emit = defineEmits<MessageEmits>();
 const slots = defineSlots<MessageSlots>();
 
-const BADGE: Record<MessageType, InkBadgeKind> = {
-  success: "check",
-  warning: "bang",
-  error: "cross",
-  info: "info",
-};
-
-/** 擦入方向和滑入方向一致：从右滑入的就从右边擦出来 */
-const REVEAL: Record<MessageDirection, NonNullable<WipeMaskOptions["direction"]>> = {
-  "top-right": "left",
-  "bottom-right": "left",
-  "top-left": "right",
-  "bottom-left": "right",
-  "top-center": "down",
-  "bottom-center": "up",
-};
-
-const root = useTemplateRef<HTMLElement>("root");
-const { width, height } = useElementSize(root, undefined, { box: "border-box" });
-const closing = ref(false);
-const dragging = ref(false);
-const removing = ref(false);
-const shift = ref<MessageShift>({ x: 0, y: 0 });
-
-// 毛边墨纸按消息实际尺寸生成（8px 分桶缓存），远山是一张固定小图当 mask
-const shape = computed(() =>
-  width.value && height.value
-    ? inkShapeUrl(width.value, height.value, { seed, raggedness: 0.7, corner: 0.1 })
-    : undefined,
-);
-const ridge = inkRidgeUrl({ seed, width: 200, height: 80, layers: 2, opacity: 0.7 });
-const style = computed(() => ({
-  "--m-message-badge": `url("${inkBadgeUrl(BADGE[type], { seed })}")`,
-  "--m-message-shape": shape.value ? `url("${shape.value.url}")` : undefined,
-  "--m-message-shape-pad": shape.value ? `${shape.value.padding}px` : undefined,
-  "--m-message-ridge": `url("${ridge.url}")`,
-  transform:
-    shift.value.x || shift.value.y
-      ? `translate(${shift.value.x}px, ${shift.value.y}px)`
-      : undefined,
+// 倒计时、悬停暂停、拖动关闭、进出场动画、尺寸测量全在 core 的控制器里，React 那边用的是同一份
+const { controller: item, state } = useController(createMessageItem, () => ({
+  direction,
+  duration,
+  dragAllow,
+  seed,
+  onClose: () => emit("close"),
 }));
 
-function motionBox(el: HTMLElement): MessageMotionBox {
-  const parent = el.parentElement;
-  const gap = parent ? Number.parseFloat(getComputedStyle(parent).rowGap) : 0;
-  return { width: el.offsetWidth, height: el.offsetHeight, gap: Number.isNaN(gap) ? 0 : gap };
-}
-
-let timer: ReturnType<typeof setTimeout> | undefined;
-
-function stopTimer() {
-  clearTimeout(timer);
-  timer = undefined;
-}
-
-function startTimer() {
-  stopTimer();
-  if (duration <= 0 || closing.value) return;
-  timer = setTimeout(close, duration);
-}
-
-async function close() {
-  const el = root.value;
-  if (closing.value || !el) return;
-  closing.value = true;
-  stopTimer();
-  await animateMessage(el, leaveKeyframes(direction, motionBox(el), shift.value), "forwards");
-  emit("close");
-}
-
-/** 只能往「出去」的那一边拖：右侧往右、左侧往左、顶部居中往上、底部居中往下 */
-const axis = computed<"x" | "y">(() => (direction.endsWith("center") ? "y" : "x"));
-const sign = computed(() =>
-  direction.endsWith("right") || direction === "bottom-center" ? 1 : -1,
+const root = useTemplateRef<HTMLElement>("root");
+// flush: "post" —— 元素真的挂上了再交给控制器，它拿到元素才好量尺寸、起进场动画
+watch(root, (el) => item.setRoot(el), { immediate: true, flush: "post" });
+// 外部请求离场：和 MDialog 的 modal.setOpen 一个路数，状态在队列那边，控制器只接一个开关
+watch(
+  () => closing,
+  (value) => item.setClosing(value),
+  { flush: "post" },
 );
-let dragStart = 0;
-let pointerId: number | undefined;
 
-function onPointerDown(event: PointerEvent) {
-  if (!dragAllow || closing.value || event.button !== 0) return;
-  // 点关闭按钮不算拖
-  if (event.target instanceof Element && event.target.closest(".m-message__close")) return;
-  pointerId = event.pointerId;
-  dragStart = axis.value === "x" ? event.clientX : event.clientY;
-  dragging.value = true;
-  stopTimer();
-  try {
-    root.value?.setPointerCapture(event.pointerId);
-  } catch {
-    // 合成事件没有活动指针，拿不到捕获也不影响拖
-  }
-}
+const classes = computed(() =>
+  messageClasses({
+    type,
+    direction,
+    dragging: state.value.dragging,
+    removing: state.value.removing,
+    closing: state.value.closing,
+  }),
+);
+const style = computed(() =>
+  messageStyle({
+    type,
+    seed,
+    width: state.value.width,
+    height: state.value.height,
+    x: state.value.x,
+    y: state.value.y,
+  }),
+);
 
-function onPointerMove(event: PointerEvent) {
-  if (!dragging.value || event.pointerId !== pointerId) return;
-  const raw = (axis.value === "x" ? event.clientX : event.clientY) - dragStart;
-  const delta = raw * sign.value > 0 ? raw : 0;
-  shift.value = axis.value === "x" ? { x: delta, y: 0 } : { x: 0, y: delta };
-  // 直接量 DOM：ResizeObserver 报上来的尺寸有延迟，刚挂载就拖会拿到 0
-  const el = root.value;
-  const size = el ? (axis.value === "x" ? el.offsetWidth : el.offsetHeight) : 0;
-  removing.value = size > 0 && Math.abs(delta) > size / 3;
-}
-
-function onPointerUp(event: PointerEvent) {
-  if (!dragging.value || event.pointerId !== pointerId) return;
-  dragging.value = false;
-  pointerId = undefined;
-  if (removing.value) {
-    void close();
-    return;
-  }
-  shift.value = { x: 0, y: 0 };
-  startTimer();
-}
-
-function onMouseLeave() {
-  if (!dragging.value) startTimer();
-}
-
-onMounted(() => {
-  const el = root.value;
-  if (!el) return;
-  void animateMessage(el, enterKeyframes(direction, motionBox(el)), "none");
-  if (document.documentElement.classList.contains("m-ink-ready")) {
-    void revealElement(el, { seed, direction: REVEAL[direction], duration: 600 });
-  }
-  startTimer();
-});
-onBeforeUnmount(stopTimer);
-
-defineExpose({ close });
+defineExpose({ close: item.close });
 </script>
 
 <template>
   <div
     ref="root"
-    class="m-message"
-    :class="[
-      `m-message--${type}`,
-      `m-message--${direction}`,
-      {
-        'm-message--dragging': dragging,
-        'm-message--removing': removing,
-        'm-message--closing': closing,
-      },
-    ]"
+    :class="classes"
     :style="style"
     role="status"
-    @mouseenter="stopTimer"
-    @mouseleave="onMouseLeave"
-    @pointerdown="onPointerDown"
-    @pointermove="onPointerMove"
-    @pointerup="onPointerUp"
-    @pointercancel="onPointerUp"
+    @mouseenter="item.onMouseEnter"
+    @mouseleave="item.onMouseLeave"
+    @pointerdown="item.onPointerDown"
+    @pointermove="item.onPointerMove"
+    @pointerup="item.onPointerUp"
+    @pointercancel="item.onPointerUp"
   >
     <span
       class="m-message__icon"
@@ -201,7 +97,13 @@ defineExpose({ close });
     <div class="m-message__content">
       <slot>{{ content }}</slot>
     </div>
-    <button v-if="closable" type="button" class="m-message__close" aria-label="关闭" @click="close">
+    <button
+      v-if="closable"
+      type="button"
+      class="m-message__close"
+      :aria-label="MESSAGE_CLOSE_LABEL"
+      @click="item.close"
+    >
       <IconClose />
     </button>
   </div>

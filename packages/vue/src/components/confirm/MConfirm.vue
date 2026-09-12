@@ -1,56 +1,69 @@
 <script setup lang="ts">
-import { computed, nextTick, useId, useTemplateRef, watch } from "vue";
+import { computed, useId, useTemplateRef, watch } from "vue";
+import {
+  confirmBrush,
+  confirmClasses,
+  createModal,
+  resolveMask,
+  CONFIRM_CANCEL_TEXT,
+  CONFIRM_OK_TEXT,
+  CONFIRM_TRANSITION,
+  type ConfirmEmits,
+  type ConfirmProps,
+  type ConfirmSlots,
+} from "@shuimo-design/core";
 import { useBrushBorder } from "../../ink";
+import { useController } from "../../runtime";
 import { MButton } from "../button";
-import type { ConfirmEmits, ConfirmProps, ConfirmSlots } from "./types";
 
 // 根是 Teleport，外部传的 class / style 落到面板上
 defineOptions({ name: "MConfirm", inheritAttrs: false });
 
+// mask 的类型里有 Boolean，Vue 会把"没传"当成 false（布尔属性的惯例），不写默认值遮罩就永远不显示
 const {
   content = "",
   title,
-  mask,
+  mask: maskProp = true,
   teleport = true,
-  confirmText = "确定",
-  cancelText = "取消",
+  confirmText = CONFIRM_OK_TEXT,
+  cancelText = CONFIRM_CANCEL_TEXT,
+  closeOnEsc = true,
   seed = 1,
 } = defineProps<ConfirmProps>();
 const emit = defineEmits<ConfirmEmits>();
 defineSlots<ConfirmSlots>();
 const open = defineModel<boolean>("open", { default: false });
 
-const maskShow = computed(() => mask?.show ?? true);
-const maskClickClose = computed(() => mask?.clickClose ?? true);
+const mask = computed(() => resolveMask(maskProp));
 const teleportTo = computed(() => (typeof teleport === "string" ? teleport : "body"));
 const titleId = useId();
 const contentId = useId();
 
 const panel = useTemplateRef<HTMLElement>("panel");
-useBrushBorder(panel, { seed, strokeWidth: 3 });
+useBrushBorder(panel, confirmBrush(seed));
 
-/** 打开时记住焦点在哪，关掉后还回去 */
-let lastFocus: Element | null = null;
+// 滚动锁、模态栈、ESC、焦点存还、Tab 循环全在 core 的控制器里，和弹窗、抽屉是同一份
+const { controller: modal } = useController(createModal, () => ({
+  closeOnEsc,
+  onRequestClose: cancel,
+}));
+// flush: "post" —— 要等面板真的渲染出来再交给控制器，它拿到元素才好聚焦
 watch(
-  open,
-  async (value) => {
-    if (value) {
-      lastFocus = document.activeElement;
-      await nextTick();
-      panel.value?.focus();
-    } else if (lastFocus instanceof HTMLElement) {
-      lastFocus.focus();
-      lastFocus = null;
-    }
+  [open, panel],
+  () => {
+    modal.setPanel(panel.value);
+    modal.setOpen(open.value);
   },
-  { immediate: true },
+  { immediate: true, flush: "post" },
 );
 
 function settle(result: boolean) {
   if (!open.value) return;
-  open.value = false;
+  // 先报结果再关：渲染出口那边是听 confirm / cancel 定结果的，
+  // 反过来的话 open 先变 false，出口会当成"被取消了"
   if (result) emit("confirm");
   else emit("cancel");
+  open.value = false;
 }
 
 function confirm() {
@@ -62,26 +75,14 @@ function cancel() {
 }
 
 function onMaskClick() {
-  if (maskClickClose.value) cancel();
-}
-
-function onKeydown(event: KeyboardEvent) {
-  if (event.key !== "Escape") return;
-  event.stopPropagation();
-  cancel();
+  if (mask.value.clickClose) cancel();
 }
 </script>
 
 <template>
   <Teleport :to="teleportTo" :disabled="teleport === false">
-    <Transition name="m-confirm" @after-leave="emit('closed')">
-      <div
-        v-if="open"
-        class="m-confirm"
-        :class="{ 'm-confirm--mask': maskShow }"
-        @click.self="onMaskClick"
-        @keydown="onKeydown"
-      >
+    <Transition :name="CONFIRM_TRANSITION" @after-leave="emit('closed')">
+      <div v-if="open" :class="confirmClasses(mask.show)" @click.self="onMaskClick">
         <div
           ref="panel"
           class="m-confirm__panel"
@@ -91,6 +92,7 @@ function onKeydown(event: KeyboardEvent) {
           :aria-labelledby="title ? titleId : undefined"
           :aria-describedby="contentId"
           tabindex="-1"
+          @keydown="modal.trapFocus"
         >
           <h3 v-if="title" :id="titleId" class="m-confirm__title">{{ title }}</h3>
           <div :id="contentId" class="m-confirm__content">

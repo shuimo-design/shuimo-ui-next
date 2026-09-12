@@ -1,8 +1,14 @@
 {
   "name": "MMessage",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MMessage"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MMessage"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MMessage"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "MessageType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "content"
       }
     },
     {
@@ -33,6 +45,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "duration"
       }
     },
     {
@@ -43,6 +58,9 @@
       "value": {
         "kind": "expression",
         "type": "MessageDirection | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
@@ -53,6 +71,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "dragAllow"
       }
     },
     {
@@ -63,6 +84,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closable"
       }
     },
     {
@@ -73,23 +97,35 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
   "events": [
     {
       "name": "close",
-      "description": "离场动画结束、可以从 DOM 移除时"
+      "description": "离场动画结束、可以从 DOM 移除时",
+      "react": {
+        "name": "onClose"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "替代 content"
+      "description": "替代 content",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "icon",
-      "description": "替代类型图标"
+      "description": "替代类型图标",
+      "react": {
+        "name": "icon"
+      }
     }
   ]
 }

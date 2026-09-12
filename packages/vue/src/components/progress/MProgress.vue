@@ -1,45 +1,55 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from "vue";
+import {
+  progressBarStyle,
+  progressBrush,
+  progressClasses,
+  progressShowInfo,
+  progressValue,
+  progressVars,
+  type ProgressProps,
+  type ProgressSlots,
+} from "@shuimo-design/core";
 import { useBrushBorder } from "../../ink";
-import type { ProgressProps, ProgressSlots } from "./types";
 
 defineOptions({ name: "MProgress" });
 
 const {
-  value = 0,
-  max = 100,
+  value,
+  max,
+  status,
+  strokeWidth,
+  // Vue 会把"没传的布尔 prop"转成 false，只有写成解构默认值才会登记进 props 的 default。
+  // showInfo 的默认是 true，不在这里登记的话 core 分不清"没传"和"显式传了 false"
   showInfo = true,
-  status = "default",
-  strokeWidth = 7,
 } = defineProps<ProgressProps>();
 defineSlots<ProgressSlots>();
 
 const track = useTemplateRef<HTMLElement>("track");
-// 外框是一圈细笔触（对应旧版 MBorder 的手绘框），进度条本体是框里一段实墨
-useBrushBorder(track, { strokeWidth: 1.5, seed: 3 });
+useBrushBorder(track, progressBrush());
 
-const clamped = computed(() => Math.min(Math.max(value, 0), Math.max(max, 0)));
-// 最多两位小数；Number() 会把 33.30 这样的多余 0 去掉
-const percent = computed(() => (max > 0 ? Number(((clamped.value / max) * 100).toFixed(2)) : 0));
+// core 的函数收整份 props，这里把解构出来的值重新组一份给它们（解构后仍是响应式的）
+const props = computed<ProgressProps>(() => ({ value, max, status, strokeWidth, showInfo }));
+// 钳制、取整全在 core，这里只把结果绑上去
+const state = computed(() => progressValue(props.value));
 </script>
 
 <template>
   <div
-    class="m-progress"
-    :class="[`m-progress--${status}`, { 'm-progress--done': percent >= 100 }]"
-    :style="{ '--m-progress-h': `${strokeWidth}px` }"
+    :class="progressClasses(props, state.percent)"
+    :style="progressVars(props)"
     role="progressbar"
-    :aria-valuenow="clamped"
+    :aria-valuenow="state.clamped"
     aria-valuemin="0"
-    :aria-valuemax="max"
-    :aria-valuetext="`${percent}%`"
+    :aria-valuemax="state.max"
+    :aria-valuetext="`${state.percent}%`"
   >
     <div ref="track" class="m-progress__track">
-      <div class="m-progress__bar" :style="{ width: `${percent}%` }" />
+      <div class="m-progress__bar" :style="progressBarStyle(state.percent)" />
     </div>
     <!-- 文字压在条上居中：纸色字描一圈墨边，条走到字下面也看得清 -->
-    <div v-if="showInfo" class="m-progress__info">
-      <slot :percent="percent">{{ percent }}%</slot>
+    <div v-if="progressShowInfo(props)" class="m-progress__info">
+      <slot :percent="state.percent">{{ state.percent }}%</slot>
     </div>
   </div>
 </template>

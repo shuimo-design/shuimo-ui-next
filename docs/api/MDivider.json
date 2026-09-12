@@ -1,8 +1,14 @@
 {
   "name": "MDivider",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MDivider"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDivider"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDivider"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "vertical"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "text"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "DividerAlign | undefined"
+      },
+      "react": {
+        "name": "align"
       }
     },
     {
@@ -42,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "thickness"
       }
     },
     {
@@ -52,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
@@ -59,7 +80,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "替代 text"
+      "description": "替代 text",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

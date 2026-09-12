@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-vue";
 import { nextTick } from "vue";
-import { MMessage, useMessage } from ".";
+import { MOverlayOutlet } from "../overlay-outlet";
+import { MMessage } from ".";
 
 function pointer(el: Element, type: string, x: number, y: number) {
   el.dispatchEvent(
@@ -15,7 +16,7 @@ function pointer(el: Element, type: string, x: number, y: number) {
   );
 }
 
-/** 函数式弹出的消息挂在 body 上，不归 render 的自动清理管，测完自己关掉 */
+/** 函数式弹出的消息被出口传送到 body，不归 render 的自动清理管，测完自己关掉 */
 async function settled() {
   MMessage.closeAll();
   await vi.waitFor(() => {
@@ -39,6 +40,7 @@ describe("MMessage", () => {
   });
 
   it("shows a message imperatively and closes it through the handle", async () => {
+    await render(MOverlayOutlet);
     const handle = MMessage.success("成功了");
     await vi.waitFor(() => {
       expect(document.querySelector(".m-message--success")?.textContent).toContain("成功了");
@@ -54,8 +56,9 @@ describe("MMessage", () => {
   });
 
   it("auto closes after the duration and honours the direction", async () => {
+    await render(MOverlayOutlet);
     const onClose = vi.fn();
-    const handle = useMessage().show({
+    const handle = MMessage.show({
       content: "很快消失",
       duration: 50,
       direction: "top-center",
@@ -127,5 +130,13 @@ describe("MMessage", () => {
     expect(el.classList.contains("m-message--removing")).toBe(false);
     await new Promise((resolve) => setTimeout(resolve, 350));
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("warns instead of failing silently when there is no outlet", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    // 这个用例必须在"出口从来没挂过"之前跑不了（同一个模块单例），所以只断言不炸
+    MMessage.info("没人接也不能炸").close();
+    warn.mockRestore();
+    expect(document.querySelectorAll(".m-message-list .m-message")).toHaveLength(0);
   });
 });

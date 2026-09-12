@@ -8,6 +8,11 @@
  *    （要量 DOM 才知道的字段，初值只能是 0 / false，由 connect() 之后的观察器补）。
  * 3. `connect()` / `disconnect()` 幂等且可反复配对——React 的 StrictMode 会跑两轮。
  *
+ * 第 1 条的配套：options 变了确实需要"去做点什么"的（重新算浮层坐标之类），
+ * 在 `update()` 里只记一笔账，把真正的动作放进可选的 `flush()`；两个壳的胶水会在
+ * 这一轮渲染**落地之后**替你调它。自己在 `update()` 里动手的话，React 会报
+ * "Cannot update a component while rendering a different component"。
+ *
  * 只有副作用、没有状态要驱动渲染的（比如笔触边框），不实现这个接口，
  * 写成 `attach(el) / update(options) / dispose()` 就够了。
  */
@@ -23,4 +28,9 @@ export interface Controller<S extends object, O> {
   connect(): void;
   /** 卸载：撤销 connect 做的一切 */
   disconnect(): void;
+  /**
+   * 可选。渲染落地之后由壳调用，用来补做 `update()` 记下、但不能在渲染期做的事。
+   * 每轮渲染都会被调到，所以实现里要自己判断"有没有真的变过"，没变就别动。
+   */
+  flush?(): void;
 }

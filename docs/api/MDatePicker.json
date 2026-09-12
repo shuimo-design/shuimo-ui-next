@@ -1,8 +1,14 @@
 {
   "name": "MDatePicker",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MDatePicker"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDatePicker"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDatePicker"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "DatePickerType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "format"
       }
     },
     {
@@ -32,15 +44,22 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "placeholder"
       }
     },
     {
       "name": "disabled",
       "description": "禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -51,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "clearable"
       }
     },
     {
@@ -60,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "((date: Date) => boolean) | undefined"
+      },
+      "react": {
+        "name": "disabledDate"
       }
     },
     {
@@ -70,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "0 | 1 | undefined"
+      },
+      "react": {
+        "name": "firstDayOfWeek"
       }
     },
     {
@@ -80,6 +108,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
       }
     },
     {
@@ -89,6 +120,13 @@
       "value": {
         "kind": "expression",
         "type": "string | Date | null | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -98,15 +136,24 @@
     },
     {
       "name": "change",
-      "description": "值变化，参数是格式化后的字符串，清空为 null"
-    },
-    {
-      "name": "clear",
-      "description": "点了清空按钮"
+      "description": "值变化，参数是格式化后的字符串，清空为 null",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
       "name": "visibleChange",
-      "description": "面板开合"
+      "description": "面板开合",
+      "react": {
+        "name": "onVisibleChange"
+      }
+    },
+    {
+      "name": "clear",
+      "description": "点了清空按钮",
+      "react": {
+        "name": "onClear"
+      }
     }
   ],
   "slots": []

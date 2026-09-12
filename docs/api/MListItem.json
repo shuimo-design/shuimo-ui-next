@@ -1,8 +1,14 @@
 {
   "name": "MListItem",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MListItem"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MListItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MListItem"
+    }
   },
   "attributes": [
     {
@@ -13,27 +19,38 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "active"
       }
     },
     {
       "name": "marker",
       "description": "是否显示项目符号；不传则跟随 MList",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "marker"
       }
     }
   ],
   "events": [
     {
-      "name": "click"
+      "name": "click",
+      "react": {
+        "name": "onClick"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

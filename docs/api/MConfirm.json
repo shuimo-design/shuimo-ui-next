@@ -1,8 +1,14 @@
 {
   "name": "MConfirm",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MConfirm"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MConfirm"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MConfirm"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "content"
       }
     },
     {
@@ -22,15 +31,22 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
       "name": "mask",
-      "description": "遮罩配置，默认 { show: true, clickClose: true }",
+      "description": "遮罩配置，默认 { show: true, clickClose: true }；传布尔只控制显示",
+      "default": "true",
       "required": false,
       "value": {
         "kind": "expression",
-        "type": "ConfirmMask | undefined"
+        "type": "boolean | ModalMask | undefined"
+      },
+      "react": {
+        "name": "mask"
       }
     },
     {
@@ -41,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "string | boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
       }
     },
     {
@@ -51,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "confirmText"
       }
     },
     {
@@ -61,6 +83,22 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "cancelText"
+      }
+    },
+    {
+      "name": "closeOnEsc",
+      "description": "按 Esc 是否等同取消，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closeOnEsc"
       }
     },
     {
@@ -71,6 +109,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -80,34 +121,56 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "open",
+        "extra": [
+          "defaultOpen",
+          "onOpenChange"
+        ]
       }
     }
   ],
   "events": [
     {
-      "name": "confirm",
-      "description": "点了确定"
-    },
-    {
       "name": "update:open"
     },
     {
+      "name": "confirm",
+      "description": "点了确定",
+      "react": {
+        "name": "onConfirm"
+      }
+    },
+    {
       "name": "cancel",
-      "description": "点了取消、遮罩或按了 Esc"
+      "description": "点了取消、遮罩或按了 Esc",
+      "react": {
+        "name": "onCancel"
+      }
     },
     {
       "name": "closed",
-      "description": "离场动画结束"
+      "description": "离场动画结束",
+      "react": {
+        "name": "onClosed"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "替代 content"
+      "description": "替代 content",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "footer",
-      "description": "替代底部按钮，参数里给了确定 / 取消两个方法"
+      "description": "替代底部按钮，参数里给了确定 / 取消两个方法",
+      "react": {
+        "name": "footer"
+      }
     }
   ]
 }

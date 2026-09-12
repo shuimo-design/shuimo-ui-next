@@ -1,8 +1,14 @@
 {
   "name": "MBadge",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MBadge"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MBadge"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MBadge"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "value"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "max"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "dot"
       }
     },
     {
@@ -42,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "hidden"
       }
     },
     {
@@ -52,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "BadgeType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -61,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "[number, number] | undefined"
+      },
+      "react": {
+        "name": "offset"
       }
     },
     {
@@ -71,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showZero"
       }
     },
     {
@@ -81,6 +108,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
@@ -88,7 +118,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "被标注的内容；不传时角标独立显示，不做绝对定位"
+      "description": "被标注的内容；不传时角标独立显示，不做绝对定位",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

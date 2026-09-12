@@ -1,8 +1,14 @@
 {
   "name": "MAvatar",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MAvatar"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MAvatar"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MAvatar"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "src"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "alt"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "AvatarVariant | undefined"
+      },
+      "react": {
+        "name": "variant"
       }
     },
     {
@@ -41,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "AvatarSize | undefined"
+      },
+      "react": {
+        "name": "size"
       }
     },
     {
@@ -51,19 +69,28 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     }
   ],
   "events": [
     {
       "name": "error",
-      "description": "图片加载失败"
+      "description": "图片加载失败",
+      "react": {
+        "name": "onError"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "无图或图片加载失败时的兜底内容，例如文字缩写或图标"
+      "description": "无图或图片加载失败时的兜底内容，例如文字缩写或图标",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

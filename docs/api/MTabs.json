@@ -1,10 +1,28 @@
 {
   "name": "MTabs",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MTabs"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTabs"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTabs"
+    }
   },
   "attributes": [
+    {
+      "name": "panes",
+      "description": "每一页的配置，顺序就是标签顺序；不传则从子组件 MTabPane 上收集",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "readonly TabPaneConfig<unknown>[] | undefined"
+      },
+      "react": {
+        "name": "panes"
+      }
+    },
     {
       "name": "type",
       "description": "外形：line 导航条下一条笔触线 + 激活项一横朱笔指示器；card 每个标签一条签条（书签式），\n激活的那条纸色、朝内容区探出一截压在内容区框线上。不开水墨引擎时退回实线和 CSS 双线框",
@@ -13,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "TabsType | undefined"
+      },
+      "react": {
+        "name": "type"
       }
     },
     {
@@ -23,16 +44,22 @@
       "value": {
         "kind": "expression",
         "type": "TabsPosition | undefined"
+      },
+      "react": {
+        "name": "position"
       }
     },
     {
       "name": "closable",
-      "description": "所有标签都显示关闭按钮；单个 MTabPane 可用自己的 closable 覆盖",
+      "description": "所有标签都显示关闭按钮；单页可用自己的 closable 覆盖",
       "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closable"
       }
     },
     {
@@ -43,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "stretch"
       }
     },
     {
@@ -53,6 +83,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -61,6 +94,13 @@
       "value": {
         "kind": "expression",
         "type": "TabName | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -70,25 +110,40 @@
     },
     {
       "name": "change",
-      "description": "激活的标签变化"
+      "description": "激活的标签变化",
+      "react": {
+        "name": "onChange"
+      }
     },
     {
       "name": "tabClick",
-      "description": "点了某个标签（不管有没有真的切换）"
+      "description": "点了某个标签（不管有没有真的切换）",
+      "react": {
+        "name": "onTabClick"
+      }
     },
     {
       "name": "tabRemove",
-      "description": "点了某个标签的关闭按钮；组件不会自己删 pane，由使用方处理"
+      "description": "点了某个标签的关闭按钮；组件不会自己删 pane，由使用方处理",
+      "react": {
+        "name": "onTabRemove"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "放 MTabPane"
+      "description": "放 MTabPane（语法糖；传了 panes 就不看这里）",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "extra",
-      "description": "导航条末尾（横排时靠右，竖排时靠下）的附加内容"
+      "description": "导航条末尾（横排时靠右，竖排时靠下）的附加内容",
+      "react": {
+        "name": "extra"
+      }
     }
   ]
 }

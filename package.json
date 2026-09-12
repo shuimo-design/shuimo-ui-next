@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm -C playground dev",
-    "build": "pnpm -r --filter \"./packages/**\" build",
+    "build": "pnpm -r --filter \"./packages/**\" build && pnpm gen:meta",
     "check": "vp check",
     "fmt": "vp fmt",
     "lint": "vp lint",
@@ -15,16 +15,25 @@
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
     "attw": "pnpm -r --filter \"./packages/**\" attw",
-    "check:arch": "tsx scripts/check-architecture.ts"
+    "gen:meta": "tsx scripts/gen-meta.ts",
+    "check:arch": "tsx scripts/check-architecture.ts",
+    "check:style": "tsx scripts/check-style.ts",
+    "check:ssr": "tsx scripts/check-ssr.ts"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^3.0.2",
+    "@shuimo-design/core": "workspace:*",
+    "@shuimo-design/react": "workspace:*",
+    "@shuimo-design/vue": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tsx": "^4.21.1",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "vue": "catalog:"
   },
   "engines": {
     "node": ">=24.11.0",

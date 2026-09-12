@@ -1,8 +1,14 @@
 {
   "name": "MList",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MList"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MList"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MList"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "T[] | undefined"
+      },
+      "react": {
+        "name": "data"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "marker"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "autoActive"
       }
     }
   ],
@@ -39,7 +54,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "有 data 时按项调用并带上 { item, index }；没有 data 时直接渲染一次"
+      "description": "有 data 时按项调用并带上 { item, index }；没有 data 时直接渲染一次",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

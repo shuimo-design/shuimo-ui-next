@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { inkMarkUrl } from "../../ink";
-import { inkTagFrame } from "../../ink";
-import { inkVarBindings } from "../../ink";
-import type { TagEmits, TagProps, TagSlots } from "./types";
+import { computed, onMounted, ref } from "vue";
+import {
+  tagClasses,
+  tagCloseInert,
+  tagInk,
+  TAG_CLOSE_LABEL,
+  type TagEmits,
+  type TagProps,
+  type TagSlots,
+} from "@shuimo-design/core";
 
 defineOptions({ name: "MTag" });
 
@@ -18,37 +23,26 @@ const {
 const emit = defineEmits<TagEmits>();
 defineSlots<TagSlots>();
 
-// 底图是旧库三段手绘 SVG：左右收口按高度等比，中段横向平铺；写成组件变量，没开 ink 引擎时也是这个形
-const frame = inkTagFrame();
-// 三段底图每个标签都一样、叉号按种子分桶：走素材登记，同一张图在样式表里只写一次，
-// 元素上只挂一个短属性；一页几十个标签不再各自内联一份几十 KB 的 data URL。登记不了（SSR）才退回内联
-const ink = computed(() =>
-  inkVarBindings({
-    "--m-tag-left": frame.left,
-    "--m-tag-body": frame.body,
-    "--m-tag-right": frame.right,
-    "--m-tag-cross": inkMarkUrl("cross", { seed, strokeWidth: 3 }),
-  }),
-);
-const style = computed(() => ({
-  ...ink.value.style,
-  "--m-tag-cap-l": String(frame.leftRatio),
-  "--m-tag-cap-r": String(frame.rightRatio),
-  ...(color ? { "--m-tag-color": color } : {}),
-}));
+// 素材登记要写样式表，服务端没有；首帧一律内联，挂载后才升级成 data 属性，否则水合会报属性不匹配
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+});
+
+const ink = computed(() => tagInk({ seed, color, registered: mounted.value }));
 
 function onClose(event: MouseEvent) {
+  // 关闭是标签内部的事，不该顺带触发外层的 click
   event.stopPropagation();
-  if (disabled) return;
+  if (tagCloseInert({ disabled })) return;
   emit("close", event);
 }
 </script>
 
 <template>
   <span
-    class="m-tag"
-    :class="[`m-tag--${type}`, `m-tag--${size}`, { 'm-tag--disabled': disabled }]"
-    :style="style"
+    :class="tagClasses({ type, size, disabled })"
+    :style="ink.style"
     v-bind="ink.attrs"
     @click="emit('click', $event)"
   >
@@ -57,7 +51,7 @@ function onClose(event: MouseEvent) {
       v-if="closable"
       type="button"
       class="m-tag__close"
-      aria-label="关闭"
+      :aria-label="TAG_CLOSE_LABEL"
       :disabled="disabled"
       @click="onClose"
     >

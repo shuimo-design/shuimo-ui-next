@@ -1,8 +1,14 @@
 {
   "name": "MTooltip",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MTooltip"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTooltip"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTooltip"
+    }
   },
   "attributes": [
     {
@@ -13,6 +19,9 @@
       "value": {
         "kind": "expression",
         "type": "Placement | undefined"
+      },
+      "react": {
+        "name": "placement"
       }
     },
     {
@@ -23,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "PopoverTrigger | undefined"
+      },
+      "react": {
+        "name": "trigger"
       }
     },
     {
@@ -32,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "content"
       }
     },
     {
@@ -42,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -52,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "arrow"
       }
     },
     {
@@ -62,6 +83,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "offset"
       }
     },
     {
@@ -72,6 +96,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "openDelay"
       }
     },
     {
@@ -82,6 +109,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "closeDelay"
       }
     },
     {
@@ -92,6 +122,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disableClickAway"
       }
     },
     {
@@ -102,6 +135,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
       }
     },
     {
@@ -112,6 +148,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -121,26 +160,42 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "show",
+        "extra": [
+          "defaultShow",
+          "onShowChange"
+        ]
       }
     }
   ],
   "events": [
     {
-      "name": "visibleChange",
-      "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+      "name": "update:show"
     },
     {
-      "name": "update:show"
+      "name": "visibleChange",
+      "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）",
+      "react": {
+        "name": "onVisibleChange"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "被提示的内容；第一个元素当参照元素，并挂上 aria-describedby"
+      "description": "被提示的内容；第一个元素当参照元素，并挂上 aria-describedby",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "content",
-      "description": "提示内容"
+      "description": "提示内容",
+      "react": {
+        "name": "content"
+      }
     }
   ]
 }

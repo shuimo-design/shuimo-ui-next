@@ -1,10 +1,28 @@
 {
   "name": "MGrid",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MGrid"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MGrid"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MGrid"
+    }
   },
   "attributes": [
+    {
+      "name": "cells",
+      "description": "每个格子的配置，顺序就是排列顺序；不传则从子组件 MCell 上收集",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "readonly GridCellConfig<unknown>[] | undefined"
+      },
+      "react": {
+        "name": "cells"
+      }
+    },
     {
       "name": "w",
       "description": "格子的默认宽 px；格子自己传了 w 以自己的为准",
@@ -12,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "w"
       }
     },
     {
@@ -21,6 +42,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "h"
       }
     },
     {
@@ -30,6 +54,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "gap"
       }
     },
     {
@@ -39,6 +66,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "colGap"
       }
     },
     {
@@ -48,15 +78,22 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "rowGap"
       }
     },
     {
       "name": "gapRotate",
       "description": "横向排列时每道分隔的倾斜角度（度），第 i 项作用在第 i 和 i+1 个格子之间；正值为 \"/\"，负值为 \"\\\"",
+      "default": "[]",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "number[] | undefined"
+      },
+      "react": {
+        "name": "gapRotate"
       }
     },
     {
@@ -67,6 +104,9 @@
       "value": {
         "kind": "expression",
         "type": "\"row\" | \"column\" | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
@@ -76,6 +116,9 @@
       "value": {
         "kind": "expression",
         "type": "GridCols | undefined"
+      },
+      "react": {
+        "name": "cols"
       }
     }
   ],
@@ -83,7 +126,10 @@
   "slots": [
     {
       "name": "default",
-      "description": "放 MCell"
+      "description": "放 MCell（语法糖；传了 cells 就不看这里）",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

@@ -1,8 +1,14 @@
 {
   "name": "MForm",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MForm"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MForm"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MForm"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "FormModel | undefined"
+      },
+      "react": {
+        "name": "model"
       }
     },
     {
@@ -21,6 +30,9 @@
       "value": {
         "kind": "expression",
         "type": "FormRules | undefined"
+      },
+      "react": {
+        "name": "rules"
       }
     },
     {
@@ -31,6 +43,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "inline"
       }
     },
     {
@@ -41,6 +56,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "labelWidth"
       }
     },
     {
@@ -51,6 +69,9 @@
       "value": {
         "kind": "expression",
         "type": "FormLabelPosition | undefined"
+      },
+      "react": {
+        "name": "labelPosition"
       }
     },
     {
@@ -61,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -71,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "submit"
       }
     },
     {
@@ -81,6 +108,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showMessage"
       }
     },
     {
@@ -91,22 +121,34 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "hideRequiredAsterisk"
       }
     }
   ],
   "events": [
     {
       "name": "submit",
-      "description": "表单提交（回车 / 提交按钮）；submit 为 false 时已阻止默认跳转"
+      "description": "表单提交（回车 / 提交按钮）；submit 为 false 时已阻止默认跳转",
+      "react": {
+        "name": "onSubmit"
+      }
     },
     {
       "name": "validate",
-      "description": "任一表单项校验完成"
+      "description": "任一表单项校验完成",
+      "react": {
+        "name": "onValidate"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

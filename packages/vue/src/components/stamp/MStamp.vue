@@ -1,120 +1,107 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef, useId, watch } from "vue";
+import { computed, useId, useTemplateRef, watch, watchPostEffect } from "vue";
 import {
-  createGlyphMeasurer,
-  generateStamp,
-  loadStampFont,
-  PROBE_SIZE,
-  type GlyphMeasurer,
-} from "../../ink";
-import type { StampProps } from "./types";
+  createStampFont,
+  stampClasses,
+  stampId,
+  stampPlainText,
+  stampRender,
+  stampStyle,
+  type StampProps,
+} from "@shuimo-design/core";
+import { PROBE_SIZE } from "../../ink";
+import { useController } from "../../runtime";
 
 defineOptions({ name: "MStamp" });
 
 const {
   text,
-  size = 120,
-  mode = "yang",
-  shape = "auto",
+  size,
+  mode,
+  shape,
   aspect,
-  sides = 6,
-  orientation = "flat-top",
-  seed = 1,
+  sides,
+  orientation,
+  seed,
   color,
   font,
   border,
-  corner = "round",
+  corner,
   cornerRadius,
-  roughness = 0.5,
-  carving = 0.8,
-  bleed = 0.7,
+  roughness,
+  carving,
+  bleed,
+  padding,
+  gap,
+  rowGap,
+  columnGap,
+  columns,
+  // stretch 必须直接从 defineProps() 上解构、并显式写成 undefined：类型是 boolean，
+  // Vue 会把"不传"转型成 false，而 generateStamp 对 undefined 的理解是
+  // "方 / 圆 / 多边形默认撑满格子"，和显式的 false 不是一回事
+  stretch = undefined,
+  cellHeightMode,
+  offsetX,
+  offsetY,
+  direction,
+  gridLines,
+  gridLineWidth,
+  rotate,
+} = defineProps<StampProps>();
+
+/** 转型过的这份 props 才是 core 的输入；默认值归一化在 core / generateStamp 里，两个壳共用一份 */
+const props = computed<StampProps>(() => ({
+  text,
+  size,
+  mode,
+  shape,
+  aspect,
+  sides,
+  orientation,
+  seed,
+  color,
+  font,
+  border,
+  corner,
+  cornerRadius,
+  roughness,
+  carving,
+  bleed,
   padding,
   gap,
   rowGap,
   columnGap,
   columns,
   stretch,
-  cellHeightMode = "uniform",
-  offsetX = 0,
-  offsetY = 0,
-  direction = "ttb-rtl",
-  gridLines = false,
+  cellHeightMode,
+  offsetX,
+  offsetY,
+  direction,
+  gridLines,
   gridLineWidth,
-  rotate = 0,
-} = defineProps<StampProps>();
-
-const id = `m-stamp-${useId()}`;
-const root = ref<HTMLElement>();
-const svg = ref<SVGSVGElement>();
-// 字的墨迹框要等字体到了才量得准：先用兜底比例排一版，字体加载完再换成真度量重排
-const measure = shallowRef<GlyphMeasurer>();
-
-const plain = computed(() => (Array.isArray(text) ? text.join("") : text));
-
-const render = computed(() =>
-  generateStamp({
-    text,
-    size,
-    mode,
-    shape,
-    aspect,
-    sides,
-    orientation,
-    seed,
-    border,
-    corner,
-    cornerRadius,
-    roughness,
-    carving,
-    bleed,
-    padding,
-    gap,
-    rowGap,
-    columnGap,
-    columns,
-    stretch,
-    cellHeightMode,
-    offsetX,
-    offsetY,
-    direction,
-    gridLines,
-    gridLineWidth,
-    id,
-    measure: measure.value,
-  }),
-);
-
-const style = computed(() => ({
-  "--m-stamp-w": `${render.value.width}px`,
-  "--m-stamp-h": `${render.value.height}px`,
-  ...(color ? { "--m-stamp-color": color } : {}),
-  ...(font ? { "--m-stamp-font": font } : {}),
-  ...(rotate ? { "--m-stamp-rotate": `${rotate}deg` } : {}),
+  rotate,
 }));
 
-let pending = 0;
-async function remeasure() {
-  // 必须量 svg 上生效的字体：根元素继承的是页面正文字体，拿它量出来的框对不上篆体
-  const el = svg.value;
-  if (!el) return;
-  const family = getComputedStyle(el).fontFamily;
-  const ticket = ++pending;
-  await loadStampFont(family, plain.value);
-  // 等待期间又改了字体 / 印文，以最后一次为准
-  if (ticket !== pending) return;
-  measure.value = createGlyphMeasurer(family);
-}
+const id = stampId(useId());
+const plain = computed(() => stampPlainText(text));
 
-onMounted(remeasure);
-watch(() => [font, plain.value], remeasure);
+// 字的墨迹框要等字体到了才量得准：控制器先给 undefined（兜底比例排一版），
+// 字体加载完把真度量推过来，这里重排一次
+const svg = useTemplateRef<SVGSVGElement>("svg");
+const { controller: fontController, state: fontState } = useController(createStampFont, () => ({
+  text: plain.value,
+}));
+watchPostEffect(() => fontController.attach(svg.value));
+// 印文或字体族换了要重新量；等这一轮 DOM 更新完才量得到新的 font-family
+watch([plain, () => font], () => fontController.refresh(), { flush: "post" });
+
+const render = computed(() => stampRender(props.value, id, fontState.value.measure));
 </script>
 
 <template>
   <span
-    ref="root"
-    class="m-stamp"
-    :class="[`m-stamp--${render.mode}`, `m-stamp--${shape}`]"
-    :style="style"
+    :class="stampClasses(props, render)"
+    :style="stampStyle(props, render)"
     role="img"
     :aria-label="render.label"
   >

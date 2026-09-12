@@ -16,8 +16,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm check:arch
+      - run: pnpm check:style
       - run: pnpm typecheck
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test
       - run: pnpm build
+      # 服务端渲染冒烟吃的是 dist，必须排在 build 之后
+      - run: pnpm check:ssr
       - run: pnpm attw

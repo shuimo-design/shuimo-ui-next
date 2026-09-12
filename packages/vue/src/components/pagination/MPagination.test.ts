@@ -2,8 +2,8 @@ import { userEvent } from "vitest/browser";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-vue";
 import { defineComponent, h, ref, type PropType } from "vue";
+import { buildPagers } from "@shuimo-design/core";
 import { MPagination } from ".";
-import { buildPagers } from "./pager";
 
 /** 父组件真的把值写回去，连续翻页才基于新值 */
 const Host = defineComponent({

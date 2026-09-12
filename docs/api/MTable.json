@@ -1,8 +1,14 @@
 {
   "name": "MTable",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MTable"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTable"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTable"
+    }
   },
   "attributes": [
     {
@@ -12,16 +18,22 @@
       "required": false,
       "value": {
         "kind": "expression",
-        "type": "T[] | undefined"
+        "type": "readonly Row[] | undefined"
+      },
+      "react": {
+        "name": "data"
       }
     },
     {
       "name": "columns",
-      "description": "列声明；不传则由默认插槽里的 MTableColumn 决定",
+      "description": "列声明，顺序就是列序；不传则从子组件 MTableColumn 上收集",
       "required": false,
       "value": {
         "kind": "expression",
-        "type": "TableColumnDef[] | undefined"
+        "type": "readonly TableColumnConfig<Row, unknown>[] | undefined"
+      },
+      "react": {
+        "name": "columns"
       }
     },
     {
@@ -30,7 +42,10 @@
       "required": false,
       "value": {
         "kind": "expression",
-        "type": "TableRowKey<T> | undefined"
+        "type": "TableRowKey<Row> | undefined"
+      },
+      "react": {
+        "name": "rowKey"
       }
     },
     {
@@ -40,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "height"
       }
     },
     {
@@ -50,6 +68,9 @@
       "value": {
         "kind": "expression",
         "type": "TableAlign | undefined"
+      },
+      "react": {
+        "name": "align"
       }
     },
     {
@@ -60,6 +81,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "stripe"
       }
     },
     {
@@ -70,23 +94,35 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "emptyText"
       }
     }
   ],
   "events": [
     {
       "name": "rowClick",
-      "description": "点击某一行"
+      "description": "点击某一行",
+      "react": {
+        "name": "onRowClick"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "放 MTableColumn，用组件的方式声明列"
+      "description": "放 MTableColumn，用组件的方式声明列（语法糖；传了 columns 就不看这里）",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "empty",
-      "description": "没有数据时显示的内容"
+      "description": "没有数据时显示的内容",
+      "react": {
+        "name": "empty"
+      }
     }
   ]
 }

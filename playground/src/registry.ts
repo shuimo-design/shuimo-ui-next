@@ -1,60 +1,18 @@
 import type { Component } from "vue";
-import AlertDemo from "./demos/AlertDemo.vue";
-import AvatarDemo from "./demos/AvatarDemo.vue";
-import BadgeDemo from "./demos/BadgeDemo.vue";
-import BorderDemo from "./demos/BorderDemo.vue";
-import BreadcrumbDemo from "./demos/BreadcrumbDemo.vue";
-import ButtonDemo from "./demos/ButtonDemo.vue";
-import CardDemo from "./demos/CardDemo.vue";
-import CheckboxDemo from "./demos/CheckboxDemo.vue";
-import CollapseDemo from "./demos/CollapseDemo.vue";
-import ConfigProviderDemo from "./demos/ConfigProviderDemo.vue";
-import ConfirmDemo from "./demos/ConfirmDemo.vue";
-import DarkModeDemo from "./demos/DarkModeDemo.vue";
-import DatePickerDemo from "./demos/DatePickerDemo.vue";
-import DeleteIconDemo from "./demos/DeleteIconDemo.vue";
-import DialogDemo from "./demos/DialogDemo.vue";
-import DividerDemo from "./demos/DividerDemo.vue";
-import DrawerDemo from "./demos/DrawerDemo.vue";
-import EmptyDemo from "./demos/EmptyDemo.vue";
-import FormDemo from "./demos/FormDemo.vue";
-import GridDemo from "./demos/GridDemo.vue";
-import InkTransitionDemo from "./demos/InkTransitionDemo.vue";
-import InputDemo from "./demos/InputDemo.vue";
-import InputNumberDemo from "./demos/InputNumberDemo.vue";
-import ListDemo from "./demos/ListDemo.vue";
-import LoadingDemo from "./demos/LoadingDemo.vue";
-import MenuDemo from "./demos/MenuDemo.vue";
-import MessageDemo from "./demos/MessageDemo.vue";
-import PaginationDemo from "./demos/PaginationDemo.vue";
-import PopoverDemo from "./demos/PopoverDemo.vue";
-import PrinterDemo from "./demos/PrinterDemo.vue";
-import ProgressDemo from "./demos/ProgressDemo.vue";
-import RadioDemo from "./demos/RadioDemo.vue";
-import RicePaperDemo from "./demos/RicePaperDemo.vue";
-import ScrollDemo from "./demos/ScrollDemo.vue";
-import SelectDemo from "./demos/SelectDemo.vue";
-import SkeletonDemo from "./demos/SkeletonDemo.vue";
-import SliderDemo from "./demos/SliderDemo.vue";
-import StampDemo from "./demos/StampDemo.vue";
-import StepsDemo from "./demos/StepsDemo.vue";
-import SvgDemo from "./demos/SvgDemo.vue";
-import SwitchDemo from "./demos/SwitchDemo.vue";
-import TableDemo from "./demos/TableDemo.vue";
-import TabsDemo from "./demos/TabsDemo.vue";
-import TagDemo from "./demos/TagDemo.vue";
-import TooltipDemo from "./demos/TooltipDemo.vue";
-import TreeDemo from "./demos/TreeDemo.vue";
-import VirtualListDemo from "./demos/VirtualListDemo.vue";
+import type { ComponentType } from "react";
 
+/**
+ * 组件清单：只写 id / 标题 / 组件名三样，demo 本身按 id 从目录里查。
+ * Vue 的 demo 在 demos/，React 的在 demos-react/，文件名都是 <Pascal>Demo。
+ * React 那边还没搬到的组件，页面上显示占位，站照常构建 —— 这也是迁移进度看板。
+ */
 export interface DemoEntry {
-  /** hash 路由用的 id */
   id: string;
-  /** 菜单显示 */
   title: string;
-  /** 组件名，页面标题用 */
+  /** M 开头的组件名，用来查 API 表 */
   name: string;
-  component: Component;
+  vue?: Component;
+  react?: ComponentType;
 }
 
 export interface DemoGroup {
@@ -62,89 +20,114 @@ export interface DemoGroup {
   items: DemoEntry[];
 }
 
+const vueDemos = import.meta.glob<{ default: Component }>("./demos/*Demo.vue", {
+  eager: true,
+  import: "default",
+}) as unknown as Record<string, Component>;
+const reactDemos = import.meta.glob<{ default: ComponentType }>("./demos-react/*Demo.tsx", {
+  eager: true,
+  import: "default",
+}) as unknown as Record<string, ComponentType>;
+
+/** delete-icon → DeleteIconDemo */
+function fileOf(id: string): string {
+  return `${id.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase())}Demo`;
+}
+
+function entry(id: string, title: string, name: string): DemoEntry {
+  return {
+    id,
+    title,
+    name,
+    vue: vueDemos[`./demos/${fileOf(id)}.vue`],
+    react: reactDemos[`./demos-react/${fileOf(id)}.tsx`],
+  };
+}
+
 export const DEMOS: DemoGroup[] = [
   {
     group: "特效",
     items: [
-      { id: "rice-paper", title: "宣纸", name: "MRicePaper", component: RicePaperDemo },
-      { id: "border", title: "笔触边框", name: "MBorder", component: BorderDemo },
-      { id: "stamp", title: "印章", name: "MStamp", component: StampDemo },
-      {
-        id: "ink-transition",
-        title: "落墨与转场",
-        name: "MInkTransition",
-        component: InkTransitionDemo,
-      },
+      entry("rice-paper", "宣纸", "MRicePaper"),
+      entry("border", "笔触边框", "MBorder"),
+      entry("stamp", "印章", "MStamp"),
+      entry("ink-transition", "落墨与转场", "MInkTransition"),
     ],
   },
   {
     group: "基础",
     items: [
-      { id: "button", title: "按钮", name: "MButton", component: ButtonDemo },
-      { id: "input", title: "输入框", name: "MInput", component: InputDemo },
-      { id: "input-number", title: "数字输入", name: "MInputNumber", component: InputNumberDemo },
-      { id: "select", title: "选择器", name: "MSelect", component: SelectDemo },
-      { id: "date-picker", title: "日期选择", name: "MDatePicker", component: DatePickerDemo },
-      { id: "checkbox", title: "复选框", name: "MCheckbox", component: CheckboxDemo },
-      { id: "radio", title: "单选框", name: "MRadio", component: RadioDemo },
-      { id: "switch", title: "开关", name: "MSwitch", component: SwitchDemo },
-      { id: "slider", title: "滑块", name: "MSlider", component: SliderDemo },
-      { id: "tag", title: "标签", name: "MTag", component: TagDemo },
-      { id: "avatar", title: "头像", name: "MAvatar", component: AvatarDemo },
-      { id: "progress", title: "进度条", name: "MProgress", component: ProgressDemo },
-      { id: "collapse", title: "折叠面板", name: "MCollapse", component: CollapseDemo },
-      { id: "list", title: "列表", name: "MList", component: ListDemo },
-      { id: "tree", title: "树", name: "MTree", component: TreeDemo },
-      { id: "card", title: "卡片", name: "MCard", component: CardDemo },
-      { id: "badge", title: "角标", name: "MBadge", component: BadgeDemo },
+      entry("button", "按钮", "MButton"),
+      entry("input", "输入框", "MInput"),
+      entry("input-number", "数字输入", "MInputNumber"),
+      entry("select", "选择器", "MSelect"),
+      entry("date-picker", "日期选择", "MDatePicker"),
+      entry("checkbox", "复选框", "MCheckbox"),
+      entry("radio", "单选框", "MRadio"),
+      entry("switch", "开关", "MSwitch"),
+      entry("slider", "滑块", "MSlider"),
+      entry("tag", "标签", "MTag"),
+      entry("avatar", "头像", "MAvatar"),
+      entry("progress", "进度条", "MProgress"),
+      entry("collapse", "折叠面板", "MCollapse"),
+      entry("list", "列表", "MList"),
+      entry("tree", "树", "MTree"),
+      entry("card", "卡片", "MCard"),
+      entry("badge", "角标", "MBadge"),
     ],
   },
   {
     group: "模版",
     items: [
-      { id: "breadcrumb", title: "面包屑", name: "MBreadcrumb", component: BreadcrumbDemo },
-      { id: "menu", title: "菜单", name: "MMenu", component: MenuDemo },
-      { id: "pagination", title: "分页", name: "MPagination", component: PaginationDemo },
-      { id: "form", title: "表单", name: "MForm", component: FormDemo },
-      { id: "table", title: "表格", name: "MTable", component: TableDemo },
-      { id: "grid", title: "栅格", name: "MGrid", component: GridDemo },
-      { id: "virtual-list", title: "虚拟列表", name: "MVirtualList", component: VirtualListDemo },
-      { id: "steps", title: "步骤条", name: "MSteps", component: StepsDemo },
-      { id: "tabs", title: "标签页", name: "MTabs", component: TabsDemo },
+      entry("breadcrumb", "面包屑", "MBreadcrumb"),
+      entry("menu", "菜单", "MMenu"),
+      entry("pagination", "分页", "MPagination"),
+      entry("form", "表单", "MForm"),
+      entry("table", "表格", "MTable"),
+      entry("grid", "栅格", "MGrid"),
+      entry("virtual-list", "虚拟列表", "MVirtualList"),
+      entry("steps", "步骤条", "MSteps"),
+      entry("tabs", "标签页", "MTabs"),
     ],
   },
   {
     group: "消息",
     items: [
-      { id: "popover", title: "气泡卡片", name: "MPopover", component: PopoverDemo },
-      { id: "tooltip", title: "悬浮提示", name: "MTooltip", component: TooltipDemo },
-      { id: "message", title: "消息提示", name: "MMessage", component: MessageDemo },
-      { id: "confirm", title: "确认框", name: "MConfirm", component: ConfirmDemo },
-      { id: "dialog", title: "弹窗", name: "MDialog", component: DialogDemo },
-      { id: "drawer", title: "抽屉", name: "MDrawer", component: DrawerDemo },
-      { id: "alert", title: "警告提示", name: "MAlert", component: AlertDemo },
+      entry("popover", "气泡卡片", "MPopover"),
+      entry("tooltip", "悬浮提示", "MTooltip"),
+      entry("message", "消息提示", "MMessage"),
+      entry("confirm", "确认框", "MConfirm"),
+      entry("dialog", "弹窗", "MDialog"),
+      entry("drawer", "抽屉", "MDrawer"),
+      entry("alert", "警告提示", "MAlert"),
     ],
   },
   {
     group: "其他",
     items: [
-      { id: "scroll", title: "滚动条", name: "MScroll", component: ScrollDemo },
-      { id: "printer", title: "打字机", name: "MPrinter", component: PrinterDemo },
-      { id: "divider", title: "分割线", name: "MDivider", component: DividerDemo },
-      { id: "loading", title: "加载", name: "MLoading", component: LoadingDemo },
-      { id: "delete-icon", title: "删除图标", name: "MDeleteIcon", component: DeleteIconDemo },
-      {
-        id: "config-provider",
-        title: "全局配置",
-        name: "MConfigProvider",
-        component: ConfigProviderDemo,
-      },
-      { id: "dark-mode", title: "深浅切换", name: "MDarkMode", component: DarkModeDemo },
-      { id: "svg", title: "图标", name: "MSvg", component: SvgDemo },
-      { id: "empty", title: "空状态", name: "MEmpty", component: EmptyDemo },
-      { id: "skeleton", title: "骨架屏", name: "MSkeleton", component: SkeletonDemo },
+      entry("scroll", "滚动条", "MScroll"),
+      entry("printer", "打字机", "MPrinter"),
+      entry("divider", "分割线", "MDivider"),
+      entry("loading", "加载", "MLoading"),
+      entry("delete-icon", "删除图标", "MDeleteIcon"),
+      entry("config-provider", "全局配置", "MConfigProvider"),
+      entry("dark-mode", "深浅切换", "MDarkMode"),
+      entry("svg", "图标", "MSvg"),
+      entry("empty", "空状态", "MEmpty"),
+      entry("skeleton", "骨架屏", "MSkeleton"),
     ],
   },
 ];
 
 export const ALL_DEMOS = DEMOS.flatMap((g) => g.items);
+
+/** 清单里写了但 demos/ 下没有对应文件的，立刻炸出来，不要静默少一页 */
+for (const demo of ALL_DEMOS) {
+  if (!demo.vue) throw new Error(`registry: 找不到 demos/${fileOf(demo.id)}.vue`);
+}
+
+/** React 侧的迁移进度，印在导航栏顶上 */
+export const REACT_PROGRESS = {
+  done: ALL_DEMOS.filter((d) => d.react).length,
+  total: ALL_DEMOS.length,
+};

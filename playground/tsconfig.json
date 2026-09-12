@@ -1,8 +1,8 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "types": []
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "env.d.ts", "vite.config.ts"]
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-vue";
 import { h } from "vue";
-import { MTable, MTableColumn, type TableCellScope } from ".";
+import { MTable, MTableColumn, type TableCellScope, type VueTableColumn } from ".";
 
 interface Term {
   id: number;
@@ -15,21 +15,17 @@ const terms: Term[] = [
 ];
 
 describe("MTable", () => {
-  it("renders header and rows from the columns prop with cell / head slots", async () => {
-    const screen = await render(MTable<Term>, {
-      props: {
-        data: terms,
-        columns: [
-          { param: "id", label: "序号", width: 80 },
-          { param: "name", label: "节气", align: "left" },
-        ],
+  it("renders header and rows from the columns prop with render / renderHead", async () => {
+    const columns: VueTableColumn<Term>[] = [
+      { prop: "id", label: "序号", width: 80, renderHead: () => "编号" },
+      {
+        prop: "name",
+        label: "节气",
+        align: "left",
+        render: ({ row, value, index }) => `${index + 1}-${row.name}-${String(value)}`,
       },
-      slots: {
-        "cell-name": ({ row, value, index }: TableCellScope<Term>) =>
-          `${index + 1}-${row.name}-${String(value)}`,
-        "head-id": () => "编号",
-      },
-    });
+    ];
+    const screen = await render(MTable<Term>, { props: { data: terms, columns } });
     const headers = screen.getByRole("columnheader");
     expect(headers.elements()).toHaveLength(2);
     await expect.element(headers.first()).toHaveTextContent("编号");
@@ -46,18 +42,17 @@ describe("MTable", () => {
     expect(inner.style.gridTemplateColumns).toBe("80px auto");
   });
 
-  it("collects MTableColumn children in DOM order and renders their scoped slots", async () => {
+  it("collects MTableColumn children in written order and renders their scoped slots", async () => {
     const screen = await render(MTable<Term>, {
       props: { data: terms },
       slots: {
         default: () => [
-          h(MTableColumn, { param: "name", label: "节气" }),
+          h(MTableColumn, { prop: "name", label: "节气" }),
           h(
             MTableColumn,
-            { param: "id", label: "序号", align: "right" },
+            { prop: "id", label: "序号", align: "right" },
             {
-              default: ({ data, index }: TableCellScope<Record<string, unknown>>) =>
-                `#${String(data.id)}/${index}`,
+              default: ({ data, index }: TableCellScope<Term>) => `#${String(data.id)}/${index}`,
               head: () => h("em", "编号"),
             },
           ),
@@ -72,18 +67,33 @@ describe("MTable", () => {
     await expect.element(cells.first()).toHaveTextContent("立春");
     await expect.element(cells.nth(1)).toHaveTextContent("#1/0");
     await expect.element(cells.nth(1)).toHaveClass("m-table__td--right");
-    await expect.element(cells.nth(1)).toHaveAttribute("data-param", "id");
+    await expect.element(cells.nth(1)).toHaveAttribute("data-prop", "id");
+  });
+
+  it("keeps the columns array order even when a v-for sits in the middle", async () => {
+    const screen = await render(MTable<Term>, {
+      props: {
+        data: terms.slice(0, 1),
+        columns: [
+          { prop: "id", label: "一" },
+          { prop: "name", label: "二" },
+          { prop: "id", label: "三" },
+        ] satisfies VueTableColumn<Term>[],
+      },
+    });
+    const headers = screen.getByRole("columnheader").elements();
+    expect(headers.map((th) => th.textContent?.trim())).toEqual(["一", "二", "三"]);
   });
 
   it("shows empty text or the empty slot when there is no data", async () => {
     const plain = await render(MTable, {
-      props: { columns: [{ param: "id", label: "序号" }] },
+      props: { columns: [{ prop: "id", label: "序号" }] },
     });
     await expect.element(plain.getByText("暂无数据")).toBeInTheDocument();
     expect(plain.container.querySelector(".m-table__row--body")).toBeNull();
 
     const slotted = await render(MTable, {
-      props: { columns: [{ param: "id", label: "序号" }] },
+      props: { columns: [{ prop: "id", label: "序号" }] },
       slots: { empty: () => "千山鸟飞绝" },
     });
     await expect.element(slotted.getByText("千山鸟飞绝")).toBeInTheDocument();
@@ -94,7 +104,7 @@ describe("MTable", () => {
     const screen = await render(MTable<Term>, {
       props: {
         data: terms,
-        columns: [{ param: "name" }],
+        columns: [{ prop: "name" }],
         stripe: true,
         height: "120px",
         rowKey: "id",

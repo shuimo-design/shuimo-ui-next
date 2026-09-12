@@ -1,8 +1,14 @@
 {
   "name": "MCollapseItem",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MCollapseItem"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCollapseItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCollapseItem"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "CollapseName | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -21,15 +30,22 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
       "name": "disabled",
       "description": "禁用后不能展开 / 收起",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -39,6 +55,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "divider"
       }
     },
     {
@@ -49,6 +68,13 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -58,17 +84,26 @@
     },
     {
       "name": "change",
-      "description": "单独使用（不在 MCollapse 里）时展开 / 收起的变化"
+      "description": "单独使用（不在 MCollapse 里）时展开 / 收起的变化",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": [
     {
       "name": "title",
-      "description": "标题区"
+      "description": "标题区",
+      "react": {
+        "name": "title"
+      }
     },
     {
       "name": "default",
-      "description": "展开后的内容"
+      "description": "展开后的内容",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

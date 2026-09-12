@@ -1,4 +1,5 @@
 import type { Component } from "vue";
+import type { SvgIconName } from "@shuimo-design/core";
 import {
   IconCalendar,
   IconCheck,
@@ -16,10 +17,12 @@ import {
   IconPlus,
   IconSearch,
 } from "../../icons";
-import type { InkMarkKind } from "../../ink";
-import type { SvgIconName } from "./types";
 
-/** 图标名 → 线性图标 SFC */
+/**
+ * 图标名 → 线性图标组件。
+ * 这张表的值是 Vue 组件，下沉不到 core；React 包那边有一张一模一样的表。
+ * 「哪些名字有笔触版」是纯数据，在 core 的 SVG_INK_MARKS 里只有一份。
+ */
 export const SVG_ICONS: Record<SvgIconName, Component> = {
   calendar: IconCalendar,
   check: IconCheck,
@@ -36,15 +39,4 @@ export const SVG_ICONS: Record<SvgIconName, Component> = {
   minus: IconMinus,
   plus: IconPlus,
   search: IconSearch,
-};
-
-/** 有笔触版的图标名 → 素材库里的记号种类；没列的只有线性版 */
-export const SVG_INK_MARKS: Partial<Record<SvgIconName, InkMarkKind>> = {
-  check: "check",
-  close: "cross",
-  "chevron-down": "chevronDown",
-  "chevron-right": "chevronRight",
-  dot: "dot",
-  minus: "minus",
-  plus: "plus",
 };

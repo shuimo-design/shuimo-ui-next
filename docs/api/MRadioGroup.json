@@ -1,17 +1,27 @@
 {
   "name": "MRadioGroup",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MRadioGroup"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MRadioGroup"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MRadioGroup"
+    }
   },
   "attributes": [
     {
       "name": "disabled",
       "description": "整组禁用",
+      "default": "false",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
@@ -22,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "\"horizontal\" | \"vertical\" | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
@@ -31,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -39,6 +55,13 @@
       "value": {
         "kind": "expression",
         "type": "RadioValue | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": [
+          "defaultValue",
+          "onValueChange"
+        ]
       }
     }
   ],
@@ -48,12 +71,18 @@
     },
     {
       "name": "change",
-      "description": "用户操作导致选中项变化"
+      "description": "用户操作导致选中项变化",
+      "react": {
+        "name": "onChange"
+      }
     }
   ],
   "slots": [
     {
-      "name": "default"
+      "name": "default",
+      "react": {
+        "name": "children"
+      }
     }
   ]
 }

@@ -1,8 +1,14 @@
 {
   "name": "MMenuItem",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MMenuItem"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MMenuItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MMenuItem"
+    }
   },
   "attributes": [
     {
@@ -12,6 +18,9 @@
       "value": {
         "kind": "expression",
         "type": "MenuKey"
+      },
+      "react": {
+        "name": "name"
       }
     },
     {
@@ -22,6 +31,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "label"
       }
     },
     {
@@ -32,16 +44,21 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
       }
     },
     {
       "name": "data",
       "description": "原始数据，透传到事件的 item.data 上",
-      "default": "undefined",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "MenuItemData | undefined"
+      },
+      "react": {
+        "name": "data"
       }
     }
   ],
@@ -49,11 +66,17 @@
   "slots": [
     {
       "name": "default",
-      "description": "子菜单：放更多 MMenuItem"
+      "description": "子菜单：放更多 MMenuItem",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "label",
-      "description": "自定义文字，作用域 { item, level }"
+      "description": "自定义文字，作用域 { item, level }",
+      "react": {
+        "name": "renderLabel"
+      }
     }
   ]
 }

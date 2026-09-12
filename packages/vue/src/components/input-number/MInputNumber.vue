@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import { computed, ref, useAttrs, useTemplateRef, watch } from "vue";
+import {
+  formatNumber,
+  inputNumberAriaBound,
+  inputNumberBrush,
+  inputNumberClasses,
+  inputNumberInk,
+  inputNumberStepDisabled,
+  parseNumberText,
+  sanitizeNumberText,
+  stepNumber,
+  INPUT_NUMBER_DECREASE_LABEL,
+  INPUT_NUMBER_INCREASE_LABEL,
+  type InputNumberEmits,
+  type InputNumberProps,
+} from "@shuimo-design/core";
 import { IconMinus, IconPlus } from "../../icons";
-import { brushLineUrl } from "../../ink";
-import { inkMarkUrl } from "../../ink";
-import { FIELD_STROKE } from "../../internal/field-stroke";
 import { useDisabled, useFormItem } from "../../internal/form-item";
 import { useBrushBorder } from "../../ink";
-import type { InputNumberEmits, InputNumberProps } from "./types";
 
 defineOptions({ name: "MInputNumber", inheritAttrs: false });
 
@@ -30,92 +41,41 @@ const nativeAttrs = computed(() => {
   const { class: _c, style: _s, ...rest } = attrs;
   return rest;
 });
+// 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水
 const formItem = useFormItem();
 const disabled = useDisabled(() => disabledProp);
 const focused = ref(false);
 const native = useTemplateRef<HTMLInputElement>("native");
 const root = useTemplateRef<HTMLElement>("root");
 // 外框和输入框共用同一套细笔触参数，两者并排时边框粗细一致
-useBrushBorder(root, FIELD_STROKE);
-// 水墨皮肤下，加减号换成素材库里一笔写出的记号，按钮与输入区之间隔一道按控件高度生成的短竖笔
-const divider = brushLineUrl({ seed: 7, length: 36, thickness: 1.2, vertical: true });
-const inkStyle = {
-  "--m-input-number-plus": `url("${inkMarkUrl("plus", { seed: 4, strokeWidth: 2.2 })}")`,
-  "--m-input-number-minus": `url("${inkMarkUrl("minus", { seed: 4, strokeWidth: 2.2 })}")`,
-  "--m-input-number-divider": `url("${divider.url}")`,
-  "--m-input-number-divider-band": `${divider.width}px`,
-};
+useBrushBorder(root, inputNumberBrush());
+// 加减号和中间那道短竖笔都在 core 里生成，两个壳共用同一份遮罩
+const inkStyle = inputNumberInk();
 
-/** 小数点后有几位；用来把浮点加减的结果修回来（0.1 + 0.2） */
-function decimalsOf(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  const text = String(value);
-  const dot = text.indexOf(".");
-  return dot < 0 ? 0 : text.length - dot - 1;
-}
-
-/** 钳制到 min/max 并按 precision 取整 */
-function normalize(value: number): number {
-  const clamped = Math.min(max, Math.max(min, value));
-  return precision === undefined ? clamped : Number(clamped.toFixed(precision));
-}
-
-function format(value: number | undefined): string {
-  if (value === undefined) return "";
-  return precision === undefined ? String(value) : value.toFixed(precision);
-}
+/** 所有算术（钳制、取整、清洗、解析、步进）都在 core，这里只传边界 */
+const bounds = computed(() => ({ min, max, precision }));
 
 /** 显示的文本；输入过程中允许 `-`、`1.` 这类中间态 */
-const text = ref(format(model.value));
+const text = ref(formatNumber(model.value, precision));
 watch(model, (value) => {
-  text.value = format(value);
+  text.value = formatNumber(value, precision);
 });
-
-/** 键入时的清洗：只留数字 / 一个前置 `-` / 一个 `.`；`.` 开头补 `0.`；去前导 0；按 precision 截断 */
-function sanitize(raw: string): string {
-  let out = "";
-  let dotted = false;
-  for (const ch of raw) {
-    if (ch >= "0" && ch <= "9") out += ch;
-    else if (ch === "-" && out === "") out += ch;
-    else if (ch === "." && !dotted && precision !== 0) {
-      dotted = true;
-      out += ch;
-    }
-  }
-  out = out.replace(/^(-?)\./, "$10.");
-  out = out.replace(/^(-?)0+(?=\d)/, "$1");
-  if (precision !== undefined) {
-    const dot = out.indexOf(".");
-    if (dot >= 0) out = out.slice(0, dot + 1 + precision);
-  }
-  return out;
-}
-
-/** 把文本解析成数：空串是 undefined，解析不了是 NaN */
-function parse(raw: string): number | undefined {
-  let s = raw.endsWith(".") ? raw.slice(0, -1) : raw;
-  if (s === "-") s = "";
-  if (s === "") return undefined;
-  const n = Number(s);
-  return Number.isFinite(n) ? normalize(n) : Number.NaN;
-}
 
 function write(next: number | undefined) {
   const old = model.value;
-  text.value = format(next);
+  text.value = formatNumber(next, precision);
   if (next !== old) {
     model.value = next;
     emit("change", next, old);
   }
-  formItem?.validate("change");
+  formItem.value.validate("change");
 }
 
 /** 提交：清洗文本写回 model，非法则回退到旧值 */
 function commit() {
-  const parsed = parse(text.value);
+  const parsed = parseNumberText(text.value, bounds.value);
   if (parsed !== undefined && Number.isNaN(parsed)) {
-    text.value = format(model.value);
+    text.value = formatNumber(model.value, precision);
     return;
   }
   write(parsed);
@@ -123,24 +83,45 @@ function commit() {
 
 function stepBy(direction: 1 | -1) {
   if (disabled.value || readonly) return;
-  const typed = parse(text.value);
-  const base = typed === undefined || Number.isNaN(typed) ? (model.value ?? normalize(0)) : typed;
-  const digits = Math.max(decimalsOf(base), decimalsOf(step));
-  write(normalize(Number((base + direction * step).toFixed(digits))));
+  write(
+    stepNumber({ text: text.value, value: model.value, step, direction, bounds: bounds.value }),
+  );
 }
 
-const decreaseDisabled = computed(
-  () => disabled.value || readonly || (model.value !== undefined && model.value <= min),
+const classes = computed(() =>
+  inputNumberClasses({
+    disabled: disabled.value,
+    readonly,
+    focused: focused.value,
+    controls,
+  }),
 );
-const increaseDisabled = computed(
-  () => disabled.value || readonly || (model.value !== undefined && model.value >= max),
+const decreaseDisabled = computed(() =>
+  inputNumberStepDisabled({
+    direction: -1,
+    value: model.value,
+    disabled: disabled.value,
+    readonly,
+    min,
+    max,
+  }),
 );
-const ariaMin = computed(() => (Number.isFinite(min) ? min : undefined));
-const ariaMax = computed(() => (Number.isFinite(max) ? max : undefined));
+const increaseDisabled = computed(() =>
+  inputNumberStepDisabled({
+    direction: 1,
+    value: model.value,
+    disabled: disabled.value,
+    readonly,
+    min,
+    max,
+  }),
+);
+const ariaMin = computed(() => inputNumberAriaBound(min));
+const ariaMax = computed(() => inputNumberAriaBound(max));
 
 function onInput(event: Event) {
   const el = event.target as HTMLInputElement;
-  const next = sanitize(el.value);
+  const next = sanitizeNumberText(el.value, precision);
   if (el.value !== next) el.value = next;
   text.value = next;
   emit("input", next);
@@ -164,7 +145,7 @@ function onBlur(event: FocusEvent) {
   focused.value = false;
   commit();
   emit("blur", event);
-  formItem?.validate("blur");
+  formItem.value.validate("blur");
 }
 
 function focus() {
@@ -183,23 +164,14 @@ defineExpose({ focus, blur, select });
 <template>
   <div
     ref="root"
-    class="m-input-number"
-    :class="[
-      {
-        'm-input-number--disabled': disabled,
-        'm-input-number--readonly': readonly,
-        'm-input-number--focused': focused,
-        'm-input-number--controls': controls,
-      },
-      $attrs.class,
-    ]"
+    :class="[classes, $attrs.class]"
     :style="[$attrs.style as string | undefined, inkStyle]"
   >
     <button
       v-if="controls"
       type="button"
       class="m-input-number__decrease"
-      aria-label="减少"
+      :aria-label="INPUT_NUMBER_DECREASE_LABEL"
       tabindex="-1"
       :disabled="decreaseDisabled"
       @mousedown.prevent
@@ -210,7 +182,7 @@ defineExpose({ focus, blur, select });
     </button>
     <input
       v-bind="nativeAttrs"
-      :id="formItem?.id.value"
+      :id="formItem.id"
       ref="native"
       class="m-input-number__native"
       type="text"
@@ -234,7 +206,7 @@ defineExpose({ focus, blur, select });
       v-if="controls"
       type="button"
       class="m-input-number__increase"
-      aria-label="增加"
+      :aria-label="INPUT_NUMBER_INCREASE_LABEL"
       tabindex="-1"
       :disabled="increaseDisabled"
       @mousedown.prevent

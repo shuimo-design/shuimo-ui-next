@@ -1,17 +1,27 @@
 {
   "name": "MDrawer",
   "source": {
-    "module": "@shuimo-design/vue",
-    "symbol": "MDrawer"
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDrawer"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDrawer"
+    }
   },
   "attributes": [
     {
       "name": "mask",
       "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+      "default": "true",
       "required": false,
       "value": {
         "kind": "expression",
         "type": "boolean | ModalMask | undefined"
+      },
+      "react": {
+        "name": "mask"
       }
     },
     {
@@ -22,6 +32,9 @@
       "value": {
         "kind": "expression",
         "type": "DrawerDirection | undefined"
+      },
+      "react": {
+        "name": "direction"
       }
     },
     {
@@ -31,6 +44,9 @@
       "value": {
         "kind": "expression",
         "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "size"
       }
     },
     {
@@ -41,6 +57,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closeBtn"
       }
     },
     {
@@ -51,6 +70,9 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closeOnEsc"
       }
     },
     {
@@ -60,6 +82,9 @@
       "value": {
         "kind": "expression",
         "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
       }
     },
     {
@@ -70,6 +95,9 @@
       "value": {
         "kind": "expression",
         "type": "string | boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
       }
     },
     {
@@ -80,6 +108,9 @@
       "value": {
         "kind": "expression",
         "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
       }
     },
     {
@@ -89,6 +120,13 @@
       "value": {
         "kind": "expression",
         "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "open",
+        "extra": [
+          "defaultOpen",
+          "onOpenChange"
+        ]
       }
     }
   ],
@@ -97,30 +135,48 @@
       "name": "update:modelValue"
     },
     {
-      "name": "close",
-      "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
+      "name": "open",
+      "description": "变为显示",
+      "react": {
+        "name": "onOpen"
+      }
     },
     {
-      "name": "open",
-      "description": "变为显示"
+      "name": "close",
+      "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）",
+      "react": {
+        "name": "onClose"
+      }
     }
   ],
   "slots": [
     {
       "name": "default",
-      "description": "抽屉内容"
+      "description": "抽屉内容",
+      "react": {
+        "name": "children"
+      }
     },
     {
       "name": "active",
-      "description": "触发元素：点一下就打开"
+      "description": "触发元素：点一下就打开",
+      "react": {
+        "name": "active"
+      }
     },
     {
       "name": "header",
-      "description": "头部，替代 title"
+      "description": "头部，替代 title",
+      "react": {
+        "name": "header"
+      }
     },
     {
       "name": "footer",
-      "description": "底部操作区"
+      "description": "底部操作区",
+      "react": {
+        "name": "footer"
+      }
     }
   ]
 }

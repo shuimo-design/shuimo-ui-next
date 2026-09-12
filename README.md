@@ -1,35 +1,56 @@
 # shuimo-ui next
 
-水墨风 Vue 组件库的下一代。59 个组件，宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG，仓库里没有一张位图。
+水墨风组件库的下一代，**同时支持 Vue 3 和 React**。59 个组件，宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG，仓库里没有一张位图。
 
-**组件文档（演练场）：<https://shuimo-ui-next.vercel.app>**
+**组件文档（演练场）：<https://shuimo-ui-next.vercel.app>** —— 每个组件页把 Vue 和 React 两边的示例并排放，用的是同一个水墨引擎实例。
 
 > 开发中，尚未发布到 npm（当前版本 `0.0.0`）。想试先克隆本仓库跑 `pnpm dev`。
 
-## 和旧版 shuimo-ui 的区别
+## 三个包，一份实现
 
-- **单包**：`@shuimo-design/ui` 一个包装完，不再分 core / vue / theme。
-- **SFC**：组件是 Vue 3.5 单文件组件，props / emits / slots 的类型写在同目录 `types.ts` 上，IDE 提示和文档 API 表共用同一份 JSDoc。
-- **水墨改成算出来的**：所有纹理和笔触是运行时生成的 SVG，给定 seed 可复现，暗色主题下自动换调子，不再有需要 `invert(1)` 的贴图。
-- **双向绑定统一 `v-model`**：旧的 `visible` / `checked` / `isActive` 这类各自为政的开关 prop 都并进去了。
+| 包                     | 装什么                                                      | 依赖 |
+| ---------------------- | ----------------------------------------------------------- | ---- |
+| `@shuimo-design/core`  | 全部逻辑、全部样式、水墨引擎。**零框架依赖**的纯 TypeScript | 无   |
+| `@shuimo-design/vue`   | Vue 3 的壳：SFC 模板 + 绑定                                 | core |
+| `@shuimo-design/react` | React 19 的壳：JSX + 绑定                                   | core |
 
-破坏性改动逐条见 [notes/MIGRATION.md](./notes/MIGRATION.md)。
+两个壳里**只有模板结构**。状态机、几何计算、SVG 生成、焦点管理、滚动锁、定位、7000 行 CSS —— 全在 core，只此一份。两边的组件名、prop 名、类名、`data-*` 属性完全对得上，所以同一套样式两边通用。
+
+这条线由机检守着，不靠自觉：
+
+- `pnpm check:arch` —— core 里不许出现任何框架；两边都落地的组件，壳里不许出现 `document.` / `setTimeout` / `ResizeObserver` / `Math.` 之类的 token（出现了就说明有逻辑没下沉）；两个壳的导出必须对得上。
+- `pnpm check:style` —— 样式只在 core；core 的 `.ts` 不许 import `.css`（纯 Node 跑服务端渲染时会真的去加载然后崩）；每份样式都必须在 `styles/index.css` 那张清单里。
 
 ## 用法
 
+### Vue
+
 ```ts
 import { createApp } from "vue";
-// 样式被抽成单独一个文件，必须显式引入
-import "@shuimo-design/ui/style.css";
-import { createShuimo } from "@shuimo-design/ui";
-import { createInkEngine } from "@shuimo-design/ui/ink";
+import "@shuimo-design/vue/style.css"; // 样式是单独一个文件，必须显式引
+import { createShuimo } from "@shuimo-design/vue";
+import { createInkEngine } from "@shuimo-design/core/ink";
 
-// 装水墨滤镜；不调用就只有基础层样式，组件照常能用
-createInkEngine();
+createInkEngine(); // 装水墨滤镜；不调用就只有基础层样式，组件照常能用
 createApp(App).use(createShuimo()).mount("#app");
 ```
 
-四个入口：`.` 组件、`./ink` 水墨引擎、`./nuxt` Nuxt 模块、`./resolver` 按需引入。纯 ESM。
+### React
+
+```tsx
+import "@shuimo-design/react/style.css";
+import { MButton } from "@shuimo-design/react";
+import { createInkEngine } from "@shuimo-design/core/ink";
+
+createInkEngine();
+export default () => <MButton type="primary" text="落笔" />;
+```
+
+Vue 的 `v-model` 在 React 侧是**受控 / 非受控两套都支持**的一组 prop：`v-model:open` → `open` + `onOpenChange` + `defaultOpen`。具名插槽对应 render prop（`#option` → `renderOption`）。每个组件页的 API 表两列并排，照着写即可。
+
+两边都支持服务端渲染（Vue SSR / Next.js）。弹层类组件（对话框、抽屉、浮层、消息）不进服务端 HTML，挂载后才出现 —— 这是两边统一的口径。
+
+Vue 独有的两个入口留着：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`@shuimo-design/vue/resolver`（按需引入）。纯 ESM。
 
 ### 关掉水墨皮肤
 
@@ -43,26 +64,35 @@ createApp(App).use(createShuimo()).mount("#app");
 pnpm install
 pnpm dev          # 起演练场（也就是文档站），localhost:5180
 pnpm check        # oxlint + oxfmt
-pnpm typecheck    # vue-tsc
-pnpm test         # vitest 浏览器模式（Chromium），364 条
-pnpm build        # vp pack 出库 + 生成 web-types 和 docs/api/*.json + 样式约定检查
+pnpm check:arch   # 守住「不重复实现」那条线
+pnpm check:style  # 守住「样式只此一份」那条线
+pnpm check:ssr    # 纯 Node 里把两边每个组件都渲染一遍（要先 build）
+pnpm typecheck    # tsc + vue-tsc，三个包
+pnpm test         # vitest 浏览器模式（Chromium），三个包共 681 条
+pnpm build        # vp pack 出三个包 + 生成 web-types 和 docs/api/*.json
 pnpm bench        # 把笔触 / 落墨样张渲染成图落盘，供人眼检查
 ```
 
-演练场吃的是 `packages/ui/dist`，所以改完库要先 `pnpm build` 再看效果。
+演练场用 `@shuimo-design/source` 这个自定义 exports 条件直接吃三个包的源码，**clone 下来不用先 build 就能跑**，改库源码也热更新。线上构建走 `dist`，顺带成为产物出口的冒烟测试。
 
 ## 目录
 
 ```
-packages/ui/src/
-├─ components/       # 47 个目录 / 59 个组件：MXxx.vue + xxx.css + types.ts + MXxx.test.ts
+packages/core/src/
+├─ components/       # 每个组件的 types.ts（Props/Emits/Slots，文档的唯一事实来源）
+│                    # + index.ts（纯计算与控制器）+ xxx.css
 ├─ ink/              # 水墨引擎：assets 素材生成器、paper 宣纸、stroke 笔触边框、
 │                    # stamp 印章、reveal 擦入、registry 素材登记表
-├─ theme/            # 传统色、语义 token、@layer 声明
-├─ icons/  internal/  nuxt/  resolver.ts
-playground/          # 演练场，每个组件一页，页底自动渲染 API 表
+├─ runtime/          # 跨框架原语：Store、observeSize、observeOutside、id
+├─ overlay/          # 模态、浮层定位、开合时序、消息队列
+├─ context/          # 上下文的「形状」：纯值接口 + 默认值 + 登记表
+├─ transition/       # 过渡类名时序 runner（Vue 用原生 Transition，React 用它）
+├─ theme/  icons/  styles/
+packages/vue/src/    # SFC 壳 + Nuxt 模块 + resolver
+packages/react/src/  # JSX 壳
+playground/          # 演练场，每个组件一页，两边示例并排，页底自动渲染 API 表
 notes/               # 方案、写法约定、迁移说明
-docs/api/            # 组件 API 元数据（构建生成）
+docs/api/            # 组件 API 元数据（从 core 的类型生成）
 ```
 
 ## 文档

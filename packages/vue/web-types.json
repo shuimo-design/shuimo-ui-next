@@ -17,6 +17,7 @@
             {
               "name": "type",
               "description": "按钮语义类型：default 灰蓝、primary 蓝、confirm 青、error 红、warning 黄，都是实色块；text 只有文字",
+              "default": "\"default\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -26,6 +27,7 @@
             {
               "name": "text",
               "description": "按钮文字，有默认插槽时被插槽覆盖",
+              "default": "\"\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -35,6 +37,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -44,6 +47,7 @@
             {
               "name": "loading",
               "description": "加载中：文字前出现旋转墨点，期间不响应点击",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -62,6 +66,7 @@
             {
               "name": "nativeType",
               "description": "原生 button 的 type",
+              "default": "\"button\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -276,7 +281,6 @@
             {
               "name": "top",
               "description": "单独控制上边，不传则听 border 的",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -286,7 +290,6 @@
             {
               "name": "right",
               "description": "单独控制右边，不传则听 border 的",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -296,7 +299,6 @@
             {
               "name": "bottom",
               "description": "单独控制下边，不传则听 border 的",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -306,7 +308,6 @@
             {
               "name": "left",
               "description": "单独控制左边，不传则听 border 的",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -316,7 +317,6 @@
             {
               "name": "mask",
               "description": "内容蒙层：半透明纸色加背景模糊，压在远山或图片上时字更清楚。默认 false",
-              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -478,6 +478,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -653,6 +654,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -713,6 +715,7 @@
             {
               "name": "disabled",
               "description": "整组禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -781,6 +784,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -953,11 +957,11 @@
           ],
           "events": [
             {
-              "name": "click"
-            },
-            {
               "name": "close",
               "description": "点了关闭按钮"
+            },
+            {
+              "name": "click"
             }
           ],
           "slots": [
@@ -994,6 +998,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1043,6 +1048,7 @@
             {
               "name": "disabled",
               "description": "整组禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1276,6 +1282,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1334,12 +1341,12 @@
               "name": "update:modelValue"
             },
             {
-              "name": "input",
-              "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）"
-            },
-            {
               "name": "change",
               "description": "值提交后（失焦、回车、按钮或方向键增减），参数是新值与旧值"
+            },
+            {
+              "name": "input",
+              "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）"
             },
             {
               "name": "focus"
@@ -1390,6 +1397,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1449,12 +1457,12 @@
               "name": "update:modelValue"
             },
             {
-              "name": "input",
-              "description": "拖动过程中每次值变化"
-            },
-            {
               "name": "change",
               "description": "松手 / 键盘调整后的最终值"
+            },
+            {
+              "name": "input",
+              "description": "拖动过程中每次值变化"
             }
           ],
           "slots": []
@@ -1548,6 +1556,7 @@
             {
               "name": "disabled",
               "description": "禁用后不能展开 / 收起",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1659,7 +1668,6 @@
             {
               "name": "marker",
               "description": "是否显示项目符号；不传则跟随 MList",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1865,6 +1873,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1961,7 +1970,6 @@
             },
             {
               "name": "modelValue",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1974,26 +1982,16 @@
               "name": "update:modelValue"
             },
             {
-              "name": "input",
-              "description": "过滤框里的文字变化"
-            },
-            {
               "name": "change",
               "description": "选中值变化"
             },
             {
-              "name": "focus"
-            },
-            {
-              "name": "blur"
-            },
-            {
-              "name": "clear",
-              "description": "点了清空按钮"
-            },
-            {
               "name": "select",
               "description": "点选了某个选项，参数是原始选项（多选时取消勾选也会触发）"
+            },
+            {
+              "name": "input",
+              "description": "过滤框里的文字变化"
             },
             {
               "name": "visibleChange",
@@ -2002,6 +2000,16 @@
             {
               "name": "removeTag",
               "description": "多选时点了 Tag 的关闭"
+            },
+            {
+              "name": "clear",
+              "description": "点了清空按钮"
+            },
+            {
+              "name": "focus"
+            },
+            {
+              "name": "blur"
             }
           ],
           "slots": [
@@ -2058,6 +2066,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -2122,12 +2131,12 @@
               "description": "值变化，参数是格式化后的字符串，清空为 null"
             },
             {
-              "name": "clear",
-              "description": "点了清空按钮"
-            },
-            {
               "name": "visibleChange",
               "description": "面板开合"
+            },
+            {
+              "name": "clear",
+              "description": "点了清空按钮"
             }
           ],
           "slots": []
@@ -2260,11 +2269,11 @@
           ],
           "events": [
             {
-              "name": "visibleChange",
-              "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+              "name": "update:show"
             },
             {
-              "name": "update:show"
+              "name": "visibleChange",
+              "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
             }
           ],
           "slots": [
@@ -2406,11 +2415,11 @@
           ],
           "events": [
             {
-              "name": "visibleChange",
-              "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+              "name": "update:show"
             },
             {
-              "name": "update:show"
+              "name": "visibleChange",
+              "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
             }
           ],
           "slots": [
@@ -2434,6 +2443,7 @@
             {
               "name": "mask",
               "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+              "default": "true",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -2522,12 +2532,12 @@
               "name": "update:modelValue"
             },
             {
-              "name": "close",
-              "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
-            },
-            {
               "name": "open",
               "description": "变为显示"
+            },
+            {
+              "name": "close",
+              "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
             }
           ],
           "slots": [
@@ -2559,6 +2569,7 @@
             {
               "name": "mask",
               "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+              "default": "true",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -2648,12 +2659,12 @@
               "name": "update:modelValue"
             },
             {
-              "name": "close",
-              "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
-            },
-            {
               "name": "open",
               "description": "变为显示"
+            },
+            {
+              "name": "close",
+              "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
             }
           ],
           "slots": [
@@ -2798,11 +2809,12 @@
             },
             {
               "name": "mask",
-              "description": "遮罩配置，默认 { show: true, clickClose: true }",
+              "description": "遮罩配置，默认 { show: true, clickClose: true }；传布尔只控制显示",
+              "default": "true",
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "ConfirmMask | undefined"
+                "type": "boolean | ModalMask | undefined"
               }
             },
             {
@@ -2836,6 +2848,16 @@
               }
             },
             {
+              "name": "closeOnEsc",
+              "description": "按 Esc 是否等同取消，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
               "name": "seed",
               "description": "笔触种子，默认 1",
               "default": "1",
@@ -2857,11 +2879,11 @@
           ],
           "events": [
             {
-              "name": "confirm",
-              "description": "点了确定"
+              "name": "update:open"
             },
             {
-              "name": "update:open"
+              "name": "confirm",
+              "description": "点了确定"
             },
             {
               "name": "cancel",
@@ -2882,6 +2904,37 @@
               "description": "替代底部按钮，参数里给了确定 / 取消两个方法"
             }
           ]
+        },
+        {
+          "name": "MOverlayOutlet",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MOverlayOutlet"
+          },
+          "attributes": [
+            {
+              "name": "messages",
+              "description": "要接的消息队列，默认是 MMessage.* 用的那一份",
+              "default": "defaultMessageQueue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MessageQueue | undefined"
+              }
+            },
+            {
+              "name": "confirms",
+              "description": "要接的确认框队列，默认是 MConfirm.show 用的那一份",
+              "default": "defaultConfirmQueue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "ConfirmQueue | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": []
         },
         {
           "name": "MForm",
@@ -3051,7 +3104,6 @@
             {
               "name": "showMessage",
               "description": "覆盖表单的 showMessage",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -3380,6 +3432,7 @@
             {
               "name": "disabled",
               "description": "禁用",
+              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -3407,14 +3460,14 @@
           ],
           "events": [
             {
-              "name": "change",
-              "description": "当前页变化"
-            },
-            {
               "name": "update:current"
             },
             {
               "name": "update:pageSize"
+            },
+            {
+              "name": "change",
+              "description": "当前页变化"
             },
             {
               "name": "sizeChange",
@@ -3442,16 +3495,16 @@
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "T[] | undefined"
+                "type": "readonly Row[] | undefined"
               }
             },
             {
               "name": "columns",
-              "description": "列声明；不传则由默认插槽里的 MTableColumn 决定",
+              "description": "列声明，顺序就是列序；不传则从子组件 MTableColumn 上收集",
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "TableColumnDef[] | undefined"
+                "type": "readonly TableColumnConfig<Row, unknown>[] | undefined"
               }
             },
             {
@@ -3460,7 +3513,7 @@
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "TableRowKey<T> | undefined"
+                "type": "TableRowKey<Row> | undefined"
               }
             },
             {
@@ -3512,7 +3565,7 @@
           "slots": [
             {
               "name": "default",
-              "description": "放 MTableColumn，用组件的方式声明列"
+              "description": "放 MTableColumn，用组件的方式声明列（语法糖；传了 columns 就不看这里）"
             },
             {
               "name": "empty",
@@ -3528,8 +3581,8 @@
           },
           "attributes": [
             {
-              "name": "param",
-              "description": "列对应的字段名，取值 row[param]",
+              "name": "prop",
+              "description": "列对应的字段名，取值 row[prop]",
               "required": true,
               "value": {
                 "kind": "expression",
@@ -3539,6 +3592,7 @@
             {
               "name": "label",
               "description": "列名；head 插槽优先",
+              "default": "\"\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -3572,7 +3626,7 @@
             },
             {
               "name": "head",
-              "description": "表头内容"
+              "description": "表头内容，作用域 { column }"
             }
           ]
         },
@@ -3583,6 +3637,15 @@
             "symbol": "MGrid"
           },
           "attributes": [
+            {
+              "name": "cells",
+              "description": "每个格子的配置，顺序就是排列顺序；不传则从子组件 MCell 上收集",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "readonly GridCellConfig<unknown>[] | undefined"
+              }
+            },
             {
               "name": "w",
               "description": "格子的默认宽 px；格子自己传了 w 以自己的为准",
@@ -3631,6 +3694,7 @@
             {
               "name": "gapRotate",
               "description": "横向排列时每道分隔的倾斜角度（度），第 i 项作用在第 i 和 i+1 个格子之间；正值为 \"/\"，负值为 \"\\\"",
+              "default": "[]",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -3661,7 +3725,7 @@
           "slots": [
             {
               "name": "default",
-              "description": "放 MCell"
+              "description": "放 MCell（语法糖；传了 cells 就不看这里）"
             }
           ]
         },
@@ -3847,12 +3911,12 @@
           ],
           "events": [
             {
-              "name": "scroll",
-              "description": "滚动时，参数是 scrollTop"
-            },
-            {
               "name": "reachBottom",
               "description": "滚到了底"
+            },
+            {
+              "name": "scroll",
+              "description": "滚动时，参数是 scrollTop"
             }
           ],
           "slots": [
@@ -3920,15 +3984,15 @@
               "name": "update:modelValue"
             },
             {
-              "name": "change",
-              "description": "当前项变化（点叶子项），参数是新 key"
-            },
-            {
               "name": "update:expandedKeys"
             },
             {
               "name": "nodeClick",
               "description": "点击菜单项（禁用项不触发）；键盘回车 / 空格也算"
+            },
+            {
+              "name": "change",
+              "description": "当前项变化（点叶子项），参数是新 key"
             },
             {
               "name": "expand",
@@ -3985,7 +4049,6 @@
             {
               "name": "data",
               "description": "原始数据，透传到事件的 item.data 上",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4100,7 +4163,6 @@
             {
               "name": "mask",
               "description": "遮罩模式：铺满最近的定位父元素并把内容盖住（父元素要 position: relative，v-loading 指令会自动加）",
-              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4110,6 +4172,7 @@
             {
               "name": "text",
               "description": "指示器下方的文字（也可用默认插槽）",
+              "default": "\"加载中\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4296,7 +4359,7 @@
             {
               "name": "storageKey",
               "description": "记住选择用的 localStorage 键，默认 \"shuimo-theme\"（值是 dark / light）；false 不记",
-              "default": "DARK_MODE_STORAGE_KEY",
+              "default": "\"shuimo-theme\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4315,7 +4378,6 @@
             },
             {
               "name": "modelValue",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4445,7 +4507,6 @@
             {
               "name": "size",
               "description": "印章高度（px），宽度按印文和形状算出来",
-              "default": "120",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4455,7 +4516,6 @@
             {
               "name": "mode",
               "description": "阳文（朱文，红字红框）还是阴文（白文，红底白字）",
-              "default": "\"yang\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4484,7 +4544,6 @@
             {
               "name": "sides",
               "description": "多边形边数（3 起），默认 6",
-              "default": "6",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4494,7 +4553,6 @@
             {
               "name": "orientation",
               "description": "多边形朝向：flat-top 一条边在上，point-top 一个角在上",
-              "default": "\"flat-top\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4504,7 +4562,6 @@
             {
               "name": "seed",
               "description": "随机种子：四角半径、边框磨损、印泥白斑都由它决定，同种子同章",
-              "default": "1",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4541,7 +4598,6 @@
             {
               "name": "corner",
               "description": "圆角：round 带一点随机的圆角，none 直角",
-              "default": "\"round\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4560,7 +4616,6 @@
             {
               "name": "roughness",
               "description": "边框磨损 0 ~ 1：一圈起伏加几个咬进边框的缺口，默认 0.5",
-              "default": "0.5",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4570,7 +4625,6 @@
             {
               "name": "carving",
               "description": "刀刻 0 ~ 1：文字边缘的崩口和石屑，默认 0.8",
-              "default": "0.8",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4580,7 +4634,6 @@
             {
               "name": "bleed",
               "description": "印泥 0 ~ 1：没压实的白斑和边缘起毛，默认 0.7",
-              "default": "0.7",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4644,7 +4697,6 @@
             {
               "name": "cellHeightMode",
               "description": "行高分配：uniform 等分，fit 按各行最高的字分（矮字不留空）",
-              "default": "\"uniform\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4654,7 +4706,6 @@
             {
               "name": "offsetX",
               "description": "文字在框内左右偏移，-1 贴右、0 居中、1 贴左",
-              "default": "0",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4664,7 +4715,6 @@
             {
               "name": "offsetY",
               "description": "文字在框内上下偏移，-1 贴上、0 居中、1 贴下",
-              "default": "0",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4674,7 +4724,6 @@
             {
               "name": "direction",
               "description": "ttb-rtl 竖排；circular 沿圆周排（圆章用）",
-              "default": "\"ttb-rtl\"",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4684,7 +4733,6 @@
             {
               "name": "gridLines",
               "description": "阴章的界格：列与列、行与行之间抠一道纸色",
-              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -4703,7 +4751,6 @@
             {
               "name": "rotate",
               "description": "盖章的歪斜角度（deg）",
-              "default": "0",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -5294,6 +5341,15 @@
           },
           "attributes": [
             {
+              "name": "panes",
+              "description": "每一页的配置，顺序就是标签顺序；不传则从子组件 MTabPane 上收集",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "readonly TabPaneConfig<unknown>[] | undefined"
+              }
+            },
+            {
               "name": "type",
               "description": "外形：line 导航条下一条笔触线 + 激活项一横朱笔指示器；card 每个标签一条签条（书签式），\n激活的那条纸色、朝内容区探出一截压在内容区框线上。不开水墨引擎时退回实线和 CSS 双线框",
               "default": "\"line\"",
@@ -5315,7 +5371,7 @@
             },
             {
               "name": "closable",
-              "description": "所有标签都显示关闭按钮；单个 MTabPane 可用自己的 closable 覆盖",
+              "description": "所有标签都显示关闭按钮；单页可用自己的 closable 覆盖",
               "default": "false",
               "required": false,
               "value": {
@@ -5372,7 +5428,7 @@
           "slots": [
             {
               "name": "default",
-              "description": "放 MTabPane"
+              "description": "放 MTabPane（语法糖；传了 panes 就不看这里）"
             },
             {
               "name": "extra",
@@ -5389,7 +5445,7 @@
           "attributes": [
             {
               "name": "name",
-              "description": "标签标识，写进 MTabs 的 v-model；不传则自动生成",
+              "description": "标签标识，写进 MTabs 的 v-model；不传则按书写顺序自动生成",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -5408,7 +5464,6 @@
             {
               "name": "disabled",
               "description": "禁用后不能被选中",
-              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -5418,7 +5473,6 @@
             {
               "name": "closable",
               "description": "是否显示关闭按钮；不传则跟随 MTabs",
-              "default": "undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -5428,7 +5482,6 @@
             {
               "name": "lazy",
               "description": "首次激活时才渲染内容，之后切走只是隐藏",
-              "default": "false",
               "required": false,
               "value": {
                 "kind": "expression",

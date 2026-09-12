@@ -1,0 +1,43 @@
+{
+  "name": "MOverlayOutlet",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MOverlayOutlet"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MOverlayOutlet"
+    }
+  },
+  "attributes": [
+    {
+      "name": "messages",
+      "description": "要接的消息队列，默认是 MMessage.* 用的那一份",
+      "default": "defaultMessageQueue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "MessageQueue | undefined"
+      },
+      "react": {
+        "name": "messages"
+      }
+    },
+    {
+      "name": "confirms",
+      "description": "要接的确认框队列，默认是 MConfirm.show 用的那一份",
+      "default": "defaultConfirmQueue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ConfirmQueue | undefined"
+      },
+      "react": {
+        "name": "confirms"
+      }
+    }
+  ],
+  "events": [],
+  "slots": []
+}

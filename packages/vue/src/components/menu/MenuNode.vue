@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { FunctionalComponent } from "vue";
-import { useMenuContext, type MenuTreeNode } from "./context";
+import type { MenuLabelScope, MenuTreeNode } from "@shuimo-design/core";
+import { useMenuContext } from "./context";
 import MMenuItem from "./MMenuItem.vue";
-import type { MenuLabelScope } from "./types";
 
 defineOptions({ name: "MenuNode" });
 

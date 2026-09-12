@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, inject } from "vue";
+import {
+  listItemClasses,
+  resolveListMarker,
+  type ListItemEmits,
+  type ListItemProps,
+  type ListItemSlots,
+} from "@shuimo-design/core";
 import { listKey } from "./context";
-import type { ListItemEmits, ListItemProps, ListItemSlots } from "./types";
 
 defineOptions({ name: "MListItem" });
 
@@ -11,15 +17,12 @@ const emit = defineEmits<ListItemEmits>();
 defineSlots<ListItemSlots>();
 
 const list = inject(listKey, undefined);
-const showMarker = computed(() => marker ?? list?.marker.value ?? true);
+const showMarker = computed(() => resolveListMarker(marker, list?.value));
+const classes = computed(() => listItemClasses({ active, marker: showMarker.value }));
 </script>
 
 <template>
-  <li
-    class="m-list-item"
-    :class="{ 'm-list-item--active': active, 'm-list-item--marker': showMarker }"
-    @click="emit('click', $event)"
-  >
+  <li :class="classes" @click="emit('click', $event)">
     <!-- 项目符号：一粒墨点；激活时外面再套一圈墨，点换成朱砂 -->
     <span v-if="showMarker" class="m-list-item__marker" aria-hidden="true" />
     <span class="m-list-item__inner"><slot /></span>

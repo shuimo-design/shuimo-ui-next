@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, watch } from "vue";
-import { configKey, useConfig, type ConfigContext } from "./context";
-import type { ConfigProviderProps, ConfigProviderSlots } from "./types";
+import {
+  applyConfigTheme,
+  mergeConfig,
+  DEFAULT_CONFIG,
+  type ConfigProviderProps,
+} from "@shuimo-design/core";
+import type { ConfigProviderSlots } from "@shuimo-design/core";
+import { MOverlayOutlet } from "../overlay-outlet";
+import { configKey, useConfig } from "./context";
 
 defineOptions({ name: "MConfigProvider" });
 
@@ -10,23 +17,21 @@ const { size, locale, inkTier, theme } = defineProps<ConfigProviderProps>();
 defineSlots<ConfigProviderSlots>();
 
 const parent = useConfig();
-const config = computed<ConfigContext>(() => ({
-  ...parent.value,
-  ...(size !== undefined ? { size } : {}),
-  ...(locale !== undefined ? { locale } : {}),
-  ...(inkTier !== undefined ? { inkTier } : {}),
-  ...(theme !== undefined ? { theme } : {}),
-}));
+// 合并规则（只挑传了的字段盖到外层上）在 core，两个壳共用同一份
+const config = computed(() => mergeConfig(parent.value, { size, locale, inkTier, theme }));
 provide(configKey, config);
 
-// 主题落到 html[data-theme] 上（tokens.css 只认这个属性）。只在浏览器里、挂载后写，
-// 避免 SSR 阶段碰 document；不传 theme 就完全不碰，留给 MDarkMode 或使用方
+// 最外层的 provider 自带函数式弹层的渲染出口（MMessage.success / MConfirm.show 要它才弹得出来）。
+// 只有最外层出：嵌套的 provider 再出一个，同一条消息就会渲染两遍。
+// mergeConfig 每次都返回新对象，所以"父配置就是那份恒定的默认值"正好等价于"上面没有 provider"
+const root = computed(() => parent.value === DEFAULT_CONFIG);
+
+// 主题写到 html[data-theme] 上。碰 document 的那一步在 core 里（壳里不许出现 document.），
+// 它自己会挡掉服务端；这里只负责"挂载后、theme 变了就再写一次"
 onMounted(() => {
   watch(
     () => theme,
-    (value) => {
-      if (value !== undefined) document.documentElement.dataset.theme = value;
-    },
+    (value) => applyConfigTheme(value),
     { immediate: true },
   );
 });
@@ -34,4 +39,5 @@ onMounted(() => {
 
 <template>
   <slot />
+  <MOverlayOutlet v-if="root" />
 </template>
