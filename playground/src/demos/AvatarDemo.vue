@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MAvatar } from "@shuimo-design/ui";
+import { MAvatar } from "@shuimo-design/vue";
 
 const avatarSrc =
   "data:image/svg+xml;utf8," +

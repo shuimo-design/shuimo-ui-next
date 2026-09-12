@@ -1,7 +1,7 @@
 {
   "name": "MBreadcrumbItem",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MBreadcrumbItem"
   },
   "attributes": [

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MInput } from "@shuimo-design/ui";
+import { MInput } from "@shuimo-design/vue";
 
 const value = ref("大侠可尝试修改这里");
 const text = ref("");

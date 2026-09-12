@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MDeleteIcon } from "@shuimo-design/ui";
+import { MDeleteIcon } from "@shuimo-design/vue";
 
 const items = ref(["兰亭序", "祭侄稿", "寒食帖"]);
 const clicks = ref(0);

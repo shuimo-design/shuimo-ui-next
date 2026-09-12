@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MStamp } from "@shuimo-design/ui";
+import { MButton, MStamp } from "@shuimo-design/vue";
 
 const seed = ref(7);
 const mode = ref<"yang" | "yin">("yang");

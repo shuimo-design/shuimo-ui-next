@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MButton, MEmpty } from "@shuimo-design/ui";
+import { MButton, MEmpty } from "@shuimo-design/vue";
 </script>
 
 <template>

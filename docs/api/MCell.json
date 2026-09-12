@@ -1,7 +1,7 @@
 {
   "name": "MCell",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MCell"
   },
   "attributes": [

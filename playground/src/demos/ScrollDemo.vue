@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MScroll, type ScrollPosition } from "@shuimo-design/ui";
+import { MButton, MScroll, type ScrollPosition } from "@shuimo-design/vue";
 
 const position = ref<ScrollPosition>({ scrollTop: 0, scrollLeft: 0 });
 const lines = Array.from(

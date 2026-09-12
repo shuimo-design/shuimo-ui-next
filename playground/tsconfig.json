@@ -1,5 +1,8 @@
 {
-  "extends": "../packages/ui/tsconfig.json",
-  "compilerOptions": { "types": [] },
-  "include": ["src", "env.d.ts", "vite.config.ts"]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "types": []
+  },
+  "include": ["src", "vite.config.ts"]
 }

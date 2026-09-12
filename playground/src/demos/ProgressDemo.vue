@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { MButton, MProgress } from "@shuimo-design/ui";
+import { MButton, MProgress } from "@shuimo-design/vue";
 
 const progress = ref(36);
 const loopPer = ref(0);

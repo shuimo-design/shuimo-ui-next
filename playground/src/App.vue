@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from "vue";
-import { MButton, MList, MListItem, MRicePaper } from "@shuimo-design/ui";
-import { startInkViewTransition } from "@shuimo-design/ui/ink";
+import { MButton, MList, MListItem, MRicePaper } from "@shuimo-design/vue";
+import { startInkViewTransition } from "@shuimo-design/core/ink";
 import ApiDoc from "./ApiDoc.vue";
 import { ALL_DEMOS, DEMOS } from "./registry";
 

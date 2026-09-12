@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MSkeleton, MSkeletonItem, MSwitch } from "@shuimo-design/ui";
+import { MButton, MSkeleton, MSkeletonItem, MSwitch } from "@shuimo-design/vue";
 
 const loading = ref(true);
 const animated = ref(true);

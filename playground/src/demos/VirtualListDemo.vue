@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from "vue";
-import { MButton, MInputNumber, MVirtualList, type VirtualListExpose } from "@shuimo-design/ui";
+import { MButton, MInputNumber, MVirtualList, type VirtualListExpose } from "@shuimo-design/vue";
 
 const STEMS = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 const fixed = Array.from({ length: 10_000 }, (_, i) => `${STEMS[i % 12]} · 第 ${i + 1} 项`);

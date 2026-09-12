@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MInputNumber } from "@shuimo-design/ui";
+import { MInputNumber } from "@shuimo-design/vue";
 
 const number = ref<number | undefined>(0);
 const price = ref<number | undefined>(9.5);

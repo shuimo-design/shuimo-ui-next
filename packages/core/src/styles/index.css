@@ -1,0 +1,70 @@
+/* 全量样式入口 —— 也是这个库唯一的 CSS 入口。
+   规则：core 里任何 .ts 都不许 import .css，全部样式只从这份清单进。
+   两个理由：
+   1. 纯 Node 跑服务端渲染时框架包是 external 的，Node 会真的去 import 那个 .css 然后崩；
+   2. 层叠顺序从"打包器遍历模块图的顺序"（不稳定）变成下面这份显式清单，可以直接 review。
+   新增组件样式记得往这里加一行，scripts/check-style.ts 会校验一个都不漏。 */
+
+/* 主题层：层声明必须最先，其余样式都挂在这些层里 */
+@import "../theme/layers.css";
+@import "../theme/colors.css";
+@import "../theme/tokens.css";
+@import "../theme/base.css";
+@import "../icons/icons.css";
+
+/* 墨迹引擎自带的样式 */
+
+@import "../ink/reveal/reveal.css";
+@import "../ink/stroke/stroke.css";
+@import "../ink/transition/transition.css";
+
+/* 组件之间共用的内部样式 */
+@import "../internal/modal-ink.css";
+@import "../internal/popper/popper.css";
+
+/* 组件样式，按目录名排序 */
+@import "../components/alert/alert.css";
+@import "../components/avatar/avatar.css";
+@import "../components/badge/badge.css";
+@import "../components/border/border.css";
+@import "../components/breadcrumb/breadcrumb.css";
+@import "../components/button/button.css";
+@import "../components/card/card.css";
+@import "../components/checkbox/checkbox.css";
+@import "../components/collapse/collapse.css";
+@import "../components/confirm/confirm.css";
+@import "../components/dark-mode/dark-mode.css";
+@import "../components/date-picker/date-picker.css";
+@import "../components/delete-icon/delete-icon.css";
+@import "../components/dialog/dialog.css";
+@import "../components/divider/divider.css";
+@import "../components/drawer/drawer.css";
+@import "../components/empty/empty.css";
+@import "../components/form/form.css";
+@import "../components/grid/grid.css";
+@import "../components/input/input.css";
+@import "../components/input-number/input-number.css";
+@import "../components/list/list.css";
+@import "../components/loading/loading.css";
+@import "../components/menu/menu.css";
+@import "../components/message/message.css";
+@import "../components/pagination/pagination.css";
+@import "../components/popover/popover.css";
+@import "../components/printer/printer.css";
+@import "../components/progress/progress.css";
+@import "../components/radio/radio.css";
+@import "../components/rice-paper/rice-paper.css";
+@import "../components/scroll/scroll.css";
+@import "../components/select/select.css";
+@import "../components/skeleton/skeleton.css";
+@import "../components/slider/slider.css";
+@import "../components/stamp/stamp.css";
+@import "../components/steps/steps.css";
+@import "../components/svg/svg.css";
+@import "../components/switch/switch.css";
+@import "../components/table/table.css";
+@import "../components/tabs/tabs.css";
+@import "../components/tag/tag.css";
+@import "../components/tooltip/tooltip.css";
+@import "../components/tree/tree.css";
+@import "../components/virtual-list/virtual-list.css";

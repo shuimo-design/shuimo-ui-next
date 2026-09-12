@@ -1,7 +1,7 @@
 {
   "name": "MGrid",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MGrid"
   },
   "attributes": [

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MAlert, MButton } from "@shuimo-design/ui";
+import { MAlert, MButton } from "@shuimo-design/vue";
 
 const key = ref(0);
 </script>

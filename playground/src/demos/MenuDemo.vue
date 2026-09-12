@@ -6,7 +6,7 @@ import {
   type MenuItem,
   type MenuItemData,
   type MenuKey,
-} from "@shuimo-design/ui";
+} from "@shuimo-design/vue";
 
 // 照旧文档站左侧导航的结构
 const menuData: MenuItemData[] = [

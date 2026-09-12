@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MBadge, MButton } from "@shuimo-design/ui";
+import { MBadge, MButton } from "@shuimo-design/vue";
 
 const count = ref(3);
 </script>

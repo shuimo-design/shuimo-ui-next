@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MRadio, MRadioGroup } from "@shuimo-design/ui";
+import { MRadio, MRadioGroup } from "@shuimo-design/vue";
 
 // 旧文档「普通单选框」：单个 radio 直接 v-model，选中后把 value 写进去
 const value = ref("");

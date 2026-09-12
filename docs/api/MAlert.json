@@ -1,7 +1,7 @@
 {
   "name": "MAlert",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MAlert"
   },
   "attributes": [

@@ -1,7 +1,7 @@
 {
   "name": "MCollapseItem",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MCollapseItem"
   },
   "attributes": [

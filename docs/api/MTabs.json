@@ -1,7 +1,7 @@
 {
   "name": "MTabs",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MTabs"
   },
   "attributes": [

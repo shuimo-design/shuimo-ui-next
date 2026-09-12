@@ -1,7 +1,7 @@
 {
   "name": "MStamp",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MStamp"
   },
   "attributes": [

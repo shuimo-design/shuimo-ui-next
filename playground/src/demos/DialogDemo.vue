@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MDialog, MInput } from "@shuimo-design/ui";
+import { MButton, MDialog, MInput } from "@shuimo-design/vue";
 
 const controlled = ref(false);
 const bound = ref(false);

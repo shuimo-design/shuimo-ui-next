@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MDrawer, type DrawerDirection } from "@shuimo-design/ui";
+import { MButton, MDrawer, type DrawerDirection } from "@shuimo-design/vue";
 
 const visible = ref(false);
 const direction = ref<DrawerDirection>("right");

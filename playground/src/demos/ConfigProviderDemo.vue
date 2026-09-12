@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineComponent, h, ref } from "vue";
-import { MButton, MConfigProvider, useConfig, type ConfigSize } from "@shuimo-design/ui";
+import { MButton, MConfigProvider, useConfig, type ConfigSize } from "@shuimo-design/vue";
 
 // 一个只负责把 useConfig() 读到的值打出来的小组件，模拟"别的组件读全局配置"
 const ConfigProbe = defineComponent({

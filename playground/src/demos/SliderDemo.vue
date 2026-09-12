@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MSlider, type SliderValue } from "@shuimo-design/ui";
+import { MSlider, type SliderValue } from "@shuimo-design/vue";
 
 const basic = ref(0);
 const bounded = ref(25);

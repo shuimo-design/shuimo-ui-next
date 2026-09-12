@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MCheckbox, MCheckboxGroup, type CheckboxValue } from "@shuimo-design/ui";
+import { MCheckbox, MCheckboxGroup, type CheckboxValue } from "@shuimo-design/vue";
 
 // 旧文档「普通复选框」：默认勾上
 const value = ref(true);

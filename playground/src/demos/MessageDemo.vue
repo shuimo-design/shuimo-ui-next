@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MMessage, MSelect, useMessage, type MessageDirection } from "@shuimo-design/ui";
+import { MButton, MMessage, MSelect, useMessage, type MessageDirection } from "@shuimo-design/vue";
 
 const message = useMessage();
 const direction = ref<MessageDirection>("top-right");

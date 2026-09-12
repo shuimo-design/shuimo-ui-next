@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MTabs, MTabPane, MButton, type TabName, type TabsPosition } from "@shuimo-design/ui";
+import { MTabs, MTabPane, MButton, type TabName, type TabsPosition } from "@shuimo-design/vue";
 
 const active = ref<TabName>("shan");
 const log = ref("还没切过");

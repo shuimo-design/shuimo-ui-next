@@ -1,7 +1,7 @@
 {
   "name": "MCheckbox",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MCheckbox"
   },
   "attributes": [

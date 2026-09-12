@@ -1,7 +1,7 @@
 {
   "name": "MConfirm",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MConfirm"
   },
   "attributes": [

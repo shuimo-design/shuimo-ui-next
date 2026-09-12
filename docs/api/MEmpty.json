@@ -1,7 +1,7 @@
 {
   "name": "MEmpty",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MEmpty"
   },
   "attributes": [

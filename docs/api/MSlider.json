@@ -1,7 +1,7 @@
 {
   "name": "MSlider",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MSlider"
   },
   "attributes": [

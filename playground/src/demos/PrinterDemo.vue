@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from "vue";
-import { createPrinter, MButton, MPrinter } from "@shuimo-design/ui";
+import { createPrinter, MButton, MPrinter } from "@shuimo-design/vue";
 
 const rounds = ref(0);
 const speed = ref(80);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MList, MListItem } from "@shuimo-design/ui";
+import { MList, MListItem } from "@shuimo-design/vue";
 
 interface Sword {
   title: string;

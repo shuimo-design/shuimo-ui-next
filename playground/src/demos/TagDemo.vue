@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MTag } from "@shuimo-design/ui";
+import { MTag } from "@shuimo-design/vue";
 
 const tags = ref(["朱砂", "花青", "藤黄", "赭石"]);
 </script>

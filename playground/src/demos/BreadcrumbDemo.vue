@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MBreadcrumb, MBreadcrumbItem } from "@shuimo-design/ui";
+import { MBreadcrumb, MBreadcrumbItem } from "@shuimo-design/vue";
 
 const options = [
   { content: "首页", href: "#breadcrumb" },

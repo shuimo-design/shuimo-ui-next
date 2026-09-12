@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MConfirm, useConfirm } from "@shuimo-design/ui";
+import { MButton, MConfirm, useConfirm } from "@shuimo-design/vue";
 
 const confirm = useConfirm();
 const result = ref<string>("");

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MPagination } from "@shuimo-design/ui";
+import { MPagination } from "@shuimo-design/vue";
 
 const current = ref(1);
 const big = ref(6);

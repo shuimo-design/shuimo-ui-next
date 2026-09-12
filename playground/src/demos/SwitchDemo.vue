@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MSwitch, type SwitchValue } from "@shuimo-design/ui";
+import { MSwitch, type SwitchValue } from "@shuimo-design/vue";
 
 const basic = ref(false);
 const withText = ref(true);

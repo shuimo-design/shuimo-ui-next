@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MButton, MCard, MStamp, MTag } from "@shuimo-design/ui";
+import { MButton, MCard, MStamp, MTag } from "@shuimo-design/vue";
 </script>
 
 <template>

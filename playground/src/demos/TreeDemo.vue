@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MTree, type TreeKey, type TreeNodeData } from "@shuimo-design/ui";
+import { MTree, type TreeKey, type TreeNodeData } from "@shuimo-design/vue";
 
 const treeData: TreeNodeData[] = [
   {

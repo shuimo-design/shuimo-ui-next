@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MBorder, MButton } from "@shuimo-design/ui";
+import { MBorder, MButton } from "@shuimo-design/vue";
 
 const seed = ref(1);
 </script>

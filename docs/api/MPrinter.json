@@ -1,7 +1,7 @@
 {
   "name": "MPrinter",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MPrinter"
   },
   "attributes": [

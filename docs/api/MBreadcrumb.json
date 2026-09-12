@@ -1,7 +1,7 @@
 {
   "name": "MBreadcrumb",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MBreadcrumb"
   },
   "attributes": [

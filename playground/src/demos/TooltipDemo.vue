@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MButton, MTooltip, type TooltipPlacement } from "@shuimo-design/ui";
+import { MButton, MTooltip, type TooltipPlacement } from "@shuimo-design/vue";
 
 const placements: TooltipPlacement[] = ["top", "bottom", "left", "right"];
 </script>

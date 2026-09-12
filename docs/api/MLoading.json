@@ -1,7 +1,7 @@
 {
   "name": "MLoading",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MLoading"
   },
   "attributes": [

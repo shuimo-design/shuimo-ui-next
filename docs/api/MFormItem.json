@@ -1,7 +1,7 @@
 {
   "name": "MFormItem",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MFormItem"
   },
   "attributes": [

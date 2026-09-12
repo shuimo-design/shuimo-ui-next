@@ -1,7 +1,7 @@
 {
   "name": "MListItem",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MListItem"
   },
   "attributes": [

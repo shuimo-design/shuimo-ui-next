@@ -14,7 +14,7 @@ import {
   MSwitch,
   type FormRules,
   type SelectOption,
-} from "@shuimo-design/ui";
+} from "@shuimo-design/vue";
 
 const pigments: SelectOption[] = [
   { label: "朱砂", value: "zhusha" },

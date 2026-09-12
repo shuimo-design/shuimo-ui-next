@@ -1,7 +1,7 @@
 {
   "name": "MCheckboxGroup",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MCheckboxGroup"
   },
   "attributes": [

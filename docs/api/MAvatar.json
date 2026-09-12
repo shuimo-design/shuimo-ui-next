@@ -1,7 +1,7 @@
 {
   "name": "MAvatar",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MAvatar"
   },
   "attributes": [

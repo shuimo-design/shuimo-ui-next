@@ -1,7 +1,7 @@
 {
   "name": "MInput",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MInput"
   },
   "attributes": [

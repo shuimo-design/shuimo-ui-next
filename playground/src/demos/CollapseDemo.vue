@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MCollapse, MCollapseItem, type CollapseName } from "@shuimo-design/ui";
+import { MCollapse, MCollapseItem, type CollapseName } from "@shuimo-design/vue";
 
 const isOpen = ref(false);
 const log = ref("还没动过");

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MSvg, type SvgIconName } from "@shuimo-design/ui";
+import { MSvg, type SvgIconName } from "@shuimo-design/vue";
 
 const NAMES: SvgIconName[] = [
   "calendar",

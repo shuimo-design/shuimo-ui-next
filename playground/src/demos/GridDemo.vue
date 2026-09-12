@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MCell, MGrid } from "@shuimo-design/ui";
+import { MButton, MCell, MGrid } from "@shuimo-design/vue";
 
 const tilt = ref(15);
 const poems = ["春江潮水连海平", "海上明月共潮生", "滟滟随波千万里", "何处春江无月明"];

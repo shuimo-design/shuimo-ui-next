@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MMessage } from "@shuimo-design/ui";
+import { MButton, MMessage } from "@shuimo-design/vue";
 
 const count = ref(0);
 const loading = ref(false);

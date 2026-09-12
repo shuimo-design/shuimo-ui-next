@@ -1,7 +1,7 @@
 {
   "name": "MButton",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MButton"
   },
   "attributes": [

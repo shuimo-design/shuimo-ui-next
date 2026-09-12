@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MLoading, vLoading } from "@shuimo-design/ui";
+import { MButton, MLoading, vLoading } from "@shuimo-design/vue";
 
 const isLoading = ref(true);
 </script>

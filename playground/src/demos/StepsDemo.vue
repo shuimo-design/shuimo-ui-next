@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MStep, MSteps, type StepStatus } from "@shuimo-design/ui";
+import { MButton, MStep, MSteps, type StepStatus } from "@shuimo-design/vue";
 
 const active = ref(1);
 const status = ref<StepStatus>("process");

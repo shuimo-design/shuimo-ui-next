@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { MButton, MCheckbox, MRicePaper, MSlider, type PaperPreset } from "@shuimo-design/ui";
-import { goldFleckUrl, paperTextureUrl, type GoldPreset } from "@shuimo-design/ui/ink";
+import { MButton, MCheckbox, MRicePaper, MSlider, type PaperPreset } from "@shuimo-design/vue";
+import { goldFleckUrl, paperTextureUrl, type GoldPreset } from "@shuimo-design/core/ink";
 
 const seed = ref(7);
 const gold = ref(true);

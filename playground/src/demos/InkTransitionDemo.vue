@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MBorder, MButton, MInkTransition, vInkReveal } from "@shuimo-design/ui";
+import { MBorder, MButton, MInkTransition, vInkReveal } from "@shuimo-design/vue";
 
 const showPanel = ref(true);
 const revealKey = ref(0);

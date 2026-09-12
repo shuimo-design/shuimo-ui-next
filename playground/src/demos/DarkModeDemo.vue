@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MDarkMode } from "@shuimo-design/ui";
+import { MDarkMode } from "@shuimo-design/vue";
 
 const dark = ref<boolean>();
 const changes = ref(0);

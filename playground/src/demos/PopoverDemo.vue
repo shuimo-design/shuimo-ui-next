@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MPopover, type PopoverPlacement } from "@shuimo-design/ui";
+import { MButton, MPopover, type PopoverPlacement } from "@shuimo-design/vue";
 
 const visible = ref(false);
 const placements: PopoverPlacement[] = ["top", "bottom", "left", "right"];

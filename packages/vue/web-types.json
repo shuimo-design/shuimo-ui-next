@@ -1,0 +1,5459 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "framework": "vue",
+  "name": "@shuimo-design/vue",
+  "version": "1.0.0-alpha.0",
+  "contributions": {
+    "html": {
+      "types-syntax": "typescript",
+      "tags": [
+        {
+          "name": "MButton",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MButton"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "按钮语义类型：default 灰蓝、primary 蓝、confirm 青、error 红、warning 黄，都是实色块；text 只有文字",
+              "default": "\"default\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "ButtonType | undefined"
+              }
+            },
+            {
+              "name": "text",
+              "description": "按钮文字，有默认插槽时被插槽覆盖",
+              "default": "\"\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "loading",
+              "description": "加载中：文字前出现旋转墨点，期间不响应点击",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "href",
+              "description": "渲染为 a 标签时的链接地址",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "nativeType",
+              "description": "原生 button 的 type",
+              "default": "\"button\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"button\" | \"submit\" | \"reset\" | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "click"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MRicePaper",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MRicePaper"
+          },
+          "attributes": [
+            {
+              "name": "seed",
+              "description": "生成种子；同 seed 同纸同山。不传则随机",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "tier",
+              "description": "强制特效档位：0 纯色纸，≥1 带纹理和远山。默认按设备检测",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "InkTier | undefined"
+              }
+            },
+            {
+              "name": "paper",
+              "description": "纸色预设或自定义 RGB；默认跟随主题 token --m-paper-rgb",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "PaperPreset | [number, number, number] | undefined"
+              }
+            },
+            {
+              "name": "grain",
+              "description": "纹理强度 0–1，默认 0.5",
+              "default": "0.5",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "goldFlecks",
+              "description": "洒金：true 用默认的金箔（密度 0.15、片径 1 ~ 7px、成簇 0.3、金色），传对象可调密度 density、\n尺寸 sizeRange、成簇 clustering、颜色 color（gold / paleGold / roseGold / copper / silver / bronze 或 RGB）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | Omit<GoldFleckOptions, \"seed\"> | undefined"
+              }
+            },
+            {
+              "name": "fibers",
+              "description": "矢量纤维密度 0 ~ 4，默认 1；0 关掉",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "particles",
+              "description": "矢量颗粒密度 0 ~ 1，默认 0.5；0 关掉",
+              "default": "0.5",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "deckleEdge",
+              "description": "毛边",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "landscape",
+              "description": "底部两侧的远山（左右各远近两层 SVG 剪影）。默认开：这是旧站宣纸的标志性远景，\n四张 SVG 整个会话只生成一次，tier 0（省流量 / 减弱动效）下自动不画",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "parallax",
+              "description": "远山跟随鼠标、滚动做视差，默认开；prefers-reduced-motion 下自动不动",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "layout",
+              "description": "布局：auto 跟随内容；full-screen 铺满视口并自己滚动。默认 auto",
+              "default": "\"auto\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"auto\" | \"full-screen\" | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "ready"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MBorder",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MBorder"
+          },
+          "attributes": [
+            {
+              "name": "seed",
+              "description": "笔触种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "strokeWidth",
+              "description": "笔宽 px，默认 2（旧版是一条 2px 上下的细手绘线）",
+              "default": "2",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "roughness",
+              "description": "边缘噪声 0–1，默认 0.35",
+              "default": "0.35",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "flyingWhite",
+              "description": "飞白 0–1，默认 0.06",
+              "default": "0.06",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "tag",
+              "description": "渲染标签，默认 div",
+              "default": "\"div\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "border",
+              "description": "画不画边：true 四边全画、false 全不画，也可传对象按边指定；优先级低于 top / right / bottom / left。默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | BorderSides | undefined"
+              }
+            },
+            {
+              "name": "top",
+              "description": "单独控制上边，不传则听 border 的",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "right",
+              "description": "单独控制右边，不传则听 border 的",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "bottom",
+              "description": "单独控制下边，不传则听 border 的",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "left",
+              "description": "单独控制左边，不传则听 border 的",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "mask",
+              "description": "内容蒙层：半透明纸色加背景模糊，压在远山或图片上时字更清楚。默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "color",
+              "description": "墨色，默认 --m-ink（无水墨引擎时退成 --m-border）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "padding",
+              "description": "内边距，数字按 px；默认 0，内容贴边，笔触压在内容边缘上",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MInkTransition",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MInkTransition"
+          },
+          "attributes": [
+            {
+              "name": "duration",
+              "description": "进入时长 ms，默认 900",
+              "default": "900",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "leaveDuration",
+              "description": "离开时长 ms，默认 600",
+              "default": "600",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "appear",
+              "description": "首次渲染也播放，默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "mode",
+              "description": "透传给 <Transition> 的 mode",
+              "default": "\"default\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"default\" | \"in-out\" | \"out-in\" | undefined"
+              }
+            },
+            {
+              "name": "reducedMotion",
+              "description": "强制跳过动画；未传则跟随 prefers-reduced-motion",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "raggedness",
+              "description": "毛边幅度（相对遮罩宽度的百分比），默认 6",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "softness",
+              "description": "边缘晕开，默认 1.5",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "扫入方向：right = 从左向右显现",
+              "default": "\"right\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"right\" | \"left\" | \"down\" | \"up\" | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MInput",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MInput"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "原生 type；textarea 时渲染多行文本框",
+              "default": "\"text\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "InputType | undefined"
+              }
+            },
+            {
+              "name": "placeholder",
+              "description": "占位文字",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "readonly",
+              "description": "只读",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "clearable",
+              "description": "有内容时显示清空按钮",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "showPassword",
+              "description": "password 时显示\"看一眼\"切换按钮",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "maxlength",
+              "description": "最大字数（原生 maxlength）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "showCount",
+              "description": "显示字数统计；有 maxlength 时显示为 `n / max`",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "rows",
+              "description": "textarea 行数，默认 3",
+              "default": "3",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "resize",
+              "description": "textarea 能否拖拽改大小，默认 vertical",
+              "default": "\"vertical\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "InputResize | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "description": "原生 name",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "autocomplete",
+              "description": "原生 autocomplete",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "autofocus",
+              "description": "挂载后自动聚焦",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "\"\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "input",
+              "description": "每次输入"
+            },
+            {
+              "name": "change",
+              "description": "值提交（原生 change：失焦或回车）"
+            },
+            {
+              "name": "focus"
+            },
+            {
+              "name": "blur"
+            },
+            {
+              "name": "clear",
+              "description": "点了清空按钮"
+            }
+          ],
+          "slots": [
+            {
+              "name": "prefix",
+              "description": "输入框前的内容（图标、单位）"
+            },
+            {
+              "name": "suffix",
+              "description": "输入框后的内容"
+            }
+          ]
+        },
+        {
+          "name": "MCheckbox",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MCheckbox"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "description": "放进 CheckboxGroup 时用来标识自己的值",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CheckboxValue | undefined"
+              }
+            },
+            {
+              "name": "label",
+              "description": "文字；默认插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "indeterminate",
+              "description": "半选态（只影响外观，不影响值）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "description": "原生 name",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "用户操作导致勾选态变化"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MCheckboxGroup",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MCheckboxGroup"
+          },
+          "attributes": [
+            {
+              "name": "disabled",
+              "description": "整组禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "min",
+              "description": "至少勾选几个；到下限后剩余已选项不可取消",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "max",
+              "description": "最多勾选几个；到上限后未选项不可再选",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "横排（默认）还是竖排",
+              "default": "\"horizontal\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"horizontal\" | \"vertical\" | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "[]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CheckboxValue[] | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MSwitch",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSwitch"
+          },
+          "attributes": [
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "loading",
+              "description": "加载中：滑钮缓慢旋转且不可操作",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "activeValue",
+              "description": "打开时 v-model 取的值，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SwitchValue | undefined"
+              }
+            },
+            {
+              "name": "inactiveValue",
+              "description": "关闭时 v-model 取的值，默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SwitchValue | undefined"
+              }
+            },
+            {
+              "name": "activeText",
+              "description": "打开态文字（显示在开关左侧）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "inactiveText",
+              "description": "关闭态文字（显示在开关右侧）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "controlled",
+              "description": "受控：点击只发 change，不自己改 v-model，由外部决定要不要切换",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "description": "原生 name",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SwitchValue | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "用户切换后，参数是（将要变成的）新值"
+            }
+          ],
+          "slots": [
+            {
+              "name": "active",
+              "description": "替代 activeText"
+            },
+            {
+              "name": "inactive",
+              "description": "替代 inactiveText"
+            }
+          ]
+        },
+        {
+          "name": "MTag",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTag"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "语义色：default 墨黑、primary 花青、success 石绿、warn 藤黄、danger 朱砂",
+              "default": "\"default\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TagType | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "description": "尺寸：sm / md / lg 对应 32 / 45 / 64px 高",
+              "default": "\"md\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TagSize | undefined"
+              }
+            },
+            {
+              "name": "color",
+              "description": "任意底色，优先于 type（等价于覆盖 --m-tag-color）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "closable",
+              "description": "显示关闭按钮",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用（灰底、关闭按钮不可点）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "关闭叉那一笔的随机种子",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "click"
+            },
+            {
+              "name": "close",
+              "description": "点了关闭按钮"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MRadio",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MRadio"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "description": "这一项代表的值；选中后写进 v-model",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "RadioValue"
+              }
+            },
+            {
+              "name": "label",
+              "description": "文字；默认插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "description": "原生 name；在 RadioGroup 里时以组的 name 为准",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "RadioValue | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "用户操作选中了这一项"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MRadioGroup",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MRadioGroup"
+          },
+          "attributes": [
+            {
+              "name": "disabled",
+              "description": "整组禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "横排（默认）还是竖排",
+              "default": "\"horizontal\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"horizontal\" | \"vertical\" | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "description": "组内所有原生 radio 共用的 name；不传则自动生成，保证方向键能在组内切换",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "RadioValue | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "用户操作导致选中项变化"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MAvatar",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MAvatar"
+          },
+          "attributes": [
+            {
+              "name": "src",
+              "description": "图片地址；不传或加载失败时显示默认插槽，插槽也没有就显示人形图标",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "alt",
+              "description": "图片替代文字，也作为兜底内容的无障碍名称",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "variant",
+              "description": "形状：circle 一笔墨圈（默认），square 笔触方框",
+              "default": "\"circle\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "AvatarVariant | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "description": "尺寸：sm / md / lg 对应 24 / 40 / 50px，也可直接传像素数",
+              "default": "\"md\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "AvatarSize | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "墨圈 / 方框 / 毛边遮罩的随机种子，同一页多个头像可以各给一个",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "error",
+              "description": "图片加载失败"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "无图或图片加载失败时的兜底内容，例如文字缩写或图标"
+            }
+          ]
+        },
+        {
+          "name": "MProgress",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MProgress"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "description": "当前值",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "max",
+              "description": "最大值；百分比 = value / max",
+              "default": "100",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "showInfo",
+              "description": "在条上居中显示百分比文字，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "status",
+              "description": "语义状态，决定条的颜色",
+              "default": "\"default\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "ProgressStatus | undefined"
+              }
+            },
+            {
+              "name": "strokeWidth",
+              "description": "条的粗细（px），默认 7；框高 = 粗细 + 10",
+              "default": "7",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "替代百分比文字；percent 是 0–100 之间、最多两位小数的数"
+            }
+          ]
+        },
+        {
+          "name": "MInputNumber",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MInputNumber"
+          },
+          "attributes": [
+            {
+              "name": "min",
+              "description": "最小值，默认 -Infinity",
+              "default": "-Infinity",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "max",
+              "description": "最大值，默认 Infinity",
+              "default": "Infinity",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "step",
+              "description": "按钮 / 方向键每次增减的量，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "precision",
+              "description": "小数位数；不传则不限制",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "readonly",
+              "description": "只读：不能键入也不能用按钮增减",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "placeholder",
+              "description": "占位文字",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "controls",
+              "description": "两侧显示减 / 加按钮，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "description": "原生 name",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "input",
+              "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）"
+            },
+            {
+              "name": "change",
+              "description": "值提交后（失焦、回车、按钮或方向键增减），参数是新值与旧值"
+            },
+            {
+              "name": "focus"
+            },
+            {
+              "name": "blur"
+            }
+          ],
+          "slots": []
+        },
+        {
+          "name": "MSlider",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSlider"
+          },
+          "attributes": [
+            {
+              "name": "min",
+              "description": "最小值，默认 0",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "max",
+              "description": "最大值，默认 100",
+              "default": "100",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "step",
+              "description": "步长，默认 1；值会对齐到步长格点",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "range",
+              "description": "范围选择：v-model 是 [起点, 终点]，显示两个滑块",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "showInfo",
+              "description": "在轨道上方显示 min、当前百分比、max 一行信息，默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "showTooltip",
+              "description": "拖动或悬停时在滑块上方显示当前值，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "formatTooltip",
+              "description": "自定义气泡文字",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "((value: number) => string) | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SliderValue | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "input",
+              "description": "拖动过程中每次值变化"
+            },
+            {
+              "name": "change",
+              "description": "松手 / 键盘调整后的最终值"
+            }
+          ],
+          "slots": []
+        },
+        {
+          "name": "MCollapse",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MCollapse"
+          },
+          "attributes": [
+            {
+              "name": "accordion",
+              "description": "手风琴：同一时刻只展开一项；此时 v-model 是单个 name，否则是 name 数组",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "divider",
+              "description": "标题右侧画一条笔触线延伸到边缘（旧版的 line）；单项可用自己的 divider 覆盖",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "整组禁用",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CollapseName | CollapseName[] | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "展开项变化；accordion 下是单个 name（全部收起时为 undefined），否则是数组"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MCollapseItem",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MCollapseItem"
+          },
+          "attributes": [
+            {
+              "name": "name",
+              "description": "项的标识，写进 MCollapse 的 v-model；不传则自动生成（单独使用时用不到）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CollapseName | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "标题文字；title 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用后不能展开 / 收起",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "divider",
+              "description": "标题右侧是否画笔触线；不传则跟随 MCollapse（默认画）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "description": "单独使用（不在 MCollapse 里）时靠这个 v-model 记展开态，对应旧版单面板的 v-model",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "单独使用（不在 MCollapse 里）时展开 / 收起的变化"
+            }
+          ],
+          "slots": [
+            {
+              "name": "title",
+              "description": "标题区"
+            },
+            {
+              "name": "default",
+              "description": "展开后的内容"
+            }
+          ]
+        },
+        {
+          "name": "MList",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MList"
+          },
+          "attributes": [
+            {
+              "name": "data",
+              "description": "数据；传了就逐项渲染 MListItem，不传则由默认插槽自己放 MListItem",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "T[] | undefined"
+              }
+            },
+            {
+              "name": "marker",
+              "description": "是否显示项目符号（墨点）",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "autoActive",
+              "description": "所有项都用激活样式（朱砂点 + 墨圈）；数据项自带 active 字段时以它为准",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "有 data 时按项调用并带上 { item, index }；没有 data 时直接渲染一次"
+            }
+          ]
+        },
+        {
+          "name": "MListItem",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MListItem"
+          },
+          "attributes": [
+            {
+              "name": "active",
+              "description": "激活态：文字加重、墨点换成朱砂点外套墨圈",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "marker",
+              "description": "是否显示项目符号；不传则跟随 MList",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "click"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MTree",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTree"
+          },
+          "attributes": [
+            {
+              "name": "data",
+              "description": "树数据",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "TreeNodeData[]"
+              }
+            },
+            {
+              "name": "fieldNames",
+              "description": "字段名映射",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TreeFieldNames | undefined"
+              }
+            },
+            {
+              "name": "checkable",
+              "description": "显示勾选框",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "checkStrictly",
+              "description": "勾选时父子不联动（各自独立）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "defaultExpandAll",
+              "description": "初始展开全部",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "selectable",
+              "description": "点击节点文字可选中",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "expandedKeys",
+              "default": "[]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TreeKey[] | undefined"
+              }
+            },
+            {
+              "name": "checkedKeys",
+              "default": "[]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TreeKey[] | undefined"
+              }
+            },
+            {
+              "name": "selectedKey",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TreeKey | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:expandedKeys"
+            },
+            {
+              "name": "update:checkedKeys"
+            },
+            {
+              "name": "update:selectedKey"
+            },
+            {
+              "name": "nodeClick",
+              "description": "点击节点行（禁用节点不触发）；键盘回车 / 空格也算"
+            },
+            {
+              "name": "check",
+              "description": "勾选态变化，带上变化后的全部已勾选 key"
+            },
+            {
+              "name": "expand",
+              "description": "展开 / 收起"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "自定义节点文字，作用域 { node, level }"
+            }
+          ]
+        },
+        {
+          "name": "MSelect",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSelect"
+          },
+          "attributes": [
+            {
+              "name": "options",
+              "description": "候选项",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "SelectOptionLike[]"
+              }
+            },
+            {
+              "name": "optionParam",
+              "description": "选项是对象时，下拉里显示哪个字段；不传就用 label",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "valueParam",
+              "description": "选项是对象时，写回 v-model 的是哪个字段；不传就用 value（没有 value 字段就写回整个对象）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "inputParam",
+              "description": "选项是对象时，选中后触发区里显示哪个字段；不传就跟 optionParam",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "toMatch",
+              "description": "自定义\"某个选项是否等于当前值\"，v-model 是对象时用；参数是原始选项和 v-model 的值",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "((option: SelectOptionLike, value: SelectValue) => boolean) | undefined"
+              }
+            },
+            {
+              "name": "placeholder",
+              "description": "占位文字，默认「请选择」",
+              "default": "\"请选择\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "clearable",
+              "description": "有值时显示清空按钮",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "multiple",
+              "description": "多选；v-model 为数组",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "filterable",
+              "description": "可输入过滤；默认按显示文字包含匹配，大小写不敏感",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "filter",
+              "description": "自定义过滤函数，参数是原始选项和输入的文字",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "((option: SelectOptionLike, query: string) => boolean) | undefined"
+              }
+            },
+            {
+              "name": "loading",
+              "description": "下拉显示加载中（替换整个列表）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "fetch",
+              "description": "滚到底部时调用，用来分页追加候选项；调用期间列表底部显示加载中",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "(() => Promise<void>) | undefined"
+              }
+            },
+            {
+              "name": "emptyText",
+              "description": "无候选项时的文字，默认「暂无数据」",
+              "default": "\"暂无数据\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "maxHeight",
+              "description": "下拉最大高度 px，默认 240",
+              "default": "240",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "下拉传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SelectValue | SelectValue[] | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "input",
+              "description": "过滤框里的文字变化"
+            },
+            {
+              "name": "change",
+              "description": "选中值变化"
+            },
+            {
+              "name": "focus"
+            },
+            {
+              "name": "blur"
+            },
+            {
+              "name": "clear",
+              "description": "点了清空按钮"
+            },
+            {
+              "name": "select",
+              "description": "点选了某个选项，参数是原始选项（多选时取消勾选也会触发）"
+            },
+            {
+              "name": "visibleChange",
+              "description": "下拉开合"
+            },
+            {
+              "name": "removeTag",
+              "description": "多选时点了 Tag 的关闭"
+            }
+          ],
+          "slots": [
+            {
+              "name": "option",
+              "description": "自定义选项内容；option 是原始选项，label 是按 optionParam 取出的显示文字"
+            },
+            {
+              "name": "empty",
+              "description": "无数据时的内容"
+            },
+            {
+              "name": "prefix",
+              "description": "触发区前的内容（图标）"
+            }
+          ]
+        },
+        {
+          "name": "MDatePicker",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MDatePicker"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "选日 / 选月 / 选年，默认 date",
+              "default": "\"date\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "DatePickerType | undefined"
+              }
+            },
+            {
+              "name": "format",
+              "description": "输出格式，只认 YYYY / MM / DD；缺省按 type：YYYY-MM-DD / YYYY-MM / YYYY",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "placeholder",
+              "description": "占位文字，默认「请选择日期」",
+              "default": "\"请选择日期\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "clearable",
+              "description": "有值时显示清空按钮，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "disabledDate",
+              "description": "返回 true 的日期不可选",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "((date: Date) => boolean) | undefined"
+              }
+            },
+            {
+              "name": "firstDayOfWeek",
+              "description": "一周从周日（0）还是周一（1）开始，默认 0",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "0 | 1 | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "面板传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "description": "进来可以是格式化字符串或 Date 对象，写回去一律是格式化字符串（和旧版一致）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | Date | null | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "值变化，参数是格式化后的字符串，清空为 null"
+            },
+            {
+              "name": "clear",
+              "description": "点了清空按钮"
+            },
+            {
+              "name": "visibleChange",
+              "description": "面板开合"
+            }
+          ],
+          "slots": []
+        },
+        {
+          "name": "MPopover",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MPopover"
+          },
+          "attributes": [
+            {
+              "name": "placement",
+              "description": "气泡出现的方位（floating-ui placement），默认 bottom",
+              "default": "\"bottom\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "Placement | undefined"
+              }
+            },
+            {
+              "name": "trigger",
+              "description": "触发方式：hover / click / focus / manual（只听 v-model:show），默认 click",
+              "default": "\"click\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "PopoverTrigger | undefined"
+              }
+            },
+            {
+              "name": "content",
+              "description": "内容只是一段文字时可以直接传，等价于 #content",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用：不再响应触发，已打开的会收起",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "arrow",
+              "description": "显示指向参照元素的墨尖箭头，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "offset",
+              "description": "气泡与参照元素的间距 px，默认 8",
+              "default": "8",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "openDelay",
+              "description": "hover 触发的打开延时 ms，默认 0",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "closeDelay",
+              "description": "hover 触发的收起延时 ms，默认 100；鼠标从参照移到气泡上时靠它不闪断",
+              "default": "100",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "disableClickAway",
+              "description": "click 触发时点到气泡外不自动收起",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "气泡传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触边框与墨尖的种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "show",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "visibleChange",
+              "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+            },
+            {
+              "name": "update:show"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "触发内容；第一个元素当参照元素"
+            },
+            {
+              "name": "content",
+              "description": "气泡内容"
+            }
+          ]
+        },
+        {
+          "name": "MTooltip",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTooltip"
+          },
+          "attributes": [
+            {
+              "name": "placement",
+              "description": "提示出现的方位（floating-ui placement），默认 bottom",
+              "default": "\"bottom\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "Placement | undefined"
+              }
+            },
+            {
+              "name": "trigger",
+              "description": "触发方式：hover（同时响应键盘聚焦）/ click / focus / manual，默认 hover",
+              "default": "\"hover\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "PopoverTrigger | undefined"
+              }
+            },
+            {
+              "name": "content",
+              "description": "提示文字，等价于 #content",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用：不再弹出，已打开的会收起",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "arrow",
+              "description": "显示指向参照元素的墨尖箭头，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "offset",
+              "description": "提示与参照元素的间距 px，默认 6",
+              "default": "6",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "openDelay",
+              "description": "hover 触发的打开延时 ms，默认 80",
+              "default": "80",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "closeDelay",
+              "description": "hover 触发的收起延时 ms，默认 80",
+              "default": "80",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "disableClickAway",
+              "description": "click 触发时点到提示外不自动收起",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "提示传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触边框与墨尖的种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "show",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "visibleChange",
+              "description": "显隐变化（用户操作引起的；改 v-model:show 不会触发）"
+            },
+            {
+              "name": "update:show"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "被提示的内容；第一个元素当参照元素，并挂上 aria-describedby"
+            },
+            {
+              "name": "content",
+              "description": "提示内容"
+            }
+          ]
+        },
+        {
+          "name": "MDialog",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MDialog"
+          },
+          "attributes": [
+            {
+              "name": "mask",
+              "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | ModalMask | undefined"
+              }
+            },
+            {
+              "name": "closeBtn",
+              "description": "显示右上角的挂牌关闭按钮，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "closeOnEsc",
+              "description": "按 ESC 关闭，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "标题；也可用 header 插槽",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "width",
+              "description": "宽度，数字按 px；默认 min(560px, 100vw - 32px)，也可覆盖 CSS 变量 --m-dialog-w",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "height",
+              "description": "高度，数字按 px；默认随内容，也可覆盖 CSS 变量 --m-dialog-h",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "传送目标：true 到 body，字符串为选择器，false 原地渲染（测试或受限容器用），默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触与角饰的随机种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "close",
+              "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
+            },
+            {
+              "name": "open",
+              "description": "变为显示"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "弹窗内容"
+            },
+            {
+              "name": "active",
+              "description": "触发元素：点一下就打开，省去自己维护 v-model"
+            },
+            {
+              "name": "header",
+              "description": "头部，替代 title"
+            },
+            {
+              "name": "footer",
+              "description": "底部操作区"
+            }
+          ]
+        },
+        {
+          "name": "MDrawer",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MDrawer"
+          },
+          "attributes": [
+            {
+              "name": "mask",
+              "description": "遮罩：false 不显示底色；对象可分别控制 show（显示）与 clickClose（点外面关闭），默认都开",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | ModalMask | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "从哪条边滑出，默认 right",
+              "default": "\"right\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "DrawerDirection | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "description": "左右抽屉是宽度、上下抽屉是高度，数字按 px；默认 320px，也可覆盖 CSS 变量 --m-drawer-size",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "closeBtn",
+              "description": "显示关闭按钮，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "closeOnEsc",
+              "description": "按 ESC 关闭，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "标题；也可用 header 插槽",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "传送目标：true 到 body，字符串为选择器，false 原地渲染，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "边缘笔触线的随机种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "close",
+              "description": "变为隐藏（关闭按钮、ESC、点遮罩或外部改 v-model 都会触发）"
+            },
+            {
+              "name": "open",
+              "description": "变为显示"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "抽屉内容"
+            },
+            {
+              "name": "active",
+              "description": "触发元素：点一下就打开"
+            },
+            {
+              "name": "header",
+              "description": "头部，替代 title"
+            },
+            {
+              "name": "footer",
+              "description": "底部操作区"
+            }
+          ]
+        },
+        {
+          "name": "MMessage",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MMessage"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "消息类型，决定图标与配色，默认 info",
+              "default": "\"info\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MessageType | undefined"
+              }
+            },
+            {
+              "name": "content",
+              "description": "消息文字；也可以用默认插槽",
+              "default": "\"\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "duration",
+              "description": "自动关闭的毫秒数，默认 3000；0 或负数表示不自动关闭",
+              "default": "3000",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "出现的位置，默认 top-right；决定进出场方向和能往哪边拖",
+              "default": "\"top-right\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MessageDirection | undefined"
+              }
+            },
+            {
+              "name": "dragAllow",
+              "description": "允许拖动关闭：往屏幕外拖过三分之一松手即关，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "closable",
+              "description": "显示关闭按钮，默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "墨迹种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "close",
+              "description": "离场动画结束、可以从 DOM 移除时"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "替代 content"
+            },
+            {
+              "name": "icon",
+              "description": "替代类型图标"
+            }
+          ]
+        },
+        {
+          "name": "MConfirm",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MConfirm"
+          },
+          "attributes": [
+            {
+              "name": "content",
+              "description": "正文；也可以用默认插槽",
+              "default": "\"\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "标题，不传就不渲染",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "mask",
+              "description": "遮罩配置，默认 { show: true, clickClose: true }",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "ConfirmMask | undefined"
+              }
+            },
+            {
+              "name": "teleport",
+              "description": "传送目标：true 到 body、false 原地渲染、字符串为选择器；默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | boolean | undefined"
+              }
+            },
+            {
+              "name": "confirmText",
+              "description": "确定按钮文字，默认「确定」",
+              "default": "\"确定\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "cancelText",
+              "description": "取消按钮文字，默认「取消」",
+              "default": "\"取消\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触种子，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "open",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "confirm",
+              "description": "点了确定"
+            },
+            {
+              "name": "update:open"
+            },
+            {
+              "name": "cancel",
+              "description": "点了取消、遮罩或按了 Esc"
+            },
+            {
+              "name": "closed",
+              "description": "离场动画结束"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "替代 content"
+            },
+            {
+              "name": "footer",
+              "description": "替代底部按钮，参数里给了确定 / 取消两个方法"
+            }
+          ]
+        },
+        {
+          "name": "MForm",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MForm"
+          },
+          "attributes": [
+            {
+              "name": "model",
+              "description": "表单数据对象，MFormItem 按 prop 从这里取值校验",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "FormModel | undefined"
+              }
+            },
+            {
+              "name": "rules",
+              "description": "按 prop 组织的校验规则；表单项自己的 rules 优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "FormRules | undefined"
+              }
+            },
+            {
+              "name": "inline",
+              "description": "行内排布：表单项横向排开",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "labelWidth",
+              "description": "标签宽度，数字按 px；默认 120px。labelPosition 为 top 时无效",
+              "default": "120",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "labelPosition",
+              "description": "标签位置：左对齐（默认）/ 右对齐 / 在控件上方",
+              "default": "\"left\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "FormLabelPosition | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "整表单禁用，所有表单项里的控件跟着禁用",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "submit",
+              "description": "允许原生 submit 真的提交跳转；默认 false，只发 submit 事件",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "showMessage",
+              "description": "是否显示错误文字，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "hideRequiredAsterisk",
+              "description": "不显示必填星号",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "submit",
+              "description": "表单提交（回车 / 提交按钮）；submit 为 false 时已阻止默认跳转"
+            },
+            {
+              "name": "validate",
+              "description": "任一表单项校验完成"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MFormItem",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MFormItem"
+          },
+          "attributes": [
+            {
+              "name": "label",
+              "description": "标签文字；label 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "prop",
+              "description": "对应 model 里的字段名，校验、重置都靠它",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "rules",
+              "description": "只作用于本项的规则，优先于表单的 rules",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "FormRule | FormRule[] | undefined"
+              }
+            },
+            {
+              "name": "required",
+              "description": "必填快捷写法：等价于加一条 { required: true } 规则",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "labelWidth",
+              "description": "覆盖表单的标签宽度",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "showMessage",
+              "description": "覆盖表单的 showMessage",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "error",
+              "description": "外部塞进来的错误信息（比如接口返回的），非空即显示为错误态",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "for",
+              "description": "指定 label 的 for / 控件的 id；不传自动生成",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default"
+            },
+            {
+              "name": "label",
+              "description": "自定义标签内容"
+            },
+            {
+              "name": "error",
+              "description": "自定义错误信息内容"
+            }
+          ]
+        },
+        {
+          "name": "MScroll",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MScroll"
+          },
+          "attributes": [
+            {
+              "name": "height",
+              "description": "视口高度，数字按 px；不传则由外层容器（或自身 CSS）决定",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "maxHeight",
+              "description": "视口最大高度，数字按 px；内容不够高时不撑满",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "always",
+              "description": "一直显示滚动条；默认只在悬停、滚动、拖动时浮现",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "minThumb",
+              "description": "滑块最短长度 px，默认 20，内容极长时滑块也不会缩成一点",
+              "default": "20",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "scroll",
+              "description": "视口滚动时触发，参数是当前滚动位置"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "要滚动的内容"
+            }
+          ]
+        },
+        {
+          "name": "MPrinter",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MPrinter"
+          },
+          "attributes": [
+            {
+              "name": "text",
+              "description": "要逐字打出的文字；换行按原样保留",
+              "default": "\"\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "speed",
+              "description": "每个字的间隔 ms，默认 80；0 或负数直接整段显示",
+              "default": "80",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "loop",
+              "description": "打完后停一停再从头打，默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "pause",
+              "description": "循环时打完到重打之间停多久 ms，默认 1200",
+              "default": "1200",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "cursor",
+              "description": "是否显示闪烁的墨点光标，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "autoplay",
+              "description": "挂载后自动开始，默认 true；关掉后要自己调 restart()",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "end",
+              "description": "一段文字全部打完时触发；循环时每一轮都会触发"
+            }
+          ],
+          "slots": []
+        },
+        {
+          "name": "MBreadcrumb",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MBreadcrumb"
+          },
+          "attributes": [
+            {
+              "name": "separator",
+              "description": "自定义分隔符文字；不传就画一笔斜杠。separator 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "options",
+              "description": "用数据渲染子项；给了就忽略默认插槽",
+              "default": "[]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "BreadcrumbItemProps[] | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "放 MBreadcrumbItem"
+            },
+            {
+              "name": "separator",
+              "description": "自定义分隔符内容"
+            }
+          ]
+        },
+        {
+          "name": "MBreadcrumbItem",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MBreadcrumbItem"
+          },
+          "attributes": [
+            {
+              "name": "content",
+              "description": "文字；默认插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "href",
+              "description": "给了就渲染成 <a href> 链接",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "项内容，替代 content"
+            }
+          ]
+        },
+        {
+          "name": "MPagination",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MPagination"
+          },
+          "attributes": [
+            {
+              "name": "total",
+              "description": "数据总条数，默认 0",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "pageSizes",
+              "description": "每页条数的候选，给 sizes 区域用，默认 [10, 20, 30, 40, 50, 100]",
+              "default": "[10, 20, 30, 40, 50, 100]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number[] | undefined"
+              }
+            },
+            {
+              "name": "layout",
+              "description": "区域排列，逗号分隔：prev / pager / next / jumper / sizes / total；默认 \"prev, pager, next, jumper, total\"",
+              "default": "\"prev, pager, next, jumper, total\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "foldedMaxPageBtn",
+              "description": "折叠后最多显示的页码个数（首末页算在内，偶数会补成奇数），默认 5",
+              "default": "5",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "maxPageBtn",
+              "description": "总页数不超过它就全部平铺不折叠，默认 10",
+              "default": "10",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "showEdgePageNum",
+              "description": "折叠时始终显示首页和末页，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "hideOnSinglePage",
+              "description": "只有一页时整个不渲染",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "current",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "pageSize",
+              "default": "10",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "description": "当前页变化"
+            },
+            {
+              "name": "update:current"
+            },
+            {
+              "name": "update:pageSize"
+            },
+            {
+              "name": "sizeChange",
+              "description": "每页条数变化"
+            }
+          ],
+          "slots": [
+            {
+              "name": "total",
+              "description": "替代「共 N 条」"
+            }
+          ]
+        },
+        {
+          "name": "MTable",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTable"
+          },
+          "attributes": [
+            {
+              "name": "data",
+              "description": "表格数据，一项一行",
+              "default": "[]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "T[] | undefined"
+              }
+            },
+            {
+              "name": "columns",
+              "description": "列声明；不传则由默认插槽里的 MTableColumn 决定",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TableColumnDef[] | undefined"
+              }
+            },
+            {
+              "name": "rowKey",
+              "description": "行的 key：字段名或函数，不传按下标",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TableRowKey<T> | undefined"
+              }
+            },
+            {
+              "name": "height",
+              "description": "表格最大高度（CSS 长度）；超出后表体内滚动、表头固定",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "align",
+              "description": "单元格默认对齐，默认居中",
+              "default": "\"center\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TableAlign | undefined"
+              }
+            },
+            {
+              "name": "stripe",
+              "description": "斑马纹：偶数行铺一层淡墨",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "emptyText",
+              "description": "没有数据时的文字；empty 插槽优先",
+              "default": "\"暂无数据\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "rowClick",
+              "description": "点击某一行"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "放 MTableColumn，用组件的方式声明列"
+            },
+            {
+              "name": "empty",
+              "description": "没有数据时显示的内容"
+            }
+          ]
+        },
+        {
+          "name": "MTableColumn",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTableColumn"
+          },
+          "attributes": [
+            {
+              "name": "param",
+              "description": "列对应的字段名，取值 row[param]",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "label",
+              "description": "列名；head 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "width",
+              "description": "列宽，数字按 px；不传按内容自动分配",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "align",
+              "description": "对齐，默认跟随表格的 align",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TableAlign | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "单元格内容，作用域 { row, data, value, index, column }"
+            },
+            {
+              "name": "head",
+              "description": "表头内容"
+            }
+          ]
+        },
+        {
+          "name": "MGrid",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MGrid"
+          },
+          "attributes": [
+            {
+              "name": "w",
+              "description": "格子的默认宽 px；格子自己传了 w 以自己的为准",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "h",
+              "description": "格子的默认高 px；格子自己传了 h 以自己的为准",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "gap",
+              "description": "格子之间的间距，数字按 px，字符串原样用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "colGap",
+              "description": "横向排列时格子之间的间距，优先于 gap",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "rowGap",
+              "description": "纵向排列时格子之间的间距，优先于 gap",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "gapRotate",
+              "description": "横向排列时每道分隔的倾斜角度（度），第 i 项作用在第 i 和 i+1 个格子之间；正值为 \"/\"，负值为 \"\\\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number[] | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "排列方向，默认 row",
+              "default": "\"row\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"row\" | \"column\" | undefined"
+              }
+            },
+            {
+              "name": "cols",
+              "description": "列数；传了就切成等宽的网格，格子用 span / offset 占位，gapRotate 不再生效",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "GridCols | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "放 MCell"
+            }
+          ]
+        },
+        {
+          "name": "MCell",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MCell"
+          },
+          "attributes": [
+            {
+              "name": "w",
+              "description": "宽 px；不传则在栅格里均分剩余宽度",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "h",
+              "description": "高 px；不传则由内容撑开",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "border",
+              "description": "画边框（默认皮肤是细线，水墨模式换成笔触）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "points",
+              "description": "四条边的倾斜角简写，同 CSS 的 1–4 值写法：上 右 下 左；一个数字则四边同角",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CellAngle | undefined"
+              }
+            },
+            {
+              "name": "a",
+              "description": "上边倾斜角（度），正值右端下沉",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CellAngle | undefined"
+              }
+            },
+            {
+              "name": "b",
+              "description": "右边倾斜角（度），正值成 \"/\"（下端左移）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CellAngle | undefined"
+              }
+            },
+            {
+              "name": "c",
+              "description": "下边倾斜角（度），正值左端上抬",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CellAngle | undefined"
+              }
+            },
+            {
+              "name": "d",
+              "description": "左边倾斜角（度），正值成 \"/\"（上端右移）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CellAngle | undefined"
+              }
+            },
+            {
+              "name": "span",
+              "description": "在 cols 模式的栅格里横跨几列，默认 1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "offset",
+              "description": "在 cols 模式的栅格里从行首空出几列再放（即从第 offset+1 列开始）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MVirtualList",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MVirtualList"
+          },
+          "attributes": [
+            {
+              "name": "list",
+              "description": "数据",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "T[] | undefined"
+              }
+            },
+            {
+              "name": "itemHeight",
+              "description": "每项固定高度 px；传了走定高模式，不量尺寸",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "estimatedItemHeight",
+              "description": "变高模式下没量过的项先按这个高度估，默认 40",
+              "default": "40",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "buffer",
+              "description": "可视区上下各多渲染几项做缓冲，默认 5",
+              "default": "5",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "height",
+              "description": "容器高度，数字按 px，字符串原样用；不传时为 300px，也可以用 CSS 覆盖 --m-virtual-list-h",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "itemKey",
+              "description": "每项的 key；不传按下标",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "((item: T, index: number) => PropertyKey) | undefined"
+              }
+            },
+            {
+              "name": "divider",
+              "description": "项之间画一道分隔线",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "scroll",
+              "description": "滚动时，参数是 scrollTop"
+            },
+            {
+              "name": "reachBottom",
+              "description": "滚到了底"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "每一项"
+            }
+          ]
+        },
+        {
+          "name": "MMenu",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MMenu"
+          },
+          "attributes": [
+            {
+              "name": "data",
+              "description": "菜单数据；不传则用默认插槽手写 MMenuItem",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MenuItemData[] | undefined"
+              }
+            },
+            {
+              "name": "fieldNames",
+              "description": "字段名映射",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MenuFieldNames | undefined"
+              }
+            },
+            {
+              "name": "defaultExpandAll",
+              "description": "初始展开全部子菜单",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MenuKey | undefined"
+              }
+            },
+            {
+              "name": "expandedKeys",
+              "default": "[]",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MenuKey[] | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "当前项变化（点叶子项），参数是新 key"
+            },
+            {
+              "name": "update:expandedKeys"
+            },
+            {
+              "name": "nodeClick",
+              "description": "点击菜单项（禁用项不触发）；键盘回车 / 空格也算"
+            },
+            {
+              "name": "expand",
+              "description": "子菜单展开 / 收起"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "手写的 MMenuItem"
+            },
+            {
+              "name": "label",
+              "description": "传 data 时自定义每项文字，作用域 { item, level }"
+            }
+          ]
+        },
+        {
+          "name": "MMenuItem",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MMenuItem"
+          },
+          "attributes": [
+            {
+              "name": "name",
+              "description": "唯一标识，对应 MMenu 的 v-model",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "MenuKey"
+              }
+            },
+            {
+              "name": "label",
+              "description": "文字，也可用 label 插槽",
+              "default": "\"\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "data",
+              "description": "原始数据，透传到事件的 item.data 上",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "MenuItemData | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "子菜单：放更多 MMenuItem"
+            },
+            {
+              "name": "label",
+              "description": "自定义文字，作用域 { item, level }"
+            }
+          ]
+        },
+        {
+          "name": "MDivider",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MDivider"
+          },
+          "attributes": [
+            {
+              "name": "vertical",
+              "description": "竖向分割线；高度跟随父容器（flex 里自动拉伸），也可自己设 height",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "text",
+              "description": "线中间的文字（也可用默认插槽）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "align",
+              "description": "文字位置，默认居中",
+              "default": "\"center\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "DividerAlign | undefined"
+              }
+            },
+            {
+              "name": "thickness",
+              "description": "笔画粗细（px），默认 4",
+              "default": "4",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触随机种子：同一页多条分割线传不同种子，飞白就不会一模一样",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "替代 text"
+            }
+          ]
+        },
+        {
+          "name": "MLoading",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MLoading"
+          },
+          "attributes": [
+            {
+              "name": "speed",
+              "description": "转一圈的毫秒数，默认 2000",
+              "default": "2000",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "description": "指示器边长（px），默认 40",
+              "default": "40",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "mask",
+              "description": "遮罩模式：铺满最近的定位父元素并把内容盖住（父元素要 position: relative，v-loading 指令会自动加）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "text",
+              "description": "指示器下方的文字（也可用默认插槽）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "墨点形状的随机种子",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "indicator",
+              "description": "替换默认的墨点转圈指示器"
+            },
+            {
+              "name": "default",
+              "description": "替代 text"
+            }
+          ]
+        },
+        {
+          "name": "MDeleteIcon",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MDeleteIcon"
+          },
+          "attributes": [
+            {
+              "name": "kind",
+              "description": "图形：brush 是旧版那支斜放的毛笔（默认），cross 是一笔叉",
+              "default": "\"brush\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "DeleteIconKind | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "description": "边长（px），默认 32",
+              "default": "32",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用：不响应点击、置灰",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "label",
+              "description": "无障碍名称，默认「删除」",
+              "default": "\"删除\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "叉的笔触随机种子",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "description": "点了图标（禁用时不触发）"
+            }
+          ],
+          "slots": []
+        },
+        {
+          "name": "MConfigProvider",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MConfigProvider"
+          },
+          "attributes": [
+            {
+              "name": "size",
+              "description": "组件默认尺寸，组件自己没传 size 时用它",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "ConfigSize | undefined"
+              }
+            },
+            {
+              "name": "locale",
+              "description": "语言标签（BCP 47，如 zh-CN / en-US），组件内置文案按它选",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "inkTier",
+              "description": "水墨效果档位 0 / 1 / 2；不传跟随 createInkEngine 的自动探测",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "InkTier | undefined"
+              }
+            },
+            {
+              "name": "theme",
+              "description": "主题：挂载后写到 html 的 data-theme；不传则不接管，交给 MDarkMode 或使用方自己写",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "ConfigTheme | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "MDarkMode",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MDarkMode"
+          },
+          "attributes": [
+            {
+              "name": "disabled",
+              "description": "禁用：不可点",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "autoMode",
+              "description": "没有 v-model 也没有本地记录时，写 data-theme=\"system\" 跟随系统深浅偏好。默认 false：库默认亮色纸，不替使用方决定",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "rotate",
+              "description": "太极缓慢自转，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "storageKey",
+              "description": "记住选择用的 localStorage 键，默认 \"shuimo-theme\"（值是 dark / light）；false 不记",
+              "default": "DARK_MODE_STORAGE_KEY",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | false | undefined"
+              }
+            },
+            {
+              "name": "transition",
+              "description": "切换时整页墨迹擦过（View Transitions），默认 true；不支持的浏览器直接切",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "用户点击切换后，参数是切换后是否为深色"
+            }
+          ],
+          "slots": []
+        },
+        {
+          "name": "MSvg",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSvg"
+          },
+          "attributes": [
+            {
+              "name": "name",
+              "description": "图标名；不传则渲染默认插槽里自己写的 svg",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SvgIconName | undefined"
+              }
+            },
+            {
+              "name": "ink",
+              "description": "用笔触写出的水墨版（check / close / chevron-down / chevron-right / dot / minus / plus 有），没有笔触版的名字回落到线性版",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触版的随机种子，默认 1（与全局素材一致）",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "description": "尺寸：数字按 px，字符串原样；默认 1em 跟随字号",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "color",
+              "description": "颜色，默认 currentColor",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "rotate",
+              "description": "顺时针旋转角度",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "spin",
+              "description": "持续转圈（配 loading 图标用）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "无障碍名称；不传按纯装饰处理（aria-hidden）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "自定义 svg 内容，name 没传时渲染"
+            }
+          ]
+        },
+        {
+          "name": "MStamp",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MStamp"
+          },
+          "attributes": [
+            {
+              "name": "text",
+              "description": "印文：字符串自动分列（竖排、从右往左读）；数组每项是一列，第一项在最右",
+              "required": true,
+              "value": {
+                "kind": "expression",
+                "type": "string | string[]"
+              }
+            },
+            {
+              "name": "size",
+              "description": "印章高度（px），宽度按印文和形状算出来",
+              "default": "120",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "mode",
+              "description": "阳文（朱文，红字红框）还是阴文（白文，红底白字）",
+              "default": "\"yang\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StampMode | undefined"
+              }
+            },
+            {
+              "name": "shape",
+              "description": "外形：auto 贴着印文、square 方、rect 长方、circle 圆、ellipse 椭圆、polygon 多边形",
+              "default": "\"auto\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StampShape | undefined"
+              }
+            },
+            {
+              "name": "aspect",
+              "description": "宽高比，rect / ellipse / polygon 用",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "sides",
+              "description": "多边形边数（3 起），默认 6",
+              "default": "6",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "orientation",
+              "description": "多边形朝向：flat-top 一条边在上，point-top 一个角在上",
+              "default": "\"flat-top\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "PolygonOrientation | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "随机种子：四角半径、边框磨损、印泥白斑都由它决定，同种子同章",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "color",
+              "description": "印泥色，默认 --m-seal（朱砂）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "font",
+              "description": "字体族，默认 --m-font-seal；要篆体自己",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "border",
+              "description": "边框厚度（px），默认 size × 3.5%",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "corner",
+              "description": "圆角：round 带一点随机的圆角，none 直角",
+              "default": "\"round\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StampCorner | undefined"
+              }
+            },
+            {
+              "name": "cornerRadius",
+              "description": "圆角半径（px），默认短边 4%",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "roughness",
+              "description": "边框磨损 0 ~ 1：一圈起伏加几个咬进边框的缺口，默认 0.5",
+              "default": "0.5",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "carving",
+              "description": "刀刻 0 ~ 1：文字边缘的崩口和石屑，默认 0.8",
+              "default": "0.8",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "bleed",
+              "description": "印泥 0 ~ 1：没压实的白斑和边缘起毛，默认 0.7",
+              "default": "0.7",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "padding",
+              "description": "文字到边框的内边距（px），默认 size × 1.5%",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "gap",
+              "description": "字距和列距（px），默认 size × 1%",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "rowGap",
+              "description": "同列字与字的距离，覆盖 gap",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "columnGap",
+              "description": "列与列的距离，覆盖 gap",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "columns",
+              "description": "字符串印文分几列，默认按字数取近似方形",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "stretch",
+              "description": "每个字非等比撑满格子（九叠篆那种）；方 / 圆 / 多边形默认开",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "cellHeightMode",
+              "description": "行高分配：uniform 等分，fit 按各行最高的字分（矮字不留空）",
+              "default": "\"uniform\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "\"uniform\" | \"fit\" | undefined"
+              }
+            },
+            {
+              "name": "offsetX",
+              "description": "文字在框内左右偏移，-1 贴右、0 居中、1 贴左",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "offsetY",
+              "description": "文字在框内上下偏移，-1 贴上、0 居中、1 贴下",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "ttb-rtl 竖排；circular 沿圆周排（圆章用）",
+              "default": "\"ttb-rtl\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StampDirection | undefined"
+              }
+            },
+            {
+              "name": "gridLines",
+              "description": "阴章的界格：列与列、行与行之间抠一道纸色",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "gridLineWidth",
+              "description": "界格线宽（px），默认字号 6%",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "rotate",
+              "description": "盖章的歪斜角度（deg）",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": []
+        },
+        {
+          "name": "MSkeleton",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSkeleton"
+          },
+          "attributes": [
+            {
+              "name": "loading",
+              "description": "是否显示骨架；为 false 时渲染 default 插槽里的真实内容",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "animated",
+              "description": "占位块上扫过一道淡墨晕（纯 CSS 动画，减弱动效时自动关掉）",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "rows",
+              "description": "段落行数",
+              "default": "3",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "avatar",
+              "description": "段落左边画一个圆形头像占位",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "第一行短一些当标题",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "throttle",
+              "description": "loading 变 true 后延迟多少毫秒才露出骨架，请求很快回来就不会闪一下",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "真实内容，loading 为 false 时渲染"
+            },
+            {
+              "name": "template",
+              "description": "自定义骨架排布，用 MSkeletonItem 拼"
+            }
+          ]
+        },
+        {
+          "name": "MSkeletonItem",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSkeletonItem"
+          },
+          "attributes": [
+            {
+              "name": "variant",
+              "description": "占位块形状：text 文字行、h1 / h3 标题、circle 圆、rect 矩形、image 带图片记号的矩形、button 按钮",
+              "default": "\"text\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "SkeletonItemVariant | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": []
+        },
+        {
+          "name": "MSteps",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MSteps"
+          },
+          "attributes": [
+            {
+              "name": "active",
+              "description": "当前步的序号，从 0 开始；序号小于它的步算完成，大于它的算等待",
+              "default": "0",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "direction",
+              "description": "排列方向，默认横向",
+              "default": "\"horizontal\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StepsDirection | undefined"
+              }
+            },
+            {
+              "name": "status",
+              "description": "当前步的状态，默认 process；出错时传 error",
+              "default": "\"process\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StepStatus | undefined"
+              }
+            },
+            {
+              "name": "simple",
+              "description": "紧凑版：节点和标题排成一行，不显示描述",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "放 MStep"
+            }
+          ]
+        },
+        {
+          "name": "MStep",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MStep"
+          },
+          "attributes": [
+            {
+              "name": "title",
+              "description": "标题；title 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "description",
+              "description": "描述，标题下面一行小字；description 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "status",
+              "description": "强制指定这一步的状态，不传则按序号和 MSteps 的 active 推断",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "StepStatus | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "icon",
+              "description": "节点里的内容，替换掉序号 / 勾 / 叉"
+            },
+            {
+              "name": "title",
+              "description": "标题"
+            },
+            {
+              "name": "description",
+              "description": "描述"
+            }
+          ]
+        },
+        {
+          "name": "MCard",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MCard"
+          },
+          "attributes": [
+            {
+              "name": "title",
+              "description": "标题（也可用 header 插槽）",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "shadow",
+              "description": "阴影：always 常显、hover 悬停时出现、never 不要",
+              "default": "\"hover\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CardShadow | undefined"
+              }
+            },
+            {
+              "name": "bordered",
+              "description": "画边框，默认 true；false 时 frame 不生效",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "frame",
+              "description": "框型。开了 ink 引擎时三种都是一笔画出来的笔触框，只是粗细不同：plain 细一笔、double 中等一笔（默认）、brush 粗一笔带飞白；\n没开引擎时 plain 单线、double 双线（外 1px + 内 1px 隔 3px）、brush 退回 double",
+              "default": "\"double\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "CardFrame | undefined"
+              }
+            },
+            {
+              "name": "padding",
+              "description": "内容区内边距，数字按 px，默认 20px",
+              "default": "20",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "笔触随机种子：笔触边框、标题下的分隔线、毛边纸缘都用它，同一页多张卡传不同值就不会一模一样",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "内容"
+            },
+            {
+              "name": "header",
+              "description": "头部（替代 title）"
+            },
+            {
+              "name": "extra",
+              "description": "头部右侧"
+            },
+            {
+              "name": "cover",
+              "description": "顶部封面（图片区），裁在边框内"
+            },
+            {
+              "name": "footer",
+              "description": "底部"
+            },
+            {
+              "name": "seal",
+              "description": "印：盖在卡片右下角，不占内容流，微微探出框外 4px、歪 6°；放一枚 MStamp 就是落款章。插槽为空不渲染任何节点"
+            }
+          ]
+        },
+        {
+          "name": "MBadge",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MBadge"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "description": "显示的数字或文字；数字超过 max 显示 \"max+\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | number | undefined"
+              }
+            },
+            {
+              "name": "max",
+              "description": "数字上限，默认 99",
+              "default": "99",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "dot",
+              "description": "只显示一个小点，不显示数字",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "hidden",
+              "description": "隐藏角标",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "type",
+              "description": "语义色，默认 danger（朱砂印泥色）",
+              "default": "\"danger\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "BadgeType | undefined"
+              }
+            },
+            {
+              "name": "offset",
+              "description": "位移 [x, y]，单位 px，在默认位置（内容右上角）基础上叠加",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "[number, number] | undefined"
+              }
+            },
+            {
+              "name": "showZero",
+              "description": "value 为 0 时也显示，默认 false",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "水墨层小印毛边、印泥纹理和小点的随机种子；同一页多个角标可以各给一个，默认 1",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "被标注的内容；不传时角标独立显示，不做绝对定位"
+            }
+          ]
+        },
+        {
+          "name": "MAlert",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MAlert"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "语义类型：success 石绿、warn 藤黄、danger 朱砂、info 花青，默认 info",
+              "default": "\"info\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "AlertType | undefined"
+              }
+            },
+            {
+              "name": "title",
+              "description": "标题",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "description",
+              "description": "辅助说明，也可用默认插槽",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "closable",
+              "description": "显示关闭按钮，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "showIcon",
+              "description": "显示状态徽记，默认 true",
+              "default": "true",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "center",
+              "description": "文字居中",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "effect",
+              "description": "light 淡底 + 语义色边和徽记；dark 语义色底 + 白字，默认 light",
+              "default": "\"light\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "AlertEffect | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "左侧笔触线和徽记的随机种子",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "close",
+              "description": "点了关闭按钮；随后组件自己隐藏"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "说明文字，优先于 description"
+            },
+            {
+              "name": "title",
+              "description": "标题，优先于 title"
+            },
+            {
+              "name": "icon",
+              "description": "替换状态徽记"
+            },
+            {
+              "name": "action",
+              "description": "右侧操作区（按钮、链接）"
+            }
+          ]
+        },
+        {
+          "name": "MEmpty",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MEmpty"
+          },
+          "attributes": [
+            {
+              "name": "description",
+              "description": "说明文字，默认「暂无数据」",
+              "default": "\"暂无数据\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "imageSize",
+              "description": "插图区高度 px，默认 120",
+              "default": "120",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            },
+            {
+              "name": "image",
+              "description": "内置插图：enso 一笔圆、ridge 远山、none 不画，默认 enso",
+              "default": "\"enso\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "EmptyImage | undefined"
+              }
+            },
+            {
+              "name": "seed",
+              "description": "插图的随机种子",
+              "default": "1",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "number | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "image",
+              "description": "自定义插图，替换内置的"
+            },
+            {
+              "name": "description",
+              "description": "说明文字，优先于 description"
+            },
+            {
+              "name": "default",
+              "description": "说明下面的操作区（按钮等）"
+            }
+          ]
+        },
+        {
+          "name": "MTabs",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTabs"
+          },
+          "attributes": [
+            {
+              "name": "type",
+              "description": "外形：line 导航条下一条笔触线 + 激活项一横朱笔指示器；card 每个标签一条签条（书签式），\n激活的那条纸色、朝内容区探出一截压在内容区框线上。不开水墨引擎时退回实线和 CSS 双线框",
+              "default": "\"line\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TabsType | undefined"
+              }
+            },
+            {
+              "name": "position",
+              "description": "导航条位置；left / right 时标签竖着排，方向键改用上下",
+              "default": "\"top\"",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TabsPosition | undefined"
+              }
+            },
+            {
+              "name": "closable",
+              "description": "所有标签都显示关闭按钮；单个 MTabPane 可用自己的 closable 覆盖",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "stretch",
+              "description": "标签平分导航条宽度",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "整组禁用：所有标签不可切换、不可关闭",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "modelValue",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TabName | undefined"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "update:modelValue"
+            },
+            {
+              "name": "change",
+              "description": "激活的标签变化"
+            },
+            {
+              "name": "tabClick",
+              "description": "点了某个标签（不管有没有真的切换）"
+            },
+            {
+              "name": "tabRemove",
+              "description": "点了某个标签的关闭按钮；组件不会自己删 pane，由使用方处理"
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "description": "放 MTabPane"
+            },
+            {
+              "name": "extra",
+              "description": "导航条末尾（横排时靠右，竖排时靠下）的附加内容"
+            }
+          ]
+        },
+        {
+          "name": "MTabPane",
+          "source": {
+            "module": "@shuimo-design/vue",
+            "symbol": "MTabPane"
+          },
+          "attributes": [
+            {
+              "name": "name",
+              "description": "标签标识，写进 MTabs 的 v-model；不传则自动生成",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "TabName | undefined"
+              }
+            },
+            {
+              "name": "label",
+              "description": "标签文字；label 插槽优先",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "禁用后不能被选中",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "closable",
+              "description": "是否显示关闭按钮；不传则跟随 MTabs",
+              "default": "undefined",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            },
+            {
+              "name": "lazy",
+              "description": "首次激活时才渲染内容，之后切走只是隐藏",
+              "default": "false",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "boolean | undefined"
+              }
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "default",
+              "description": "面板内容"
+            },
+            {
+              "name": "label",
+              "description": "导航条上的标签内容，优先于 label"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

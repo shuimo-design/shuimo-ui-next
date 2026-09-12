@@ -1,7 +1,7 @@
 {
   "name": "MPopover",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MPopover"
   },
   "attributes": [

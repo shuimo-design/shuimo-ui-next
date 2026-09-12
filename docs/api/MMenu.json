@@ -1,7 +1,7 @@
 {
   "name": "MMenu",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MMenu"
   },
   "attributes": [

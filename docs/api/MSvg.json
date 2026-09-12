@@ -1,7 +1,7 @@
 {
   "name": "MSvg",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MSvg"
   },
   "attributes": [

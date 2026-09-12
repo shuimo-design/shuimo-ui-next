@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MSelect, type SelectOption, type SelectValue } from "@shuimo-design/ui";
+import { MSelect, type SelectOption, type SelectValue } from "@shuimo-design/vue";
 
 type Model = SelectValue | SelectValue[] | undefined;
 

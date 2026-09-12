@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { MTable, MTableColumn } from "@shuimo-design/ui";
+import { MTable, MTableColumn } from "@shuimo-design/vue";
 
 /**
  * docs/api/<组件名>.json 的结构：packages/ui/scripts/gen-meta.ts 在 `pnpm build` 时

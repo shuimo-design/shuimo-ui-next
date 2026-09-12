@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MDatePicker } from "@shuimo-design/ui";
+import { MDatePicker } from "@shuimo-design/vue";
 
 // 旧文档示例
 const plain = ref<string | Date | null>(null);

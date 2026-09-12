@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MDivider } from "@shuimo-design/ui";
+import { MDivider } from "@shuimo-design/vue";
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 {
   "name": "MDarkMode",
   "source": {
-    "module": "@shuimo-design/ui",
+    "module": "@shuimo-design/vue",
     "symbol": "MDarkMode"
   },
   "attributes": [

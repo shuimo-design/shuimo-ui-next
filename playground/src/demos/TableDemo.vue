@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MButton, MTable, MTableColumn, type TableColumnDef } from "@shuimo-design/ui";
+import { MButton, MTable, MTableColumn, type TableColumnDef } from "@shuimo-design/vue";
 
 interface Term {
   id: number;
