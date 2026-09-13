@@ -1,6 +1,6 @@
 {
   "name": "@shuimo-design/core",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-beta.0",
   "description": "水墨风组件库的无框架内核 —— 墨迹生成、状态控制器与全部样式",
   "keywords": [
     "chinese",
@@ -39,6 +39,9 @@
       "default": "./dist/style.css"
     },
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "vp pack && pnpm check:style",

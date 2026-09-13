@@ -1,4 +1,4 @@
-# @shuimo-design/vue
+# @shuimo-design/core
 
 ## 1.0.0-beta.0
 
@@ -13,18 +13,3 @@
   - `@shuimo-design/react` —— React 壳，`v-model` 对应受控 / 非受控两套 prop，具名插槽对应渲染属性。
 
   样式是单独一份，必须显式 `import "@shuimo-design/vue/style.css"`；水墨皮肤在 `@layer m.ink` 里，由 `createInkEngine()` 打开，不调用就只有基础层。两边都支持服务端渲染，弹层类组件不进服务端 HTML。纯 ESM。
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @shuimo-design/core@1.0.0-beta.1
-
-## 1.0.0-alpha.0
-
-### Major Changes
-
-- 首个预发布版本。59 个组件，宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG，包里没有位图和字体。
-
-  四个入口：`.` 组件、`./ink` 水墨引擎、`./nuxt` Nuxt 模块、`./resolver` 按需引入。纯 ESM，需要 Vue 3.5+。
-
-  水墨皮肤在 `@layer m.ink` 层，由 `createInkEngine()` 打开；不调用就只有基础层样式。

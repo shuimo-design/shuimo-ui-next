@@ -1,6 +1,6 @@
 {
   "name": "@shuimo-design/vue",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-beta.0",
   "description": "水墨风 Vue 3 组件库（next）—— 程序化宣纸、山水、墨晕与笔触",
   "keywords": [
     "chinese",
@@ -46,6 +46,9 @@
     },
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "vp pack && pnpm check:style",
