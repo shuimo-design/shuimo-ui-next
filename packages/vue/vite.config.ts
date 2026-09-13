@@ -15,8 +15,12 @@ const SOURCE_SSR = ["@shuimo-design/source", "module", "node", "development|prod
 
 export default defineConfig({
   plugins: [vue()],
+  // 同 react 包：测试期的依赖要全列，漏了会在跑到一半时触发重新预构建，
+  // 正在飞的动态 import 直接失败（`@floating-ui/dom` 是 core 的依赖，core 被 exclude
+  // 掉按源码提供，初次扫描扫不到它）。@vueuse/core 和 @floating-ui/vue 早就不用了，
+  // 留在这里 vite 反而要去解析两个不存在的包
   optimizeDeps: {
-    include: ["@floating-ui/vue", "vue", "@vueuse/core"],
+    include: ["vue", "vitest-browser-vue", "@shuimo-design/core > @floating-ui/dom"],
     exclude: ["@shuimo-design/core"],
   },
 

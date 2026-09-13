@@ -10,8 +10,22 @@ const SOURCE_SSR = ["@shuimo-design/source", "module", "node", "development|prod
 
 export default defineConfig({
   plugins: [react()],
+  // 测试期用得到的依赖要**全**列出来，`@floating-ui/dom` 尤其不能漏 —— 它是 core 的依赖，
+  // 而 core 被 exclude 掉、按源码提供，vite 初次扫描看不到它，要等某个测试真的引到才
+  // 现场预构建，然后 "optimized dependencies changed. reloading"，正在飞的那几个动态
+  // import 当场以 "Failed to fetch dynamically imported module" 整个文件加载失败。
+  // 表现是随机几个测试文件挂掉，冷缓存（CI 每次都是）必现
   optimizeDeps: {
-    include: ["react", "react-dom", "react/jsx-runtime"],
+    include: [
+      "react",
+      "react-dom",
+      "react-dom/client",
+      "react/jsx-runtime",
+      "vitest-browser-react",
+      // 写成 "A > B" 是 vite 给这种情况准备的语法：B 不是本包的依赖，解析不到，
+      // 要告诉它从 A 里面找
+      "@shuimo-design/core > @floating-ui/dom",
+    ],
     exclude: ["@shuimo-design/core"],
   },
 

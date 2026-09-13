@@ -56,7 +56,6 @@
     "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
   },
   "dependencies": {
-    "@floating-ui/vue": "^2.0.1",
     "@shuimo-design/core": "workspace:^"
   },
   "devDependencies": {
@@ -74,7 +73,6 @@
     "vitest": "catalog:",
     "vitest-browser-vue": "^3.1.0",
     "vue": "catalog:",
-    "vue-component-meta": "^3.3.11",
     "vue-tsc": "^3.3.11"
   },
   "peerDependencies": {
