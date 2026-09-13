@@ -111,7 +111,12 @@ describe("MMenu", () => {
         onValueChange={onValueChange}
       />,
     );
-    // 带 aria-disabled 的元素 playwright 默认不肯点，force 跳过可点性检查
+    // defaultExpandAll 是挂载后才展开的，子菜单撑开的 240ms 里下面的行一直在往下滑。
+    // force 点击不等元素稳定，取完坐标就按，那一瞬行已经滑走，按到的是上面那行"关于"
+    // （根目录并行跑两套浏览器时偶发）。先 hover 一次：它要等位置连续两帧不变、且那个点
+    // 命中的就是它自己，等的正是动画结束。带 aria-disabled 的元素 playwright 默认不肯点，
+    // 之后的 click 才需要 force 跳过可点性检查
+    await itemOf(screen, "停用").hover();
     await itemOf(screen, "停用").click({ force: true });
     await itemOf(screen, "输入框").click({ force: true });
     expect(onValueChange).not.toHaveBeenCalled();
