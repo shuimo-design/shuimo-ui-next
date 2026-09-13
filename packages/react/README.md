@@ -23,8 +23,9 @@ import App from "./App";
 
 // 样式是单独一份，JS 里不带，必须自己引一次
 import "@shuimo-design/react/style.css";
-// 墨迹引擎：不调就只剩骨架样式，毛边和笔触不出现
-import { createInkEngine } from "@shuimo-design/core/ink";
+// 墨迹引擎：不调就只剩骨架样式，毛边和笔触不出现。
+// 从这个包的 /ink 引，别引 @shuimo-design/core：pnpm 下 core 不是你项目的直接依赖，解析不到
+import { createInkEngine } from "@shuimo-design/react/ink";
 
 createInkEngine();
 createRoot(document.getElementById("root")!).render(<App />);

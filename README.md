@@ -29,7 +29,7 @@
 import { createApp } from "vue";
 import "@shuimo-design/vue/style.css"; // 样式是单独一个文件，必须显式引
 import { createShuimo } from "@shuimo-design/vue";
-import { createInkEngine } from "@shuimo-design/core/ink";
+import { createInkEngine } from "@shuimo-design/vue/ink";
 
 createInkEngine(); // 装水墨滤镜；不调用就只有基础层样式，组件照常能用
 createApp(App).use(createShuimo()).mount("#app");
@@ -40,7 +40,7 @@ createApp(App).use(createShuimo()).mount("#app");
 ```tsx
 import "@shuimo-design/react/style.css";
 import { MButton } from "@shuimo-design/react";
-import { createInkEngine } from "@shuimo-design/core/ink";
+import { createInkEngine } from "@shuimo-design/react/ink";
 
 createInkEngine();
 export default () => <MButton type="primary" text="落笔" />;
@@ -76,7 +76,7 @@ Vue 独有的两个入口留着：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`
 然后在启动时拉一次字体：
 
 ```ts
-import { createInkEngine, preloadStampFont } from "@shuimo-design/core/ink";
+import { createInkEngine, preloadStampFont } from "@shuimo-design/vue/ink"; // React 就是 @shuimo-design/react/ink
 
 createInkEngine();
 void preloadStampFont(); // 不传参数就读 :root 上的 --m-font-seal

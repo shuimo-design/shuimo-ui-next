@@ -8,8 +8,9 @@ import App from "./App.vue";
 
 // 1. 样式：JS 里不带样式，必须自己显式引一次
 import "@shuimo-design/vue/style.css";
-// 2. 墨迹引擎：不调就只有骨架，没有毛边、笔触和印泥
-import { createInkEngine } from "@shuimo-design/core/ink";
+// 2. 墨迹引擎：不调就只有骨架，没有毛边、笔触和印泥。
+// 从这个包的 /ink 引，别引 @shuimo-design/core：pnpm 下 core 不是你项目的直接依赖，解析不到
+import { createInkEngine } from "@shuimo-design/vue/ink";
 
 createInkEngine();
 createApp(App).mount("#app");`;
@@ -42,7 +43,7 @@ const font = `@font-face {
   --m-font-seal: "我的篆体", serif;
 }`;
 
-const preload = `import { createInkEngine, preloadStampFont } from "@shuimo-design/core/ink";
+const preload = `import { createInkEngine, preloadStampFont } from "@shuimo-design/vue/ink";
 
 createInkEngine();
 void preloadStampFont();`;
