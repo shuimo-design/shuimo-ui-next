@@ -115,15 +115,42 @@ function membersOf(name: string): ts.Symbol[] {
   return checker.getPropertiesOfType(checker.getTypeAtLocation(found.decl));
 }
 
+/**
+ * 泛型接口的类型参数在文档里怎么显示：按默认值，没有默认值就按约束。
+ * `SwitchProps<T extends SwitchValue = SwitchValue>` 的 `activeValue?: T` 应显示成
+ * `SwitchValue | undefined`，读者不需要知道 T —— T 只是让壳层能把 v-model 推窄的手段
+ */
+function typeParamDisplay(params: readonly ts.TypeParameterDeclaration[] | undefined) {
+  const map = new Map<string, string>();
+  for (const param of params ?? []) {
+    const shown = param.default ?? param.constraint;
+    if (shown) map.set(param.name.text, shown.getText());
+  }
+  return map;
+}
+
+/** 把类型文字里的类型参数名换成显示用的文字；只替换整词，`T` 不会碰到 `TabName` */
+function substituteTypeParams(text: string, params: Map<string, string>): string {
+  let out = text;
+  for (const [name, shown] of params) {
+    out = out.replace(new RegExp(`(?<![\\w$])${name}(?![\\w$])`, "g"), shown);
+  }
+  return out;
+}
+
 /** 打印某个成员的类型文字；可选成员会自带 ` | undefined`，跟旧脚本一致 */
 function typeTextOf(symbol: ts.Symbol): string {
   const at = symbol.valueDeclaration ?? symbol.declarations?.[0];
   if (!at) return "unknown";
-  return checker.typeToString(
+  const text = checker.typeToString(
     checker.getTypeOfSymbolAtLocation(symbol, at),
     at,
     ts.TypeFormatFlags.NoTruncation,
   );
+  // 成员的父节点就是声明它的接口（继承来的成员，父节点是被继承的那个接口），类型参数从那里拿
+  const owner = at.parent;
+  const params = ts.isInterfaceDeclaration(owner) ? owner.typeParameters : undefined;
+  return substituteTypeParams(text, typeParamDisplay(params));
 }
 
 /**
@@ -288,6 +315,20 @@ function readSfc(file: string): { defaults: Map<string, string>; models: ModelEn
     readFileSync(file, "utf8"),
   );
   if (!block) return { defaults, models };
+  // 泛型 SFC：`<script setup generic="T extends SwitchValue = boolean">`。
+  // 文档里的 v-model 类型按 T 的约束显示（不是默认值：默认值是"用户不传时"的推导结果，
+  // 约束才是"这个属性接受什么"）
+  const generic = /\bgeneric\s*=\s*"([^"]*)"/.exec(block[0])?.[1];
+  const genericParams = new Map<string, string>();
+  for (const raw of generic?.split(",") ?? []) {
+    const m = /^\s*(\w+)(?:\s+extends\s+(.+?))?(?:\s*=\s*(.+?))?\s*$/.exec(raw);
+    if (m?.[1] && (m[2] ?? m[3])) genericParams.set(m[1], (m[2] ?? m[3])!.trim());
+  }
+  /** 默认值上的类型断言（`true as T`）只是给泛型看的，文档里去掉 */
+  const stripAssertion = (node: ts.Expression): ts.Expression =>
+    ts.isAsExpression(node) || ts.isTypeAssertionExpression(node)
+      ? stripAssertion(node.expression)
+      : node;
   const source = ts.createSourceFile(
     `${file}.ts`,
     block[1]!,
@@ -299,15 +340,28 @@ function readSfc(file: string): { defaults: Map<string, string>; models: ModelEn
   /** 工厂函数形式的默认值（数组 / 对象必须包一层函数）在文档里只显示里面那个字面量 */
   const literalOf = (node: ts.Expression): string => {
     if (ts.isArrowFunction(node) && node.parameters.length === 0) {
-      const body = node.body;
-      if (ts.isArrayLiteralExpression(body) || ts.isObjectLiteralExpression(body)) {
+      const body = ts.isBlock(node.body) ? undefined : stripAssertion(node.body);
+      if (body && (ts.isArrayLiteralExpression(body) || ts.isObjectLiteralExpression(body))) {
         return body.getText(source);
       }
-      if (ts.isParenthesizedExpression(body) && ts.isObjectLiteralExpression(body.expression)) {
+      if (
+        body &&
+        ts.isParenthesizedExpression(body) &&
+        ts.isObjectLiteralExpression(body.expression)
+      ) {
         return body.expression.getText(source);
       }
+      // 泛型 model 的默认值只能写成函数（`() => false as T`），文档里显示里面那个字面量
+      if (
+        body &&
+        (ts.isLiteralExpression(body) ||
+          body.kind === ts.SyntaxKind.TrueKeyword ||
+          body.kind === ts.SyntaxKind.FalseKeyword)
+      ) {
+        return body.getText(source);
+      }
     }
-    return node.getText(source);
+    return stripAssertion(node).getText(source);
   };
 
   const calleeName = (node: ts.Expression): string | undefined =>
@@ -327,7 +381,7 @@ function readSfc(file: string): { defaults: Map<string, string>; models: ModelEn
         for (const element of declaration.name.elements) {
           if (element.initializer && ts.isIdentifier(element.propertyName ?? element.name)) {
             const key = (element.propertyName ?? element.name) as ts.Identifier;
-            defaults.set(key.text, element.initializer.getText(source));
+            defaults.set(key.text, stripAssertion(element.initializer).getText(source));
           }
         }
       }
@@ -350,9 +404,10 @@ function readSfc(file: string): { defaults: Map<string, string>; models: ModelEn
         const options = [first, second].find(
           (a): a is ts.ObjectLiteralExpression => !!a && ts.isObjectLiteralExpression(a),
         );
+        const typeArg = init.typeArguments?.[0]?.getText(source);
         const entry: ModelEntry = {
           name: named ?? "modelValue",
-          type: init.typeArguments?.[0]?.getText(source),
+          type: typeArg && substituteTypeParams(typeArg, genericParams),
           required: false,
         };
         for (const property of options?.properties ?? []) {

@@ -875,7 +875,7 @@
             },
             {
               "name": "modelValue",
-              "description": "开关的值，默认 true / false；可用 activeValue / inactiveValue 换成别的",
+              "description": "开关的值，类型和 activeValue / inactiveValue 一致；不绑的话默认 false",
               "default": "false",
               "required": false,
               "value": {
@@ -3540,7 +3540,7 @@
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "readonly Row[] | undefined"
+                "type": "readonly TableRow[] | undefined"
               }
             },
             {
@@ -3549,7 +3549,7 @@
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "readonly TableColumnConfig<Row, unknown>[] | undefined"
+                "type": "readonly TableColumnConfig<TableRow, unknown>[] | undefined"
               }
             },
             {
@@ -3558,7 +3558,7 @@
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "TableRowKey<Row> | undefined"
+                "type": "TableRowKey<TableRow> | undefined"
               }
             },
             {

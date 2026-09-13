@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends SwitchValue = boolean">
 import { computed } from "vue";
 import {
   switchChecked,
@@ -18,17 +18,19 @@ defineOptions({ name: "MSwitch" });
 const {
   disabled: disabledProp = false,
   loading = false,
-  activeValue = true,
-  inactiveValue = false,
+  // 默认值是 true / false，T 默认也是 boolean；用户传了别的 activeValue，T 就跟着变
+  activeValue = true as T,
+  inactiveValue = false as T,
   activeText,
   inactiveText,
   controlled = false,
   name,
-} = defineProps<SwitchProps>();
-const emit = defineEmits<SwitchEmits>();
+} = defineProps<SwitchProps<T>>();
+const emit = defineEmits<SwitchEmits<T>>();
 const slots = defineSlots<SwitchSlots>();
-/** 开关的值，默认 true / false；可用 activeValue / inactiveValue 换成别的 */
-const model = defineModel<SwitchValue>({ default: false });
+/** 开关的值，类型和 activeValue / inactiveValue 一致；不绑的话默认 false */
+// 默认值必须写成函数：泛型 T 过不了 Vue 对字面量默认值的类型检查（它要先确定 T 是原始类型）
+const model = defineModel<T>({ default: () => false as T });
 
 // 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水
 const formItem = useFormItem();

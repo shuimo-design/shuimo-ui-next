@@ -47,16 +47,16 @@ export function switchInk(): Record<string, string> {
 }
 
 /** 绑定值等于 activeValue 才算打开；非布尔的 activeValue（"night" / 1）走同一条路 */
-export function switchChecked(value: SwitchValue | undefined, activeValue: SwitchValue = true) {
+export function switchChecked<T extends SwitchValue>(value: T | undefined, activeValue: T) {
   return value === activeValue;
 }
 
-/** 点一下之后"将要变成"的值 */
-export function switchNextValue(
+/** 点一下之后"将要变成"的值；类型跟着 activeValue 走，壳层能原样写回 v-model */
+export function switchNextValue<T extends SwitchValue>(
   checked: boolean,
-  activeValue: SwitchValue = true,
-  inactiveValue: SwitchValue = false,
-): SwitchValue {
+  activeValue: T,
+  inactiveValue: T,
+): T {
   return checked ? inactiveValue : activeValue;
 }
 

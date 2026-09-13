@@ -10,14 +10,15 @@ import {
 } from "@shuimo-design/core";
 import { useDisabled, useFormItem } from "../../internal/form-item";
 
-export interface MSwitchProps extends CoreSwitchProps {
+/** T 跟 core 的 SwitchProps 一样：默认 boolean，传了 activeValue="night" 就是 string */
+export interface MSwitchProps<T extends SwitchValue = boolean> extends CoreSwitchProps<T> {
   /** 受控值；不传就由组件自己记（配合 defaultValue） */
-  value?: SwitchValue;
-  defaultValue?: SwitchValue;
+  value?: T;
+  defaultValue?: T;
   /** 值变了（`controlled` 为真时不发，由外部自己决定改不改） */
-  onValueChange?: (value: SwitchValue) => void;
+  onValueChange?: (value: T) => void;
   /** 用户切换后，参数是（将要变成的）新值 */
-  onChange?: (value: SwitchValue) => void;
+  onChange?: (value: T) => void;
   /** 替代 activeText */
   active?: ReactNode;
   /** 替代 inactiveText */
@@ -26,12 +27,13 @@ export interface MSwitchProps extends CoreSwitchProps {
   style?: CSSProperties;
 }
 
-export function MSwitch(props: MSwitchProps) {
+export function MSwitch<T extends SwitchValue = boolean>(props: MSwitchProps<T>) {
   const {
     disabled: disabledProp = false,
     loading = false,
-    activeValue = true,
-    inactiveValue = false,
+    // 默认值是 true / false，T 默认也是 boolean；用户传了别的 activeValue，T 就跟着变
+    activeValue = true as T,
+    inactiveValue = false as T,
     activeText,
     inactiveText,
     controlled = false,
@@ -46,9 +48,7 @@ export function MSwitch(props: MSwitchProps) {
 
   // 受控 / 非受控两种都支持：传了 value 就听外面的，没传就自己记一份
   const isControlled = props.value !== undefined;
-  const [uncontrolled, setUncontrolled] = useState<SwitchValue>(
-    props.defaultValue ?? inactiveValue,
-  );
+  const [uncontrolled, setUncontrolled] = useState<T>(props.defaultValue ?? inactiveValue);
   const model = isControlled ? props.value! : uncontrolled;
 
   const checked = switchChecked(model, activeValue);

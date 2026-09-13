@@ -114,7 +114,7 @@
     },
     {
       "name": "modelValue",
-      "description": "开关的值，默认 true / false；可用 activeValue / inactiveValue 换成别的",
+      "description": "开关的值，类型和 activeValue / inactiveValue 一致；不绑的话默认 false",
       "default": "false",
       "required": false,
       "value": {
