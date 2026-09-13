@@ -6,7 +6,7 @@
 import type { BrushLineControllerOptions } from "../divider";
 import type { CollapseName } from "./types";
 
-export type { CollapseItemProps, CollapseName, CollapseProps } from "./types";
+export type { CollapseItemProps, CollapseModel, CollapseName, CollapseProps } from "./types";
 
 /**
  * 标题右侧那一笔按剩余宽度单独生成：标题长短不同，线的长度就不同，

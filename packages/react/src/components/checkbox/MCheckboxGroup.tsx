@@ -8,24 +8,29 @@ import {
 } from "@shuimo-design/core";
 import { CheckboxGroupContext } from "./context";
 
-export interface MCheckboxGroupProps extends CoreCheckboxGroupProps {
+/** T 跟 core 的 CheckboxProps 一样：从 value / onValueChange 推出这一组的值类型 */
+export interface MCheckboxGroupProps<
+  T extends CheckboxValue = CheckboxValue,
+> extends CoreCheckboxGroupProps {
   /** 受控的已选值；不传就由组件自己记（配合 defaultValue） */
-  value?: CheckboxValue[];
-  defaultValue?: CheckboxValue[];
-  onValueChange?: (values: CheckboxValue[]) => void;
+  value?: T[];
+  defaultValue?: T[];
+  onValueChange?: (values: T[]) => void;
   /** 用户操作导致已选值变化 */
-  onChange?: (values: CheckboxValue[]) => void;
+  onChange?: (values: T[]) => void;
   children?: ReactNode;
   className?: string;
   style?: CSSProperties;
 }
 
-export function MCheckboxGroup(props: MCheckboxGroupProps) {
+export function MCheckboxGroup<T extends CheckboxValue = CheckboxValue>(
+  props: MCheckboxGroupProps<T>,
+) {
   const { disabled = false, min, max, direction = "horizontal", children } = props;
 
   // 受控 / 非受控两种都支持：传了 value 就听外面的，没传就自己记一份
   const isControlled = props.value !== undefined;
-  const [uncontrolled, setUncontrolled] = useState<CheckboxValue[]>(props.defaultValue ?? []);
+  const [uncontrolled, setUncontrolled] = useState<T[]>(props.defaultValue ?? []);
   const values = isControlled ? props.value! : uncontrolled;
 
   // toggle 要放进上下文，身份必须稳定（变一次所有子项白重渲染一轮），
@@ -35,8 +40,8 @@ export function MCheckboxGroup(props: MCheckboxGroupProps) {
 
   const toggle = useCallback((value: CheckboxValue, checked: boolean) => {
     const current = latest.current;
-    // 增删规则在 core，和 Vue 那边是同一份
-    const next = nextCheckboxValues(current.values, value, checked);
+    // 增删规则在 core，和 Vue 那边是同一份；上下文里的值是宽的 CheckboxValue，到这里收窄一次
+    const next = nextCheckboxValues(current.values, value, checked) as T[];
     if (!current.isControlled) setUncontrolled(next);
     current.props.onValueChange?.(next);
     current.props.onChange?.(next);

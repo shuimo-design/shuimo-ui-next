@@ -18,7 +18,17 @@ export interface SelectOption {
  */
 export type SelectOptionLike = SelectOption | string | number | boolean | object;
 
-export interface SelectProps {
+/**
+ * v-model 的形状：多选是数组，单选是一个值或 undefined（清空后）。
+ * 壳层把 V 接到 v-model / value、Multiple 接到 multiple 属性上：绑 ref<string | undefined>()
+ * 就推成 string，`<MSelect multiple v-model="arr">` 推成数组。不带参数用是所有形状的并集
+ */
+export type SelectModel<
+  V extends SelectValue = SelectValue,
+  Multiple extends boolean = boolean,
+> = Multiple extends true ? V[] : V | undefined;
+
+export interface SelectProps<Multiple extends boolean = boolean> {
   /** 候选项 */
   options: SelectOptionLike[];
   /** 选项是对象时，下拉里显示哪个字段；不传就用 label */
@@ -36,7 +46,7 @@ export interface SelectProps {
   /** 有值时显示清空按钮 */
   clearable?: boolean;
   /** 多选；v-model 为数组 */
-  multiple?: boolean;
+  multiple?: Multiple;
   /** 可输入过滤；默认按显示文字包含匹配，大小写不敏感 */
   filterable?: boolean;
   /** 自定义过滤函数，参数是原始选项和输入的文字 */
@@ -53,9 +63,12 @@ export interface SelectProps {
   teleport?: boolean;
 }
 
-export interface SelectEmits {
+export interface SelectEmits<
+  V extends SelectValue = SelectValue,
+  Multiple extends boolean = boolean,
+> {
   /** 选中值变化 */
-  change: [value: SelectValue | SelectValue[] | undefined];
+  change: [value: SelectModel<V, Multiple>];
   /** 点选了某个选项，参数是原始选项（多选时取消勾选也会触发） */
   select: [option: SelectOptionLike];
   /** 过滤框里的文字变化 */
@@ -63,7 +76,7 @@ export interface SelectEmits {
   /** 下拉开合 */
   visibleChange: [open: boolean];
   /** 多选时点了 Tag 的关闭 */
-  removeTag: [value: SelectValue];
+  removeTag: [value: V];
   /** 点了清空按钮 */
   clear: [];
   /** 获得焦点 */

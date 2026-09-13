@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends CheckboxValue = CheckboxValue">
 import { computed, provide, toRef } from "vue";
 import {
   checkboxGroupClasses,
@@ -20,17 +20,18 @@ const {
   max,
   direction = "horizontal",
 } = defineProps<CheckboxGroupProps>();
-const emit = defineEmits<CheckboxGroupEmits>();
+const emit = defineEmits<CheckboxGroupEmits<T>>();
 defineSlots<CheckboxGroupSlots>();
 /** 组内选中的值，顺序按勾选先后 */
-const model = defineModel<CheckboxValue[]>({ default: () => [] });
+const model = defineModel<T[]>({ default: () => [] });
 
 // 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水
 const formItem = useFormItem();
 const disabled = useDisabled(() => disabledProp);
 
+// 上下文里的值是宽的 CheckboxValue（子项不知道 T），到这里收窄一次
 function toggle(value: CheckboxValue, checked: boolean) {
-  const next = nextCheckboxValues(model.value, value, checked);
+  const next = nextCheckboxValues(model.value, value, checked) as T[];
   model.value = next;
   emit("change", next);
   formItem.value.validate("change");

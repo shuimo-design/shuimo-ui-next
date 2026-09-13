@@ -22,6 +22,7 @@ import {
   type SelectOptionLike,
   type SelectOptionScope,
   type SelectProps as CoreSelectProps,
+  type SelectModel,
   type SelectValue,
 } from "@shuimo-design/core";
 import { IconCheck, IconChevronDown, IconClose, IconLoading } from "../../icons";
@@ -30,13 +31,17 @@ import { MPopper } from "../../internal/MPopper";
 import { MTag } from "../tag";
 import { useController } from "../../runtime";
 
-export interface MSelectProps extends CoreSelectProps {
+/** V 从 value / onValueChange 推，Multiple 从 multiple 属性推，和 core 的 SelectModel 一致 */
+export interface MSelectProps<
+  V extends SelectValue = SelectValue,
+  Multiple extends boolean = boolean,
+> extends CoreSelectProps<Multiple> {
   /** 受控值；不传就由组件自己记（配合 defaultValue） */
-  value?: SelectValue | SelectValue[];
-  defaultValue?: SelectValue | SelectValue[];
-  onValueChange?: (value: SelectValue | SelectValue[] | undefined) => void;
+  value?: SelectModel<V, Multiple>;
+  defaultValue?: SelectModel<V, Multiple>;
+  onValueChange?: (value: SelectModel<V, Multiple>) => void;
   /** 选中值变化 */
-  onChange?: (value: SelectValue | SelectValue[] | undefined) => void;
+  onChange?: (value: SelectModel<V, Multiple>) => void;
   /** 点选了某个选项，参数是原始选项（多选时取消勾选也会触发） */
   onSelect?: (option: SelectOptionLike) => void;
   /** 过滤框里的文字变化 */
@@ -44,7 +49,7 @@ export interface MSelectProps extends CoreSelectProps {
   /** 下拉开合 */
   onVisibleChange?: (open: boolean) => void;
   /** 多选时点了 Tag 的关闭 */
-  onRemoveTag?: (value: SelectValue) => void;
+  onRemoveTag?: (value: V) => void;
   /** 点了清空按钮 */
   onClear?: () => void;
   onFocus?: (event: FocusEvent) => void;
@@ -59,7 +64,9 @@ export interface MSelectProps extends CoreSelectProps {
   style?: CSSProperties;
 }
 
-export function MSelect(props: MSelectProps) {
+export function MSelect<V extends SelectValue = SelectValue, Multiple extends boolean = false>(
+  props: MSelectProps<V, Multiple>,
+) {
   const {
     options,
     optionParam,
@@ -69,7 +76,7 @@ export function MSelect(props: MSelectProps) {
     placeholder = SELECT_PLACEHOLDER,
     disabled = false,
     clearable = false,
-    multiple = false,
+    multiple = false as Multiple,
     filterable = false,
     filter,
     loading = false,
@@ -85,7 +92,7 @@ export function MSelect(props: MSelectProps) {
   // 受控与否看的是有没有传 `value` 这个键，不是它等不等于 undefined：
   // 单选清空之后值本来就是 undefined，用 `!== undefined` 判断会让受控的选择器清空后突然变成非受控
   const controlled = "value" in props;
-  const [uncontrolled, setUncontrolled] = useState<SelectValue | SelectValue[] | undefined>(
+  const [uncontrolled, setUncontrolled] = useState<SelectModel<V, Multiple> | undefined>(
     props.defaultValue,
   );
   const model = controlled ? props.value : uncontrolled;
@@ -105,15 +112,17 @@ export function MSelect(props: MSelectProps) {
     disabled,
     value: model,
     fetch,
+    // 控制器给的是所有形状的并集，按本组件的 V / Multiple 收窄一次
     onCommit: (next: SelectValue | SelectValue[] | undefined) => {
-      if (!controlled) setUncontrolled(next);
-      props.onValueChange?.(next);
-      props.onChange?.(next);
+      const narrowed = next as SelectModel<V, Multiple>;
+      if (!controlled) setUncontrolled(narrowed);
+      props.onValueChange?.(narrowed);
+      props.onChange?.(narrowed);
     },
     onSelect: (option: SelectOptionLike) => props.onSelect?.(option),
     onInput: (value: string) => props.onInput?.(value),
     onVisibleChange: (open: boolean) => props.onVisibleChange?.(open),
-    onRemoveTag: (value: SelectValue) => props.onRemoveTag?.(value),
+    onRemoveTag: (value: SelectValue) => props.onRemoveTag?.(value as V),
     onClear: () => props.onClear?.(),
     onFocus: (event: FocusEvent) => props.onFocus?.(event),
     onBlur: (event: FocusEvent) => props.onBlur?.(event),

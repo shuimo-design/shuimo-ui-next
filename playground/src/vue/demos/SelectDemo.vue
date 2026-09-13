@@ -2,12 +2,12 @@
 import { ref } from "vue";
 import { MSelect, type SelectOption, type SelectValue } from "@shuimo-design/vue";
 
-type Model = SelectValue | SelectValue[] | undefined;
+// 值的类型跟着绑定的 ref 走：单选是"值 | undefined"（清空后是 undefined），multiple 是数组
 
 // 旧文档示例：地支 / 八卦
 const branches = ["子", "丑", "寅", "卯"];
-const basic = ref<Model>("子");
-const disabledValue = ref<Model>("子");
+const basic = ref<string | undefined>("子");
+const disabledValue = ref<string | undefined>("子");
 
 type Trigram = { before: string; after: string; number: string };
 const trigrams: Trigram[] = [
@@ -16,11 +16,11 @@ const trigrams: Trigram[] = [
   { before: "离", after: "震", number: "叁" },
   { before: "震", after: "巽", number: "肆" },
 ];
-const byParam = ref<Model>("叁");
+const byParam = ref<string | undefined>("叁");
 
-const searchable = ref<Model>("子");
+const searchable = ref<string | undefined>("子");
 const stems = ["甲", "甲乙丙", "子鼠寅卯", "甲乙丙丁"];
-const filtered = ref<Model>("甲");
+const filtered = ref<string | undefined>("甲");
 const customFilter = (option: unknown, query: string) =>
   String(option).toLowerCase().includes(query.toLowerCase());
 
@@ -31,12 +31,12 @@ const elements: Bagua[] = [
   { before: "离", after: "震", element: "木" },
   { before: "震", after: "巽", element: "木" },
 ];
-const matched = ref<Model>({ before: "离", after: "震", element: "木" });
+const matched = ref<Bagua | undefined>({ before: "离", after: "震", element: "木" });
 const matchByElement = (option: unknown, value: SelectValue) =>
   (option as Bagua).element === (value as Bagua).element;
 
-const withSlot = ref<Model>();
-const multi = ref<Model>(["子", "丑"]);
+const withSlot = ref<string | undefined>();
+const multi = ref<string[]>(["子", "丑"]);
 
 // 新增能力：{ label, value } 写法、清空、分页拉取
 const pigments: SelectOption[] = [
@@ -47,9 +47,10 @@ const pigments: SelectOption[] = [
   { label: "石绿", value: "shilv", disabled: true },
   { label: "胭脂", value: "yanzhi" },
 ];
-const pigment = ref<Model>();
+const pigment = ref<string | undefined>();
+const pigmentMulti = ref<string[]>([]);
 const paged = ref<string[]>(Array.from({ length: 12 }, (_, i) => `第 ${i + 1} 项`));
-const pagedValue = ref<Model>();
+const pagedValue = ref<string | undefined>();
 async function fetchMore() {
   await new Promise((resolve) => setTimeout(resolve, 600));
   const start = paged.value.length;
@@ -136,7 +137,7 @@ async function fetchMore() {
       <p class="demo__caption">multiple 多选：v-model 为数组，Backspace 删最后一个</p>
       <div class="demo__row">
         <MSelect v-model="multi" :options="branches" multiple />
-        <span class="demo__hint">{{ Array.isArray(multi) ? multi.join("、") : multi }}</span>
+        <span class="demo__hint">{{ multi.join("、") }}</span>
       </div>
     </div>
 
@@ -144,7 +145,7 @@ async function fetchMore() {
       <p class="demo__caption">{ label, value, disabled } 写法 + clearable 清空按钮</p>
       <div class="demo__row">
         <MSelect v-model="pigment" :options="pigments" clearable placeholder="选一种颜料" />
-        <MSelect v-model="pigment" :options="pigments" multiple clearable placeholder="多选" />
+        <MSelect v-model="pigmentMulti" :options="pigments" multiple clearable placeholder="多选" />
       </div>
     </div>
 

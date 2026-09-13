@@ -1,8 +1,12 @@
 export type CheckboxValue = string | number | boolean;
 
-export interface CheckboxProps {
+/**
+ * T 是这一组复选的值类型：壳层把它接到 MCheckboxGroup 的 v-model / value 上，
+ * 绑 ref<string[]>([]) 就推成 string。不带参数用就是宽联合，和以前一样
+ */
+export interface CheckboxProps<T extends CheckboxValue = CheckboxValue> {
   /** 放进 CheckboxGroup 时用来标识自己的值 */
-  value?: CheckboxValue;
+  value?: T;
   /** 文字；默认插槽优先 */
   label?: string | number;
   /** 禁用 */
@@ -34,9 +38,9 @@ export interface CheckboxGroupProps {
   direction?: "horizontal" | "vertical";
 }
 
-export interface CheckboxGroupEmits {
+export interface CheckboxGroupEmits<T extends CheckboxValue = CheckboxValue> {
   /** 组内选中项变化，参数是变化后的全部选中值 */
-  change: [values: CheckboxValue[]];
+  change: [values: T[]];
 }
 
 export interface CheckboxGroupSlots {

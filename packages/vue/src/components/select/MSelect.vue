@@ -1,4 +1,8 @@
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+  generic="V extends SelectValue = SelectValue, Multiple extends boolean = false"
+>
 import { computed, useId, useTemplateRef, watch } from "vue";
 import {
   createSelect,
@@ -23,10 +27,12 @@ import {
   type SelectNormalizedOption,
   type SelectProps,
   type SelectSlots,
+  type SelectModel,
   type SelectValue,
 } from "@shuimo-design/core";
 import { IconCheck, IconChevronDown, IconClose, IconLoading } from "../../icons";
 import { useDisabled, useFormItem } from "../../internal/form-item";
+import { unboundModel } from "../../internal/model";
 import { useBrushBorder } from "../../ink";
 import MPopper from "../../internal/popper/MPopper.vue";
 import { MTag } from "../tag";
@@ -43,7 +49,8 @@ const {
   placeholder = SELECT_PLACEHOLDER,
   disabled: disabledProp = false,
   clearable = false,
-  multiple = false,
+  // 默认单选，Multiple 默认也是 false；写了 multiple 就推成 true，v-model 跟着变数组
+  multiple = false as Multiple,
   filterable = false,
   filter,
   loading = false,
@@ -51,12 +58,12 @@ const {
   emptyText = SELECT_EMPTY_TEXT,
   maxHeight = SELECT_MAX_HEIGHT,
   teleport = true,
-} = defineProps<SelectProps>();
-const emit = defineEmits<SelectEmits>();
+} = defineProps<SelectProps<Multiple>>();
+const emit = defineEmits<SelectEmits<V, Multiple>>();
 const slots = defineSlots<SelectSlots>();
-// 值类型里带 boolean 会触发 Vue 的布尔转换，不传就变成 false；显式给个 undefined 默认值挡掉
+// 值类型里带 boolean 会触发 Vue 的布尔转换，不传就变成 false；给个返回 undefined 的默认值挡掉
 /** 选中的值；multiple 时是数组，清空后是 undefined */
-const model = defineModel<SelectValue | SelectValue[] | undefined>({ default: undefined });
+const model = defineModel<SelectModel<V, Multiple>>({ default: unboundModel });
 
 const formItem = useFormItem();
 const disabled = useDisabled(() => disabledProp);
@@ -84,15 +91,16 @@ const { controller: select, state } = useController(createSelect, () => ({
   disabled: disabled.value,
   value: model.value,
   fetch,
+  // 控制器给的是所有形状的并集，按本组件的 V / Multiple 收窄一次
   onCommit: (next: SelectValue | SelectValue[] | undefined) => {
-    model.value = next;
-    emit("change", next);
+    model.value = next as SelectModel<V, Multiple>;
+    emit("change", next as SelectModel<V, Multiple>);
     formItem.value.validate("change");
   },
   onSelect: (option: SelectProps["options"][number]) => emit("select", option),
   onInput: (value: string) => emit("input", value),
   onVisibleChange: (open: boolean) => emit("visibleChange", open),
-  onRemoveTag: (value: SelectValue) => emit("removeTag", value),
+  onRemoveTag: (value: SelectValue) => emit("removeTag", value as V),
   onClear: () => emit("clear"),
   onFocus: (event: FocusEvent) => emit("focus", event),
   onBlur: (event: FocusEvent) => {

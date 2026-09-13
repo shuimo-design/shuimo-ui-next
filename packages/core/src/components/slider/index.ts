@@ -11,7 +11,7 @@ import { createStore } from "../../runtime/store";
 import type { Controller } from "../../runtime/controller";
 import type { SliderValue } from "./types";
 
-export type { SliderEmits, SliderProps, SliderValue } from "./types";
+export type { SliderEmits, SliderModel, SliderProps, SliderValue } from "./types";
 
 /** range 时两个把手的无障碍名字；单把手不加名字，读屏会念外面的 label */
 export const SLIDER_RANGE_LABELS = ["起点", "终点"] as const;

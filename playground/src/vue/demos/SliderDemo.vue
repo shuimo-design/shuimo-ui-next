@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { MSlider, type SliderValue } from "@shuimo-design/vue";
+import { MSlider } from "@shuimo-design/vue";
 
 const basic = ref(0);
 const bounded = ref(25);
@@ -9,8 +9,8 @@ const committed = ref(50);
 const stepped = ref(40);
 const span = ref<[number, number]>([20, 60]);
 
-function onChange(value: SliderValue) {
-  committed.value = Array.isArray(value) ? value[0] : value;
+function onChange(value: number) {
+  committed.value = value;
 }
 </script>
 

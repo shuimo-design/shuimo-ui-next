@@ -11,37 +11,41 @@ import {
   sliderTrackStyle,
   sliderValues,
   type SliderProps as CoreSliderProps,
+  type SliderModel,
   type SliderValue,
 } from "@shuimo-design/core";
 import { useController } from "../../runtime";
 
-export interface MSliderProps extends CoreSliderProps {
+/** Range 从 range 属性推，和 core 的 SliderModel 一致：写了 range 值就是 [起, 止] */
+export interface MSliderProps<Range extends boolean = boolean> extends CoreSliderProps<Range> {
   /** 受控值；不传就由组件自己记（配合 defaultValue） */
-  value?: SliderValue;
-  defaultValue?: SliderValue;
-  onValueChange?: (value: SliderValue) => void;
+  value?: SliderModel<Range>;
+  defaultValue?: SliderModel<Range>;
+  onValueChange?: (value: SliderModel<Range>) => void;
   /** 拖动过程中每次值变化 */
-  onInput?: (value: SliderValue) => void;
+  onInput?: (value: SliderModel<Range>) => void;
   /** 松手 / 键盘调整后的最终值 */
-  onChange?: (value: SliderValue) => void;
+  onChange?: (value: SliderModel<Range>) => void;
   className?: string;
   style?: CSSProperties;
 }
 
-export function MSlider(props: MSliderProps) {
+export function MSlider<Range extends boolean = false>(props: MSliderProps<Range>) {
   const {
     min = 0,
     max = 100,
     step = 1,
     disabled = false,
-    range = false,
+    range = false as Range,
     showInfo = false,
     showTooltip = true,
     formatTooltip,
   } = props;
 
   const controlled = props.value !== undefined;
-  const [uncontrolled, setUncontrolled] = useState<SliderValue | undefined>(props.defaultValue);
+  const [uncontrolled, setUncontrolled] = useState<SliderModel<Range> | undefined>(
+    props.defaultValue,
+  );
   const model = controlled ? props.value : uncontrolled;
 
   const geometry = { min, max, step, range };
@@ -54,12 +58,14 @@ export function MSlider(props: MSliderProps) {
     ...geometry,
     disabled,
     values,
+    // 控制器给的是两种形状的并集，按本组件的 Range 收窄一次
     onInput: (value: SliderValue) => {
-      if (!controlled) setUncontrolled(value);
-      props.onValueChange?.(value);
-      props.onInput?.(value);
+      const next = value as SliderModel<Range>;
+      if (!controlled) setUncontrolled(next);
+      props.onValueChange?.(next);
+      props.onInput?.(next);
     },
-    onChange: (value: SliderValue) => props.onChange?.(value),
+    onChange: (value: SliderValue) => props.onChange?.(value as SliderModel<Range>),
   });
 
   // ref 回调的身份必须稳定：变了 React 会先 ref(null) 再 ref(node)，控制器手里的元素会来回换

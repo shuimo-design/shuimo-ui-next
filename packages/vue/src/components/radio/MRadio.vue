@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends RadioValue = RadioValue">
 import { computed, inject } from "vue";
 import {
   radioChecked,
@@ -13,15 +13,16 @@ import {
   type RadioValue,
 } from "@shuimo-design/core";
 import { useDisabled, useFormItem } from "../../internal/form-item";
+import { unboundModel } from "../../internal/model";
 import { radioGroupKey } from "./context";
 
 defineOptions({ name: "MRadio" });
 
-const { value, label, disabled: disabledProp = false, name } = defineProps<RadioProps>();
-const emit = defineEmits<RadioEmits>();
+const { value, label, disabled: disabledProp = false, name } = defineProps<RadioProps<T>>();
+const emit = defineEmits<RadioEmits<T>>();
 const slots = defineSlots<RadioSlots>();
 /** 选中的值；单独用（不在 MRadioGroup 里）时才需要 */
-const model = defineModel<RadioValue>();
+const model = defineModel<T>({ default: unboundModel });
 
 const group = inject(radioGroupKey, undefined);
 // 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水

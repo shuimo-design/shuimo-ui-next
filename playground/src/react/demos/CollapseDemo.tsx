@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { MCollapse, MCollapseItem, type CollapseModel } from "@shuimo-design/react";
+import { MCollapse, MCollapseItem } from "@shuimo-design/react";
 
 export default function CollapseDemo() {
   const [isOpen, setIsOpen] = useState(false);
   const [log, setLog] = useState("还没动过");
-  const [opened, setOpened] = useState<CollapseModel>(["one"]);
-  const [accordion, setAccordion] = useState<CollapseModel>("a");
+  const [opened, setOpened] = useState<string[]>(["one"]);
+  const [accordion, setAccordion] = useState<string | undefined>("a");
 
   function handleChange(value: boolean) {
     setIsOpen(value);
     setLog(`折叠面板状态改变：${value ? "展开" : "收起"}`);
   }
 
-  const names = Array.isArray(opened) ? opened : opened === undefined ? [] : [opened];
+  const names = opened;
 
   return (
     <div className="demo">

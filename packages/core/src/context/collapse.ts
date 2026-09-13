@@ -4,10 +4,10 @@
  * 展开项在对外的 v-model 上有两种形状（手风琴是单个 name，普通模式是 name 数组，全收起是 undefined），
  * 但子项只关心"我是不是展开的"，所以上下文里统一成一个数组，形状转换在下面的纯函数里做。
  */
-import type { CollapseName } from "../components/collapse/types";
+import type { CollapseModel, CollapseName } from "../components/collapse/types";
 
-/** 对外那个 v-model 的取值：手风琴是单个 name，普通模式是数组，全收起是 undefined */
-export type CollapseModel = CollapseName | CollapseName[] | undefined;
+// 形状定义在 types.ts（壳层的泛型要引它），这里照旧转出去，引用方不用改路径
+export type { CollapseModel };
 
 export interface CollapseContextValue {
   /** 当前展开的项，统一成数组 */

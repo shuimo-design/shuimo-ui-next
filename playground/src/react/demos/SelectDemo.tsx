@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MSelect, type SelectOption, type SelectValue } from "@shuimo-design/react";
 
-type Model = SelectValue | SelectValue[] | undefined;
+// 值的类型跟着 value / onValueChange 走：单选是"值 | undefined"（清空后是 undefined），multiple 是数组
 
 // 旧文档示例：地支 / 八卦
 const branches = ["子", "丑", "寅", "卯"];
@@ -39,18 +39,22 @@ const pigments: SelectOption[] = [
 ];
 
 export default function SelectDemo() {
-  const [basic, setBasic] = useState<Model>("子");
-  const [byParam, setByParam] = useState<Model>("叁");
-  const [searchable, setSearchable] = useState<Model>("子");
-  const [filtered, setFiltered] = useState<Model>("甲");
-  const [matched, setMatched] = useState<Model>({ before: "离", after: "震", element: "木" });
-  const [withSlot, setWithSlot] = useState<Model>();
-  const [multi, setMulti] = useState<Model>(["子", "丑"]);
-  const [pigment, setPigment] = useState<Model>();
+  const [basic, setBasic] = useState<string | undefined>("子");
+  const [byParam, setByParam] = useState<string | undefined>("叁");
+  const [searchable, setSearchable] = useState<string | undefined>("子");
+  const [filtered, setFiltered] = useState<string | undefined>("甲");
+  const [matched, setMatched] = useState<Bagua | undefined>({
+    before: "离",
+    after: "震",
+    element: "木",
+  });
+  const [withSlot, setWithSlot] = useState<string | undefined>();
+  const [multi, setMulti] = useState<string[]>(["子", "丑"]);
+  const [pigment, setPigment] = useState<string | undefined>();
   const [paged, setPaged] = useState<string[]>(
     Array.from({ length: 12 }, (_, i) => `第 ${i + 1} 项`),
   );
-  const [pagedValue, setPagedValue] = useState<Model>();
+  const [pagedValue, setPagedValue] = useState<string | undefined>();
 
   async function fetchMore() {
     await new Promise((resolve) => setTimeout(resolve, 600));
@@ -151,9 +155,7 @@ export default function SelectDemo() {
         <p className="demo__caption">multiple 多选：值为数组，Backspace 删最后一个</p>
         <div className="demo__row">
           <MSelect options={branches} value={multi} onValueChange={setMulti} multiple />
-          <span className="demo__hint">
-            {Array.isArray(multi) ? multi.join("、") : String(multi)}
-          </span>
+          <span className="demo__hint">{multi.join("、")}</span>
         </div>
       </div>
 

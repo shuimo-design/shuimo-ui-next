@@ -19,6 +19,7 @@ import type { SelectOptionLike, SelectValue } from "./types";
 
 export type {
   SelectEmits,
+  SelectModel,
   SelectOption,
   SelectOptionLike,
   SelectOptionScope,

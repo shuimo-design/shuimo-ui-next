@@ -1474,7 +1474,7 @@
               "required": false,
               "value": {
                 "kind": "expression",
-                "type": "SliderValue | undefined"
+                "type": "number | [number, number] | undefined"
               }
             }
           ],

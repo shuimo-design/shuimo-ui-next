@@ -15,24 +15,25 @@ import {
 } from "@shuimo-design/core";
 import { RadioGroupContext } from "./context";
 
-export interface MRadioGroupProps extends CoreRadioGroupProps {
+/** T 跟 core 的 RadioProps 一样：从 value / onValueChange 推出这一组的值类型 */
+export interface MRadioGroupProps<T extends RadioValue = RadioValue> extends CoreRadioGroupProps {
   /** 受控的选中值；不传就由组件自己记（配合 defaultValue） */
-  value?: RadioValue;
-  defaultValue?: RadioValue;
-  onValueChange?: (value: RadioValue) => void;
+  value?: T;
+  defaultValue?: T;
+  onValueChange?: (value: T) => void;
   /** 用户操作导致选中项变化 */
-  onChange?: (value: RadioValue) => void;
+  onChange?: (value: T) => void;
   children?: ReactNode;
   className?: string;
   style?: CSSProperties;
 }
 
-export function MRadioGroup(props: MRadioGroupProps) {
+export function MRadioGroup<T extends RadioValue = RadioValue>(props: MRadioGroupProps<T>) {
   const { disabled = false, direction = "horizontal", name, children } = props;
 
   // 受控 / 非受控两种都支持：传了 value 就听外面的，没传就自己记一份
   const isControlled = props.value !== undefined;
-  const [uncontrolled, setUncontrolled] = useState<RadioValue | undefined>(props.defaultValue);
+  const [uncontrolled, setUncontrolled] = useState<T | undefined>(props.defaultValue);
   const value = isControlled ? props.value : uncontrolled;
 
   // 同一组原生 radio 必须共用 name，方向键才会在组内切换；useId 在 SSR 两端一致，不会水合不匹配
@@ -43,12 +44,13 @@ export function MRadioGroup(props: MRadioGroupProps) {
   const latest = useRef({ value, isControlled, props });
   latest.current = { value, isControlled, props };
 
+  // 上下文里的值是宽的 RadioValue（子项不知道 T），到这里收窄一次
   const select = useCallback((next: RadioValue) => {
     const current = latest.current;
     if (current.value === next) return;
-    if (!current.isControlled) setUncontrolled(next);
-    current.props.onValueChange?.(next);
-    current.props.onChange?.(next);
+    if (!current.isControlled) setUncontrolled(next as T);
+    current.props.onValueChange?.(next as T);
+    current.props.onChange?.(next as T);
   }, []);
 
   const context = useMemo<RadioGroupContextValue>(

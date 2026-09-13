@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { MSlider, type SliderValue } from "@shuimo-design/react";
+import { MSlider } from "@shuimo-design/react";
 
 export default function SliderDemo() {
-  const [basic, setBasic] = useState<SliderValue>(0);
-  const [bounded, setBounded] = useState<SliderValue>(25);
-  const [current, setCurrent] = useState<SliderValue>(50);
+  const [basic, setBasic] = useState(0);
+  const [bounded, setBounded] = useState(25);
+  const [current, setCurrent] = useState(50);
   const [committed, setCommitted] = useState(50);
-  const [stepped, setStepped] = useState<SliderValue>(40);
-  const [span, setSpan] = useState<SliderValue>([20, 60]);
+  const [stepped, setStepped] = useState(40);
+  const [span, setSpan] = useState<[number, number]>([20, 60]);
 
-  function onChange(value: SliderValue) {
-    setCommitted(Array.isArray(value) ? value[0] : value);
+  function onChange(value: number) {
+    setCommitted(value);
   }
 
   return (

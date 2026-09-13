@@ -226,7 +226,8 @@ for (const source of coreSources.values()) {
  * 返回 undefined 表示这一格不显示。
  */
 function displayDefault(text: string | undefined): string | undefined {
-  if (!text || text === "undefined") return undefined;
+  // unboundModel（packages/vue/src/internal/model.ts）运行时就是 undefined，只是给泛型 v-model 用的类型手段
+  if (!text || text === "undefined" || text === "unboundModel") return undefined;
   return /^[A-Za-z_$][\w$]*$/.test(text) ? (constants.get(text) ?? text) : text;
 }
 
@@ -429,9 +430,64 @@ function readSfc(file: string): { defaults: Map<string, string>; models: ModelEn
   return { defaults, models };
 }
 
+/**
+ * 把 v-model 的类型文字解析成展开后的样子。
+ * 泛型 SFC 的 model 写的是 `SelectModel<V, Multiple>` 这种别名，类型参数换成默认值后是
+ * `SelectModel<SelectValue, boolean>`——读者要的是它展开后的 `SelectValue[] | SelectValue | undefined`。
+ * 展开只能交给 TypeScript：把所有 model 类型放进一个虚拟文件、和 core 的类型一起建一个程序，
+ * 让 checker 去算。只处理带尖括号的（泛型实例化）；`RadioValue` 这种普通别名原样保留，
+ * 读者认得它。打印用 InTypeAlias：只剥最外层别名，里面的 SelectValue 这些名字留着。
+ */
+const MODEL_TYPE_FILE = resolve(root, "scripts/__model-types.ts");
+function expandModelTypes(texts: readonly string[]): Map<string, string> {
+  const out = new Map<string, string>();
+  const unique = [...new Set(texts.filter((t) => t.includes("<")))];
+  if (!unique.length) return out;
+  // 每个 core 类型文件各 import 一次，它们的名字全都在 declsByName 里
+  const byFile = new Map<string, string[]>();
+  for (const [name, { decl, pkg }] of declsByName) {
+    if (pkg !== "core") continue;
+    const file = decl.getSourceFile().fileName;
+    byFile.set(file, [...(byFile.get(file) ?? []), name]);
+  }
+  const imports = [...byFile]
+    .map(([file, names]) => `import type { ${names.join(", ")} } from "${file}";`)
+    .join("\n");
+  const aliases = unique.map((t, i) => `type __M${i} = ${t};`).join("\n");
+  const text = `${imports}\n${aliases}\n`;
+
+  const host = ts.createCompilerHost(program.getCompilerOptions());
+  const readFile = host.readFile.bind(host);
+  const fileExists = host.fileExists.bind(host);
+  host.readFile = (f) => (f === MODEL_TYPE_FILE ? text : readFile(f));
+  host.fileExists = (f) => f === MODEL_TYPE_FILE || fileExists(f);
+  const probe = ts.createProgram({
+    rootNames: [MODEL_TYPE_FILE],
+    options: program.getCompilerOptions(),
+    host,
+  });
+  const probeChecker = probe.getTypeChecker();
+  const source = probe.getSourceFile(MODEL_TYPE_FILE)!;
+  for (const statement of source.statements) {
+    if (!ts.isTypeAliasDeclaration(statement) || !statement.name.text.startsWith("__M")) continue;
+    const index = Number(statement.name.text.slice(3));
+    const type = probeChecker.getTypeAtLocation(statement.name);
+    out.set(
+      unique[index]!,
+      probeChecker.typeToString(
+        type,
+        statement,
+        ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.InTypeAlias,
+      ),
+    );
+  }
+  return out;
+}
+
 /** v-model 属性在文档里的类型：可选属性都带 ` | undefined`，泛型里已经有的不重复加 */
-function modelType(entry: ModelEntry): string {
-  const text = entry.type?.trim();
+function modelType(entry: ModelEntry, expanded: Map<string, string>): string {
+  const raw = entry.type?.trim();
+  const text = raw && (expanded.get(raw) ?? raw);
   if (!text) return "unknown";
   if (entry.required) return text;
   return /(^|\|)\s*undefined\s*(\||$)/.test(text) ? text : `${text} | undefined`;
@@ -577,13 +633,18 @@ const propNamesByComponent = new Map(
   ),
 );
 
+// 先把所有 SFC 读完，v-model 的类型文字攒到一起，只建一次程序来展开
+const sfcInfo = new Map(COMPONENT_NAMES.map((name) => [name, readSfc(sfcByName.get(name)!)]));
+const expandedModelTypes = expandModelTypes(
+  [...sfcInfo.values()].flatMap((info) => info.models.flatMap((m) => (m.type ? [m.type] : []))),
+);
+
 for (const name of COMPONENT_NAMES) {
   const stem = name.slice(1);
   const propsDecl = declsByName.get(`${stem}Props`);
   if (propsDecl?.pkg === "vue") typesStillInVue.push(name);
 
-  const sfc = sfcByName.get(name)!;
-  const { defaults, models } = readSfc(sfc);
+  const { defaults, models } = sfcInfo.get(name)!;
 
   // React 壳：目录跟 Vue 壳同名；文件不在就是还没迁
   const dir = dirByName.get(name)!;
@@ -638,7 +699,7 @@ for (const name of COMPONENT_NAMES) {
       description: model.description,
       default: displayDefault(model.default),
       required: model.required,
-      value: { kind: "expression", type: modelType(model) },
+      value: { kind: "expression", type: modelType(model, expandedModelTypes) },
       react: target
         ? bind(target, [`default${capitalize(target)}`, `on${capitalize(target)}Change`])
         : undefined,
