@@ -250,3 +250,65 @@
 [data-theme="dark"] .src__code .shiki span {
   color: var(--shiki-dark);
 }
+
+/* ── 指南页（安装这类不讲组件的页面）─────────────────────────── */
+
+.guide {
+  max-width: 760px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.guide p {
+  margin: 0 0 12px;
+}
+.guide__lead {
+  color: var(--m-fg-muted);
+}
+.guide__h {
+  margin: 32px 0 12px;
+  font-size: 17px;
+  font-weight: 500;
+}
+.guide code {
+  padding: 1px 4px;
+  border-radius: var(--m-radius);
+  background: color-mix(in srgb, var(--m-ink) 7%, transparent);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+.guide__code {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--m-divider);
+  border-radius: var(--m-radius);
+  background: color-mix(in srgb, var(--m-ink) 3%, transparent);
+  overflow-x: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  white-space: pre;
+}
+/* 代码块里的行内 code 样式要让位，不然块里每个字都带底色 */
+.guide__code code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+/* 还没发 npm 这种要先说清楚的事，左边一道朱砂 */
+.guide__note {
+  margin: 0 0 24px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--m-seal);
+  background: color-mix(in srgb, var(--m-seal) 5%, transparent);
+}
+.guide__note .guide__code {
+  margin: 12px 0 0;
+  background: color-mix(in srgb, var(--m-ink) 4%, transparent);
+}
+.guide__hint {
+  color: var(--m-fg-muted);
+  font-size: 13px;
+}
+.guide a {
+  color: var(--m-seal);
+}

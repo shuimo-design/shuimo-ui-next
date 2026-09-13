@@ -125,12 +125,17 @@ function nextPaperWithTransition() {
         <section :key="current.id" class="pg__page">
           <header class="pg__header">
             <h2 class="pg__title">{{ current.title }}</h2>
-            <code class="pg__code">{{ current.name }}</code>
+            <code v-if="current.name" class="pg__code">{{ current.name }}</code>
           </header>
           <component :is="demos[current.id]" />
-          <DemoSource :load="sources[current.id]!" :file="`${fileOf(current.id)}.vue`" />
+          <!-- 指南这类页面不讲某个组件，既没有源码可看也没有 API 表 -->
+          <DemoSource
+            v-if="current.name"
+            :load="sources[current.id]!"
+            :file="`${fileOf(current.id)}.vue`"
+          />
           <!-- 示例底下挂上构建时生成的属性 / 事件 / 插槽表（docs/api/<组件名>.json） -->
-          <ApiDoc :names="[current.name, ...(current.parts ?? [])]" />
+          <ApiDoc :names="current.name ? [current.name, ...(current.parts ?? [])] : []" />
         </section>
       </main>
     </div>

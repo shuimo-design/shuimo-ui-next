@@ -8,8 +8,8 @@ export interface DemoMeta {
   /** 页面的 hash 路由，也用来拼 demo 文件名 */
   id: string;
   title: string;
-  /** M 开头的组件名，用来查 API 表 */
-  name: string;
+  /** M 开头的组件名，用来查 API 表；指南这类不讲组件的页面没有 */
+  name?: string;
   /**
    * 同一页里还要列出 API 的子组件（MTableColumn、MFormItem 这些）。
    * 它们没有自己的页面，不在这里登记就等于生成了文档却没人看得见。
@@ -26,7 +26,16 @@ function entry(id: string, title: string, name: string, ...parts: string[]): Dem
   return parts.length ? { id, title, name, parts } : { id, title, name };
 }
 
+/** 不讲某个组件的页面（安装、指南）：没有 API 表，也不显示源码 */
+function guide(id: string, title: string): DemoMeta {
+  return { id, title };
+}
+
 export const CATALOG: DemoGroup[] = [
+  {
+    group: "指南",
+    items: [guide("install", "安装")],
+  },
   {
     group: "特效",
     items: [

@@ -123,12 +123,15 @@ export default function App() {
           <section key={current.id} className="pg__page">
             <header className="pg__header">
               <h2 className="pg__title">{current.title}</h2>
-              <code className="pg__code">{current.name}</code>
+              {current.name ? <code className="pg__code">{current.name}</code> : null}
             </header>
             <Demo />
-            <DemoSource load={sources[current.id]!} file={`${fileOf(current.id)}.tsx`} />
+            {/* 指南这类页面不讲某个组件，既没有源码可看也没有 API 表 */}
+            {current.name ? (
+              <DemoSource load={sources[current.id]!} file={`${fileOf(current.id)}.tsx`} />
+            ) : null}
             {/* 示例底下挂上构建时生成的属性 / 事件 / 内容表（docs/api/<组件名>.json） */}
-            <ApiDoc names={[current.name, ...(current.parts ?? [])]} />
+            <ApiDoc names={current.name ? [current.name, ...(current.parts ?? [])] : []} />
           </section>
         </main>
       </div>
