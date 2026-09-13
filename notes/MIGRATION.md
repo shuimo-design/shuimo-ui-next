@@ -168,6 +168,7 @@ next 是重写版：所有水墨素材改为程序化 SVG（仓库里没有任�
 ### 其他
 
 - `MStamp` 的 `stretch` 原来因为 Vue 的布尔转型恒为 `false`，现在按文档透传 `undefined`：方章 / 圆章 / 多边形章的字会撑满格子。
+- `MStamp` 用自己的篆体时，启动时要调一次 `preloadStampFont()`（`@shuimo-design/core/ink`，放在 `createInkEngine()` 旁边）。印章的版式是量出来的 —— 每个字的墨迹框决定这一枚章多宽、字怎么摆 —— 字体没到就只能按兜底比例先排一版、到了再重排，看上去就是跳一下。而浏览器只在「真有元素用到某个字体」时才下载它，光写 `@font-face` 一个字节都不会拉，所以这一句省不掉。换字体本身还是走 CSS：`@font-face` 引好，再把 `--m-font-seal` 指过去；单枚要不一样就传 `font` 属性。
 - `MScroll` 的 `defineExpose` 里 `view` 从模板 ref 改成函数 `view()`。
 - `MRicePaper` 不传 `seed` 时的随机数从 setup 挪到了挂载之后：服务端和水合首帧固定用种子 1（首帧本来就是纯色纸，看不出区别），否则两边会抽到两张不同的纸。
 - `@vueuse/core` 依赖整个去掉了（只用到 4 个函数，在 core 里重写不到 100 行）。
