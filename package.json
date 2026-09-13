@@ -26,6 +26,7 @@
     "@shuimo-design/core": "workspace:*",
     "@shuimo-design/react": "workspace:*",
     "@shuimo-design/vue": "workspace:*",
+    "playwright": "^1.63.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tsx": "^4.21.1",
