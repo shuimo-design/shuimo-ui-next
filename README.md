@@ -50,7 +50,9 @@ Vue 的 `v-model` 在 React 侧是**受控 / 非受控两套都支持**的一组
 
 两边都支持服务端渲染（Vue SSR / Next.js）。弹层类组件（对话框、抽屉、浮层、消息）不进服务端 HTML，挂载后才出现 —— 这是两边统一的口径。
 
-Vue 独有的两个入口留着：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`@shuimo-design/vue/resolver`（按需引入）。纯 ESM。
+Vue 独有的两个入口留着：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`@shuimo-design/vue/resolver`（配合 unplugin-vue-components 自动引入）。纯 ESM。
+
+**按需引入不用配任何东西**：三个包都是一个源文件出一个产物文件，`import { MButton } from "@shuimo-design/vue"` 只会带进这个按钮用得到的那部分。实测只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip），47 个组件全用上是 106 KB。样式是例外，`style.css` 只有整份一个文件。
 
 ### 印章换字体
 

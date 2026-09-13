@@ -35,19 +35,16 @@ export default defineConfig({
     format: ["esm"],
     platform: "neutral",
     plugins: [VueRolldown({ isProduction: true })],
+    // 一个源文件出一个产物文件。合并成一个 index.js 的话，rolldown 会用 __exportAll
+    // 在运行时把所有组件挂到一个对象上，使用方的打包器就静态分析不动了 —— 只用一个组件
+    // 也要把整份产物连同 core 一起留下（实测多付约 45 KB gzip）
+    unbundle: true,
     dts: { vue: true, sourcemap: false },
     deps: {
       // 外部依赖用显式数组：函数形式会让 dts 插件丢掉入口名（ink.d.ts 变 index2.d.ts）。
       // core 必须 external：墨迹引擎是文档级单例（全局 SVG 滤镜、素材登记表、html.m-ink-ready），
       // 打进来一份就等于 Vue 和 React 各持一套引擎，单例失效。
-      neverBundle: [
-        "vue",
-        "@shuimo-design/core",
-        "@nuxt/kit",
-        "@nuxt/schema",
-        "@vueuse/core",
-        "@floating-ui/vue",
-      ],
+      neverBundle: ["vue", "@shuimo-design/core", "@nuxt/kit", "@nuxt/schema"],
       dts: { neverBundle: true },
     },
     // 样式全在 core，这里只把它的产物复制过来，用户装一个包就能 import "@shuimo-design/vue/style.css"

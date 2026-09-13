@@ -36,6 +36,10 @@ export default defineConfig({
     },
     format: ["esm"],
     platform: "neutral",
+    // 一个源文件出一个产物文件。合并成一个 index.js 的话，rolldown 会用 __exportAll
+    // 在运行时把所有组件挂到一个对象上，使用方的打包器就静态分析不动了 —— 只用一个组件
+    // 也要把整份产物连同 core 一起留下（实测多付约 45 KB gzip）
+    unbundle: true,
     // JSX 由 tsconfig 的 "jsx": "react-jsx" 决定，rolldown 底下的 oxc 会读它，
     // 不需要额外插件，pack 这里也没有对应的选项可配
     dts: { sourcemap: false },
