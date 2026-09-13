@@ -1,7 +1,55 @@
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite-plus";
+import type { Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 import react from "@vitejs/plugin-react";
+import { createHighlighter, type Highlighter } from "shiki";
+
+const HIGHLIGHT = "?highlight";
+/** `\0` 开头是 vite 的约定：其他插件（尤其是 vue 那个）看到就绕开，不会拿去当 SFC 编译 */
+const VIRTUAL = "\0highlight:";
+
+/**
+ * `import src from "./demos/ButtonDemo.vue?highlight"` 拿到 `{ code, html }`。
+ *
+ * 高亮在**构建期**做完，浏览器里一行 shiki 都没有 —— 它带着 wasm 正则引擎和语法定义，
+ * 上兆的东西，为了给示例上个色把它塞进文档站不值当。
+ */
+function highlightDemos(): Plugin {
+  let highlighter: Promise<Highlighter> | undefined;
+  const get = (): Promise<Highlighter> =>
+    (highlighter ??= createHighlighter({
+      themes: ["github-light", "github-dark"],
+      langs: ["vue", "tsx"],
+    }));
+
+  return {
+    name: "demo-highlight",
+    enforce: "pre",
+    async resolveId(id, importer) {
+      if (!id.endsWith(HIGHLIGHT)) return;
+      const resolved = await this.resolve(id.slice(0, -HIGHLIGHT.length), importer, {
+        skipSelf: true,
+      });
+      return resolved ? VIRTUAL + resolved.id : undefined;
+    },
+    async load(id) {
+      if (!id.startsWith(VIRTUAL)) return;
+      const file = id.slice(VIRTUAL.length);
+      // 源文件改了要重新高亮：dev 下靠这一句把它挂进依赖图
+      this.addWatchFile(file);
+      const code = await readFile(file, "utf8");
+      const html = (await get()).codeToHtml(code, {
+        lang: file.endsWith(".vue") ? "vue" : "tsx",
+        // 两套主题一起出，颜色落成 CSS 变量，页面切深浅不用重新高亮
+        themes: { light: "github-light", dark: "github-dark" },
+        defaultColor: false,
+      });
+      return `export default ${JSON.stringify({ code, html })};`;
+    },
+  };
+}
 
 // 开发时直接吃三个包的源码，不用先 pnpm build；打包仍然走 dist，
 // 顺带让线上站成为 exports 出口的冒烟测试。
@@ -13,6 +61,7 @@ const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig(({ command }) => ({
   plugins: [
+    highlightDemos(),
     vue(),
     // 只接管 .tsx。配合"JSX 只写在 .tsx 里"的约定，两个插件按扩展名分流，永远不会撞
     react({ include: [/\.tsx$/] }),

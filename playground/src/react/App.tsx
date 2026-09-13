@@ -3,6 +3,8 @@ import { flushSync } from "react-dom";
 import { MButton, MList, MListItem, MOverlayOutlet, MRicePaper } from "@shuimo-design/react";
 import { startInkViewTransition } from "@shuimo-design/core/ink";
 import ApiDoc from "./ApiDoc";
+import DemoSource from "./DemoSource";
+import type { DemoSource as Source } from "../shared/catalog";
 import { ALL_DEMOS, CATALOG, assertComplete, fileOf, readHash } from "../shared/catalog";
 
 /**
@@ -21,6 +23,19 @@ for (const meta of ALL_DEMOS) {
   if (found) demos[meta.id] = found;
 }
 assertComplete(demos, "demos", ".tsx");
+
+// 同一批文件再取一次源码：`?highlight` 让构建期把高亮做完（见 vite.config.ts）。
+// **不能 eager**：47 份高亮好的 HTML 一起打进主包会让它从 408 KB 涨到 2 MB（gzip 120 → 220 KB），
+// 而代码区默认是收起的，多数人根本不会展开。改成按需加载，点开哪个才拉哪个
+const rawSources = import.meta.glob<Source>("./demos/*Demo.tsx", {
+  query: "?highlight",
+  import: "default",
+});
+const sources: Record<string, () => Promise<Source>> = {};
+for (const meta of ALL_DEMOS) {
+  const found = rawSources[`./demos/${fileOf(meta.id)}.tsx`];
+  if (found) sources[meta.id] = found;
+}
 
 export default function App() {
   const [dark, setDark] = useState(false);
@@ -111,6 +126,7 @@ export default function App() {
               <code className="pg__code">{current.name}</code>
             </header>
             <Demo />
+            <DemoSource load={sources[current.id]!} file={`${fileOf(current.id)}.tsx`} />
             {/* 示例底下挂上构建时生成的属性 / 事件 / 内容表（docs/api/<组件名>.json） */}
             <ApiDoc names={[current.name, ...(current.parts ?? [])]} />
           </section>

@@ -189,3 +189,64 @@
 .api__none {
   color: var(--m-fg-muted);
 }
+
+/* ── 示例源码区 ────────────────────────────────────────────────── */
+
+.src {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--m-divider);
+}
+.src__bar {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.src__btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--m-fg-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: var(--m-cursor-pointer);
+  transition: color var(--m-duration) var(--m-ease);
+}
+.src__btn:hover {
+  color: var(--m-seal);
+}
+.src__file {
+  flex: 1;
+  color: var(--m-fg-muted);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  opacity: 0.7;
+}
+.src__code {
+  margin-top: 12px;
+  border: 1px solid var(--m-divider);
+  border-radius: var(--m-radius);
+  background: color-mix(in srgb, var(--m-ink) 3%, transparent);
+  overflow: auto;
+  max-height: 60vh;
+}
+.src__code pre {
+  margin: 0;
+  padding: 16px 18px;
+  background: none !important;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+/*
+ * shiki 两套主题一起出，颜色落在 --shiki-light / --shiki-dark 上（不选默认色），
+ * 所以深浅切换只是换一个变量，不用在浏览器里重新高亮。
+ */
+.src__code .shiki,
+.src__code .shiki span {
+  color: var(--shiki-light);
+}
+[data-theme="dark"] .src__code .shiki,
+[data-theme="dark"] .src__code .shiki span {
+  color: var(--shiki-dark);
+}

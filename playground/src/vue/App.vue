@@ -4,6 +4,8 @@ import type { Component } from "vue";
 import { MButton, MList, MListItem, MOverlayOutlet, MRicePaper } from "@shuimo-design/vue";
 import { startInkViewTransition } from "@shuimo-design/core/ink";
 import ApiDoc from "./ApiDoc.vue";
+import DemoSource from "./DemoSource.vue";
+import type { DemoSource as Source } from "../shared/catalog";
 import { ALL_DEMOS, CATALOG, assertComplete, fileOf, readHash } from "../shared/catalog";
 
 /**
@@ -22,6 +24,19 @@ for (const meta of ALL_DEMOS) {
   if (found) demos[meta.id] = found;
 }
 assertComplete(demos, "demos", ".vue");
+
+// 同一批文件再取一次源码：`?highlight` 让构建期把高亮做完（见 vite.config.ts）。
+// **不能 eager**：47 份高亮好的 HTML 一起打进主包会让它从 306 KB 涨到 2 MB（gzip 98 → 196 KB），
+// 而代码区默认是收起的，多数人根本不会展开。改成按需加载，点开哪个才拉哪个
+const rawSources = import.meta.glob<Source>("./demos/*Demo.vue", {
+  query: "?highlight",
+  import: "default",
+});
+const sources: Record<string, () => Promise<Source>> = {};
+for (const meta of ALL_DEMOS) {
+  const found = rawSources[`./demos/${fileOf(meta.id)}.vue`];
+  if (found) sources[meta.id] = found;
+}
 
 const dark = ref(false);
 const seed = ref(42);
@@ -113,6 +128,7 @@ function nextPaperWithTransition() {
             <code class="pg__code">{{ current.name }}</code>
           </header>
           <component :is="demos[current.id]" />
+          <DemoSource :load="sources[current.id]!" :file="`${fileOf(current.id)}.vue`" />
           <!-- 示例底下挂上构建时生成的属性 / 事件 / 插槽表（docs/api/<组件名>.json） -->
           <ApiDoc :names="[current.name, ...(current.parts ?? [])]" />
         </section>

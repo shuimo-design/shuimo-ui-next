@@ -103,6 +103,14 @@ export const CATALOG: DemoGroup[] = [
 
 export const ALL_DEMOS: DemoMeta[] = CATALOG.flatMap((g) => g.items);
 
+/** 一个示例文件的源码：`?highlight` 在构建期做好高亮，浏览器里不带任何高亮器 */
+export interface DemoSource {
+  /** 原始源码，给"复制"用 */
+  code: string;
+  /** 高亮好的 HTML，颜色是 CSS 变量，深浅两套都在里面 */
+  html: string;
+}
+
 /** delete-icon → DeleteIconDemo */
 export function fileOf(id: string): string {
   return `${id.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase())}Demo`;
