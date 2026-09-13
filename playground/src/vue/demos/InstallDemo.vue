@@ -3,11 +3,6 @@
 const install = `pnpm add @shuimo-design/vue
 # 或 npm i @shuimo-design/vue / yarn add @shuimo-design/vue`;
 
-const clone = `git clone https://github.com/shuimo-design/shuimo-ui-next.git
-cd shuimo-ui-next
-pnpm install
-pnpm dev          # 文档站起在 localhost:5180`;
-
 const main = `import { createApp } from "vue";
 import App from "./App.vue";
 
@@ -60,10 +55,9 @@ void preloadStampFont();`;
     </p>
 
     <div class="guide__note">
-      <strong>还没发到 npm。</strong>
-      三个包都已经打好 <code>1.0.0-alpha.0</code>，但还没推上去 —— 现在
-      <code>npm i</code> 装不到。想先试，把仓库克隆下来跑文档站：
-      <pre class="guide__code">{{ clone }}</pre>
+      <strong>当前是 1.0.0-beta.0，预发布版。</strong>
+      API 还可能改，每次改动都记在各包的 CHANGELOG 里。直接
+      <code>npm i</code> 装到的就是这个版本，不用加 <code>@beta</code>。
     </div>
 
     <h3 class="guide__h">装哪个包</h3>

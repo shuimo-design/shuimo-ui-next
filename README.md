@@ -4,7 +4,7 @@
 
 **组件文档：<https://shuimo-ui-next.vercel.app>** —— 分成两版，[Vue 版](https://shuimo-ui-next.vercel.app/vue/)和 [React 版](https://shuimo-ui-next.vercel.app/react/)各是一个独立的单框架站：看 React 的人不会在文档里读到 `v-model` 和插槽，Vue 版的页面里也没有一行 React。两边的组件清单、外壳、样式和 API 数据都是同一份，只是各自挑自己那一列。
 
-> 开发中，**还没发到 npm**：三个包都已经打好 `1.0.0-alpha.0`，但还没推上去，现在 `npm i` 装不到。想试先克隆本仓库跑 `pnpm dev`。
+> **已发到 npm，当前 `1.0.0-beta.0`，预发布版。** API 还可能改，改动写在各包的 CHANGELOG 里。`npm i @shuimo-design/vue` 或 `@shuimo-design/react` 装到的就是这个版本。
 
 ## 三个包，一份实现
 
