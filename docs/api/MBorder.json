@@ -178,6 +178,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "框住的内容",
       "react": {
         "name": "children"
       }

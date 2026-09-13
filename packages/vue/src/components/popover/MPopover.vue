@@ -32,6 +32,7 @@ const {
 } = defineProps<PopoverProps>();
 const emit = defineEmits<PopoverEmits>();
 defineSlots<PopoverSlots>();
+/** 是否显示气泡；不传也能用，由 trigger 自己管 */
 const show = defineModel<boolean>("show", { default: false });
 
 const panelId = useId();

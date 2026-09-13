@@ -92,6 +92,7 @@
   "events": [
     {
       "name": "click",
+      "description": "点击；禁用和加载中不触发",
       "react": {
         "name": "onClick"
       }
@@ -100,6 +101,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "按钮文字；给了就盖掉 text 属性",
       "react": {
         "name": "children"
       }

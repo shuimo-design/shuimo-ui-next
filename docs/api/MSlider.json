@@ -116,6 +116,7 @@
     },
     {
       "name": "modelValue",
+      "description": "滑块的值；range 模式下是 [起, 止]",
       "required": false,
       "value": {
         "kind": "expression",

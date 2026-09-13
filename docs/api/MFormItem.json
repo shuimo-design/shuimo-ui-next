@@ -113,6 +113,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "这一项的表单控件",
       "react": {
         "name": "children"
       }

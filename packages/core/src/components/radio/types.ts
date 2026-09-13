@@ -17,6 +17,7 @@ export interface RadioEmits {
 }
 
 export interface RadioSlots {
+  /** 单选框的文字；给了就盖掉 label 属性 */
   default?: () => unknown;
 }
 
@@ -35,5 +36,6 @@ export interface RadioGroupEmits {
 }
 
 export interface RadioGroupSlots {
+  /** 放 MRadio */
   default?: () => unknown;
 }

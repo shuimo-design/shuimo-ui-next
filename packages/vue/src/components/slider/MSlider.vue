@@ -31,6 +31,7 @@ const {
   formatTooltip,
 } = defineProps<SliderProps>();
 const emit = defineEmits<SliderEmits>();
+/** 滑块的值；range 模式下是 [起, 止] */
 const model = defineModel<SliderValue>();
 
 const formItem = useFormItem();

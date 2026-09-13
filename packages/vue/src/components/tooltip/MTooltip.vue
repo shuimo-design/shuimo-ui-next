@@ -30,6 +30,7 @@ const {
 } = defineProps<TooltipProps>();
 const emit = defineEmits<TooltipEmits>();
 defineSlots<TooltipSlots>();
+/** 是否显示提示；不传也能用，由 trigger 自己管 */
 const show = defineModel<boolean>("show", { default: false });
 
 const tooltipId = useId();

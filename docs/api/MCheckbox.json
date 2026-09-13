@@ -75,6 +75,7 @@
     },
     {
       "name": "modelValue",
+      "description": "是否勾选",
       "default": "false",
       "required": false,
       "value": {
@@ -102,6 +103,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "复选框的文字；给了就盖掉 label 属性",
       "react": {
         "name": "children"
       }

@@ -127,6 +127,7 @@
     },
     {
       "name": "modelValue",
+      "description": "数值；清空后是 undefined",
       "required": false,
       "value": {
         "kind": "expression",
@@ -158,12 +159,14 @@
     },
     {
       "name": "focus",
+      "description": "获得焦点",
       "react": {
         "name": "onFocus"
       }
     },
     {
       "name": "blur",
+      "description": "失去焦点",
       "react": {
         "name": "onBlur"
       }

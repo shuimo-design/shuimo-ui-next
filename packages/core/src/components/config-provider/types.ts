@@ -16,5 +16,6 @@ export interface ConfigProviderProps {
 }
 
 export interface ConfigProviderSlots {
+  /** 被这份配置罩住的内容 */
   default?: () => unknown;
 }

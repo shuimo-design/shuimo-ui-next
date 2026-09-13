@@ -99,6 +99,7 @@
     },
     {
       "name": "click",
+      "description": "点标签本身；点关闭按钮走 close",
       "react": {
         "name": "onClick"
       }
@@ -107,6 +108,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "标签文字",
       "react": {
         "name": "children"
       }

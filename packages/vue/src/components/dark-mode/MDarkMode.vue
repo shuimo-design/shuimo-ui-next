@@ -25,6 +25,7 @@ const {
 const emit = defineEmits<DarkModeEmits>();
 // 显式 default: undefined 是为了绕开 Boolean 转型（不传会变 false）：
 // undefined 表示使用方没绑 v-model，初始状态要从本地记录 / 系统偏好推
+/** 是否深色；undefined 表示还没选过（autoMode 下跟随系统） */
 const model = defineModel<boolean | undefined>({ default: undefined });
 
 // 读 localStorage、问 matchMedia、监听系统偏好、改 html[data-theme]、整页墨迹擦过

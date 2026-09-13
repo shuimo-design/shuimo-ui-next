@@ -42,9 +42,11 @@ export interface RicePaperReadyPayload {
 }
 
 export interface RicePaperEmits {
+  /** 纹理（和洒金）解码完成、纸可以淡入时触发一次 */
   ready: [payload: RicePaperReadyPayload];
 }
 
 export interface RicePaperSlots {
+  /** 铺在纸上的内容 */
   default?: () => unknown;
 }

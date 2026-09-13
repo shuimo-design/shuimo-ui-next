@@ -14,5 +14,6 @@ export interface InkTransitionProps extends WipeMaskOptions {
 }
 
 export interface InkTransitionSlots {
+  /** 要做转场的内容；同一时刻只显示一个 */
   default?: () => unknown;
 }

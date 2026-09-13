@@ -64,6 +64,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "被这份配置罩住的内容",
       "react": {
         "name": "children"
       }

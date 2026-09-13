@@ -155,6 +155,7 @@
   "events": [
     {
       "name": "ready",
+      "description": "纹理（和洒金）解码完成、纸可以淡入时触发一次",
       "react": {
         "name": "onReady"
       }
@@ -163,6 +164,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "铺在纸上的内容",
       "react": {
         "name": "children"
       }

@@ -19,6 +19,7 @@ export interface CheckboxEmits {
 }
 
 export interface CheckboxSlots {
+  /** 复选框的文字；给了就盖掉 label 属性 */
   default?: () => unknown;
 }
 
@@ -34,9 +35,11 @@ export interface CheckboxGroupProps {
 }
 
 export interface CheckboxGroupEmits {
+  /** 组内选中项变化，参数是变化后的全部选中值 */
   change: [values: CheckboxValue[]];
 }
 
 export interface CheckboxGroupSlots {
+  /** 放 MCheckbox */
   default?: () => unknown;
 }

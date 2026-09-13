@@ -62,6 +62,7 @@
     },
     {
       "name": "modelValue",
+      "description": "选中的值；单独用（不在 MRadioGroup 里）时才需要",
       "required": false,
       "value": {
         "kind": "expression",
@@ -88,6 +89,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "单选框的文字；给了就盖掉 label 属性",
       "react": {
         "name": "children"
       }

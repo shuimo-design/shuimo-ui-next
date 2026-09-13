@@ -114,8 +114,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+/* 示例和 API 表撑满右边剩下的宽度，不再压在 880px 里 */
 .pg__page {
-  max-width: 880px;
+  width: 100%;
 }
 .pg__header {
   display: flex;
@@ -144,6 +145,16 @@
 .api__title {
   margin: 0;
   font-size: 18px;
+  font-weight: 500;
+}
+/* 一页可能列好几个组件（主组件 + 它的子组件），每个之间留出间距 */
+.api__group {
+  display: grid;
+  gap: 16px;
+}
+.api__name {
+  margin: 0;
+  font-size: 15px;
   font-weight: 500;
 }
 .api__block {

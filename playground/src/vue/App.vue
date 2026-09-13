@@ -114,7 +114,7 @@ function nextPaperWithTransition() {
           </header>
           <component :is="demos[current.id]" />
           <!-- 示例底下挂上构建时生成的属性 / 事件 / 插槽表（docs/api/<组件名>.json） -->
-          <ApiDoc :name="current.name" />
+          <ApiDoc :names="[current.name, ...(current.parts ?? [])]" />
         </section>
       </main>
     </div>

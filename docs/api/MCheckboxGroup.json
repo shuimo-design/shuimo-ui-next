@@ -63,6 +63,7 @@
     },
     {
       "name": "modelValue",
+      "description": "组内选中的值，顺序按勾选先后",
       "default": "[]",
       "required": false,
       "value": {
@@ -81,6 +82,7 @@
     },
     {
       "name": "change",
+      "description": "组内选中项变化，参数是变化后的全部选中值",
       "react": {
         "name": "onChange"
       }
@@ -89,6 +91,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "放 MCheckbox",
       "react": {
         "name": "children"
       }

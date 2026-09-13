@@ -146,6 +146,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "放 MFormItem",
       "react": {
         "name": "children"
       }

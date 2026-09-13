@@ -41,6 +41,7 @@ const {
 const emit = defineEmits<TabsEmits>();
 const slots = useSlots() as TabsSlots;
 defineSlots<TabsSlots>();
+/** 当前激活的标签页；没给 name 的页用书写位置的下标 */
 const model = defineModel<TabName>();
 
 const uid = useId();

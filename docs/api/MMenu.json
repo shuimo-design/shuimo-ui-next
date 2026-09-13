@@ -50,6 +50,7 @@
     },
     {
       "name": "modelValue",
+      "description": "当前选中的菜单项 key",
       "required": false,
       "value": {
         "kind": "expression",
@@ -62,6 +63,7 @@
     },
     {
       "name": "expandedKeys",
+      "description": "展开的子菜单 key",
       "default": "[]",
       "required": false,
       "value": {

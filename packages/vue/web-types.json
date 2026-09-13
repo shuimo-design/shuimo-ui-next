@@ -76,12 +76,14 @@
           ],
           "events": [
             {
-              "name": "click"
+              "name": "click",
+              "description": "点击；禁用和加载中不触发"
             }
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "按钮文字；给了就盖掉 text 属性"
             }
           ]
         },
@@ -202,12 +204,14 @@
           ],
           "events": [
             {
-              "name": "ready"
+              "name": "ready",
+              "description": "纹理（和洒金）解码完成、纸可以淡入时触发一次"
             }
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "铺在纸上的内容"
             }
           ]
         },
@@ -345,7 +349,8 @@
           "events": [],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "框住的内容"
             }
           ]
         },
@@ -407,6 +412,7 @@
             },
             {
               "name": "seed",
+              "description": "随机种子：毛边的形状由它决定，同种子同形状，默认 7",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -445,7 +451,8 @@
           "events": [],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "要做转场的内容；同一时刻只显示一个"
             }
           ]
         },
@@ -584,6 +591,7 @@
             },
             {
               "name": "modelValue",
+              "description": "输入框的值",
               "default": "\"\"",
               "required": false,
               "value": {
@@ -605,10 +613,12 @@
               "description": "值提交（原生 change：失焦或回车）"
             },
             {
-              "name": "focus"
+              "name": "focus",
+              "description": "获得焦点"
             },
             {
-              "name": "blur"
+              "name": "blur",
+              "description": "失去焦点"
             },
             {
               "name": "clear",
@@ -682,6 +692,7 @@
             },
             {
               "name": "modelValue",
+              "description": "是否勾选",
               "default": "false",
               "required": false,
               "value": {
@@ -701,7 +712,8 @@
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "复选框的文字；给了就盖掉 label 属性"
             }
           ]
         },
@@ -752,6 +764,7 @@
             },
             {
               "name": "modelValue",
+              "description": "组内选中的值，顺序按勾选先后",
               "default": "[]",
               "required": false,
               "value": {
@@ -765,12 +778,14 @@
               "name": "update:modelValue"
             },
             {
-              "name": "change"
+              "name": "change",
+              "description": "组内选中项变化，参数是变化后的全部选中值"
             }
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "放 MCheckbox"
             }
           ]
         },
@@ -860,6 +875,7 @@
             },
             {
               "name": "modelValue",
+              "description": "开关的值，默认 true / false；可用 activeValue / inactiveValue 换成别的",
               "default": "false",
               "required": false,
               "value": {
@@ -961,12 +977,14 @@
               "description": "点了关闭按钮"
             },
             {
-              "name": "click"
+              "name": "click",
+              "description": "点标签本身；点关闭按钮走 close"
             }
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "标签文字"
             }
           ]
         },
@@ -1016,6 +1034,7 @@
             },
             {
               "name": "modelValue",
+              "description": "选中的值；单独用（不在 MRadioGroup 里）时才需要",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1034,7 +1053,8 @@
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "单选框的文字；给了就盖掉 label 属性"
             }
           ]
         },
@@ -1076,6 +1096,7 @@
             },
             {
               "name": "modelValue",
+              "description": "组内选中的值",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1094,7 +1115,8 @@
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "放 MRadio"
             }
           ]
         },
@@ -1329,6 +1351,7 @@
             },
             {
               "name": "modelValue",
+              "description": "数值；清空后是 undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1349,10 +1372,12 @@
               "description": "每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态）"
             },
             {
-              "name": "focus"
+              "name": "focus",
+              "description": "获得焦点"
             },
             {
-              "name": "blur"
+              "name": "blur",
+              "description": "失去焦点"
             }
           ],
           "slots": []
@@ -1445,6 +1470,7 @@
             },
             {
               "name": "modelValue",
+              "description": "滑块的值；range 模式下是 [起, 止]",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1506,6 +1532,7 @@
             },
             {
               "name": "modelValue",
+              "description": "展开的项；accordion 模式下是单个 name，否则是数组",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1524,7 +1551,8 @@
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "放 MCollapseItem"
             }
           ]
         },
@@ -1677,12 +1705,14 @@
           ],
           "events": [
             {
-              "name": "click"
+              "name": "click",
+              "description": "点这一项"
             }
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "这一项的内容"
             }
           ]
         },
@@ -1753,6 +1783,7 @@
             },
             {
               "name": "expandedKeys",
+              "description": "展开的节点 key",
               "default": "[]",
               "required": false,
               "value": {
@@ -1762,6 +1793,7 @@
             },
             {
               "name": "checkedKeys",
+              "description": "勾选的节点 key（只含复选框真正勾上的，半选不算）",
               "default": "[]",
               "required": false,
               "value": {
@@ -1771,6 +1803,7 @@
             },
             {
               "name": "selectedKey",
+              "description": "当前高亮的节点 key",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -1970,6 +2003,7 @@
             },
             {
               "name": "modelValue",
+              "description": "选中的值；multiple 时是数组，清空后是 undefined",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -2006,10 +2040,12 @@
               "description": "点了清空按钮"
             },
             {
-              "name": "focus"
+              "name": "focus",
+              "description": "获得焦点"
             },
             {
-              "name": "blur"
+              "name": "blur",
+              "description": "失去焦点"
             }
           ],
           "slots": [
@@ -2259,6 +2295,7 @@
             },
             {
               "name": "show",
+              "description": "是否显示气泡；不传也能用，由 trigger 自己管",
               "default": "false",
               "required": false,
               "value": {
@@ -2405,6 +2442,7 @@
             },
             {
               "name": "show",
+              "description": "是否显示提示；不传也能用，由 trigger 自己管",
               "default": "false",
               "required": false,
               "value": {
@@ -2519,6 +2557,7 @@
             },
             {
               "name": "modelValue",
+              "description": "是否显示",
               "default": "false",
               "required": false,
               "value": {
@@ -2646,6 +2685,7 @@
             },
             {
               "name": "modelValue",
+              "description": "是否显示",
               "default": "false",
               "required": false,
               "value": {
@@ -2869,6 +2909,7 @@
             },
             {
               "name": "open",
+              "description": "是否显示；函数式的 MConfirm.show() 不用管它",
               "default": "false",
               "required": false,
               "value": {
@@ -3044,7 +3085,8 @@
           ],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "放 MFormItem"
             }
           ]
         },
@@ -3132,7 +3174,8 @@
           "events": [],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "这一项的表单控件"
             },
             {
               "name": "label",
@@ -3441,6 +3484,7 @@
             },
             {
               "name": "current",
+              "description": "当前页码，从 1 起",
               "default": "1",
               "required": false,
               "value": {
@@ -3450,6 +3494,7 @@
             },
             {
               "name": "pageSize",
+              "description": "每页条数",
               "default": "10",
               "required": false,
               "value": {
@@ -3831,7 +3876,8 @@
           "events": [],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "格子里的内容"
             }
           ]
         },
@@ -3963,6 +4009,7 @@
             },
             {
               "name": "modelValue",
+              "description": "当前选中的菜单项 key",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -3971,6 +4018,7 @@
             },
             {
               "name": "expandedKeys",
+              "description": "展开的子菜单 key",
               "default": "[]",
               "required": false,
               "value": {
@@ -4315,7 +4363,8 @@
           "events": [],
           "slots": [
             {
-              "name": "default"
+              "name": "default",
+              "description": "被这份配置罩住的内容"
             }
           ]
         },
@@ -4378,6 +4427,7 @@
             },
             {
               "name": "modelValue",
+              "description": "是否深色；undefined 表示还没选过（autoMode 下跟随系统）",
               "required": false,
               "value": {
                 "kind": "expression",
@@ -5401,6 +5451,7 @@
             },
             {
               "name": "modelValue",
+              "description": "当前激活的标签页；没给 name 的页用书写位置的下标",
               "required": false,
               "value": {
                 "kind": "expression",

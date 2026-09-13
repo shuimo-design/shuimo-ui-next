@@ -116,6 +116,7 @@
     },
     {
       "name": "open",
+      "description": "是否显示；函数式的 MConfirm.show() 不用管它",
       "default": "false",
       "required": false,
       "value": {

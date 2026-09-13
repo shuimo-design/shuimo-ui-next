@@ -52,6 +52,7 @@
     },
     {
       "name": "modelValue",
+      "description": "展开的项；accordion 模式下是单个 name，否则是数组",
       "required": false,
       "value": {
         "kind": "expression",
@@ -78,6 +79,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "放 MCollapseItem",
       "react": {
         "name": "children"
       }

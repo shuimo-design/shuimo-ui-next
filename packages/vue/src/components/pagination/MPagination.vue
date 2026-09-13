@@ -44,7 +44,9 @@ const {
 } = defineProps<PaginationProps>();
 const emit = defineEmits<PaginationEmits>();
 defineSlots<PaginationSlots>();
+/** 当前页码，从 1 起 */
 const current = defineModel<number>("current", { default: 1 });
+/** 每页条数 */
 const pageSize = defineModel<number>("pageSize", { default: 10 });
 
 const disabled = useDisabled(() => disabledProp);

@@ -3,6 +3,7 @@
  * 作为 mask-image 用 mask-size 200% 铺开，把 mask-position 从 100% 扫到 0% 就是"落墨"。
  */
 export interface WipeMaskOptions {
+  /** 随机种子：毛边的形状由它决定，同种子同形状，默认 7 */
   seed?: number;
   /** 毛边幅度（相对遮罩宽度的百分比），默认 6 */
   raggedness?: number;

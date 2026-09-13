@@ -178,6 +178,7 @@
     },
     {
       "name": "modelValue",
+      "description": "输入框的值",
       "default": "\"\"",
       "required": false,
       "value": {
@@ -210,12 +211,14 @@
     },
     {
       "name": "focus",
+      "description": "获得焦点",
       "react": {
         "name": "onFocus"
       }
     },
     {
       "name": "blur",
+      "description": "失去焦点",
       "react": {
         "name": "onBlur"
       }

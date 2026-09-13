@@ -36,5 +36,6 @@ export interface BorderProps {
 }
 
 export interface BorderSlots {
+  /** 框住的内容 */
   default?: () => unknown;
 }

@@ -27,9 +27,11 @@ export interface ListItemProps {
 }
 
 export interface ListItemEmits {
+  /** 点这一项 */
   click: [event: MouseEvent];
 }
 
 export interface ListItemSlots {
+  /** 这一项的内容 */
   default?: () => unknown;
 }

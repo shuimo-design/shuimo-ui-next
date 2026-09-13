@@ -78,6 +78,7 @@
     },
     {
       "name": "modelValue",
+      "description": "是否深色；undefined 表示还没选过（autoMode 下跟随系统）",
       "required": false,
       "value": {
         "kind": "expression",

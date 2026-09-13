@@ -89,6 +89,7 @@
     },
     {
       "name": "expandedKeys",
+      "description": "展开的节点 key",
       "default": "[]",
       "required": false,
       "value": {
@@ -102,6 +103,7 @@
     },
     {
       "name": "checkedKeys",
+      "description": "勾选的节点 key（只含复选框真正勾上的，半选不算）",
       "default": "[]",
       "required": false,
       "value": {
@@ -115,6 +117,7 @@
     },
     {
       "name": "selectedKey",
+      "description": "当前高亮的节点 key",
       "required": false,
       "value": {
         "kind": "expression",

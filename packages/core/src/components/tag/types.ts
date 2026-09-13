@@ -19,9 +19,11 @@ export interface TagProps {
 export interface TagEmits {
   /** 点了关闭按钮 */
   close: [event: MouseEvent];
+  /** 点标签本身；点关闭按钮走 close */
   click: [event: MouseEvent];
 }
 
 export interface TagSlots {
+  /** 标签文字 */
   default?: () => unknown;
 }

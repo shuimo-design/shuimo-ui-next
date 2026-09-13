@@ -81,5 +81,6 @@ export interface GridSlots {
 }
 
 export interface CellSlots {
+  /** 格子里的内容 */
   default?: () => unknown;
 }

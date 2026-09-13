@@ -33,8 +33,11 @@ const {
 } = defineProps<TreeProps>();
 const emit = defineEmits<TreeEmits>();
 const slots = defineSlots<TreeSlots>();
+/** 展开的节点 key */
 const expandedKeys = defineModel<TreeKey[]>("expandedKeys", { default: () => [] });
+/** 勾选的节点 key（只含复选框真正勾上的，半选不算） */
 const checkedKeys = defineModel<TreeKey[]>("checkedKeys", { default: () => [] });
+/** 当前高亮的节点 key */
 const selectedKey = defineModel<TreeKey | undefined>("selectedKey");
 
 const fields = computed(() => resolveTreeFields(fieldNames));

@@ -45,7 +45,9 @@ export interface InputEmits {
   input: [value: string];
   /** 值提交（原生 change：失焦或回车） */
   change: [value: string];
+  /** 获得焦点 */
   focus: [event: FocusEvent];
+  /** 失去焦点 */
   blur: [event: FocusEvent];
   /** 点了清空按钮 */
   clear: [];

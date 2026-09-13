@@ -25,7 +25,9 @@ defineOptions({ name: "MMenu" });
 const { data, fieldNames, defaultExpandAll = false } = defineProps<MenuProps>();
 const emit = defineEmits<MenuEmits>();
 const slots = defineSlots<MenuSlots>();
+/** 当前选中的菜单项 key */
 const model = defineModel<MenuKey | undefined>();
+/** 展开的子菜单 key */
 const expandedKeys = defineModel<MenuKey[]>("expandedKeys", { default: () => [] });
 
 const root = useTemplateRef<HTMLElement>("root");

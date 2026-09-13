@@ -15,6 +15,7 @@ export interface CollapseEmits {
 }
 
 export interface CollapseSlots {
+  /** 放 MCollapseItem */
   default?: () => unknown;
 }
 

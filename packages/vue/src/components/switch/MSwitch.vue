@@ -27,6 +27,7 @@ const {
 } = defineProps<SwitchProps>();
 const emit = defineEmits<SwitchEmits>();
 const slots = defineSlots<SwitchSlots>();
+/** 开关的值，默认 true / false；可用 activeValue / inactiveValue 换成别的 */
 const model = defineModel<SwitchValue>({ default: false });
 
 // 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水

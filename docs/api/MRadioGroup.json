@@ -51,6 +51,7 @@
     },
     {
       "name": "modelValue",
+      "description": "组内选中的值",
       "required": false,
       "value": {
         "kind": "expression",
@@ -77,6 +78,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "放 MRadio",
       "react": {
         "name": "children"
       }

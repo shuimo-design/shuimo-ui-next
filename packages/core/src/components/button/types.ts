@@ -16,9 +16,11 @@ export interface ButtonProps {
 }
 
 export interface ButtonEmits {
+  /** 点击；禁用和加载中不触发 */
   click: [event: MouseEvent];
 }
 
 export interface ButtonSlots {
+  /** 按钮文字；给了就盖掉 text 属性 */
   default?: () => unknown;
 }

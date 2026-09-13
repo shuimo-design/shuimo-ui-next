@@ -24,7 +24,9 @@ export interface InputNumberEmits {
   change: [value: number | undefined, oldValue: number | undefined];
   /** 每次键入，参数是清洗后的文本（可能是 `-`、`1.` 这类中间态） */
   input: [value: string];
+  /** 获得焦点 */
   focus: [event: FocusEvent];
+  /** 失去焦点 */
   blur: [event: FocusEvent];
 }
 

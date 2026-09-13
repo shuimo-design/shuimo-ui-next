@@ -66,7 +66,9 @@ export interface SelectEmits {
   removeTag: [value: SelectValue];
   /** 点了清空按钮 */
   clear: [];
+  /** 获得焦点 */
   focus: [event: FocusEvent];
+  /** 失去焦点 */
   blur: [event: FocusEvent];
 }
 

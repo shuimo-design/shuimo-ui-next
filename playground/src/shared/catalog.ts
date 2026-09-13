@@ -10,6 +10,11 @@ export interface DemoMeta {
   title: string;
   /** M 开头的组件名，用来查 API 表 */
   name: string;
+  /**
+   * 同一页里还要列出 API 的子组件（MTableColumn、MFormItem 这些）。
+   * 它们没有自己的页面，不在这里登记就等于生成了文档却没人看得见。
+   */
+  parts?: string[];
 }
 
 export interface DemoGroup {
@@ -17,8 +22,8 @@ export interface DemoGroup {
   items: DemoMeta[];
 }
 
-function entry(id: string, title: string, name: string): DemoMeta {
-  return { id, title, name };
+function entry(id: string, title: string, name: string, ...parts: string[]): DemoMeta {
+  return parts.length ? { id, title, name, parts } : { id, title, name };
 }
 
 export const CATALOG: DemoGroup[] = [
@@ -39,15 +44,15 @@ export const CATALOG: DemoGroup[] = [
       entry("input-number", "数字输入", "MInputNumber"),
       entry("select", "选择器", "MSelect"),
       entry("date-picker", "日期选择", "MDatePicker"),
-      entry("checkbox", "复选框", "MCheckbox"),
-      entry("radio", "单选框", "MRadio"),
+      entry("checkbox", "复选框", "MCheckbox", "MCheckboxGroup"),
+      entry("radio", "单选框", "MRadio", "MRadioGroup"),
       entry("switch", "开关", "MSwitch"),
       entry("slider", "滑块", "MSlider"),
       entry("tag", "标签", "MTag"),
       entry("avatar", "头像", "MAvatar"),
       entry("progress", "进度条", "MProgress"),
-      entry("collapse", "折叠面板", "MCollapse"),
-      entry("list", "列表", "MList"),
+      entry("collapse", "折叠面板", "MCollapse", "MCollapseItem"),
+      entry("list", "列表", "MList", "MListItem"),
       entry("tree", "树", "MTree"),
       entry("card", "卡片", "MCard"),
       entry("badge", "角标", "MBadge"),
@@ -56,15 +61,15 @@ export const CATALOG: DemoGroup[] = [
   {
     group: "模版",
     items: [
-      entry("breadcrumb", "面包屑", "MBreadcrumb"),
-      entry("menu", "菜单", "MMenu"),
+      entry("breadcrumb", "面包屑", "MBreadcrumb", "MBreadcrumbItem"),
+      entry("menu", "菜单", "MMenu", "MMenuItem"),
       entry("pagination", "分页", "MPagination"),
-      entry("form", "表单", "MForm"),
-      entry("table", "表格", "MTable"),
-      entry("grid", "栅格", "MGrid"),
+      entry("form", "表单", "MForm", "MFormItem"),
+      entry("table", "表格", "MTable", "MTableColumn"),
+      entry("grid", "栅格", "MGrid", "MCell"),
       entry("virtual-list", "虚拟列表", "MVirtualList"),
-      entry("steps", "步骤条", "MSteps"),
-      entry("tabs", "标签页", "MTabs"),
+      entry("steps", "步骤条", "MSteps", "MStep"),
+      entry("tabs", "标签页", "MTabs", "MTabPane"),
     ],
   },
   {
@@ -87,11 +92,11 @@ export const CATALOG: DemoGroup[] = [
       entry("divider", "分割线", "MDivider"),
       entry("loading", "加载", "MLoading"),
       entry("delete-icon", "删除图标", "MDeleteIcon"),
-      entry("config-provider", "全局配置", "MConfigProvider"),
+      entry("config-provider", "全局配置", "MConfigProvider", "MOverlayOutlet"),
       entry("dark-mode", "深浅切换", "MDarkMode"),
       entry("svg", "图标", "MSvg"),
       entry("empty", "空状态", "MEmpty"),
-      entry("skeleton", "骨架屏", "MSkeleton"),
+      entry("skeleton", "骨架屏", "MSkeleton", "MSkeletonItem"),
     ],
   },
 ];

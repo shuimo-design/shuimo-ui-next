@@ -20,6 +20,7 @@ const {
 } = defineProps<RadioGroupProps>();
 const emit = defineEmits<RadioGroupEmits>();
 defineSlots<RadioGroupSlots>();
+/** 组内选中的值 */
 const model = defineModel<RadioValue>();
 
 // 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水

@@ -90,6 +90,7 @@
     },
     {
       "name": "modelValue",
+      "description": "当前激活的标签页；没给 name 的页用书写位置的下标",
       "required": false,
       "value": {
         "kind": "expression",

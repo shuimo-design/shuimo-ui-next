@@ -31,6 +31,7 @@ const {
 } = defineProps<DialogProps>();
 const emit = defineEmits<DialogEmits>();
 const slots = defineSlots<DialogSlots>();
+/** 是否显示 */
 const model = defineModel<boolean>({ default: false });
 
 const mask = computed(() => resolveMask(maskProp));

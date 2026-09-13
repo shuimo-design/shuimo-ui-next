@@ -22,6 +22,7 @@ const {
 } = defineProps<CheckboxGroupProps>();
 const emit = defineEmits<CheckboxGroupEmits>();
 defineSlots<CheckboxGroupSlots>();
+/** 组内选中的值，顺序按勾选先后 */
 const model = defineModel<CheckboxValue[]>({ default: () => [] });
 
 // 上下文形状在 core（context/form-item.ts），这两行只是 Vue 的 inject 胶水

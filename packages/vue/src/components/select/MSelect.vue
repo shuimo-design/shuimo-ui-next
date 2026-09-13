@@ -55,6 +55,7 @@ const {
 const emit = defineEmits<SelectEmits>();
 const slots = defineSlots<SelectSlots>();
 // 值类型里带 boolean 会触发 Vue 的布尔转换，不传就变成 false；显式给个 undefined 默认值挡掉
+/** 选中的值；multiple 时是数组，清空后是 undefined */
 const model = defineModel<SelectValue | SelectValue[] | undefined>({ default: undefined });
 
 const formItem = useFormItem();

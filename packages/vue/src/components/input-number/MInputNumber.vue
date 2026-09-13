@@ -33,6 +33,7 @@ const {
   name,
 } = defineProps<InputNumberProps>();
 const emit = defineEmits<InputNumberEmits>();
+/** 数值；清空后是 undefined */
 const model = defineModel<number | undefined>();
 
 const attrs = useAttrs();

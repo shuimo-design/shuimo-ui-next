@@ -18,6 +18,7 @@ const { accordion = false, divider = true, disabled = false } = defineProps<Coll
 const emit = defineEmits<CollapseEmits>();
 defineSlots<CollapseSlots>();
 // 手风琴下是单个 name，普通模式下是 name 数组；两种形状的换算在 core 里
+/** 展开的项；accordion 模式下是单个 name，否则是数组 */
 const model = defineModel<CollapseName | CollapseName[]>();
 
 function toggle(name: CollapseName) {

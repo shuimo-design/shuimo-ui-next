@@ -20,6 +20,7 @@ defineOptions({ name: "MRadio" });
 const { value, label, disabled: disabledProp = false, name } = defineProps<RadioProps>();
 const emit = defineEmits<RadioEmits>();
 const slots = defineSlots<RadioSlots>();
+/** 选中的值；单独用（不在 MRadioGroup 里）时才需要 */
 const model = defineModel<RadioValue>();
 
 const group = inject(radioGroupKey, undefined);

@@ -43,6 +43,7 @@ const {
 } = defineProps<InputProps>();
 const emit = defineEmits<InputEmits>();
 const slots = defineSlots<InputSlots>();
+/** 输入框的值 */
 const model = defineModel<string>({ default: "" });
 
 const attrs = useAttrs();

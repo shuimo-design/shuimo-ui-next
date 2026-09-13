@@ -31,6 +31,7 @@ const {
 } = defineProps<DrawerProps>();
 const emit = defineEmits<DrawerEmits>();
 const slots = defineSlots<DrawerSlots>();
+/** 是否显示 */
 const model = defineModel<boolean>({ default: false });
 
 const mask = computed(() => resolveMask(maskProp));

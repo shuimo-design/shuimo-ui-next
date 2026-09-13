@@ -114,6 +114,7 @@
     },
     {
       "name": "modelValue",
+      "description": "是否显示",
       "default": "false",
       "required": false,
       "value": {

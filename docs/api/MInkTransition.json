@@ -74,6 +74,7 @@
     },
     {
       "name": "seed",
+      "description": "随机种子：毛边的形状由它决定，同种子同形状，默认 7",
       "required": false,
       "value": {
         "kind": "expression",
@@ -125,6 +126,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "要做转场的内容；同一时刻只显示一个",
       "react": {
         "name": "children"
       }

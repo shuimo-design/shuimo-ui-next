@@ -27,6 +27,7 @@ const {
 } = defineProps<CheckboxProps>();
 const emit = defineEmits<CheckboxEmits>();
 const slots = defineSlots<CheckboxSlots>();
+/** 是否勾选 */
 const model = defineModel<boolean>({ default: false });
 
 const group = inject(checkboxGroupKey, undefined);

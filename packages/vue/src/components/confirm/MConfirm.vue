@@ -32,6 +32,7 @@ const {
 } = defineProps<ConfirmProps>();
 const emit = defineEmits<ConfirmEmits>();
 defineSlots<ConfirmSlots>();
+/** 是否显示；函数式的 MConfirm.show() 不用管它 */
 const open = defineModel<boolean>("open", { default: false });
 
 const mask = computed(() => resolveMask(maskProp));

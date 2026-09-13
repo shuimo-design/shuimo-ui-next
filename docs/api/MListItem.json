@@ -40,6 +40,7 @@
   "events": [
     {
       "name": "click",
+      "description": "点这一项",
       "react": {
         "name": "onClick"
       }
@@ -48,6 +49,7 @@
   "slots": [
     {
       "name": "default",
+      "description": "这一项的内容",
       "react": {
         "name": "children"
       }

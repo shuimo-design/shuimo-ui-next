@@ -84,6 +84,7 @@ export interface FormEmits {
 }
 
 export interface FormSlots {
+  /** 放 MFormItem */
   default?: () => unknown;
 }
 
@@ -116,6 +117,7 @@ export interface FormItemProps {
 }
 
 export interface FormItemSlots {
+  /** 这一项的表单控件 */
   default?: () => unknown;
   /** 自定义标签内容 */
   label?: (scope: { label: string | undefined }) => unknown;

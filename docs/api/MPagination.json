@@ -117,6 +117,7 @@
     },
     {
       "name": "current",
+      "description": "当前页码，从 1 起",
       "default": "1",
       "required": false,
       "value": {
@@ -130,6 +131,7 @@
     },
     {
       "name": "pageSize",
+      "description": "每页条数",
       "default": "10",
       "required": false,
       "value": {
