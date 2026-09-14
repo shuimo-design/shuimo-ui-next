@@ -21,7 +21,7 @@ packages/react/src/components/<kebab>/
   M<Name>.test.tsx vitest browser 模式，用 vitest-browser-react
 ```
 
-新组件的 CSS 要往 `packages/core/src/styles/index.css` 的清单里加一行，`check-style.ts` 会校验一个都不漏。
+新组件的 CSS 要往 `packages/core/src/styles/index.css` 的清单里加一行，`check-style.ts` 会校验一个都不漏。同时在 `packages/core/src/styles/manifest.ts` 的 `COMPONENT_STYLES` 里登记：自己的 css 文件名，以及它内部会渲染哪些别的组件（`renders`）—— 按需入口 `style/<组件名>` 就是从这张表算的，漏写 `renders` 的后果是用户按需引入时子组件裸奔。
 
 ## 哪些东西必须在 core
 

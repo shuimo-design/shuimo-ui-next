@@ -23,7 +23,8 @@
   ],
   "type": "module",
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "./dist/style/*.js"
   ],
   "exports": {
     ".": {
@@ -45,6 +46,8 @@
       "import": "./dist/resolver.js"
     },
     "./style.css": "./dist/style.css",
+    "./css/*": "./dist/css/*",
+    "./style/*": "./dist/style/*.js",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -56,7 +59,7 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vp test",
     "bench": "BENCH=1 vp test bench/",
-    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
+    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css \"css/*\" \"style/*\""
   },
   "dependencies": {
     "@shuimo-design/core": "workspace:^"

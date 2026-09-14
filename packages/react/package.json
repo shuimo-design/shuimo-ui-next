@@ -21,7 +21,8 @@
   ],
   "type": "module",
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "./dist/style/*.js"
   ],
   "exports": {
     ".": {
@@ -35,6 +36,8 @@
       "import": "./dist/ink.js"
     },
     "./style.css": "./dist/style.css",
+    "./css/*": "./dist/css/*",
+    "./style/*": "./dist/style/*.js",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -45,7 +48,7 @@
     "check:style": "tsx scripts/check-style.ts",
     "typecheck": "tsc --noEmit",
     "test": "vp test",
-    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
+    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css \"css/*\" \"style/*\""
   },
   "dependencies": {
     "@shuimo-design/core": "workspace:^"

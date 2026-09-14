@@ -38,17 +38,23 @@
       "@shuimo-design/source": "./src/styles/index.css",
       "default": "./dist/style.css"
     },
+    "./css/*": "./dist/css/*",
+    "./styles": {
+      "@shuimo-design/source": "./src/styles/manifest.ts",
+      "types": "./dist/styles.d.ts",
+      "import": "./dist/styles.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "vp pack && pnpm check:style",
+    "build": "vp pack && tsx scripts/build-css.ts && pnpm check:style",
     "check:style": "tsx scripts/check-style.ts",
     "typecheck": "tsc --noEmit",
     "test": "vp test",
-    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css"
+    "attw": "attw --pack . --profile esm-only --exclude-entrypoints style.css \"css/*\""
   },
   "dependencies": {
     "@floating-ui/dom": "^1.8.0"

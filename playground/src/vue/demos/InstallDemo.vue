@@ -45,6 +45,17 @@ const font = `@font-face {
   --m-font-seal: "我的篆体", serif;
 }`;
 
+const onDemand = `// vite.config.ts
+import Components from "unplugin-vue-components/vite";
+import { ShuimoResolver } from "@shuimo-design/vue/resolver";
+
+export default defineConfig({
+  plugins: [vue(), Components({ resolvers: [ShuimoResolver({ importStyle: true })] })],
+});`;
+
+const onDemandManual = `import "@shuimo-design/vue/style/MButton";
+import "@shuimo-design/vue/style/MDialog";`;
+
 const preload = `import { createInkEngine, preloadStampFont } from "@shuimo-design/vue/ink";
 
 createInkEngine();
@@ -78,8 +89,8 @@ void preloadStampFont();`;
     <h3 class="guide__h">接进项目：两行</h3>
     <pre class="guide__code">{{ main }}</pre>
     <p class="guide__hint">
-      样式是一整份，不按组件拆；<code>@shuimo-design/vue/style.css</code> 和
-      <code>@shuimo-design/core/style.css</code> 是同一份文件的两个名字，引哪个都行。
+      <code>style.css</code> 是全部组件的样式，整份 22
+      KB（gzip）。只想带用到的组件，看下面「样式按需」。
     </p>
     <p class="guide__hint">
       不调 <code>createInkEngine()</code> 也能用：那样只剩骨架（盒模型、间距、状态），
@@ -90,8 +101,25 @@ void preloadStampFont();`;
     <p>直接 import，不用 <code>app.use()</code> 注册，也不用配按需引入的插件。</p>
     <pre class="guide__code">{{ use }}</pre>
     <p class="guide__hint">
-      按需引入是天然的：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip）， 47
+      JS 的按需引入是天然的：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip）， 47
       个组件全用上也才 106 KB。
+    </p>
+
+    <h3 class="guide__h">样式按需</h3>
+    <p>
+      配合 unplugin-vue-components：模板里写 <code>&lt;MButton&gt;</code> 就自动 import
+      组件和它的样式，<code>main.ts</code> 里那行 <code>style.css</code> 去掉。
+    </p>
+    <pre class="guide__code">{{ onDemand }}</pre>
+    <p>不用插件也行，每个组件一个入口，自己引：</p>
+    <pre class="guide__code">{{ onDemandManual }}</pre>
+    <p class="guide__hint">
+      一个入口把底子（层顺序、变量、基础重置、图标、墨迹动画）、它内部用到的组件、它自己的 css
+      一起带齐，几个入口重复引到的文件由打包器按模块去重。按需时不要再引
+      <code>style.css</code>，会重。<code>MMessage.success()</code>
+      这类函数式调用不是标签，resolver 看不见，它们的样式跟着
+      <code>&lt;MConfigProvider&gt;</code> 的入口一起来。散件本身也暴露在
+      <code>@shuimo-design/vue/css/&lt;名字&gt;.css</code>。
     </p>
 
     <h3 class="guide__h">消息和确认框要有个出口</h3>
@@ -123,7 +151,7 @@ void preloadStampFont();`;
     <p>
       <code>@shuimo-design/vue/nuxt</code> 是 Nuxt 模块（自动注入样式）；
       <code>@shuimo-design/vue/resolver</code> 配合 unplugin-vue-components 用， 让模板里写
-      <code>&lt;MButton&gt;</code> 不用 import。
+      <code>&lt;MButton&gt;</code> 不用 import，开 <code>importStyle</code> 连样式也按需。
     </p>
   </article>
 </template>

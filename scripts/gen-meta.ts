@@ -22,6 +22,7 @@ import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { COMPONENT_NAMES } from "../packages/vue/src/nuxt/components";
+import { COMPONENT_STYLES } from "../packages/core/src/styles/manifest";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const VUE_MODULE = "@shuimo-design/vue";
@@ -577,6 +578,16 @@ const isPublic = (pkg: "vue" | "react", dir: string, name: string): boolean => {
     new RegExp(`\\b${name}\\b`).test(readFileSync(index, "utf8"))
   );
 };
+
+// 按需样式的清单要和组件清单一一对应：少一个就有组件按需引不到样式，多一个就是拼错了名字
+for (const name of COMPONENT_NAMES) {
+  if (!Object.hasOwn(COMPONENT_STYLES, name)) {
+    fail(`${name} 不在 packages/core/src/styles/manifest.ts 的 COMPONENT_STYLES 里`);
+  }
+}
+for (const name of Object.keys(COMPONENT_STYLES)) {
+  if (!known.has(name)) fail(`COMPONENT_STYLES 里的 ${name} 不是 COMPONENT_NAMES 里的组件`);
+}
 
 // 正向：清单里的每个组件，core 要有类型、vue 要有实现
 for (const name of COMPONENT_NAMES) {

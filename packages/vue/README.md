@@ -44,13 +44,36 @@ const open = ref(false);
 </template>
 ```
 
-直接 import 就行，不用 `app.use()` 注册，也不用配按需引入的插件：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip）。
+直接 import 就行，不用 `app.use()` 注册，也不用配按需引入的插件：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip）。样式按需见下一节。
 
 `MMessage.success()` 这类函数式调用渲染在你自己的组件树里，所以树里要有一个 `<MOverlayOutlet>` —— 最外层套一个 `<MConfigProvider>` 就自带了。
 
 另有两个入口：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`@shuimo-design/vue/resolver`（配合 unplugin-vue-components 自动引入）。
 
 支持服务端渲染；弹层类组件不进服务端 HTML，挂载后才出现。
+
+### 样式按需
+
+`style.css` 是整份（22 KB gzip）。只想带用到的组件：
+
+```ts
+// vite.config.ts —— 配合 unplugin-vue-components，模板里写 <MButton> 就自动 import 组件和它的样式
+import Components from "unplugin-vue-components/vite";
+import { ShuimoResolver } from "@shuimo-design/vue/resolver";
+
+export default defineConfig({
+  plugins: [vue(), Components({ resolvers: [ShuimoResolver({ importStyle: true })] })],
+});
+```
+
+不用插件也行，每个组件一个入口，手动引：
+
+```ts
+import "@shuimo-design/vue/style/MButton";
+import "@shuimo-design/vue/style/MDialog";
+```
+
+一个入口把底子（`css/base.css`：层顺序、变量、基础重置、图标、墨迹动画）、它内部用到的组件和它自己的 css 一起带齐，几个入口重复引到的文件由打包器按模块去重。散件也直接暴露在 `@shuimo-design/vue/css/<名字>.css`。按需时**不要再引 `style.css`**，会重。`MMessage.success()` 这类函数式调用不是标签，resolver 看不见，样式跟着 `<MConfigProvider>` / `<MOverlayOutlet>` 的入口一起来。Nuxt 模块目前仍是全量。
 
 ## 许可
 

@@ -52,7 +52,15 @@ Vue 的 `v-model` 在 React 侧是**受控 / 非受控两套都支持**的一组
 
 Vue 独有的两个入口留着：`@shuimo-design/vue/nuxt`（Nuxt 模块）、`@shuimo-design/vue/resolver`（配合 unplugin-vue-components 自动引入）。纯 ESM。
 
-**按需引入不用配任何东西**：三个包都是一个源文件出一个产物文件，`import { MButton } from "@shuimo-design/vue"` 只会带进这个按钮用得到的那部分。实测只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip），47 个组件全用上是 106 KB。样式是例外，`style.css` 只有整份一个文件。
+**JS 按需引入不用配任何东西**：三个包都是一个源文件出一个产物文件，`import { MButton } from "@shuimo-design/vue"` 只会带进这个按钮用得到的那部分。实测只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip），47 个组件全用上是 106 KB。
+
+**样式也可以按需**。`style.css` 是整份（22 KB gzip），不想全引就按组件引 `style/<组件名>` 入口，一个入口把底子、它依赖的组件和它自己的 css 一起带齐，重复的由打包器去重：
+
+```ts
+import "@shuimo-design/vue/style/MButton"; // 手动
+```
+
+配插件就不用手写：Vue 用 unplugin-vue-components 的 `ShuimoResolver({ importStyle: true })`，React 用 vite-plugin-imp 照 import 名单补样式。两种写法见各包 README。按需时不要再引 `style.css`，会重。
 
 ### 印章换字体
 

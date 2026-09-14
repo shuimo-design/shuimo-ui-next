@@ -42,6 +42,29 @@ const font = `@font-face {
   --m-font-seal: "我的篆体", serif;
 }`;
 
+const onDemandManual = `import "@shuimo-design/react/style/MButton";
+import "@shuimo-design/react/style/MDialog";`;
+
+const onDemand = `// vite.config.ts
+import vitePluginImp from "vite-plugin-imp";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    vitePluginImp({
+      libList: [
+        {
+          libName: "@shuimo-design/react",
+          camel2DashComponentName: false,
+          // 组件照旧从包入口引（入口本身可摇树），插件只补样式那一行
+          replaceOldImport: false,
+          style: (name) => \`@shuimo-design/react/style/\${name}\`,
+        },
+      ],
+    }),
+  ],
+});`;
+
 const preload = `import { createInkEngine, preloadStampFont } from "@shuimo-design/react/ink";
 
 createInkEngine();
@@ -75,8 +98,8 @@ export default function InstallDemo() {
       <h3 className="guide__h">接进项目：两行</h3>
       <pre className="guide__code">{main}</pre>
       <p className="guide__hint">
-        样式是一整份，不按组件拆；<code>@shuimo-design/react/style.css</code> 和{" "}
-        <code>@shuimo-design/core/style.css</code> 是同一份文件的两个名字，引哪个都行。
+        <code>style.css</code> 是全部组件的样式，整份 22
+        KB（gzip）。只想带用到的组件，看下面「样式按需」。
       </p>
       <p className="guide__hint">
         不调 <code>createInkEngine()</code> 也能用：那样只剩骨架（盒模型、间距、状态），
@@ -87,14 +110,35 @@ export default function InstallDemo() {
       <p>直接 import，不用任何 provider，也不用配按需引入的插件。</p>
       <pre className="guide__code">{use}</pre>
       <p className="guide__hint">
-        按需引入是天然的：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip）， 47
-        个组件全用上也才 93 KB。
+        JS 的按需引入是天然的：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip），
+        47 个组件全用上也才 93 KB。
       </p>
       <p className="guide__hint">
         Vue 的 <code>v-model</code> 在这边是受控 / 非受控两套都支持的一组 prop：
         <code>v-model:open</code> 对应 <code>open</code> + <code>onOpenChange</code> +{" "}
         <code>defaultOpen</code>。具名插槽对应渲染属性。每个组件页的 API 表写的就是 React
         这一套叫法。
+      </p>
+
+      <h3 className="guide__h">样式按需</h3>
+      <p>
+        每个组件一个入口，把 <code>main.tsx</code> 里那行 <code>style.css</code> 换成用到的这些：
+      </p>
+      <pre className="guide__code">{onDemandManual}</pre>
+      <p className="guide__hint">
+        一个入口把底子（层顺序、变量、基础重置、图标、墨迹动画）、它内部用到的组件、它自己的 css
+        一起带齐，几个入口重复引到的文件由打包器按模块去重。按需时不要再引 <code>style.css</code>
+        ，会重。散件本身也暴露在 <code>@shuimo-design/react/css/&lt;名字&gt;.css</code>。
+      </p>
+      <p>
+        不想手写就配 vite-plugin-imp，照 <code>import {"{ MButton, MDialog }"}</code>{" "}
+        的名单每个补一行样式：
+      </p>
+      <pre className="guide__code">{onDemand}</pre>
+      <p className="guide__hint">
+        babel-plugin-import 在 Vite 里不行：它只认 JSX 编译之后的{" "}
+        <code>createElement(MButton)</code> 调用，而 Vite 的 JSX 编译在 babel 之后，它看不见{" "}
+        <code>&lt;MButton&gt;</code>。
       </p>
 
       <h3 className="guide__h">消息和确认框要有个出口</h3>

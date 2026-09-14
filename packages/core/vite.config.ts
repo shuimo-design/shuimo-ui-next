@@ -7,6 +7,8 @@ export default defineConfig({
     entry: {
       index: "src/index.ts",
       ink: "src/ink/index.ts",
+      // 按需样式的清单，给两个壳的构建脚本和 Vue 的 resolver 用，跑在 Node 里
+      styles: "src/styles/manifest.ts",
     },
     format: ["esm"],
     platform: "neutral",
