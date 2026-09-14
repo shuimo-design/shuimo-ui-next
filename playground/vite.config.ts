@@ -59,6 +59,12 @@ const SOURCE = ["@shuimo-design/source", "module", "browser", "development|produ
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
+// 安装页展示的版本号。三个包由 changesets 同步升版，读 vue 那份就够了；
+// 写死在页面里的字符串在上一次发版时就已经过期过一回。
+const { version } = JSON.parse(await readFile(here("../packages/vue/package.json"), "utf8")) as {
+  version: string;
+};
+
 export default defineConfig(({ command }) => ({
   plugins: [
     highlightDemos(),
@@ -67,6 +73,7 @@ export default defineConfig(({ command }) => ({
     react({ include: [/\.tsx$/] }),
   ],
   resolve: { conditions: command === "serve" ? SOURCE : [] },
+  define: { __SHUIMO_VERSION__: JSON.stringify(version) },
   optimizeDeps: {
     exclude: ["@shuimo-design/core", "@shuimo-design/vue", "@shuimo-design/react"],
     include: ["vue", "react", "react-dom", "react-dom/client", "react/jsx-runtime"],

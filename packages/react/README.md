@@ -2,7 +2,7 @@
 
 水墨风 React 组件库。宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG —— 包里没有位图，也没有字体。
 
-> **1.0.0-beta.0，预发布版。** API 还可能改，改动会写在 [CHANGELOG](./CHANGELOG.md) 里。
+> **预发布版（1.0.0-beta.x）。** API 还可能改，每一版改了什么写在 [CHANGELOG](./CHANGELOG.md) 里。
 
 **文档：<https://shuimo-ui-next.vercel.app/react/>**（Vue 版在 [/vue/](https://shuimo-ui-next.vercel.app/vue/)）
 

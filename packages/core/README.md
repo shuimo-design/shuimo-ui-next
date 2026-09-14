@@ -2,7 +2,7 @@
 
 水墨风组件库的**无框架内核**：状态控制器、几何与墨迹生成、以及全部样式。不含任何框架代码。
 
-> **1.0.0-beta.0，预发布版。** API 还可能改，改动会写在 [CHANGELOG](./CHANGELOG.md) 里。
+> **预发布版（1.0.0-beta.x）。** API 还可能改，每一版改了什么写在 [CHANGELOG](./CHANGELOG.md) 里。
 
 一般不用直接装它 —— 它是 [`@shuimo-design/vue`](https://www.npmjs.com/package/@shuimo-design/vue) 和 [`@shuimo-design/react`](https://www.npmjs.com/package/@shuimo-design/react) 的依赖，装哪个壳它就跟着来。
 

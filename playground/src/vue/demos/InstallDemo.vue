@@ -1,5 +1,7 @@
 <script setup lang="ts">
 /** 安装页。代码块是死的文本，写成常量免得模板里满屏转义 */
+const version = __SHUIMO_VERSION__;
+
 const install = `pnpm add @shuimo-design/vue
 # 或 npm i @shuimo-design/vue / yarn add @shuimo-design/vue`;
 
@@ -56,7 +58,7 @@ void preloadStampFont();`;
     </p>
 
     <div class="guide__note">
-      <strong>当前是 1.0.0-beta.0，预发布版。</strong>
+      <strong>当前是 {{ version }}，预发布版。</strong>
       API 还可能改，每次改动都记在各包的 CHANGELOG 里。直接
       <code>npm i</code> 装到的就是这个版本，不用加 <code>@beta</code>。
     </div>
