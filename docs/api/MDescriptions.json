@@ -1,0 +1,142 @@
+{
+  "name": "MDescriptions",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDescriptions"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDescriptions"
+    }
+  },
+  "attributes": [
+    {
+      "name": "items",
+      "description": "数据；不传则从子组件 MDescriptionsItem 上按书写顺序收集",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "readonly DescriptionsItem[] | undefined"
+      },
+      "react": {
+        "name": "items"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题；title 插槽优先",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "title"
+      }
+    },
+    {
+      "name": "column",
+      "description": "一行几列，默认 3",
+      "default": "3",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "column"
+      }
+    },
+    {
+      "name": "bordered",
+      "description": "画格线：外框、行线、列线，标签格铺一层淡墨",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "bordered"
+      }
+    },
+    {
+      "name": "layout",
+      "description": "标签和值的排法，默认 horizontal",
+      "default": "\"horizontal\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DescriptionsLayout | undefined"
+      },
+      "react": {
+        "name": "layout"
+      }
+    },
+    {
+      "name": "size",
+      "description": "格子的内边距档位，默认 md",
+      "default": "\"md\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DescriptionsSize | undefined"
+      },
+      "react": {
+        "name": "size"
+      }
+    },
+    {
+      "name": "colon",
+      "description": "标签后面带冒号，默认 true；只在 horizontal 且不带格线时显示",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "colon"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MDescriptionsItem（语法糖；传了 items 就不看这里）",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "title",
+      "description": "标题，优先于 title",
+      "react": {
+        "name": "title"
+      }
+    },
+    {
+      "name": "extra",
+      "description": "标题右侧的操作区",
+      "react": {
+        "name": "extra"
+      }
+    },
+    {
+      "name": "label",
+      "description": "自定义标签，作用域 { item }",
+      "react": {
+        "name": "renderLabel"
+      }
+    },
+    {
+      "name": "value",
+      "description": "自定义值，作用域 { item }",
+      "react": {
+        "name": "renderValue"
+      }
+    }
+  ]
+}

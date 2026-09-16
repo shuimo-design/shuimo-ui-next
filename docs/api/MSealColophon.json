@@ -1,0 +1,156 @@
+{
+  "name": "MSealColophon",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MSealColophon"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MSealColophon"
+    }
+  },
+  "attributes": [
+    {
+      "name": "author",
+      "description": "署名",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "string"
+      },
+      "react": {
+        "name": "author"
+      }
+    },
+    {
+      "name": "text",
+      "description": "落款语，写在署名前面，如 \"写于丙午年秋\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "text"
+      }
+    },
+    {
+      "name": "date",
+      "description": "日期，原样显示在署名后面",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "date"
+      }
+    },
+    {
+      "name": "seal",
+      "description": "印文；默认取 author 的前两个字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "seal"
+      }
+    },
+    {
+      "name": "sealShape",
+      "description": "印章外形，同 MStamp 的 shape；默认 auto 贴着印文",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "StampShape | undefined"
+      },
+      "react": {
+        "name": "sealShape"
+      }
+    },
+    {
+      "name": "sealMode",
+      "description": "阳文（朱文）还是阴文（白文），同 MStamp 的 mode；默认阳文",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "StampMode | undefined"
+      },
+      "react": {
+        "name": "sealMode"
+      }
+    },
+    {
+      "name": "sealSize",
+      "description": "印章高度（px），默认 40",
+      "default": "40",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "sealSize"
+      }
+    },
+    {
+      "name": "align",
+      "description": "整块靠左还是靠右，默认 right",
+      "default": "\"right\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "SealColophonAlign | undefined"
+      },
+      "react": {
+        "name": "align"
+      }
+    },
+    {
+      "name": "vertical",
+      "description": "竖排落款（writing-mode: vertical-rl），印章落在末字下面",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "vertical"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "印章的随机种子，默认固定，服务端和客户端盖的是同一枚",
+      "default": "7",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替换整段落款文（落款语 + 署名 + 日期）",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "seal",
+      "description": "替换印章",
+      "react": {
+        "name": "renderSeal"
+      }
+    }
+  ]
+}

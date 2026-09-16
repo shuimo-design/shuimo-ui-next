@@ -1,0 +1,212 @@
+{
+  "name": "MPopconfirm",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MPopconfirm"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MPopconfirm"
+    }
+  },
+  "attributes": [
+    {
+      "name": "title",
+      "description": "标题，也是读屏念出来的对话框名字；可用 title 插槽替代内容，但属性仍要传",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "string"
+      },
+      "react": {
+        "name": "title"
+      }
+    },
+    {
+      "name": "content",
+      "description": "说明文字；也可以用 content 插槽",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "content"
+      }
+    },
+    {
+      "name": "confirmText",
+      "description": "确定按钮文字，默认「确定」",
+      "default": "POPCONFIRM_OK_TEXT",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "confirmText"
+      }
+    },
+    {
+      "name": "cancelText",
+      "description": "取消按钮文字，默认「取消」",
+      "default": "POPCONFIRM_CANCEL_TEXT",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "cancelText"
+      }
+    },
+    {
+      "name": "confirmType",
+      "description": "确定按钮的类型，默认 primary",
+      "default": "\"primary\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ButtonType | undefined"
+      },
+      "react": {
+        "name": "confirmType"
+      }
+    },
+    {
+      "name": "placement",
+      "description": "气泡出现的方位（floating-ui placement），默认 top",
+      "default": "\"top\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Placement | undefined"
+      },
+      "react": {
+        "name": "placement"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：点触发元素不再弹出，已打开的会收起",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
+      }
+    },
+    {
+      "name": "icon",
+      "description": "标题左侧的提示徽记，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "icon"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "气泡与触发元素的间距 px，默认 8",
+      "default": "8",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "offset"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "气泡传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触边框、墨尖与徽记的种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "open",
+      "description": "是否显示；不传也能用，点触发元素自己开",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "open",
+        "extra": ["defaultOpen", "onOpenChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:open"
+    },
+    {
+      "name": "confirm",
+      "description": "点了确定",
+      "react": {
+        "name": "onConfirm"
+      }
+    },
+    {
+      "name": "cancel",
+      "description": "点了取消、点到气泡外面或按了 Esc",
+      "react": {
+        "name": "onCancel"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发内容；第一个元素当参照元素",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "title",
+      "description": "替代 title 属性的显示内容",
+      "react": {
+        "name": "renderTitle"
+      }
+    },
+    {
+      "name": "content",
+      "description": "替代 content 属性",
+      "react": {
+        "name": "renderContent"
+      }
+    }
+  ]
+}

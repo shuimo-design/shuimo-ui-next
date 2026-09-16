@@ -1,0 +1,68 @@
+{
+  "name": "MDescriptionsItem",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDescriptionsItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDescriptionsItem"
+    }
+  },
+  "attributes": [
+    {
+      "name": "label",
+      "description": "标签",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "string"
+      },
+      "react": {
+        "name": "label"
+      }
+    },
+    {
+      "name": "value",
+      "description": "值；不传显示空",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "value"
+      }
+    },
+    {
+      "name": "span",
+      "description": "占几列，默认 1；超过列数截到列数，超过本行剩余列数截到剩余",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "span"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "值，优先于 value",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "label",
+      "description": "标签，优先于 label",
+      "react": {
+        "name": "label"
+      }
+    }
+  ]
+}

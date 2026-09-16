@@ -1,0 +1,160 @@
+{
+  "name": "MRate",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MRate"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MRate"
+    }
+  },
+  "attributes": [
+    {
+      "name": "count",
+      "description": "总格数，默认 5",
+      "default": "5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "count"
+      }
+    },
+    {
+      "name": "allowHalf",
+      "description": "允许半格：值可以是 .5，指针落在一格左半边就是半格",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "allowHalf"
+      }
+    },
+    {
+      "name": "allowClear",
+      "description": "再点一次当前值就归零，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "allowClear"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：不响应指针和键盘，退出 Tab 序列",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
+      }
+    },
+    {
+      "name": "readonly",
+      "description": "只读：只展示，不响应指针和键盘，仍可聚焦",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "readonly"
+      }
+    },
+    {
+      "name": "size",
+      "description": "尺寸：sm / md / lg 对应 16 / 20 / 26px，默认 md",
+      "default": "\"md\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "RateSize | undefined"
+      },
+      "react": {
+        "name": "size"
+      }
+    },
+    {
+      "name": "texts",
+      "description": "每一档右侧显示的文字，按档位下标取；悬停预览时跟着预览值变",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string[] | undefined"
+      },
+      "react": {
+        "name": "texts"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "每格墨团毛边的随机种子，默认 1；同一组里每格再按下标派生，各不相同",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "modelValue",
+      "description": "当前分值，0 表示没评；allowHalf 时可为 .5",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": ["defaultValue", "onValueChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "change",
+      "description": "点击或键盘落定的新值",
+      "react": {
+        "name": "onChange"
+      }
+    },
+    {
+      "name": "hoverChange",
+      "description": "悬停预览值变化；指针离开时为 0",
+      "react": {
+        "name": "onHoverChange"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "character",
+      "description": "自定义每一格的图形；不给就是墨点",
+      "react": {
+        "name": "renderCharacter"
+      }
+    }
+  ]
+}

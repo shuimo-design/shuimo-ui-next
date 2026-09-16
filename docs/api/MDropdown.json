@@ -1,0 +1,147 @@
+{
+  "name": "MDropdown",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MDropdown"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MDropdown"
+    }
+  },
+  "attributes": [
+    {
+      "name": "items",
+      "description": "菜单项",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "DropdownItem[]"
+      },
+      "react": {
+        "name": "items"
+      }
+    },
+    {
+      "name": "trigger",
+      "description": "触发方式，默认 click",
+      "default": "\"click\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "DropdownTrigger | undefined"
+      },
+      "react": {
+        "name": "trigger"
+      }
+    },
+    {
+      "name": "placement",
+      "description": "菜单出现的方位（floating-ui placement），默认 bottom-start",
+      "default": "\"bottom-start\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Placement | undefined"
+      },
+      "react": {
+        "name": "placement"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：不再响应触发，已打开的会收起",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "菜单与触发元素的间距 px，默认 6",
+      "default": "6",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "offset"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "菜单传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "笔触边框的种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "open",
+      "description": "是否展开；不传也能用，由 trigger 自己管",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "open",
+        "extra": ["defaultOpen", "onOpenChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:open"
+    },
+    {
+      "name": "select",
+      "description": "选中一项（禁用项不触发）；选中后菜单自动收起",
+      "react": {
+        "name": "onSelect"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发内容；第一个元素当参照元素",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "item",
+      "description": "自定义每一项的内容，作用域 { item }",
+      "react": {
+        "name": "renderItem"
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "name": "MTimeline",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTimeline"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTimeline"
+    }
+  },
+  "attributes": [
+    {
+      "name": "items",
+      "description": "数据；不传则从子组件 MTimelineItem 上按书写顺序收集",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "readonly TimelineItem[] | undefined"
+      },
+      "react": {
+        "name": "items"
+      }
+    },
+    {
+      "name": "mode",
+      "description": "轴线位置，默认 left",
+      "default": "\"left\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TimelineMode | undefined"
+      },
+      "react": {
+        "name": "mode"
+      }
+    },
+    {
+      "name": "pending",
+      "description": "末尾加一个幽灵节点和一段虚线，表示还在进行；传字符串就是幽灵节点旁的文字",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | boolean | undefined"
+      },
+      "react": {
+        "name": "pending"
+      }
+    },
+    {
+      "name": "reverse",
+      "description": "倒序排列；幽灵节点跟着挪到最前",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "reverse"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "轴线笔触的随机种子",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MTimelineItem（语法糖；传了 items 就不看这里）",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "dot",
+      "description": "自定义节点，作用域 { item, index }",
+      "react": {
+        "name": "renderDot"
+      }
+    },
+    {
+      "name": "item",
+      "description": "自定义整条内容，作用域 { item, index }",
+      "react": {
+        "name": "renderItem"
+      }
+    }
+  ]
+}

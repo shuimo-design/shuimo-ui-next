@@ -1,0 +1,129 @@
+{
+  "name": "MNotification",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MNotification"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MNotification"
+    }
+  },
+  "attributes": [
+    {
+      "name": "title",
+      "description": "标题",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "string"
+      },
+      "react": {
+        "name": "title"
+      }
+    },
+    {
+      "name": "content",
+      "description": "正文；也可以用默认插槽",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "content"
+      }
+    },
+    {
+      "name": "type",
+      "description": "类型，决定左侧徽记与配色；不传就没有徽记",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "NotificationType | undefined"
+      },
+      "react": {
+        "name": "type"
+      }
+    },
+    {
+      "name": "duration",
+      "description": "自动关闭的毫秒数，默认 4500；0 表示不自动关闭",
+      "default": "4500",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "duration"
+      }
+    },
+    {
+      "name": "closable",
+      "description": "显示关闭按钮，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "closable"
+      }
+    },
+    {
+      "name": "placement",
+      "description": "出现在哪个角，默认 top-right；决定进出场方向",
+      "default": "\"top-right\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "NotificationPlacement | undefined"
+      },
+      "react": {
+        "name": "placement"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "墨迹种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "close",
+      "description": "离场动画结束、可以从 DOM 移除时",
+      "react": {
+        "name": "onClose"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替代 content",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "icon",
+      "description": "替代类型徽记",
+      "react": {
+        "name": "icon"
+      }
+    }
+  ]
+}

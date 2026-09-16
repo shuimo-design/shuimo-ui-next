@@ -1,0 +1,80 @@
+{
+  "name": "MTimelineItem",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MTimelineItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MTimelineItem"
+    }
+  },
+  "attributes": [
+    {
+      "name": "label",
+      "description": "时间或标题，节点旁的第一行",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "label"
+      }
+    },
+    {
+      "name": "content",
+      "description": "正文，label 下面",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "content"
+      }
+    },
+    {
+      "name": "type",
+      "description": "节点颜色",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TimelineType | undefined"
+      },
+      "react": {
+        "name": "type"
+      }
+    },
+    {
+      "name": "dot",
+      "description": "节点里的文字（一个字为宜）；传了节点从墨点变成带字的圈",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "dot"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "整条内容，优先于 label / content",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "dot",
+      "description": "节点，优先于 dot",
+      "react": {
+        "name": "dot"
+      }
+    }
+  ]
+}

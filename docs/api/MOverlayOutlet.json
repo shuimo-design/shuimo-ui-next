@@ -25,6 +25,19 @@
       }
     },
     {
+      "name": "notifications",
+      "description": "要接的通知队列，默认是 MNotification.* 用的那一份",
+      "default": "defaultNotificationQueue",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "NotificationQueue | undefined"
+      },
+      "react": {
+        "name": "notifications"
+      }
+    },
+    {
       "name": "confirms",
       "description": "要接的确认框队列，默认是 MConfirm.show 用的那一份",
       "default": "defaultConfirmQueue",

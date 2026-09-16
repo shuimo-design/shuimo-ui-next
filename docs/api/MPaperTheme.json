@@ -1,0 +1,104 @@
+{
+  "name": "MPaperTheme",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MPaperTheme"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MPaperTheme"
+    }
+  },
+  "attributes": [
+    {
+      "name": "presets",
+      "description": "展示哪几种纸，按给的顺序排；默认全部五种：raw 生宣、processed 熟宣、antique 古色、teaStained 茶染、moonWhite 月白",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "PaperPreset[] | undefined"
+      },
+      "react": {
+        "name": "presets"
+      }
+    },
+    {
+      "name": "size",
+      "description": "纸样尺寸：sm 24px、md 32px、lg 44px，默认 md",
+      "default": "\"md\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "PaperThemeSize | undefined"
+      },
+      "react": {
+        "name": "size"
+      }
+    },
+    {
+      "name": "storage",
+      "description": "把选择记到 localStorage（键 \"shuimo-paper\"），刷新后恢复，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "storage"
+      }
+    },
+    {
+      "name": "labels",
+      "description": "各种纸的显示名，覆盖默认中文名（生宣 / 熟宣 / 古色 / 茶染 / 月白）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Partial<Record<PaperPreset, string>> | undefined"
+      },
+      "react": {
+        "name": "labels"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用：不可点、不可用键盘切换",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
+      }
+    },
+    {
+      "name": "preset",
+      "description": "当前用的纸；undefined 表示还没切过（tokens.css 的默认纸）",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "PaperPreset | undefined"
+      },
+      "react": {
+        "name": "preset",
+        "extra": ["defaultPreset", "onPresetChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:preset"
+    },
+    {
+      "name": "change",
+      "description": "用户选了一种纸，参数是选中的预设",
+      "react": {
+        "name": "onChange"
+      }
+    }
+  ],
+  "slots": []
+}
