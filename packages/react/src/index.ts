@@ -10,6 +10,7 @@ export * from "./components/drawer";
 export * from "./components/tooltip";
 export * from "./components/badge";
 export * from "./components/avatar";
+export * from "./components/image";
 export * from "./components/loading";
 export * from "./components/progress";
 export * from "./components/svg";

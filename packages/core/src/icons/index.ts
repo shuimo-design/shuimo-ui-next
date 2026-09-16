@@ -207,6 +207,30 @@ export const ICONS = {
     strokeLinejoin: "round",
     shapes: [{ tag: "path", attrs: { d: "M12 6v12M6 12h12" } }],
   },
+  /** 还原：四个角括号，把图收回到原大 */
+  restore: {
+    viewBox: "0 0 24 24",
+    width: "1em",
+    height: "1em",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    shapes: [{ tag: "path", attrs: { d: "M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" } }],
+  },
+  /** 顺时针旋转：一段弧加箭头 */
+  rotate: {
+    viewBox: "0 0 24 24",
+    width: "1em",
+    height: "1em",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    shapes: [{ tag: "path", attrs: { d: "M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4" } }],
+  },
   search: {
     viewBox: "0 0 24 24",
     width: "1em",

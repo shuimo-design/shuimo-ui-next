@@ -12,6 +12,7 @@ export const COMPONENT_NAMES = [
   "MRadio",
   "MRadioGroup",
   "MAvatar",
+  "MImage",
   "MProgress",
   "MInputNumber",
   "MSlider",

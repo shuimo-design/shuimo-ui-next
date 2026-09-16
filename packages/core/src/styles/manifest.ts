@@ -64,6 +64,8 @@ export const COMPONENT_STYLES = {
   MForm: { css: "form" },
   MFormItem: { css: "form" },
   MGrid: { css: "grid" },
+  // 预览层的挂牌关闭钮借用弹窗的墨皮；加载中的占位是 MSkeletonItem
+  MImage: { css: "image", renders: ["modal-ink", "MSkeletonItem"] },
   // 过渡的样式在 ink/transition 里，已经在 base
   MInkTransition: {},
   MInput: { css: "input" },

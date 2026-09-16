@@ -70,5 +70,7 @@ export const IconEyeOff = icon("eye-off");
 export const IconLoading = icon("loading");
 export const IconMinus = icon("minus");
 export const IconPlus = icon("plus");
+export const IconRestore = icon("restore");
+export const IconRotate = icon("rotate");
 export const IconSearch = icon("search");
 export const IconUser = icon("user");

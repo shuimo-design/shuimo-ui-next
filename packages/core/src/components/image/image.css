@@ -1,0 +1,314 @@
+@layer m.component {
+  /* ── 图片本体 ─────────────────────────────────────────────── */
+  .m-image {
+    /* 宽高不给就按图片本身尺寸 */
+    --m-image-w: auto;
+    --m-image-h: auto;
+    position: relative;
+    display: inline-block;
+    width: var(--m-image-w);
+    height: var(--m-image-h);
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    vertical-align: middle;
+  }
+
+  .m-image__img {
+    display: block;
+    max-width: 100%;
+    /* 图刚出来时淡入，占位块在上面盖着 */
+    transition: opacity var(--m-duration) var(--m-ease);
+  }
+
+  /* 给了尺寸才让图撑满容器；不给时 100% 会在收缩容器里算成 0 */
+  .m-image--sized .m-image__img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .m-image--fill .m-image__img {
+    object-fit: fill;
+  }
+
+  .m-image--contain .m-image__img {
+    object-fit: contain;
+  }
+
+  .m-image--cover .m-image__img {
+    object-fit: cover;
+  }
+
+  .m-image--none .m-image__img {
+    object-fit: none;
+  }
+
+  .m-image--scale-down .m-image__img {
+    object-fit: scale-down;
+  }
+
+  .m-image--loading .m-image__img {
+    opacity: 0;
+  }
+
+  /* 失败的图不占位，让位给失败提示 */
+  .m-image--error .m-image__img {
+    display: none;
+  }
+
+  .m-image--previewable .m-image__img {
+    cursor: zoom-in;
+  }
+
+  .m-image--previewable .m-image__img:focus-visible {
+    outline: 2px solid var(--m-accent);
+    outline-offset: 2px;
+  }
+
+  /* 占位和失败提示都铺满容器；容器没尺寸时它们撑出一块最小的 */
+  .m-image__placeholder,
+  .m-image__error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  .m-image--error .m-image__error {
+    position: relative;
+    min-width: 96px;
+    min-height: 64px;
+    padding: var(--m-space-2) var(--m-space-3);
+    background: color-mix(in srgb, var(--m-ink) 6%, var(--m-bg));
+    color: var(--m-fg-muted);
+    font-size: 13px;
+  }
+
+  /* 骨架块在这里要跟着容器走，不用它自己的固定高 */
+  .m-image__placeholder > .m-skeleton-item {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  /* ── 预览层：传送到 body，变量全部声明在这里 ─────────────────── */
+  .m-image-preview {
+    /* 和弹窗一层：弹窗里的图也能预览、预览时的消息浮在它上面 */
+    --m-image-preview-z: 900;
+    --m-image-preview-mask-bg: color-mix(in srgb, var(--m-ink) 82%, transparent);
+    --m-image-preview-duration: calc(var(--m-duration) * 1.25);
+    position: fixed;
+    inset: 0;
+    z-index: var(--m-image-preview-z);
+    color: var(--m-bg);
+    font-family: var(--m-font-sans);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    /* 同弹窗：根不淡入淡出，只给 <Transition> 一个可等的时长；真正的过渡在遮罩和图上 */
+    transition: opacity var(--m-image-preview-duration) var(--m-ease);
+  }
+
+  .m-image-preview__mask {
+    position: absolute;
+    inset: 0;
+    background: var(--m-image-preview-mask-bg);
+    backdrop-filter: blur(6px);
+    cursor: zoom-out;
+    transition:
+      background-color var(--m-image-preview-duration) var(--m-ease),
+      backdrop-filter var(--m-image-preview-duration) var(--m-ease);
+  }
+
+  /* 面板铺满整层但自己不吃点击：空白处点到的是底下的遮罩（关闭），图和按钮各自接回点击 */
+  .m-image-preview__panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 0;
+    pointer-events: none;
+  }
+
+  .m-image-preview__img {
+    display: block;
+    max-width: calc(100% - var(--m-space-6) * 2);
+    max-height: calc(100% - 120px);
+    box-shadow: 0 24px 64px rgb(0 0 0 / 0.45);
+    user-select: none;
+    pointer-events: auto;
+    transition:
+      transform var(--m-image-preview-duration) var(--m-ease),
+      opacity var(--m-image-preview-duration) var(--m-ease);
+  }
+
+  /* 左右两侧的翻页箭头 */
+  .m-image-preview__arrow {
+    position: absolute;
+    top: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--m-bg) 14%, transparent);
+    color: var(--m-bg);
+    font-size: 22px;
+    cursor: var(--m-cursor-pointer);
+    transform: translateY(-50%);
+    pointer-events: auto;
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      background: color-mix(in srgb, var(--m-bg) 26%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-bg);
+      outline-offset: 2px;
+    }
+
+    &.m-image-preview__arrow--prev {
+      left: var(--m-space-6);
+    }
+
+    &.m-image-preview__arrow--next {
+      right: var(--m-space-6);
+    }
+  }
+
+  /* 底部工具栏：一条半透明的墨带 */
+  .m-image-preview__toolbar {
+    position: absolute;
+    bottom: var(--m-space-6);
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-1);
+    padding: var(--m-space-1) var(--m-space-3);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--m-ink) 55%, transparent);
+    transform: translateX(-50%);
+    pointer-events: auto;
+  }
+
+  .m-image-preview__tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-bg);
+    font-size: 18px;
+    cursor: var(--m-cursor-pointer);
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      background: color-mix(in srgb, var(--m-bg) 16%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-bg);
+      outline-offset: 1px;
+    }
+  }
+
+  .m-image-preview__counter {
+    padding: 0 var(--m-space-2);
+    color: color-mix(in srgb, var(--m-bg) 80%, transparent);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* 右上角的关闭：m.ink 层把它换成挂牌 */
+  .m-image-preview__close {
+    position: absolute;
+    top: var(--m-space-4);
+    right: var(--m-space-4);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--m-bg) 14%, transparent);
+    color: var(--m-bg);
+    font-size: 20px;
+    cursor: var(--m-cursor-pointer);
+    pointer-events: auto;
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      background: color-mix(in srgb, var(--m-bg) 26%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-bg);
+      outline-offset: 2px;
+    }
+  }
+
+  .m-image-preview__close-splash,
+  .m-image-preview__close-tassel {
+    display: none;
+  }
+
+  /* 开合：遮罩渐深、磨砂渐糊，图从略小处浮出来 */
+  .m-image-preview-enter-from .m-image-preview__mask,
+  .m-image-preview-leave-to .m-image-preview__mask {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+
+  .m-image-preview-enter-from .m-image-preview__img,
+  .m-image-preview-leave-to .m-image-preview__img {
+    opacity: 0;
+  }
+
+  .m-image-preview-enter-from .m-image-preview__toolbar,
+  .m-image-preview-leave-to .m-image-preview__toolbar,
+  .m-image-preview-enter-from .m-image-preview__arrow,
+  .m-image-preview-leave-to .m-image-preview__arrow {
+    opacity: 0;
+  }
+}
+
+/* 挂牌关闭钮的外观在 ../../internal/modal-ink.css，和弹窗 / 抽屉共用；这里只定它挂在哪 */
+@layer m.ink {
+  /* 遮罩铺一层墨：中间略透，四周积墨 */
+  html.m-ink-ready .m-image-preview__mask {
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--m-ink) 74%, transparent),
+      color-mix(in srgb, var(--m-ink) 94%, transparent)
+    );
+  }
+
+  /* 工具栏做成一抹墨带：两端收细 */
+  html.m-ink-ready .m-image-preview__toolbar {
+    border-radius: 0;
+    background: color-mix(in srgb, var(--m-ink) 72%, transparent);
+    mask: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent);
+  }
+
+  /* 挂牌吊在画幅顶边、靠右 */
+  html.m-ink-ready .m-image-preview__panel > .m-image-preview__close {
+    top: 28px;
+    right: 40px;
+  }
+}

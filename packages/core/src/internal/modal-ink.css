@@ -1,6 +1,7 @@
 /**
  * 弹窗与抽屉共用的水墨外观：纸框、四角回纹、题头小景、挂在框线上的石牌关闭钮。
  * 两个组件长得一模一样，差别只在"挂牌挂在哪条边"——那部分写在各自的 css 里。
+ * 图片预览层没有纸框，只借用挂牌关闭钮（吊在画幅顶边）。
  * 改这里两边一起变；只想改一个的，去 dialog.css / drawer.css 的对应段落。
  * 变量统一叫 --m-modal-*，由组件在根节点上赋值（回纹和墨花的遮罩是运行时生成的 data URL）。
  */
@@ -14,7 +15,8 @@
   /* 面板套一圈笔触纸框（useBrushBorder 的 ::before），原有细边、圆角、投影让位。
      老版是一张平铺在蒙版上的纸，没有投影；而且面板下面有 clip-path 挖角，投影会被裁成一块硬边灰方块 */
   html.m-ink-ready .m-dialog__panel,
-  html.m-ink-ready .m-drawer__panel {
+  html.m-ink-ready .m-drawer__panel,
+  html.m-ink-ready .m-image-preview__panel {
     --m-modal-lattice-size: 64px;
     /* 挂牌的石板色：偏冷的灰，只带一点蓝（老素材牌底色 rgb(37 42 52)），不是暖墨色 */
     --m-modal-slate: color-mix(in srgb, var(--m-ink) 86%, var(--m-info));
@@ -82,7 +84,8 @@
      按钮本身透明，牌身画在 ::before 上——clip-path 只裁牌身，不裁绳和坠子。
      挂在哪条边、离边多远，由各自的 css 定 */
   html.m-ink-ready .m-dialog__panel > .m-dialog__close,
-  html.m-ink-ready .m-drawer__panel > .m-drawer__close {
+  html.m-ink-ready .m-drawer__panel > .m-drawer__close,
+  html.m-ink-ready .m-image-preview__panel > .m-image-preview__close {
     position: absolute;
     z-index: 3;
     display: flex;
@@ -157,7 +160,8 @@
   /* 牌顶的墨花：七八朵分开的浅灰蓝尖瓣墨花散在屋檐两侧和肩头（形状见生成器），压在屋檐线上、半透，
      顶边放在牌尖上方 7px（生成器按这个画幅定的）。它在牌身之上、叉之下 */
   html.m-ink-ready .m-dialog__close-splash,
-  html.m-ink-ready .m-drawer__close-splash {
+  html.m-ink-ready .m-drawer__close-splash,
+  html.m-ink-ready .m-image-preview__close-splash {
     display: block;
     position: absolute;
     top: -7px;
@@ -174,7 +178,8 @@
 
   /* 牌底：先垂一小段绳，绳头一枚往右弯的小坠——都是半透的灰蓝 */
   html.m-ink-ready .m-dialog__close-tassel,
-  html.m-ink-ready .m-drawer__close-tassel {
+  html.m-ink-ready .m-drawer__close-tassel,
+  html.m-ink-ready .m-image-preview__close-tassel {
     display: block;
     position: absolute;
     top: 100%;
@@ -227,7 +232,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     html.m-ink-ready .m-dialog__panel > .m-dialog__close,
-    html.m-ink-ready .m-drawer__panel > .m-drawer__close {
+    html.m-ink-ready .m-drawer__panel > .m-drawer__close,
+    html.m-ink-ready .m-image-preview__panel > .m-image-preview__close {
       animation: none;
     }
   }

@@ -8,6 +8,7 @@ export * from "./switch";
 export * from "./tag";
 export * from "./radio";
 export * from "./avatar";
+export * from "./image";
 export * from "./progress";
 export * from "./input-number";
 export * from "./slider";

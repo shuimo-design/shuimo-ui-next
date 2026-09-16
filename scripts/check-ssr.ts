@@ -23,6 +23,7 @@ const MINIMAL_PROPS: Record<string, Record<string, unknown>> = {
   MIcon: { name: "close" },
   MNotification: { title: "山水" },
   MPopconfirm: { title: "确定删除？" },
+  MImage: { src: "/shan.png" },
   MSelect: { options: [{ label: "山", value: "shan" }] },
   MSealColophon: { author: "白石" },
   MStamp: { text: "山水" },
