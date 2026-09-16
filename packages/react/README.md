@@ -1,10 +1,10 @@
 # @shuimo-design/react
 
-水墨风 React 组件库。宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG —— 包里没有位图，也没有字体。
+水墨风 React 组件库。宣纸、远山、毛边、笔触、印章都是运行时生成的 SVG，包里没有位图和字体。
 
-> **预发布版（1.0.0-beta.x）。** API 还可能改，每一版改了什么写在 [CHANGELOG](./CHANGELOG.md) 里。
+文档：<https://shuimo-ui-next.vercel.app/react/>（Vue 版：[/vue/](https://shuimo-ui-next.vercel.app/vue/)）
 
-**文档：<https://shuimo-ui-next.vercel.app/react/>**（Vue 版在 [/vue/](https://shuimo-ui-next.vercel.app/vue/)）
+当前 `1.0.0-beta.x`，API 可能变，见 [CHANGELOG](./CHANGELOG.md)。
 
 ## 安装
 
@@ -12,22 +12,18 @@
 pnpm add @shuimo-design/react
 ```
 
-逻辑、样式、墨迹生成都在 `@shuimo-design/core` 里，它是这个包的依赖，会跟着装上，不用单独装。需要 React 18 或 19，纯 ESM。
+React 18 / 19，纯 ESM。
 
-## 用
+## 用法
 
 ```tsx
 // main.tsx
+import "@shuimo-design/react/style.css";
+import { createInkEngine } from "@shuimo-design/react/ink"; // ink 从壳包引；core 不是直接依赖，pnpm 下解析不到
 import { createRoot } from "react-dom/client";
 import App from "./App";
 
-// 样式是单独一份，JS 里不带，必须自己引一次
-import "@shuimo-design/react/style.css";
-// 墨迹引擎：不调就只剩骨架样式，毛边和笔触不出现。
-// 从这个包的 /ink 引，别引 @shuimo-design/core：pnpm 下 core 不是你项目的直接依赖，解析不到
-import { createInkEngine } from "@shuimo-design/react/ink";
-
-createInkEngine();
+createInkEngine(); // 不调则只有骨架样式，没有毛边和笔触
 createRoot(document.getElementById("root")!).render(<App />);
 ```
 
@@ -50,26 +46,22 @@ export default function App() {
 }
 ```
 
-直接 import 就行，不用任何 provider，也不用配按需引入的插件：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip）。样式按需见下一节。
+组件名与 Vue 版一致；`v-model:x` 对应 `x` / `onXChange` / `defaultX`，受控非受控都支持；具名插槽对应 render prop。`MMessage.success()` 等函数式 API 渲染在组件树里，树中需要一个 `<MOverlayOutlet>`，`<MConfigProvider>` 内含一个。
 
-组件名和 Vue 版完全一致。Vue 的 `v-model:open` 在这边是受控 / 非受控两套都支持的一组 prop：`open` + `onOpenChange` + `defaultOpen`；具名插槽对应渲染属性。
+SSR（Next.js）支持；弹层类组件不进服务端 HTML。
 
-`MMessage.success()` 这类函数式调用渲染在你自己的组件树里，所以树里要有一个 `<MOverlayOutlet>` —— 最外层套一个 `<MConfigProvider>` 就自带了。
+## 样式按需
 
-支持服务端渲染（Next.js）；弹层类组件不进服务端 HTML，挂载后才出现。
-
-### 样式按需
-
-`style.css` 是整份（22 KB gzip）。只想带用到的组件，每个组件一个入口：
+`style.css` 整份 22 KB gzip。按组件引时去掉它，改为：
 
 ```ts
 import "@shuimo-design/react/style/MButton";
 import "@shuimo-design/react/style/MDialog";
 ```
 
-一个入口把底子（`css/base.css`：层顺序、变量、基础重置、图标、墨迹动画）、它内部用到的组件和它自己的 css 一起带齐，几个入口重复引到的文件由打包器按模块去重。散件也直接暴露在 `@shuimo-design/react/css/<名字>.css`。按需时**不要再引 `style.css`**，会重。
+`style/<Name>` 是副作用入口，import base（层顺序、变量、reset、图标、墨迹动画）+ 该组件内部渲染的组件 + 自己的 css，重复由打包器按模块去重。散件在 `@shuimo-design/react/css/<name>.css`。
 
-不想手写就配 [vite-plugin-imp](https://github.com/onebay/vite-plugin-imp)，照 `import { MButton, MDialog } from "@shuimo-design/react"` 的名单每个补一行样式：
+自动补样式用 [vite-plugin-imp](https://github.com/onebay/vite-plugin-imp)：
 
 ```ts
 // vite.config.ts
@@ -83,8 +75,7 @@ export default defineConfig({
         {
           libName: "@shuimo-design/react",
           camel2DashComponentName: false,
-          // 组件照旧从包入口引（入口本身可摇树），插件只补样式那一行
-          replaceOldImport: false,
+          replaceOldImport: false, // 组件仍从包入口引，插件只加样式 import
           style: (name) => `@shuimo-design/react/style/${name}`,
         },
       ],
@@ -93,7 +84,7 @@ export default defineConfig({
 });
 ```
 
-babel-plugin-import 在 Vite 里**不行**：它只认 JSX 编译之后的 `createElement(MButton)` 调用，而 Vite 的 JSX 编译在 babel 之后，它看不见 `<MButton>`。
+babel-plugin-import 在 Vite 下无效：它匹配 `createElement()` 调用，而 Vite 的 JSX 转换在 babel 之后。
 
 ## 许可
 

@@ -10,7 +10,7 @@ import App from "./App";
 // 1. 样式：JS 里不带样式，必须自己显式引一次
 import "@shuimo-design/react/style.css";
 // 2. 墨迹引擎：不调就只有骨架，没有毛边、笔触和印泥。
-// 从这个包的 /ink 引，别引 @shuimo-design/core：pnpm 下 core 不是你项目的直接依赖，解析不到
+// ink 从壳包引；core 不是直接依赖，pnpm 下解析不到
 import { createInkEngine } from "@shuimo-design/react/ink";
 
 createInkEngine();
@@ -73,100 +73,80 @@ void preloadStampFont();`;
 export default function InstallDemo() {
   return (
     <article className="guide">
-      <p className="guide__lead">
-        水墨风组件库，同一套核心同时支持 Vue 3 和 React。这一页讲怎么把它接进你的项目。
-      </p>
+      <p className="guide__lead">Vue 3 和 React 共用一套核心的水墨风组件库。这一页是接入步骤。</p>
 
       <div className="guide__note">
-        <strong>当前是 {version}，预发布版。</strong>
-        API 还可能改，每次改动都记在各包的 CHANGELOG 里。直接 <code>npm i</code>{" "}
-        装到的就是这个版本， 不用加 <code>@beta</code>。
+        当前 <strong>{version}</strong>，预发布。API 可能变，见各包 CHANGELOG。
       </div>
 
-      <h3 className="guide__h">装哪个包</h3>
-      <p>
-        用 React 就只装 <code>@shuimo-design/react</code>。逻辑、样式、墨迹生成都在{" "}
-        <code>@shuimo-design/core</code> 里，它是这个包的依赖，会跟着装上，
-        <strong>不用单独装</strong>。
-      </p>
+      <h3 className="guide__h">安装</h3>
       <pre className="guide__code">{install}</pre>
       <p className="guide__hint">
-        需要 React 18 或 19。纯 ESM，没有 CommonJS 产物。Vue 项目请装{" "}
-        <code>@shuimo-design/vue</code>，看 <a href="../vue/#/install">Vue 版的这一页</a>。
+        React 18 / 19，纯 ESM。Vue 项目见 <a href="../vue/#/install">Vue 版</a>。
       </p>
 
-      <h3 className="guide__h">接进项目：两行</h3>
+      <h3 className="guide__h">接入</h3>
       <pre className="guide__code">{main}</pre>
       <p className="guide__hint">
-        <code>style.css</code> 是全部组件的样式，整份 22
-        KB（gzip）。只想带用到的组件，看下面「样式按需」。
-      </p>
-      <p className="guide__hint">
-        不调 <code>createInkEngine()</code> 也能用：那样只剩骨架（盒模型、间距、状态），
-        毛边和笔触不出现。想要一个规矩的组件库而不是水墨风，可以就这么用。
+        <code>style.css</code> 是整份样式（22 KB gzip），按需见下节。不调{" "}
+        <code>createInkEngine()</code> 则只有 <code>@layer m.component</code>{" "}
+        的骨架样式，没有毛边和笔触。
       </p>
 
-      <h3 className="guide__h">用组件</h3>
-      <p>直接 import，不用任何 provider，也不用配按需引入的插件。</p>
+      <h3 className="guide__h">使用</h3>
       <pre className="guide__code">{use}</pre>
       <p className="guide__hint">
-        JS 的按需引入是天然的：产物一个源文件一份，只用一个组件比空应用多 6 ~ 8 KB（压缩 + gzip），
-        47 个组件全用上也才 93 KB。
+        JS 一个源文件一个产物，import 即按需；单个组件比空应用多 6 ~ 8 KB（压缩 + gzip）。
       </p>
       <p className="guide__hint">
-        Vue 的 <code>v-model</code> 在这边是受控 / 非受控两套都支持的一组 prop：
-        <code>v-model:open</code> 对应 <code>open</code> + <code>onOpenChange</code> +{" "}
-        <code>defaultOpen</code>。具名插槽对应渲染属性。每个组件页的 API 表写的就是 React
-        这一套叫法。
+        组件名与 Vue 版一致。<code>v-model:x</code> 对应 <code>x</code> / <code>onXChange</code> /{" "}
+        <code>defaultX</code>，受控非受控都支持；具名插槽对应 render prop。API 表按 React 写法显示。
       </p>
 
       <h3 className="guide__h">样式按需</h3>
       <p>
-        每个组件一个入口，把 <code>main.tsx</code> 里那行 <code>style.css</code> 换成用到的这些：
+        去掉 <code>main.tsx</code> 里的 <code>style.css</code>，按组件引入口：
       </p>
       <pre className="guide__code">{onDemandManual}</pre>
       <p className="guide__hint">
-        一个入口把底子（层顺序、变量、基础重置、图标、墨迹动画）、它内部用到的组件、它自己的 css
-        一起带齐，几个入口重复引到的文件由打包器按模块去重。按需时不要再引 <code>style.css</code>
-        ，会重。散件本身也暴露在 <code>@shuimo-design/react/css/&lt;名字&gt;.css</code>。
+        <code>style/&lt;Name&gt;</code> 是副作用入口：base（层顺序、变量、reset、图标、墨迹动画）+
+        该组件内部渲染的组件 + 自己的 css，打包器按模块去重。散件在{" "}
+        <code>@shuimo-design/react/css/&lt;name&gt;.css</code>。
       </p>
       <p>
-        不想手写就配 vite-plugin-imp，照 <code>import {"{ MButton, MDialog }"}</code>{" "}
-        的名单每个补一行样式：
+        自动补样式用 vite-plugin-imp，按 <code>import {"{ MButton, MDialog }"}</code>{" "}
+        的名单每个加一行：
       </p>
       <pre className="guide__code">{onDemand}</pre>
       <p className="guide__hint">
-        babel-plugin-import 在 Vite 里不行：它只认 JSX 编译之后的{" "}
-        <code>createElement(MButton)</code> 调用，而 Vite 的 JSX 编译在 babel 之后，它看不见{" "}
-        <code>&lt;MButton&gt;</code>。
+        babel-plugin-import 在 Vite 下无效：它匹配 <code>createElement()</code> 调用，而 Vite 的 JSX
+        转换在 babel 之后。
       </p>
 
-      <h3 className="guide__h">消息和确认框要有个出口</h3>
+      <h3 className="guide__h">函数式 API 的出口</h3>
       <p>
-        <code>MMessage.success()</code>、<code>MConfirm.show()</code> 这类函数式调用，
-        渲染在你自己的组件树里（不再偷偷往 body 上挂），所以树里要有一个{" "}
-        <code>&lt;MOverlayOutlet&gt;</code>。最外层套一个 <code>&lt;MConfigProvider&gt;</code>{" "}
-        就自带了：
+        <code>MMessage.success()</code>、<code>MConfirm.show()</code>{" "}
+        渲染在你的组件树里，树中需要一个 <code>&lt;MOverlayOutlet&gt;</code>；
+        <code>&lt;MConfigProvider&gt;</code> 内含一个：
       </p>
       <pre className="guide__code">{overlay}</pre>
 
-      <h3 className="guide__h">印章要用自己的篆体</h3>
+      <h3 className="guide__h">印章字体</h3>
       <p>
-        库不打包字体。自己 <code>@font-face</code> 引好，再把 <code>--m-font-seal</code> 指过去：
+        库不带字体。<code>@font-face</code> 引好后把 <code>--m-font-seal</code> 指过去：
       </p>
       <pre className="guide__code">{font}</pre>
       <p>
-        然后启动时拉一次。<strong>这步省不掉</strong>
-        ：浏览器只在真有元素用到某个字体时才去下载它， 光写 <code>@font-face</code>{" "}
-        一个字节都不会拉，不预加载就会看到印章先排一版再跳一下。
+        启动时调一次 <code>preloadStampFont()</code>。<code>MStamp</code> 用 canvas
+        量字排版，字体在首枚印章绘制后才开始下载的话会重排一次。
       </p>
       <pre className="guide__code">{preload}</pre>
 
-      <h3 className="guide__h">服务端渲染</h3>
+      <h3 className="guide__h">SSR</h3>
       <p>
-        Next.js 这类 React SSR 都支持。弹层类组件（对话框、抽屉、浮层、消息）不进服务端 HTML，
-        挂载之后才出现 —— 两个框架统一这个口径。首帧是没有墨迹的朴素版，挂载后根元素加上{" "}
-        <code>m-ink-ready</code> 才升级成水墨皮，所以水合不会不匹配。
+        Next.js 等 React SSR 支持。弹层类（对话框、抽屉、浮层、消息）不进服务端
+        HTML；首帧无墨迹，挂载后 <code>&lt;html&gt;</code> 加 <code>m-ink-ready</code>{" "}
+        再升级，水合一致。
       </p>
     </article>
   );

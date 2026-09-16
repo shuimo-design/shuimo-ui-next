@@ -58,7 +58,7 @@ export default function VirtualTreeDemo() {
           onSelectedKeyChange={setSelected}
         />
         <div className="demo__row">
-          <MInputNumber value={target} min={0} max={839} onValueChange={setTarget} />
+          <MInputNumber value={target} min={0} max={839} onValueChange={(v) => setTarget(v ?? 0)} />
           <MButton onClick={jump}>滚到第 {target} 行的节点</MButton>
           <MButton onClick={() => tree.current?.scrollTo(0)}>回顶</MButton>
         </div>
