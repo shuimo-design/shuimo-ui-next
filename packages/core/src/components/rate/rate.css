@@ -1,0 +1,110 @@
+@layer m.component {
+  .m-rate {
+    /* 一格的边长和格距，档位按 size 类覆盖 */
+    --m-rate-size: 20px;
+    --m-rate-gap: 6px;
+    /* 未选淡墨、选中浓墨；想要朱砂就把 --m-rate-active 换成 var(--m-seal) */
+    --m-rate-empty: color-mix(in srgb, var(--m-ink) 16%, transparent);
+    --m-rate-active: var(--m-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-rate-gap);
+    color: var(--m-fg);
+    font-size: 13px;
+    line-height: 1;
+    vertical-align: middle;
+    user-select: none;
+
+    &.m-rate--sm {
+      --m-rate-size: 16px;
+      --m-rate-gap: 4px;
+    }
+
+    &.m-rate--lg {
+      --m-rate-size: 26px;
+      --m-rate-gap: 8px;
+    }
+
+    &.m-rate--disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-rate__item {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--m-rate-size);
+    height: var(--m-rate-size);
+    border-radius: 50%;
+    outline: 0;
+    cursor: var(--m-cursor-pointer);
+    transition: transform var(--m-duration) var(--m-ease);
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+
+    /* 悬停预览时被指着的那一格微微放大 */
+    &.m-rate__item--hover {
+      transform: scale(1.15);
+    }
+  }
+
+  .m-rate--disabled .m-rate__item,
+  .m-rate--readonly .m-rate__item {
+    cursor: inherit;
+    transform: none;
+  }
+
+  /* 一格里的图形层：底层画整格，半格时再叠一层只露左半 */
+  .m-rate__char {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--m-rate-empty);
+
+    &.m-rate__char--active {
+      color: var(--m-rate-active);
+    }
+
+    &.m-rate__char--half {
+      clip-path: inset(0 50% 0 0);
+    }
+  }
+
+  /* 默认图形：一枚墨点，颜色跟着所在层走 */
+  .m-rate__dot {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: currentColor;
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  .m-rate--disabled .m-rate__char {
+    color: color-mix(in srgb, var(--m-disabled) 70%, transparent);
+
+    &.m-rate__char--active {
+      color: var(--m-disabled);
+    }
+  }
+
+  .m-rate__text {
+    margin-left: var(--m-space-1);
+    color: var(--m-fg-muted);
+    white-space: nowrap;
+  }
+}
+
+@layer m.ink {
+  /* 墨点换成毛边墨团：遮罩由每格自己的 seed 生成，同一组里每格略不同 */
+  html.m-ink-ready .m-rate__dot {
+    border-radius: 0;
+    mask: var(--m-rate-mask, none) center / 100% 100% no-repeat;
+  }
+}

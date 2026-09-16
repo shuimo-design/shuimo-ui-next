@@ -11,6 +11,7 @@ export * from "./avatar";
 export * from "./progress";
 export * from "./input-number";
 export * from "./slider";
+export * from "./rate";
 export * from "./collapse";
 export * from "./list";
 export * from "./tree";

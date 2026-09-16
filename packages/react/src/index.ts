@@ -22,6 +22,7 @@ export { MTransition, type MTransitionProps } from "./transition";
 export { useMounted, useSize } from "./runtime";
 export { detectInkTier, type InkTier } from "@shuimo-design/core";
 export * from "./components/slider";
+export * from "./components/rate";
 export * from "./components/pagination";
 export * from "./components/dark-mode";
 export * from "./components/paper-theme";

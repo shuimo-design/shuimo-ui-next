@@ -15,6 +15,7 @@ export const COMPONENT_NAMES = [
   "MProgress",
   "MInputNumber",
   "MSlider",
+  "MRate",
   "MCollapse",
   "MCollapseItem",
   "MList",

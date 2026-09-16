@@ -87,6 +87,7 @@ export const COMPONENT_STYLES = {
   MProgress: { css: "progress" },
   MRadio: { css: "radio" },
   MRadioGroup: { css: "radio" },
+  MRate: { css: "rate" },
   MRicePaper: { css: "rice-paper" },
   MScroll: { css: "scroll" },
   // 印章是一枚 MStamp
