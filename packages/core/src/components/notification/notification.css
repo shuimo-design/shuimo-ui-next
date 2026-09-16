@@ -1,0 +1,174 @@
+@layer m.component {
+  /* 每个角一个固定定位的栈；容器本身不接事件，只有通知接 */
+  .m-notification-list {
+    --m-notification-gap: 12px;
+    position: fixed;
+    /* 压在消息列表之下：消息是一句话的即时反馈，比通知更急 */
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    gap: var(--m-notification-gap);
+    max-height: 100vh;
+    padding: var(--m-space-4);
+    pointer-events: none;
+  }
+
+  .m-notification-list--top-right {
+    top: 0;
+    right: 0;
+    align-items: flex-end;
+  }
+
+  .m-notification-list--top-left {
+    top: 0;
+    left: 0;
+    align-items: flex-start;
+  }
+
+  .m-notification-list--bottom-right {
+    right: 0;
+    bottom: 0;
+    align-items: flex-end;
+  }
+
+  .m-notification-list--bottom-left {
+    bottom: 0;
+    left: 0;
+    align-items: flex-start;
+  }
+
+  /* 一张小卡：边框、圆角、底色、阴影都按 MCard 的口径 */
+  .m-notification {
+    --m-notification-color: var(--m-info);
+    --m-notification-icon: 24px;
+    --m-notification-w: 360px;
+    --m-notification-shadow: 0 2px 12px
+      light-dark(color-mix(in srgb, var(--m-ink) 12%, transparent), rgb(0 0 0 / 0.45));
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--m-space-3);
+    box-sizing: border-box;
+    width: min(var(--m-notification-w), calc(100vw - 32px));
+    padding: var(--m-space-4);
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: var(--m-bg);
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+    box-shadow: var(--m-notification-shadow);
+    pointer-events: auto;
+
+    &.m-notification--success {
+      --m-notification-color: var(--m-success);
+    }
+
+    &.m-notification--warning {
+      --m-notification-color: var(--m-warn);
+    }
+
+    &.m-notification--error {
+      --m-notification-color: var(--m-danger);
+    }
+
+    &.m-notification--info {
+      --m-notification-color: var(--m-info);
+    }
+  }
+
+  /* 内容压在墨底（::before）上面 */
+  .m-notification > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 状态徽记：一团墨里挖出记号，颜色跟类型走；和 MAlert 用同一套素材 */
+  .m-notification__icon {
+    flex: none;
+    width: var(--m-notification-icon);
+    height: var(--m-notification-icon);
+    background: var(--m-notification-color);
+    mask: var(--m-notification-badge) center / 100% 100% no-repeat;
+  }
+
+  .m-notification__icon--custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    mask: none;
+    color: var(--m-notification-color);
+    font-size: var(--m-notification-icon);
+  }
+
+  .m-notification__body {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .m-notification__title {
+    color: var(--m-fg-strong);
+    font-weight: 600;
+  }
+
+  /* 有关闭按钮时标题给它留出位置 */
+  .m-notification--closable .m-notification__title {
+    padding-right: 24px;
+  }
+
+  .m-notification__content {
+    margin-top: var(--m-space-1);
+    color: var(--m-fg-muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* 关闭是 MDeleteIcon 的叉，钉在右上角 */
+  .m-notification__close.m-delete-icon {
+    position: absolute;
+    top: var(--m-space-3);
+    right: var(--m-space-3);
+    z-index: 1;
+    color: var(--m-fg-muted);
+  }
+}
+
+@layer m.ink {
+  /* 水墨皮肤：方框换成一页毛边宣纸——纸色打底、左缘洇一点淡墨 */
+  html.m-ink-ready .m-notification {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(var(--m-notification-shape-pad, 0px) * -1);
+      z-index: 0;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--m-ink) 18%, var(--m-bg)) 0%,
+        var(--m-bg) 18%,
+        var(--m-bg) 100%
+      );
+      mask: var(--m-notification-shape, none) center / 100% 100% no-repeat;
+      filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--m-ink) 16%, transparent))
+        drop-shadow(0 8px 16px color-mix(in srgb, var(--m-ink) 10%, transparent));
+      pointer-events: none;
+    }
+  }
+
+  html.m-ink-ready .m-notification__icon {
+    filter: url(#m-ink-bleed-light);
+  }
+
+  /* 标题手写体，像纸条上的题头 */
+  html.m-ink-ready .m-notification__title {
+    font-family: var(--m-font-brush);
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+}

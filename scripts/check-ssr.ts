@@ -20,6 +20,7 @@ import * as VuePkg from "@shuimo-design/vue";
  */
 const MINIMAL_PROPS: Record<string, Record<string, unknown>> = {
   MIcon: { name: "close" },
+  MNotification: { title: "山水" },
   MSelect: { options: [{ label: "山", value: "shan" }] },
   MStamp: { text: "山水" },
   MTree: { data: [{ key: "1", label: "山" }] },

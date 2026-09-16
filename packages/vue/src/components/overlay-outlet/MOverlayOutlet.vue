@@ -4,21 +4,26 @@ import {
   confirm as defaultConfirmQueue,
   message as defaultMessageQueue,
   messageGroups,
+  notification as defaultNotificationQueue,
+  notificationGroups,
   type ConfirmQueue,
   type ConfirmQueueSnapshot,
   type MessageQueue,
   type MessageQueueSnapshot,
+  type NotificationQueue,
+  type NotificationQueueSnapshot,
   type OverlayOutletProps,
 } from "@shuimo-design/core";
 import MConfirm from "../confirm/MConfirm.vue";
 import MMessageList from "../message/MMessageList.vue";
+import MNotificationList from "../notification/MNotificationList.vue";
 
 /**
  * 函数式弹层的渲染出口。
  *
  * 旧版的 `MMessage.success(...)` 是自己往 body 上手挂一棵 Vue 树的，为此还要靠
  * `useMessage()` 偷记一份 appContext —— React 里没有对等物，那条路走不通。
- * 现在队列在 core，消息和确认框由这个组件渲染在**用户自己的组件树里**：
+ * 现在队列在 core，消息、通知和确认框由这个组件渲染在**用户自己的组件树里**：
  * 读得到用户的 provider、DevTools 看得见、不用再借上下文。
  * 代价是用户必须在树里放一个出口（`<MConfigProvider>` 自带，或者自己放一个这个）。
  *
@@ -28,24 +33,33 @@ import MMessageList from "../message/MMessageList.vue";
 // 出口有多个根节点（消息列表 + 确认框），透传属性没有唯一的落点
 defineOptions({ name: "MOverlayOutlet", inheritAttrs: false });
 
-const { messages = defaultMessageQueue, confirms = defaultConfirmQueue } =
-  defineProps<OverlayOutletProps>();
+const {
+  messages = defaultMessageQueue,
+  notifications = defaultNotificationQueue,
+  confirms = defaultConfirmQueue,
+} = defineProps<OverlayOutletProps>();
 
 // 弹层一律不进服务端 HTML，挂载后才渲染；快照初值用服务端那份（恒为空、引用恒定）
 const mounted = ref(false);
 const messageSnapshot = shallowRef<MessageQueueSnapshot>(messages.getServerSnapshot());
+const notificationSnapshot = shallowRef<NotificationQueueSnapshot>(
+  notifications.getServerSnapshot(),
+);
 const confirmSnapshot = shallowRef<ConfirmQueueSnapshot>(confirms.getServerSnapshot());
 
 onMounted(() => {
   mounted.value = true;
   const stops = [
     messages.subscribe(() => (messageSnapshot.value = messages.getSnapshot())),
+    notifications.subscribe(() => (notificationSnapshot.value = notifications.getSnapshot())),
     confirms.subscribe(() => (confirmSnapshot.value = confirms.getSnapshot())),
     messages.attachOutlet(),
+    notifications.attachOutlet(),
     confirms.attachOutlet(),
   ];
   // 订阅之前可能已经有人 show 过了，补读一次
   messageSnapshot.value = messages.getSnapshot();
+  notificationSnapshot.value = notifications.getSnapshot();
   confirmSnapshot.value = confirms.getSnapshot();
   onScopeDispose(() => {
     for (const stop of stops) stop();
@@ -53,6 +67,7 @@ onMounted(() => {
 });
 
 const groups = computed(() => messageGroups(messageSnapshot.value));
+const stacks = computed(() => notificationGroups(notificationSnapshot.value));
 const current = computed(() => confirmSnapshot.value.current);
 </script>
 
@@ -65,6 +80,13 @@ const current = computed(() => confirmSnapshot.value.current);
         :direction="group.direction"
         :items="group.items"
         :on-remove="messages.remove"
+      />
+      <MNotificationList
+        v-for="stack in stacks"
+        :key="stack.placement"
+        :placement="stack.placement"
+        :items="stack.items"
+        :on-remove="notifications.remove"
       />
     </Teleport>
     <MConfirm

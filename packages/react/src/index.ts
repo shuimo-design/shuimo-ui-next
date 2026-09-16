@@ -50,6 +50,7 @@ export * from "./components/menu";
 
 export * from "./components/form";
 export * from "./components/message";
+export * from "./components/notification";
 export * from "./components/confirm";
 export * from "./components/overlay-outlet";
 export * from "./components/popover";

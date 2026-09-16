@@ -69,8 +69,10 @@ export const COMPONENT_STYLES = {
   MMenu: { css: "menu" },
   MMenuItem: { css: "menu" },
   MMessage: { css: "message" },
-  // 函数式弹层的渲染出口：消息和确认框都从这里出
-  MOverlayOutlet: { renders: ["MMessage", "MConfirm"] },
+  // 右上角的关闭是 MDeleteIcon 的叉
+  MNotification: { css: "notification", renders: ["MDeleteIcon"] },
+  // 函数式弹层的渲染出口：消息、通知和确认框都从这里出
+  MOverlayOutlet: { renders: ["MMessage", "MNotification", "MConfirm"] },
   // Vue 侧的每页条数下拉和跳页输入框是 MSelect / MInput；React 侧手写了同一套类名
   MPagination: { css: "pagination", renders: ["MInput", "MSelect"] },
   MPopover: { css: "popover", renders: ["popper", "MBorder"] },

@@ -88,6 +88,7 @@ export const CATALOG: DemoGroup[] = [
       entry("popover", "气泡卡片", "MPopover"),
       entry("tooltip", "悬浮提示", "MTooltip"),
       entry("message", "消息提示", "MMessage"),
+      entry("notification", "通知", "MNotification"),
       entry("confirm", "确认框", "MConfirm"),
       entry("dialog", "弹窗", "MDialog"),
       entry("drawer", "抽屉", "MDrawer"),

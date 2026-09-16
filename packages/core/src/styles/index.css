@@ -49,6 +49,7 @@
 @import "../components/loading/loading.css";
 @import "../components/menu/menu.css";
 @import "../components/message/message.css";
+@import "../components/notification/notification.css";
 @import "../components/pagination/pagination.css";
 @import "../components/popover/popover.css";
 @import "../components/printer/printer.css";

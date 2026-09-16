@@ -21,6 +21,7 @@ export * from "./tooltip";
 export * from "./dialog";
 export * from "./drawer";
 export * from "./message";
+export * from "./notification";
 export * from "./confirm";
 export * from "./form";
 export * from "./scroll";

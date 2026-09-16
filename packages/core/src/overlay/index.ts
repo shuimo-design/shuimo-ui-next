@@ -41,3 +41,13 @@ export {
   type ConfirmQueueSnapshot,
   type ConfirmRequest,
 } from "./confirm-queue";
+export {
+  createNotificationQueue,
+  notification,
+  notificationApi,
+  notificationGroups,
+  type NotificationEntry,
+  type NotificationGroup,
+  type NotificationQueue,
+  type NotificationQueueSnapshot,
+} from "./notification-queue";
