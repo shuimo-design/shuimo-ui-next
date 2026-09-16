@@ -25,6 +25,7 @@ export const COMPONENT_NAMES = [
   "MPopover",
   "MTooltip",
   "MDropdown",
+  "MPopconfirm",
   "MDialog",
   "MDrawer",
   "MMessage",

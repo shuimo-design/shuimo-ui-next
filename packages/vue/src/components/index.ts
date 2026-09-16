@@ -19,6 +19,7 @@ export * from "./date-picker";
 export * from "./popover";
 export * from "./tooltip";
 export * from "./dropdown";
+export * from "./popconfirm";
 export * from "./dialog";
 export * from "./drawer";
 export * from "./message";

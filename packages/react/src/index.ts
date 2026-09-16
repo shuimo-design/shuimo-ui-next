@@ -55,6 +55,7 @@ export * from "./components/confirm";
 export * from "./components/overlay-outlet";
 export * from "./components/popover";
 export * from "./components/dropdown";
+export * from "./components/popconfirm";
 export * from "./components/select";
 export * from "./components/date-picker";
 export * from "./components/tabs";

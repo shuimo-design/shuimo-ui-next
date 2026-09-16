@@ -764,6 +764,20 @@ export {
   type PopoverSlots,
 } from "./components/popover";
 export {
+  POPCONFIRM_BORDER_STROKE,
+  POPCONFIRM_CANCEL_TEXT,
+  POPCONFIRM_OK_TEXT,
+  POPCONFIRM_REFERENCE_ARIA,
+  popconfirmClasses,
+  popconfirmFocusTarget,
+  popconfirmReferenceAria,
+  popconfirmStyle,
+  type PopconfirmEmits,
+  type PopconfirmPlacement,
+  type PopconfirmProps,
+  type PopconfirmSlots,
+} from "./components/popconfirm";
+export {
   DROPDOWN_BORDER_STROKE,
   DROPDOWN_REFERENCE_ARIA,
   dropdownClasses,
