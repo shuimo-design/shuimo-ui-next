@@ -70,4 +70,6 @@ export const COMPONENT_NAMES = [
   "MBackTop",
   "MTimeline",
   "MTimelineItem",
+  "MDescriptions",
+  "MDescriptionsItem",
 ] as const;

@@ -1,0 +1,173 @@
+@layer m.component {
+  .m-descriptions {
+    /* 格子的内边距，三档尺寸改这两个 */
+    --m-descriptions-py: 10px;
+    --m-descriptions-px: var(--m-space-4);
+    /* 格线颜色；m.ink 层里横线换成墨线，这个只剩竖线和外框在用 */
+    --m-descriptions-line-color: var(--m-divider);
+    /* 带格线时标签格铺的那层淡墨 */
+    --m-descriptions-label-bg: color-mix(in srgb, var(--m-ink) 6%, transparent);
+    /* 行线的高度；m.ink 层会换成笔触线的画幅高度 */
+    --m-descriptions-line-band: 1px;
+    width: 100%;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+
+    &.m-descriptions--sm {
+      --m-descriptions-py: 6px;
+      --m-descriptions-px: var(--m-space-3);
+    }
+
+    &.m-descriptions--lg {
+      --m-descriptions-py: 14px;
+      --m-descriptions-px: 20px;
+    }
+  }
+
+  .m-descriptions__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--m-space-3);
+    margin-bottom: var(--m-space-3);
+  }
+
+  .m-descriptions__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--m-fg-strong);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .m-descriptions__extra {
+    flex: 0 0 auto;
+  }
+
+  /*
+   * 网格挂在 <dl> 外面这层 div 上：带格线时的横线是和格子同一网格里的元素，
+   * <dl> 里放不了它们（内容模型只认 dt / dd），所以 <dl> 自己 display: contents，
+   * 让 dt / dd 直接当网格项。列模板由 core 按列数算好写在内联样式里。
+   */
+  .m-descriptions__grid {
+    position: relative;
+    display: grid;
+    align-items: stretch;
+  }
+
+  .m-descriptions__list {
+    display: contents;
+    margin: 0;
+  }
+
+  .m-descriptions__label,
+  .m-descriptions__value {
+    min-width: 0;
+    margin: 0;
+    padding: 0 var(--m-descriptions-px) var(--m-descriptions-py) 0;
+    word-break: break-word;
+  }
+
+  .m-descriptions__label {
+    color: var(--m-fg-muted);
+    /* 横排标签贴着值：标签轨自适应宽，右侧只留冒号的空 */
+    padding-right: var(--m-space-2);
+  }
+
+  /* 冒号只在横排、不带格线时显示 */
+  .m-descriptions--colon.m-descriptions--horizontal:not(.m-descriptions--bordered)
+    .m-descriptions__label::after {
+    content: ":";
+    margin: 0 var(--m-space-1) 0 2px;
+  }
+
+  .m-descriptions--vertical .m-descriptions__label {
+    padding-bottom: var(--m-space-1);
+  }
+
+  .m-descriptions__value {
+    color: var(--m-fg);
+  }
+
+  /* 不带格线时最后一行不留底边距 */
+  .m-descriptions__label--bottom,
+  .m-descriptions__value--bottom {
+    padding-bottom: 0;
+  }
+
+  /* 竖排的标签在值上面，最后一行的标签和值之间那点空要留着 */
+  .m-descriptions--vertical .m-descriptions__label--bottom {
+    padding-bottom: var(--m-space-1);
+  }
+
+  /* ---- 带格线 ---- */
+  .m-descriptions--bordered .m-descriptions__grid {
+    border-right: 1px solid var(--m-descriptions-line-color);
+    border-left: 1px solid var(--m-descriptions-line-color);
+  }
+
+  .m-descriptions--bordered .m-descriptions__label,
+  .m-descriptions--bordered .m-descriptions__value {
+    padding: var(--m-descriptions-py) var(--m-descriptions-px);
+    border-right: 1px solid var(--m-descriptions-line-color);
+  }
+
+  .m-descriptions--bordered .m-descriptions__label {
+    background: var(--m-descriptions-label-bg);
+    color: var(--m-fg);
+    font-weight: 500;
+  }
+
+  /* 一行最右边的格不画右线，外框那条在网格容器上 */
+  .m-descriptions--bordered .m-descriptions__value--last,
+  .m-descriptions--bordered.m-descriptions--vertical .m-descriptions__label--last {
+    border-right: 0;
+  }
+
+  /* 带格线时每格自己有内边距，最后一行不再清零 */
+  .m-descriptions--bordered .m-descriptions__label--bottom,
+  .m-descriptions--bordered .m-descriptions__value--bottom {
+    padding-bottom: var(--m-descriptions-py);
+  }
+
+  /*
+   * 横线：跨整行的元素，贴在行底（外框顶线贴第一行的顶），1px 高不撑行高；
+   * 行号由 core 写在内联样式里。m.ink 层换成画幅居中压在行界上的笔触线
+   */
+  .m-descriptions__line {
+    z-index: 1;
+    grid-column: 1 / -1;
+    align-self: end;
+    height: var(--m-descriptions-line-band);
+    /* 画幅比 1px 宽出来的部分对半探出行界，笔画正好压在线上 */
+    margin-bottom: calc((var(--m-descriptions-line-band) - 1px) / -2);
+    background: var(--m-descriptions-line-color);
+    pointer-events: none;
+
+    &.m-descriptions__line--top {
+      align-self: start;
+      margin-top: calc((var(--m-descriptions-line-band) - 1px) / -2);
+      margin-bottom: 0;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 横线换成按宽度生成的淡墨笔触线（口径同表格的行间线），没量到宽度前回落到通用线 */
+  html.m-ink-ready .m-descriptions--bordered {
+    --m-descriptions-line-band: var(--m-descriptions-ink-band, 9px);
+  }
+
+  html.m-ink-ready .m-descriptions__line {
+    background: var(--m-ink);
+    opacity: 0.55;
+    mask: var(--m-descriptions-line, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  /* 竖线退成更淡的一笔，别抢横线的戏 */
+  html.m-ink-ready .m-descriptions--bordered {
+    --m-descriptions-line-color: color-mix(in srgb, var(--m-ink) 14%, transparent);
+  }
+}

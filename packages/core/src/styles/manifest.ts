@@ -54,6 +54,8 @@ export const COMPONENT_STYLES = {
   MDarkMode: { css: "dark-mode" },
   MDatePicker: { css: "date-picker", renders: ["popper"] },
   MDeleteIcon: { css: "delete-icon" },
+  MDescriptions: { css: "descriptions" },
+  MDescriptionsItem: { css: "descriptions" },
   MDialog: { css: "dialog", renders: ["modal-ink"] },
   MDivider: { css: "divider" },
   MDrawer: { css: "drawer", renders: ["modal-ink"] },
