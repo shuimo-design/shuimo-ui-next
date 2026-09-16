@@ -57,6 +57,7 @@ export const COMPONENT_STYLES = {
   MDialog: { css: "dialog", renders: ["modal-ink"] },
   MDivider: { css: "divider" },
   MDrawer: { css: "drawer", renders: ["modal-ink"] },
+  MDropdown: { css: "dropdown", renders: ["popper", "MBorder"] },
   MEmpty: { css: "empty" },
   MForm: { css: "form" },
   MFormItem: { css: "form" },

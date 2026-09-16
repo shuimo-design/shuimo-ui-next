@@ -24,6 +24,7 @@ export const COMPONENT_NAMES = [
   "MDatePicker",
   "MPopover",
   "MTooltip",
+  "MDropdown",
   "MDialog",
   "MDrawer",
   "MMessage",

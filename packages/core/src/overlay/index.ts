@@ -22,6 +22,11 @@ export {
   type PopoverTriggerOptions,
   type PopoverTriggerSnapshot,
 } from "./popover-trigger";
+export {
+  createPopoverFocus,
+  type PopoverFocusController,
+  type PopoverFocusOptions,
+} from "./popover-focus";
 export { closeLoadingHost, loadingHostText, openLoadingHost } from "./loading-mask";
 export {
   createMessageQueue,

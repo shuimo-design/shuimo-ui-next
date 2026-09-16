@@ -18,6 +18,7 @@ export * from "./select";
 export * from "./date-picker";
 export * from "./popover";
 export * from "./tooltip";
+export * from "./dropdown";
 export * from "./dialog";
 export * from "./drawer";
 export * from "./message";

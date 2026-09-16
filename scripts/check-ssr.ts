@@ -19,6 +19,7 @@ import * as VuePkg from "@shuimo-design/vue";
  * 这里给它们一份最小可渲染的 props，两个壳共用 —— prop 名本来就是对齐的。
  */
 const MINIMAL_PROPS: Record<string, Record<string, unknown>> = {
+  MDropdown: { items: [{ key: "1", label: "山" }] },
   MIcon: { name: "close" },
   MNotification: { title: "山水" },
   MSelect: { options: [{ label: "山", value: "shan" }] },
