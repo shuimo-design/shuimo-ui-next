@@ -68,4 +68,6 @@ export const COMPONENT_NAMES = [
   "MTabs",
   "MTabPane",
   "MBackTop",
+  "MTimeline",
+  "MTimelineItem",
 ] as const;

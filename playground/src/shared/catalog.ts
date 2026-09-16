@@ -85,6 +85,10 @@ export const CATALOG: DemoGroup[] = [
     ],
   },
   {
+    group: "数据",
+    items: [entry("timeline", "时间线", "MTimeline", "MTimelineItem")],
+  },
+  {
     group: "消息",
     items: [
       entry("popover", "气泡卡片", "MPopover"),

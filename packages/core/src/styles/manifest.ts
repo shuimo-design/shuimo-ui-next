@@ -104,6 +104,8 @@ export const COMPONENT_STYLES = {
   MTabPane: { css: "tabs" },
   MTabs: { css: "tabs" },
   MTag: { css: "tag" },
+  MTimeline: { css: "timeline" },
+  MTimelineItem: { css: "timeline" },
   MTooltip: { css: "tooltip", renders: ["popper", "MBorder"] },
   // 行的皮肤是两棵树共用的 tree-row 块；checkable 时行里是 MCheckbox
   MTree: { css: "tree", renders: ["tree-row", "MCheckbox"] },

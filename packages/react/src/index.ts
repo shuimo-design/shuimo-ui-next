@@ -64,3 +64,4 @@ export * from "./components/tabs";
 export * from "./components/table";
 export * from "./components/grid";
 export * from "./components/back-top";
+export * from "./components/timeline";

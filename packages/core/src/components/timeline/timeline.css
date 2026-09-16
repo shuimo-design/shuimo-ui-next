@@ -1,0 +1,237 @@
+@layer m.component {
+  /*
+   * 整个 <ol> 是一张网格：每条 <li> 占一行、跨全部列（subgrid 让节点列在各行之间对齐），
+   * 轴线是一个跨多行的 <li role="presentation">，行号由 core 算好写在内联样式里。
+   * 轴线从第一个节点的圆心到最后一个节点的圆心：网格区域是第一行顶到最后一行顶，
+   * 上边距缩进一个节点偏移、下边距负一个节点偏移，正好落在两个圆心上，不用量任何东西。
+   */
+  .m-timeline {
+    /* 墨点直径 / 带字的圈的直径 */
+    --m-timeline-node-size: 10px;
+    --m-timeline-ring-size: 22px;
+    /* 节点圆心到这一行顶边的距离 = 第一行文字的半行高 */
+    --m-timeline-node-offset: 10px;
+    /* 相邻两条之间的空 */
+    --m-timeline-gap: var(--m-space-4);
+    --m-timeline-axis-color: var(--m-border);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--m-space-3);
+    margin: 0;
+    padding: 0;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: 20px;
+    list-style: none;
+
+    &.m-timeline--right {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    &.m-timeline--alternate {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+  }
+
+  .m-timeline-item {
+    /* 节点颜色；type 修饰符改这一个变量 */
+    --m-timeline-color: var(--m-ink);
+    position: relative;
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+
+    &.m-timeline-item--primary {
+      --m-timeline-color: var(--m-info);
+    }
+
+    &.m-timeline-item--success {
+      --m-timeline-color: var(--m-success);
+    }
+
+    &.m-timeline-item--warn {
+      --m-timeline-color: var(--m-warn);
+    }
+
+    &.m-timeline-item--danger {
+      --m-timeline-color: var(--m-danger);
+    }
+
+    &.m-timeline-item--muted {
+      --m-timeline-color: var(--m-fg-muted);
+    }
+  }
+
+  /* 节点：默认一粒墨点，圆心对齐第一行文字的中线 */
+  .m-timeline-item__node {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    justify-self: center;
+    align-self: start;
+    width: var(--m-timeline-node-size);
+    height: var(--m-timeline-node-size);
+    margin-top: calc(var(--m-timeline-node-offset) - var(--m-timeline-node-size) / 2);
+    border-radius: 50%;
+    background: currentColor;
+    color: var(--m-timeline-color);
+    isolation: isolate;
+    transition:
+      background-color var(--m-duration) var(--m-ease),
+      border-color var(--m-duration) var(--m-ease),
+      color var(--m-duration) var(--m-ease);
+  }
+
+  /* 节点里有字或插槽：换成一个带字的圈 */
+  .m-timeline-item--ring .m-timeline-item__node {
+    width: var(--m-timeline-ring-size);
+    height: var(--m-timeline-ring-size);
+    margin-top: calc(var(--m-timeline-node-offset) - var(--m-timeline-ring-size) / 2);
+    border: 1.5px solid currentColor;
+    background: transparent;
+    font-size: 12px;
+    line-height: 1;
+
+    & > .m-icon {
+      font-size: 14px;
+    }
+  }
+
+  /* 幽灵节点：虚线空心圈，表示还没发生 */
+  .m-timeline-item--pending .m-timeline-item__node {
+    border: 1px dashed var(--m-timeline-axis-color);
+    background: transparent;
+  }
+
+  .m-timeline-item--pending .m-timeline-item__main {
+    color: var(--m-fg-muted);
+  }
+
+  .m-timeline-item__main {
+    min-width: 0;
+    padding-bottom: var(--m-timeline-gap);
+  }
+
+  .m-timeline-item--last .m-timeline-item__main {
+    padding-bottom: 0;
+  }
+
+  .m-timeline-item__label {
+    color: var(--m-fg-strong);
+  }
+
+  .m-timeline-item__content {
+    color: var(--m-fg);
+  }
+
+  .m-timeline-item__label + .m-timeline-item__content {
+    margin-top: 2px;
+  }
+
+  /* 内容在轴线左边的那一侧靠右对齐，贴着轴线 */
+  .m-timeline-item--left .m-timeline-item__main {
+    text-align: right;
+  }
+
+  /* ---- 三种模式下节点列 / 内容列各在第几列 ---- */
+  .m-timeline--left .m-timeline-item__node,
+  .m-timeline--left .m-timeline__axis {
+    grid-column: 1;
+  }
+
+  .m-timeline--left .m-timeline-item__main {
+    grid-column: 2;
+  }
+
+  .m-timeline--right .m-timeline-item__node,
+  .m-timeline--right .m-timeline__axis {
+    grid-column: 2;
+  }
+
+  .m-timeline--right .m-timeline-item__main {
+    grid-column: 1;
+  }
+
+  .m-timeline--alternate .m-timeline-item__node,
+  .m-timeline--alternate .m-timeline__axis {
+    grid-column: 2;
+  }
+
+  .m-timeline--alternate .m-timeline-item--left .m-timeline-item__main {
+    grid-column: 1;
+  }
+
+  .m-timeline--alternate .m-timeline-item--right .m-timeline-item__main {
+    grid-column: 3;
+  }
+
+  /* 轴线：默认皮肤一条 1px 实线；行区间由 core 写在内联样式，上下边距把两端收到圆心 */
+  .m-timeline__axis {
+    z-index: 0;
+    justify-self: center;
+    width: 1px;
+    margin: var(--m-timeline-node-offset) 0 calc(-1 * var(--m-timeline-node-offset));
+    padding: 0;
+    background: var(--m-timeline-axis-color);
+    pointer-events: none;
+    transition: background-color var(--m-duration) var(--m-ease);
+  }
+
+  /* 通往幽灵节点的那一段：虚线 */
+  .m-timeline__axis--pending {
+    width: 0;
+    border-left: 1px dashed var(--m-timeline-axis-color);
+    background: transparent;
+  }
+}
+
+@layer m.ink {
+  /* 轴线换成按实际高度生成的竖向笔触线；画幅比笔画宽，让画幅居中、笔画自然落在中线 */
+  html.m-ink-ready .m-timeline__axis:not(.m-timeline__axis--pending) {
+    width: var(--m-brush-line-band, 9px);
+    /* 淡的干墨，不是实黑 */
+    opacity: 0.7;
+    background: var(--m-ink);
+    /* 还没量出长度时先用通用竖线兜底，量出来后换成按实际长度生成的那条 */
+    mask: var(--m-brush-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+  }
+
+  html.m-ink-ready .m-timeline__axis--pending {
+    border-color: var(--m-ink);
+    opacity: 0.5;
+  }
+
+  /* 墨点换成毛边墨团。素材里墨团只占画幅八成，盒子往外扩一圈让墨点仍是节点大小 */
+  html.m-ink-ready
+    .m-timeline-item:not(.m-timeline-item--ring, .m-timeline-item--pending)
+    .m-timeline-item__node {
+    background: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      background: currentColor;
+      mask: var(--m-timeline-blob) center / 100% 100% no-repeat;
+    }
+  }
+
+  /* 带字的圈换成一笔绕出的圆相，起笔重、收笔留口 */
+  html.m-ink-ready .m-timeline-item--ring .m-timeline-item__node {
+    border-color: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      z-index: -1;
+      background: currentColor;
+      mask: var(--m-timeline-enso) center / 100% 100% no-repeat;
+    }
+  }
+}
