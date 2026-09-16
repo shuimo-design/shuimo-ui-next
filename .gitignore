@@ -13,3 +13,6 @@ packages/vue/web-types.json
 .vitest-attachments
 .vercel
 .env*
+
+# Claude Code 的临时 worktree
+.claude/worktrees/
