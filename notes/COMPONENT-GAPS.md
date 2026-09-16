@@ -1,27 +1,12 @@
 # 组件缺口与排期
 
-2026-09-16。现状 61 个组件（`docs/api/`）。做完一项删一项。
+2026-09-16。现状 73 个组件（`docs/api/`）。做完一项删一项。
 
 排序依据：目标场景（博客、作品集、文化 / 品牌站、文档站）的出场频率 × 水墨风的加分 × 现有积木。不按"Ant / Element / Arco / Naive 有没有"排——那是后台库的尺子，穿梭框、级联、树选择、图片墙在这些场景里基本不出现，且都是硬骨头。
 
 ## 第一批
 
-积木现成，每个一两天，凑一个 minor。
-
-| 组件               | 用途                          | 积木                                |
-| ------------------ | ----------------------------- | ----------------------------------- |
-| Dropdown           | 顶栏 / 用户菜单               | MPopover + MMenu                    |
-| Notification       | 角落常驻通知，MMessage 的补集 | 弹层队列（core）                    |
-| Popconfirm         | 内联确认                      | MPopover + MConfirm 逻辑            |
-| Timeline           | 年表、历程页；轴线用笔触线    | brush line                          |
-| Rate               | 墨点 / 小方印代替星星         | enso / stamp                        |
-| BackTop            | 长文页；印章按钮              | stamp                               |
-| Image              | 带放大 / 翻页预览             | MOverlayOutlet                      |
-| Descriptions       | key-value 详情                | —                                   |
-| MPaperTheme        | 五种纸面一键切换              | `PAPER_PRESETS` 已在 core，只缺 API |
-| MSealColophon 落款 | 页脚署名 + 印章 + 日期        | stamp、paste                        |
-
-能力补齐：MDatePicker range。
+已完成（1.0.0-beta.3）：Dropdown、Notification、Popconfirm、Timeline、Rate、BackTop、Image、Descriptions、MPaperTheme、MSealColophon。剩下：MDatePicker range。
 
 ## 第二批
 

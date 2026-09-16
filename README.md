@@ -1,6 +1,6 @@
 # shuimo-ui next
 
-水墨风组件库，Vue 3 和 React 共用一套实现。61 个组件；宣纸、远山、毛边、笔触、印章都是运行时生成的 SVG，仓库里没有位图。
+水墨风组件库，Vue 3 和 React 共用一套实现。73 个组件；宣纸、远山、毛边、笔触、印章都是运行时生成的 SVG，仓库里没有位图。
 
 文档：<https://shuimo-ui-next.vercel.app>（[Vue](https://shuimo-ui-next.vercel.app/vue/) / [React](https://shuimo-ui-next.vercel.app/react/) 各一版，同一份组件清单和 API 数据，只显示各自的写法）。
 
