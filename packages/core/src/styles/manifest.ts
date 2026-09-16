@@ -87,6 +87,8 @@ export const COMPONENT_STYLES = {
   MRadioGroup: { css: "radio" },
   MRicePaper: { css: "rice-paper" },
   MScroll: { css: "scroll" },
+  // 印章是一枚 MStamp
+  MSealColophon: { css: "seal-colophon", renders: ["MStamp"] },
   // 多选时选中项渲染成 MTag
   MSelect: { css: "select", renders: ["popper", "MTag"] },
   MSkeleton: { css: "skeleton" },

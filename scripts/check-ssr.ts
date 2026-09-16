@@ -24,6 +24,7 @@ const MINIMAL_PROPS: Record<string, Record<string, unknown>> = {
   MNotification: { title: "山水" },
   MPopconfirm: { title: "确定删除？" },
   MSelect: { options: [{ label: "山", value: "shan" }] },
+  MSealColophon: { author: "白石" },
   MStamp: { text: "山水" },
   MTree: { data: [{ key: "1", label: "山" }] },
   MVirtualTree: { data: [{ key: "1", label: "山" }] },

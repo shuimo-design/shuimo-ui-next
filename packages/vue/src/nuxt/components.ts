@@ -56,6 +56,7 @@ export const COMPONENT_NAMES = [
   "MPaperTheme",
   "MSvg",
   "MStamp",
+  "MSealColophon",
   "MSkeleton",
   "MSkeletonItem",
   "MSteps",

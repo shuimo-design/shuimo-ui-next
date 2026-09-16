@@ -44,3 +44,18 @@
   align-items: center;
   gap: 6px;
 }
+
+/* 落款示例：一张有边框的"纸"，竖排那组左右各一 */
+.seal-colophon-demo__sheet {
+  padding: 16px 24px;
+  border: 1px solid var(--m-divider);
+}
+.seal-colophon-demo__sheet--tall {
+  display: flex;
+  justify-content: space-between;
+  min-height: 200px;
+}
+.seal-colophon-demo__body {
+  margin: 0 0 8px;
+  line-height: 2;
+}

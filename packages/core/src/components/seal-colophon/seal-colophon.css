@@ -1,0 +1,90 @@
+@layer m.component {
+  .m-seal-colophon {
+    /* 落款文是淡墨：墨色掺一点透明 */
+    --m-seal-colophon-color: color-mix(in srgb, var(--m-ink) 74%, transparent);
+    --m-seal-colophon-font-size: var(--m-font-size);
+    --m-seal-colophon-line-height: 1.9;
+    /* 印章压进末字的距离（沿书写方向）和往外沿偏出的距离 */
+    --m-seal-colophon-overlap: 0.3em;
+    --m-seal-colophon-offset: 28%;
+    --m-seal-colophon-seal-opacity: 1;
+    --m-seal-colophon-seal-rotate: 0deg;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    color: var(--m-seal-colophon-color);
+    font-family: var(--m-font-brush);
+    font-size: var(--m-seal-colophon-font-size);
+    line-height: var(--m-seal-colophon-line-height);
+    letter-spacing: 0.08em;
+
+    &.m-seal-colophon--left {
+      justify-content: flex-start;
+    }
+
+    /* 竖排：整块变成一列，文字从上往下写，印章落在末字下面 */
+    &.m-seal-colophon--vertical {
+      flex-direction: column;
+      align-items: flex-end;
+
+      &.m-seal-colophon--left {
+        align-items: flex-start;
+      }
+    }
+  }
+
+  .m-seal-colophon__text {
+    margin: 0;
+    /* 印章会压过来，文字在下 */
+    position: relative;
+    z-index: 0;
+  }
+
+  .m-seal-colophon--vertical .m-seal-colophon__text {
+    writing-mode: vertical-rl;
+  }
+
+  /* 三段之间空半个字；署名是第一段时前面不留 */
+  .m-seal-colophon__note + .m-seal-colophon__author,
+  .m-seal-colophon__date {
+    margin-inline-start: 0.5em;
+  }
+
+  .m-seal-colophon__date {
+    font-size: 0.85em;
+    color: var(--m-fg-muted);
+  }
+
+  /* 印章：横排时压在末字右下，竖排时压在末字下方略靠右 */
+  .m-seal-colophon__seal {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex: none;
+    line-height: 0;
+    margin-inline-start: calc(var(--m-seal-colophon-overlap) * -1);
+    transform: translateY(var(--m-seal-colophon-offset)) rotate(var(--m-seal-colophon-seal-rotate));
+    transform-origin: center;
+    opacity: var(--m-seal-colophon-seal-opacity);
+  }
+
+  .m-seal-colophon--vertical .m-seal-colophon__seal {
+    margin-inline-start: 0;
+    margin-block-start: calc(var(--m-seal-colophon-overlap) * -1);
+    transform: translateX(calc(var(--m-seal-colophon-offset) * 0.5))
+      rotate(var(--m-seal-colophon-seal-rotate));
+  }
+
+  .m-seal-colophon--vertical.m-seal-colophon--left .m-seal-colophon__seal {
+    transform: translateX(calc(var(--m-seal-colophon-offset) * -0.5))
+      rotate(var(--m-seal-colophon-seal-rotate));
+  }
+}
+
+@layer m.ink {
+  /* 印泥叠在墨字上略透一点，章也不会盖得笔直 */
+  html.m-ink-ready .m-seal-colophon {
+    --m-seal-colophon-seal-opacity: 0.9;
+    --m-seal-colophon-seal-rotate: -3deg;
+  }
+}

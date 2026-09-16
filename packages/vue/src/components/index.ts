@@ -43,6 +43,7 @@ export * from "./dark-mode";
 export * from "./paper-theme";
 export * from "./svg";
 export * from "./stamp";
+export * from "./seal-colophon";
 export * from "./skeleton";
 export * from "./steps";
 export * from "./card";

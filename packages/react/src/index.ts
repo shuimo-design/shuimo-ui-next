@@ -28,6 +28,7 @@ export * from "./components/paper-theme";
 export * from "./components/border";
 export * from "./components/card";
 export * from "./components/stamp";
+export * from "./components/seal-colophon";
 export * from "./components/printer";
 export * from "./components/input";
 export * from "./components/input-number";

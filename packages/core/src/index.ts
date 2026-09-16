@@ -303,6 +303,16 @@ export {
 } from "./components/paper-theme";
 export type { PaperThemeEmits } from "./components/paper-theme/types";
 export {
+  SEAL_COLOPHON_SEAL_SIZE,
+  SEAL_COLOPHON_SEED,
+  sealColophonClasses,
+  sealColophonSealText,
+  sealColophonStampProps,
+  type SealColophonAlign,
+  type SealColophonProps,
+  type SealColophonSlots,
+} from "./components/seal-colophon";
+export {
   createRegistry,
   type Registry,
   type RegistryRecord,

@@ -43,6 +43,7 @@ export const CATALOG: DemoGroup[] = [
       entry("paper-theme", "宣纸主题", "MPaperTheme"),
       entry("border", "笔触边框", "MBorder"),
       entry("stamp", "印章", "MStamp"),
+      entry("seal-colophon", "落款", "MSealColophon"),
       entry("ink-transition", "落墨与转场", "MInkTransition"),
     ],
   },
