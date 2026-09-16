@@ -1,0 +1,127 @@
+@layer m.component {
+  /* 切过纸的页面：根元素铺上预设的纸色。变量由 applyPaperPreset 内联在 html 上，
+     深色主题下会被移除，这里就退回 tokens.css 的深色纸 */
+  :root[data-paper] {
+    background-color: rgb(var(--m-paper-rgb));
+  }
+
+  .m-paper-theme {
+    --m-paper-theme-size: 32px;
+    --m-paper-theme-gap: var(--m-space-3);
+    /* 纸样边上的一圈淡墨，选中后换成实墨 */
+    --m-paper-theme-ring: color-mix(in srgb, var(--m-ink) 22%, transparent);
+    --m-paper-theme-ring-checked: var(--m-ink);
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--m-paper-theme-gap);
+
+    &.m-paper-theme--sm {
+      --m-paper-theme-size: 24px;
+      --m-paper-theme-gap: var(--m-space-2);
+    }
+
+    &.m-paper-theme--lg {
+      --m-paper-theme-size: 44px;
+      --m-paper-theme-gap: var(--m-space-4);
+    }
+
+    &.m-paper-theme--disabled {
+      opacity: 0.5;
+    }
+  }
+
+  .m-paper-theme__swatch {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--m-space-1);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font: inherit;
+    font-size: 12px;
+    line-height: 1.4;
+    cursor: var(--m-cursor-pointer);
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:focus-visible .m-paper-theme__paper {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 3px;
+      border-radius: 50%;
+    }
+
+    &:disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+
+    &.m-paper-theme__swatch--checked {
+      color: var(--m-fg);
+    }
+  }
+
+  /* 纸样本体是 ::before：颜色、纹理、毛边遮罩都在它上面，外层只管尺寸、边圈和悬停位移 */
+  .m-paper-theme__paper {
+    position: relative;
+    display: block;
+    width: var(--m-paper-theme-size);
+    height: var(--m-paper-theme-size);
+    transition: transform var(--m-duration) var(--m-ease);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background-color: rgb(var(--m-paper-theme-swatch-rgb));
+      background-image: var(--m-paper-theme-swatch-texture, none);
+      background-size: 64px 64px;
+      box-shadow: inset 0 0 0 1px var(--m-paper-theme-ring);
+      transition: box-shadow var(--m-duration) var(--m-ease);
+    }
+  }
+
+  .m-paper-theme__swatch:hover .m-paper-theme__paper {
+    transform: translateY(-1px);
+  }
+
+  .m-paper-theme__swatch--checked .m-paper-theme__paper::before {
+    box-shadow: inset 0 0 0 2px var(--m-paper-theme-ring-checked);
+  }
+
+  .m-paper-theme__label {
+    white-space: nowrap;
+  }
+}
+
+@layer m.ink {
+  /* 页面根元素铺上按纸色生成的宣纸纹理 */
+  html.m-ink-ready[data-paper] {
+    background-image: var(--m-paper-theme-texture, none);
+    background-size: 384px 384px;
+  }
+
+  /* 纸样裁成毛边墨团；圆圈边框换成贴着毛边描出来的一圈墨（四向各投一次实心影，就是描边） */
+  html.m-ink-ready .m-paper-theme__paper {
+    filter: drop-shadow(1px 0 0 var(--m-paper-theme-ring))
+      drop-shadow(-1px 0 0 var(--m-paper-theme-ring)) drop-shadow(0 1px 0 var(--m-paper-theme-ring))
+      drop-shadow(0 -1px 0 var(--m-paper-theme-ring));
+
+    &::before {
+      border-radius: 0;
+      box-shadow: none;
+      mask: var(--m-paper-theme-swatch-mask) center / 100% 100% no-repeat;
+    }
+  }
+
+  html.m-ink-ready .m-paper-theme__swatch--checked .m-paper-theme__paper {
+    filter: drop-shadow(1.5px 0 0 var(--m-paper-theme-ring-checked))
+      drop-shadow(-1.5px 0 0 var(--m-paper-theme-ring-checked))
+      drop-shadow(0 1.5px 0 var(--m-paper-theme-ring-checked))
+      drop-shadow(0 -1.5px 0 var(--m-paper-theme-ring-checked));
+  }
+}

@@ -24,6 +24,7 @@ export { detectInkTier, type InkTier } from "@shuimo-design/core";
 export * from "./components/slider";
 export * from "./components/pagination";
 export * from "./components/dark-mode";
+export * from "./components/paper-theme";
 export * from "./components/border";
 export * from "./components/card";
 export * from "./components/stamp";

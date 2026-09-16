@@ -277,6 +277,32 @@ export {
 } from "./components/dark-mode";
 export type { DarkModeEmits } from "./components/dark-mode/types";
 export {
+  applyPaperPreset,
+  clearPaperPreset,
+  createPaperTheme,
+  focusedPaperSwatchIndex,
+  focusPaperSwatch,
+  isPaperPreset,
+  PAPER_PRESET_LABELS,
+  PAPER_PRESET_ORDER,
+  PAPER_THEME_STORAGE_KEY,
+  paperRootIsDark,
+  paperThemeClasses,
+  paperThemeNextIndex,
+  paperThemePresets,
+  paperThemeSwatches,
+  paperThemeVars,
+  readPaperPreset,
+  syncPaperVars,
+  type PaperThemeController,
+  type PaperThemeOptions,
+  type PaperThemeProps,
+  type PaperThemeSize,
+  type PaperThemeSnapshot,
+  type PaperThemeSwatch,
+} from "./components/paper-theme";
+export type { PaperThemeEmits } from "./components/paper-theme/types";
+export {
   createRegistry,
   type Registry,
   type RegistryRecord,

@@ -40,6 +40,7 @@ export const CATALOG: DemoGroup[] = [
     group: "特效",
     items: [
       entry("rice-paper", "宣纸", "MRicePaper"),
+      entry("paper-theme", "宣纸主题", "MPaperTheme"),
       entry("border", "笔触边框", "MBorder"),
       entry("stamp", "印章", "MStamp"),
       entry("ink-transition", "落墨与转场", "MInkTransition"),

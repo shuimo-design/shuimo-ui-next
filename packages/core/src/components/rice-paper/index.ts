@@ -394,10 +394,12 @@ export function createRicePaper(initial: RicePaperOptions): RicePaperController 
     if (stopSize) return;
     stopSize = observeSize(el, onResize, "border-box");
     readThemePaper();
+    // MPaperTheme / applyPaperPreset 切纸时把 --m-paper-rgb 内联写在 html 的 style 上（深浅切换后还会重写），
+    // 所以 style 属性也要盯：它变了就重读纸色，全局的纸才跟得上
     observer = new MutationObserver(readThemePaper);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"],
+      attributeFilter: ["data-theme", "style"],
     });
     // 只有 data-theme="system" 时纸色才会随系统变
     media = window.matchMedia(THEME_MEDIA);

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { applyPaperPreset, clearPaperPreset } from "@shuimo-design/core";
 import { MRicePaper } from ".";
 
 /** 浏览器会把 translate3d 写回 style；取横向位移的数值 */
@@ -142,6 +143,18 @@ describe("MRicePaper", () => {
     await vi.waitFor(() =>
       expect(screen.container.querySelectorAll(".m-rice-paper__ridge")).toHaveLength(4),
     );
+  });
+
+  it("follows the global paper preset when no paper prop is given", async () => {
+    clearPaperPreset();
+    const screen = await render(<MRicePaper tier={0} style={{ width: 200, height: 100 }} />);
+    const rootEl = screen.container.querySelector(".m-rice-paper") as HTMLElement;
+    // tokens.css 的默认纸
+    expect(getComputedStyle(rootEl).backgroundColor).toBe("rgb(252, 250, 240)");
+    applyPaperPreset("teaStained");
+    await expect.poll(() => getComputedStyle(rootEl).backgroundColor).toBe("rgb(240, 228, 200)");
+    clearPaperPreset();
+    await expect.poll(() => getComputedStyle(rootEl).backgroundColor).toBe("rgb(252, 250, 240)");
   });
 
   it("full-screen layout fills the viewport", async () => {

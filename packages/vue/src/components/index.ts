@@ -40,6 +40,7 @@ export * from "./loading";
 export * from "./delete-icon";
 export * from "./config-provider";
 export * from "./dark-mode";
+export * from "./paper-theme";
 export * from "./svg";
 export * from "./stamp";
 export * from "./skeleton";

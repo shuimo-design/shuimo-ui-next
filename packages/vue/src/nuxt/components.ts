@@ -53,6 +53,7 @@ export const COMPONENT_NAMES = [
   "MDeleteIcon",
   "MConfigProvider",
   "MDarkMode",
+  "MPaperTheme",
   "MSvg",
   "MStamp",
   "MSkeleton",

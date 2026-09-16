@@ -78,6 +78,7 @@ export const COMPONENT_STYLES = {
   MOverlayOutlet: { renders: ["MMessage", "MNotification", "MConfirm"] },
   // Vue 侧的每页条数下拉和跳页输入框是 MSelect / MInput；React 侧手写了同一套类名
   MPagination: { css: "pagination", renders: ["MInput", "MSelect"] },
+  MPaperTheme: { css: "paper-theme" },
   MPopconfirm: { css: "popconfirm", renders: ["popper", "MBorder", "MButton"] },
   MPopover: { css: "popover", renders: ["popper", "MBorder"] },
   MPrinter: { css: "printer" },
