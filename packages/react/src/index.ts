@@ -34,6 +34,7 @@ export * from "./components/switch";
 export * from "./components/scroll";
 export * from "./components/skeleton";
 export * from "./components/virtual-list";
+export * from "./components/virtual-tree";
 export * from "./components/list";
 export * from "./components/breadcrumb";
 export * from "./components/steps";

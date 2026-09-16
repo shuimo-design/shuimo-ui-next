@@ -823,12 +823,10 @@ export {
   resolveTreeFields,
   toggleTreeKey,
   treeCheckState,
-  treeCheckboxClasses,
-  treeCheckboxInk,
   treeInkStyle,
   treeKeyAction,
   treeNodeClasses,
-  TREE_CHECKBOX_BRUSH,
+  treeRowClasses,
   TREE_COLLAPSE_LABEL,
   TREE_EXPAND_LABEL,
   type NextCheckedOptions,
@@ -844,8 +842,25 @@ export {
   type TreeNodeState,
   type TreeProps,
   type TreeRows,
+  type TreeRowState,
   type TreeSlots,
 } from "./components/tree";
+export {
+  createVirtualTreeFocus,
+  flattenVirtualTree,
+  virtualTreeClasses,
+  virtualTreeResumesFocus,
+  virtualTreeRootStyle,
+  virtualTreeRowIndexes,
+  type VirtualTreeFocus,
+  type VirtualTreeRow,
+} from "./components/virtual-tree";
+export type {
+  VirtualTreeEmits,
+  VirtualTreeExpose,
+  VirtualTreeProps,
+  VirtualTreeSlots,
+} from "./components/virtual-tree/types";
 export {
   TREE_CONTEXT_ERROR,
   TREE_UNCHECKED,

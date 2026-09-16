@@ -42,6 +42,7 @@ export const COMPONENT_NAMES = [
   "MGrid",
   "MCell",
   "MVirtualList",
+  "MVirtualTree",
   "MMenu",
   "MMenuItem",
   "MDivider",

@@ -75,3 +75,7 @@ pnpm -C packages/react exec vp test src/components/<kebab>
 ## 登记
 
 新组件要登记三处：`packages/vue/src/components/index.ts`、`packages/react/src/index.ts`，以及 `packages/vue/src/nuxt/components.ts` 的 `COMPONENT_NAMES`（`pnpm gen:meta` 会校验一致）。
+
+有必填 prop 的组件还要往 `scripts/check-ssr.ts` 的 `MINIMAL_PROPS` 里加一份最小可渲染 props——不加的话服务端渲染冒烟只会以一句难懂的渲染报错失败，不会告诉你该去补表。
+
+文档站是手写的清单：`playground/src/shared/catalog.ts` 加一项，`playground/src/vue/demos/` 和 `playground/src/react/demos/` 各放一个 `<Name>Demo`（`assertComplete` 启动时校验两边都有）。API 表不用手写，`gen:meta` 从 core 的类型里生成。

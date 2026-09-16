@@ -30,6 +30,7 @@ export * from "./pagination";
 export * from "./table";
 export * from "./grid";
 export * from "./virtual-list";
+export * from "./virtual-tree";
 export * from "./menu";
 export * from "./divider";
 export * from "./loading";

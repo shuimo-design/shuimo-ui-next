@@ -1,0 +1,227 @@
+{
+  "name": "MVirtualTree",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MVirtualTree"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MVirtualTree"
+    }
+  },
+  "attributes": [
+    {
+      "name": "itemHeight",
+      "description": "每行固定高度 px；传了走定高模式，不量尺寸",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "itemHeight"
+      }
+    },
+    {
+      "name": "estimatedItemHeight",
+      "description": "变高模式下没量过的行先按这个高度估，默认 32",
+      "default": "32",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "estimatedItemHeight"
+      }
+    },
+    {
+      "name": "buffer",
+      "description": "可视区上下各多渲染几行做缓冲，默认 5",
+      "default": "5",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "buffer"
+      }
+    },
+    {
+      "name": "height",
+      "description": "容器高度，数字按 px，字符串原样用；不传时为 300px，也可以用 CSS 覆盖 --m-virtual-tree-h",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "height"
+      }
+    },
+    {
+      "name": "data",
+      "description": "树数据",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "TreeNodeData[]"
+      },
+      "react": {
+        "name": "data"
+      }
+    },
+    {
+      "name": "fieldNames",
+      "description": "字段名映射",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeFieldNames | undefined"
+      },
+      "react": {
+        "name": "fieldNames"
+      }
+    },
+    {
+      "name": "checkable",
+      "description": "显示勾选框",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "checkable"
+      }
+    },
+    {
+      "name": "checkStrictly",
+      "description": "勾选时父子不联动（各自独立）",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "checkStrictly"
+      }
+    },
+    {
+      "name": "defaultExpandAll",
+      "description": "初始展开全部",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "defaultExpandAll"
+      }
+    },
+    {
+      "name": "selectable",
+      "description": "点击节点文字可选中",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "selectable"
+      }
+    },
+    {
+      "name": "expandedKeys",
+      "description": "展开的节点 key",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeKey[] | undefined"
+      },
+      "react": {
+        "name": "expandedKeys",
+        "extra": ["defaultExpandedKeys", "onExpandedKeysChange"]
+      }
+    },
+    {
+      "name": "checkedKeys",
+      "description": "勾选的节点 key（只含复选框真正勾上的，半选不算）",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeKey[] | undefined"
+      },
+      "react": {
+        "name": "checkedKeys",
+        "extra": ["defaultCheckedKeys", "onCheckedKeysChange"]
+      }
+    },
+    {
+      "name": "selectedKey",
+      "description": "当前高亮的节点 key",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TreeKey | undefined"
+      },
+      "react": {
+        "name": "selectedKey",
+        "extra": ["defaultSelectedKey", "onSelectedKeyChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:expandedKeys"
+    },
+    {
+      "name": "update:checkedKeys"
+    },
+    {
+      "name": "update:selectedKey"
+    },
+    {
+      "name": "scroll",
+      "description": "滚动时，参数是 scrollTop",
+      "react": {
+        "name": "onScroll"
+      }
+    },
+    {
+      "name": "nodeClick",
+      "description": "点击节点行（禁用节点不触发）；键盘回车 / 空格也算",
+      "react": {
+        "name": "onNodeClick"
+      }
+    },
+    {
+      "name": "check",
+      "description": "勾选态变化，带上变化后的全部已勾选 key",
+      "react": {
+        "name": "onCheck"
+      }
+    },
+    {
+      "name": "expand",
+      "description": "展开 / 收起",
+      "react": {
+        "name": "onExpand"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "自定义节点文字，作用域 { node, level }"
+    }
+  ]
+}

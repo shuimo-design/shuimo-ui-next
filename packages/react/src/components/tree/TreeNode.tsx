@@ -2,12 +2,13 @@ import { useCallback, useId, type CSSProperties, type KeyboardEvent, type MouseE
 import {
   treeCheckState,
   treeNodeClasses,
+  treeRowClasses,
   TREE_COLLAPSE_LABEL,
   TREE_EXPAND_LABEL,
   type TreeNode as TreeNodeType,
 } from "@shuimo-design/core";
+import { MCheckbox } from "../checkbox";
 import { useTreeContext } from "./context";
-import { TreeCheckbox } from "./TreeCheckbox";
 
 /** 递归渲染一个节点。Vue 那边是 SFC 自引用，这边就是函数组件自己调自己 */
 export function TreeNode({ node }: { node: TreeNodeType }) {
@@ -49,7 +50,7 @@ export function TreeNode({ node }: { node: TreeNodeType }) {
     >
       <div
         ref={rowRef}
-        className="m-tree-node__row"
+        className={treeRowClasses({ expanded, selected, disabled: node.disabled })}
         tabIndex={0}
         onClick={(event: MouseEvent<HTMLElement>) => tree.select(node, event.nativeEvent)}
         onKeyDown={onKeyDown}
@@ -57,7 +58,7 @@ export function TreeNode({ node }: { node: TreeNodeType }) {
         {hasChildren ? (
           <button
             type="button"
-            className="m-tree-node__arrow"
+            className="m-tree-row__arrow"
             tabIndex={-1}
             aria-label={expanded ? TREE_COLLAPSE_LABEL : TREE_EXPAND_LABEL}
             onClick={(event: MouseEvent<HTMLElement>) => {
@@ -66,21 +67,23 @@ export function TreeNode({ node }: { node: TreeNodeType }) {
             }}
           >
             {/* 实心小三角，形状全靠 CSS（m.ink 层换成毛边墨尖遮罩），转向也在它身上 */}
-            <span className="m-tree-node__arrow-shape" />
+            <span className="m-tree-row__arrow-shape" />
           </button>
         ) : (
-          <span className="m-tree-node__arrow m-tree-node__arrow--placeholder" aria-hidden="true" />
+          <span className="m-tree-row__arrow m-tree-row__arrow--placeholder" aria-hidden="true" />
         )}
         {tree.checkable ? (
-          <TreeCheckbox
-            className="m-tree-node__checkbox"
+          <MCheckbox
+            className="m-tree-row__checkbox"
             checked={check.checked}
             indeterminate={check.indeterminate}
             disabled={node.disabled}
-            onChange={(value) => tree.setChecked(node, value)}
+            // 点勾选框不该顺带把整行选中
+            onClick={(event: MouseEvent<HTMLLabelElement>) => event.stopPropagation()}
+            onCheckedChange={(value) => tree.setChecked(node, value)}
           />
         ) : null}
-        <span id={labelId} className="m-tree-node__label">
+        <span id={labelId} className="m-tree-row__label">
           {tree.renderLabel({ node, level: node.level })}
         </span>
       </div>

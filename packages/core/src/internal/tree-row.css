@@ -1,0 +1,127 @@
+/* 树的一行：MTree 和 MVirtualTree 共用的行皮肤（箭头、勾选框、文字、hover / 选中 / 禁用）。
+   两个组件只差外层：MTree 的行外面套着 .m-tree-node（子树的收展动画挂在它身上），
+   MVirtualTree 的行本身就是 treeitem，全部摊平在一个滚动容器里。
+   变量 --m-tree-indent / --m-tree-row-h / --m-tree-arrow-size 由各自的根元素给默认值，
+   --m-tree-level 由每一行给，--m-tree-tip-mask（墨尖）来自 core 的 treeInkStyle()。 */
+@layer m.component {
+  .m-tree-row {
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    min-height: var(--m-tree-row-h, 32px);
+    padding-right: var(--m-space-2);
+    padding-left: calc(var(--m-tree-indent, 28px) * var(--m-tree-level, 0));
+    color: var(--m-fg);
+    cursor: var(--m-cursor-pointer);
+    user-select: none;
+    transition: color var(--m-duration) var(--m-ease);
+
+    /* 行底色单独一层，方便水墨层只给底色上滤镜 */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: var(--m-radius);
+      background: transparent;
+      transition: background-color var(--m-duration) var(--m-ease);
+    }
+
+    &:hover {
+      color: var(--m-accent);
+    }
+
+    &:hover::before {
+      background: color-mix(in srgb, var(--m-ink) 6%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  .m-tree-row--selected {
+    color: var(--m-accent);
+  }
+
+  .m-tree-row--selected::before {
+    background: color-mix(in srgb, var(--m-accent) 10%, transparent);
+  }
+
+  .m-tree-row--disabled {
+    color: var(--m-fg-muted);
+    cursor: var(--m-cursor-disabled);
+  }
+
+  .m-tree-row--disabled:hover::before {
+    background: transparent;
+  }
+
+  .m-tree-row__arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-tree-arrow-size, 20px);
+    height: var(--m-tree-arrow-size, 20px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-ink);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+  }
+
+  /* 展开箭头：一枚实心小三角（旧版 arrow.webp 的形状），收起时尖朝右，展开后转成朝下 */
+  .m-tree-row__arrow-shape {
+    display: block;
+    width: 9px;
+    height: 7px;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform: rotate(-90deg);
+    transition: transform var(--m-duration) var(--m-ease);
+  }
+
+  .m-tree-row--expanded .m-tree-row__arrow-shape {
+    transform: rotate(0deg);
+  }
+
+  .m-tree-row__checkbox {
+    flex-shrink: 0;
+  }
+
+  .m-tree-row__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@layer m.ink {
+  /* 三角换成毛边墨尖遮罩（按种子生成，尖朝上；这里先转半圈让它朝右，再按展开态转向） */
+  html.m-ink-ready .m-tree-row__arrow-shape {
+    clip-path: none;
+    mask: var(--m-tree-tip-mask) center / contain no-repeat;
+    transform: rotate(90deg);
+  }
+
+  html.m-ink-ready .m-tree-row--expanded .m-tree-row__arrow-shape {
+    transform: rotate(180deg);
+  }
+
+  html.m-ink-ready .m-tree-row::before {
+    filter: url(#m-ink-bleed-light);
+  }
+}

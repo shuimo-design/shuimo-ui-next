@@ -21,6 +21,7 @@
 /* 组件之间共用的内部样式 */
 @import "../internal/modal-ink.css";
 @import "../internal/popper/popper.css";
+@import "../internal/tree-row.css";
 
 /* 组件样式，按目录名排序 */
 @import "../components/alert/alert.css";
@@ -68,3 +69,4 @@
 @import "../components/tooltip/tooltip.css";
 @import "../components/tree/tree.css";
 @import "../components/virtual-list/virtual-list.css";
+@import "../components/virtual-tree/virtual-tree.css";

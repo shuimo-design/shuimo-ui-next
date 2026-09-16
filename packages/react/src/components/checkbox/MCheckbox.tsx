@@ -1,4 +1,10 @@
-import { useState, type CSSProperties, type ChangeEvent, type ReactNode } from "react";
+import {
+  useState,
+  type CSSProperties,
+  type ChangeEvent,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import {
   checkboxAriaChecked,
   checkboxBrush,
@@ -26,6 +32,8 @@ export interface MCheckboxProps extends CoreCheckboxProps {
   onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
   /** 文字，优先于 label */
   children?: ReactNode;
+  /** 落在整个勾选框（label）上的点击；放在可点的行里时用它拦住冒泡，免得顺带把行选中 */
+  onClick?: (event: MouseEvent<HTMLLabelElement>) => void;
   className?: string;
   style?: CSSProperties;
 }
@@ -72,6 +80,7 @@ export function MCheckbox(props: MCheckboxProps) {
         .filter(Boolean)
         .join(" ")}
       style={{ ...inkStyle, ...props.style } as CSSProperties}
+      onClick={props.onClick}
     >
       <input
         className="m-checkbox__input"

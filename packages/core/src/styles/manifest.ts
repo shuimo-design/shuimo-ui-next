@@ -24,7 +24,7 @@ export const LAYER_ORDER = "@layer m.reset, m.tokens, m.base, m.component, m.ink
 export const STYLE_BASE = "base";
 
 /** 组件之间共用的样式块（src/internal 下的），按需时当成一个普通文件 */
-export const SHARED_STYLES = ["modal-ink", "popper"] as const;
+export const SHARED_STYLES = ["modal-ink", "popper", "tree-row"] as const;
 export type SharedStyle = (typeof SHARED_STYLES)[number];
 
 interface StyleEntry {
@@ -96,8 +96,10 @@ export const COMPONENT_STYLES = {
   MTabs: { css: "tabs" },
   MTag: { css: "tag" },
   MTooltip: { css: "tooltip", renders: ["popper", "MBorder"] },
-  MTree: { css: "tree" },
+  // 行的皮肤是两棵树共用的 tree-row 块；checkable 时行里是 MCheckbox
+  MTree: { css: "tree", renders: ["tree-row", "MCheckbox"] },
   MVirtualList: { css: "virtual-list" },
+  MVirtualTree: { css: "virtual-tree", renders: ["tree-row", "MCheckbox"] },
 } as const satisfies Record<string, StyleEntry>;
 
 export type StyledComponentName = keyof typeof COMPONENT_STYLES;

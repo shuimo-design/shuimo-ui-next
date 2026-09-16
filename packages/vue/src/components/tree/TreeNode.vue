@@ -10,6 +10,7 @@ import {
 import {
   treeCheckState,
   treeNodeClasses,
+  treeRowClasses,
   TREE_COLLAPSE_LABEL,
   TREE_EXPAND_LABEL,
   type TreeLabelScope,
@@ -40,6 +41,9 @@ const classes = computed(() =>
     leaf: !hasChildren.value,
   }),
 );
+const rowClasses = computed(() =>
+  treeRowClasses({ expanded: expanded.value, selected: selected.value, disabled: node.disabled }),
+);
 
 /** 用函数组件把上下文里的插槽渲染出来，递归层级里不用逐层转发插槽 */
 const Label: FunctionalComponent<TreeLabelScope> = (scope) => tree.renderLabel(scope);
@@ -66,7 +70,7 @@ onBeforeUnmount(() => tree.registerRow(node.key, null));
   >
     <div
       ref="row"
-      class="m-tree-node__row"
+      :class="rowClasses"
       tabindex="0"
       @click="tree.select(node, $event)"
       @keydown="onKeydown"
@@ -74,25 +78,25 @@ onBeforeUnmount(() => tree.registerRow(node.key, null));
       <button
         v-if="hasChildren"
         type="button"
-        class="m-tree-node__arrow"
+        class="m-tree-row__arrow"
         tabindex="-1"
         :aria-label="expanded ? TREE_COLLAPSE_LABEL : TREE_EXPAND_LABEL"
         @click.stop="tree.toggleExpand(node)"
       >
         <!-- 实心小三角，形状全靠 CSS（m.ink 层换成毛边墨尖遮罩），转向也在它身上 -->
-        <span class="m-tree-node__arrow-shape" />
+        <span class="m-tree-row__arrow-shape" />
       </button>
-      <span v-else class="m-tree-node__arrow m-tree-node__arrow--placeholder" aria-hidden="true" />
+      <span v-else class="m-tree-row__arrow m-tree-row__arrow--placeholder" aria-hidden="true" />
       <MCheckbox
         v-if="tree.checkable"
-        class="m-tree-node__checkbox"
+        class="m-tree-row__checkbox"
         :model-value="check.checked"
         :indeterminate="check.indeterminate"
         :disabled="node.disabled"
         @click.stop
         @update:model-value="(value: boolean) => tree.setChecked(node, value)"
       />
-      <span :id="labelId" class="m-tree-node__label">
+      <span :id="labelId" class="m-tree-row__label">
         <Label :node="node" :level="node.level" />
       </span>
     </div>

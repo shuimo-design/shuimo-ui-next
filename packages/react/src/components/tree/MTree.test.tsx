@@ -55,7 +55,7 @@ const clickCheckbox = async (screen: Screen, name: string) => {
   await userEvent.click(label);
 };
 const rowOf = (screen: Screen, name: string) => {
-  const row = item(screen, name).element().querySelector<HTMLElement>(".m-tree-node__row");
+  const row = item(screen, name).element().querySelector<HTMLElement>(".m-tree-row");
   if (!row) throw new Error(`没有 ${name} 的节点行`);
   return row;
 };
@@ -157,8 +157,8 @@ describe("MTree", () => {
     await expect.element(item(screen, "宋")).toHaveAttribute("aria-expanded", "false");
     await vi.waitFor(() => expect(onChange).toHaveBeenCalledWith(["tang"]));
     // 叶子没有箭头，父节点的箭头是一枚三角
-    expect(item(screen, "唐").element().querySelector(".m-tree-node__arrow-shape")).not.toBeNull();
-    expect(item(screen, "李白").element().querySelector(".m-tree-node__arrow-shape")).toBeNull();
+    expect(item(screen, "唐").element().querySelector(".m-tree-row__arrow-shape")).not.toBeNull();
+    expect(item(screen, "李白").element().querySelector(".m-tree-row__arrow-shape")).toBeNull();
   });
 
   it("maps field names and renders the label render prop", async () => {

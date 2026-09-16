@@ -9,10 +9,7 @@
  * 唯一碰 DOM 的是 createTreeRows()：方向键要把焦点挪到另一行上，得拿着行元素。
  * 它没有驱动渲染的状态，所以不写成控制器，就是一张 key → 元素的表。
  */
-import { generateInkShape } from "../../ink/assets/shape";
-import { brushLineUrl } from "../../ink/assets/line";
 import { inkTipUrl } from "../../ink/assets/tip";
-import type { BrushBorderControllerOptions } from "../../ink/stroke";
 import { TREE_UNCHECKED, type TreeCheckState } from "../../context/tree";
 import type { TreeFieldNames, TreeKey, TreeNode, TreeNodeData } from "./types";
 
@@ -231,6 +228,12 @@ export interface TreeKeyContext {
   expanded: ReadonlySet<TreeKey>;
   /** 事件是不是落在行本身（落在行里的勾选框上时，回车 / 空格交给它自己处理） */
   selfTarget: boolean;
+  /**
+   * 已经算好的可见序和这一行在里面的下标。不传就现遍历一遍树再查——MTree 几十行无所谓，
+   * 虚拟树是给几万行准备的，每次按键都遍历全树不合适，它每次渲染本来就有一份现成的
+   */
+  visible?: readonly TreeNode[];
+  index?: number;
 }
 
 /**
@@ -238,8 +241,8 @@ export interface TreeKeyContext {
  * 谁都不碰 DOM —— 真正去聚焦的是壳手里的 createTreeRows()。
  */
 export function treeKeyAction(node: TreeNode, key: string, ctx: TreeKeyContext): TreeKeyAction {
-  const list = visibleTreeNodes(ctx.nodes, ctx.expanded);
-  const index = list.findIndex((n) => n.key === node.key);
+  const list = ctx.visible ?? visibleTreeNodes(ctx.nodes, ctx.expanded);
+  const index = ctx.index ?? list.findIndex((n) => n.key === node.key);
   const focusAt = (i: number): TreeKeyAction => {
     const target = list[i];
     return target ? { prevent: true, kind: "focus", key: target.key } : NO_ACTION;
@@ -281,7 +284,8 @@ export function treeKeyAction(node: TreeNode, key: string, ctx: TreeKeyContext):
 /** key → 行元素。方向键要把焦点挪过去，非得拿着元素不可，所以这一小块 DOM 留在 core */
 export interface TreeRows {
   set(key: TreeKey, el: HTMLElement | null): void;
-  focus(key: TreeKey): void;
+  /** 聚焦一行。目标行不在表里（虚拟树滚出渲染窗口的行已下线）返回 false，调用方先滚过去再补聚焦 */
+  focus(key: TreeKey): boolean;
 }
 
 export function createTreeRows(): TreeRows {
@@ -292,7 +296,10 @@ export function createTreeRows(): TreeRows {
       else rows.delete(key);
     },
     focus(key) {
-      rows.get(key)?.focus();
+      const el = rows.get(key);
+      if (!el) return false;
+      el.focus();
+      return true;
     },
   };
 }
@@ -306,7 +313,7 @@ export interface TreeNodeState {
   leaf: boolean;
 }
 
-/** 节点的类名。两个壳都调它，才保证输出的字符串一模一样（顺序也一样） */
+/** MTree 节点外层（套着行和子树）的类名。两个壳都调它，才保证输出的字符串一模一样（顺序也一样） */
 export function treeNodeClasses(state: TreeNodeState): string {
   const list = ["m-tree-node"];
   if (state.expanded) list.push("m-tree-node--expanded");
@@ -316,58 +323,28 @@ export function treeNodeClasses(state: TreeNodeState): string {
   return list.join(" ");
 }
 
+export interface TreeRowState {
+  expanded: boolean;
+  selected: boolean;
+  disabled: boolean;
+}
+
+/**
+ * 行（箭头 + 勾选框 + 文字那一横条）的类名，皮肤在 internal/tree-row.css。
+ * MTree 的行套在 .m-tree-node 里，MVirtualTree 的行本身就是 treeitem，两个组件共用这一套
+ */
+export function treeRowClasses(state: TreeRowState): string {
+  const list = ["m-tree-row"];
+  if (state.expanded) list.push("m-tree-row--expanded");
+  if (state.selected) list.push("m-tree-row--selected");
+  if (state.disabled) list.push("m-tree-row--disabled");
+  return list.join(" ");
+}
+
 // 展开箭头在 m.ink 层换成毛边墨尖：全库共用一张，头一次用到时才生成（引用恒定，服务端也算得出来）
 let treeInk: Record<string, string> | undefined;
 
 export function treeInkStyle(): Record<string, string> {
   treeInk ??= { "--m-tree-tip-mask": `url("${inkTipUrl({ seed: 5, width: 9, height: 7 })}")` };
   return treeInk;
-}
-
-/* ---------- 行里的勾选框 ---------- */
-
-/**
- * 树的勾选框用的是 MCheckbox 那套皮肤（类名、遮罩参数都一样）。
- * Vue 那边直接用 MCheckbox 组件；React 还没有 checkbox，MTree 自己画一个同样的框，
- * 所以这里放一份两边通用的墨迹参数 —— 等 checkbox 也搬过来，这两个函数搬进它的 core 模块即可。
- */
-export const TREE_CHECKBOX_BRUSH: BrushBorderControllerOptions = {
-  strokeWidth: 2,
-  seed: 11,
-  overshoot: 0.6,
-  wobble: 0.4,
-  flyingWhite: 0.05,
-};
-
-/** 勾选墨块与半选一横按 4 倍画幅生成再缩到 10px 左右（直接画 10px 会被晕染位移撕碎） */
-const CHECKBOX_MARK_SCALE = 4;
-
-let checkboxInk: Record<string, string> | undefined;
-
-export function treeCheckboxInk(): Record<string, string> {
-  if (checkboxInk) return checkboxInk;
-  const mark = generateInkShape(40, 36, { seed: 11, raggedness: 0.9, corner: 0.1 });
-  // 笔触线画幅两端各留 thickness * 1.5 + wobble 的余量（这里是 16px），72 长的画幅里笔画本身约 40px，缩后正好 10px
-  const bar = brushLineUrl({ seed: 11, length: 72, thickness: 10, flyingWhite: 0.04, wobble: 1 });
-  checkboxInk = {
-    "--m-checkbox-mark-mask": `url("${mark.url}")`,
-    "--m-checkbox-mark-pad": `${mark.padding / CHECKBOX_MARK_SCALE}px`,
-    "--m-checkbox-bar-mask": `url("${bar.url}")`,
-    "--m-checkbox-bar-w": `${bar.width / CHECKBOX_MARK_SCALE}px`,
-    "--m-checkbox-bar-band": `${bar.height / CHECKBOX_MARK_SCALE}px`,
-  };
-  return checkboxInk;
-}
-
-/** 勾选框的类名，和 MCheckbox 输出的完全一致 */
-export function treeCheckboxClasses(state: {
-  checked: boolean;
-  indeterminate: boolean;
-  disabled: boolean;
-}): string {
-  const list = ["m-checkbox"];
-  if (state.checked) list.push("m-checkbox--checked");
-  if (state.indeterminate) list.push("m-checkbox--indeterminate");
-  if (state.disabled) list.push("m-checkbox--disabled");
-  return list.join(" ");
 }

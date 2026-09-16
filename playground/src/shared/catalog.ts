@@ -77,6 +77,7 @@ export const CATALOG: DemoGroup[] = [
       entry("table", "表格", "MTable", "MTableColumn"),
       entry("grid", "栅格", "MGrid", "MCell"),
       entry("virtual-list", "虚拟列表", "MVirtualList"),
+      entry("virtual-tree", "虚拟树", "MVirtualTree"),
       entry("steps", "步骤条", "MSteps", "MStep"),
       entry("tabs", "标签页", "MTabs", "MTabPane"),
     ],

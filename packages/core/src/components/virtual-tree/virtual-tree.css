@@ -1,0 +1,53 @@
+/* 虚拟滚动树：容器的滚动 / 占位 / 平移这一套和 MVirtualList 同构；
+   行（也就是 treeitem）的皮肤在 internal/tree-row.css，和 MTree 共用同一份，
+   只是没有嵌套的子树容器——可见的行全部摊平成一列，按下标渲染。 */
+@layer m.component {
+  .m-virtual-tree {
+    --m-virtual-tree-h: 300px;
+    --m-tree-indent: 28px;
+    --m-tree-row-h: 32px;
+    --m-tree-arrow-size: 20px;
+    position: relative;
+    box-sizing: border-box;
+    height: var(--m-virtual-tree-h);
+    overflow: hidden auto;
+    color: var(--m-fg);
+    /* 滚动条收细、去掉轨道，只留一条把手 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--m-border) transparent;
+    overscroll-behavior: contain;
+
+    /* 焦点行被滚出窗口后焦点落在容器上（tabindex=-1），键盘用户得看得出树还拿着焦点 */
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  .m-virtual-tree__phantom {
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .m-virtual-tree__body {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    will-change: transform;
+  }
+
+  /* 定高模式高度写死在行内：行皮肤的 min-height 必须让位（min-height 大于 height 时 min-height 赢，
+     itemHeight 传 24 会被顶回 32，行的真实高度和前缀和对不上，越滚越漂）；内容多了裁掉，免得撑坏位置计算 */
+  .m-virtual-tree .m-tree-row[style*="height"] {
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+@layer m.ink {
+  /* 滚动条把手蘸墨 */
+  html.m-ink-ready .m-virtual-tree {
+    scrollbar-color: var(--m-ink) transparent;
+  }
+}

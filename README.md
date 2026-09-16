@@ -1,6 +1,6 @@
 # shuimo-ui next
 
-水墨风组件库的下一代，**同时支持 Vue 3 和 React**。59 个组件，宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG，仓库里没有一张位图。
+水墨风组件库的下一代，**同时支持 Vue 3 和 React**。61 个组件，宣纸、远山、毛边、笔触、印章全部由代码现算成 SVG，仓库里没有一张位图。
 
 **组件文档：<https://shuimo-ui-next.vercel.app>** —— 分成两版，[Vue 版](https://shuimo-ui-next.vercel.app/vue/)和 [React 版](https://shuimo-ui-next.vercel.app/react/)各是一个独立的单框架站：看 React 的人不会在文档里读到 `v-model` 和插槽，Vue 版的页面里也没有一行 React。两边的组件清单、外壳、样式和 API 数据都是同一份，只是各自挑自己那一列。
 
