@@ -48,3 +48,4 @@ export * from "./alert";
 export * from "./empty";
 export * from "./tabs";
 export * from "./overlay-outlet";
+export * from "./back-top";

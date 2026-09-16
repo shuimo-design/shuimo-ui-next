@@ -59,3 +59,4 @@ export * from "./components/date-picker";
 export * from "./components/tabs";
 export * from "./components/table";
 export * from "./components/grid";
+export * from "./components/back-top";

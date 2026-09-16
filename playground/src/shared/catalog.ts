@@ -108,6 +108,7 @@ export const CATALOG: DemoGroup[] = [
       entry("svg", "图标", "MSvg"),
       entry("empty", "空状态", "MEmpty"),
       entry("skeleton", "骨架屏", "MSkeleton", "MSkeletonItem"),
+      entry("back-top", "回到顶部", "MBackTop"),
     ],
   },
 ];

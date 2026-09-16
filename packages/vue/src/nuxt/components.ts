@@ -63,4 +63,5 @@ export const COMPONENT_NAMES = [
   "MEmpty",
   "MTabs",
   "MTabPane",
+  "MBackTop",
 ] as const;

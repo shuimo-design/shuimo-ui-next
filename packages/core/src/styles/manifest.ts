@@ -35,6 +35,8 @@ interface StyleEntry {
 export const COMPONENT_STYLES = {
   MAlert: { css: "alert" },
   MAvatar: { css: "avatar" },
+  // 默认那枚「顶」字印是 MStamp
+  MBackTop: { css: "back-top", renders: ["MStamp"] },
   MBadge: { css: "badge" },
   MBorder: { css: "border" },
   MBreadcrumb: { css: "breadcrumb" },

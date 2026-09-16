@@ -1023,3 +1023,21 @@ export {
   type ResolvedGridCell,
 } from "./components/grid";
 export type { OverlayOutletProps } from "./components/overlay-outlet";
+export {
+  BACK_TOP_LABEL,
+  BACK_TOP_OFFSET,
+  BACK_TOP_TEXT,
+  BACK_TOP_TRANSITION,
+  BACK_TOP_VISIBILITY_HEIGHT,
+  backTopClasses,
+  backTopStamp,
+  backTopStyle,
+  createBackTop,
+  resolveBackTopTarget,
+  type BackTopController,
+  type BackTopEmits,
+  type BackTopOptions,
+  type BackTopProps,
+  type BackTopSlots,
+  type BackTopSnapshot,
+} from "./components/back-top";
