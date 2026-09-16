@@ -81,6 +81,7 @@ export function MImage(props: MImageProps) {
   const [failedSrc, setFailedSrc] = useState<string | undefined>(undefined);
   const status = imageStatus({ src, loadedSrc, failedSrc });
   const previewable = imagePreviewable({ preview, status });
+  const triggerAttrs = imageTriggerAttrs(previewable);
   const sized = imageSized({ width, height });
 
   function onLoad(event: SyntheticEvent<HTMLImageElement, Event>) {
@@ -236,7 +237,9 @@ export function MImage(props: MImageProps) {
           src={src}
           alt={alt}
           loading={imageLoading(lazy)}
-          {...imageTriggerAttrs(previewable)}
+          // core 给的是 DOM 属性名，React 的 tabIndex 要单独映射
+          tabIndex={triggerAttrs.tabindex}
+          aria-haspopup={triggerAttrs["aria-haspopup"]}
           onLoad={onLoad}
           onError={onError}
           onClick={() => previewable && viewer.open(start)}
