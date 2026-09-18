@@ -6,6 +6,7 @@
     --m-table-head-bg: color-mix(in srgb, var(--m-ink) 12%, transparent);
     --m-table-hover-bg: color-mix(in srgb, var(--m-ink) 7%, transparent);
     --m-table-stripe-bg: color-mix(in srgb, var(--m-ink) 4%, transparent);
+    --m-table-selected-bg: color-mix(in srgb, var(--m-accent) 10%, transparent);
     --m-table-cell-py: 9px;
     --m-table-cell-px: var(--m-space-2);
     position: relative;
@@ -114,6 +115,14 @@
     background-color: var(--m-table-hover-bg);
   }
 
+  /* 选中的行：默认皮肤铺一层淡朱砂，压过斑马纹和 hover */
+  .m-table__row--selected,
+  .m-table__row--selected:hover,
+  .m-table--stripe .m-table__row--selected:nth-child(even),
+  .m-table--stripe .m-table__row--selected:hover {
+    background-color: var(--m-table-selected-bg);
+  }
+
   .m-table__th,
   .m-table__td {
     min-width: 0;
@@ -131,6 +140,12 @@
   .m-table__th--right,
   .m-table__td--right {
     text-align: right;
+  }
+
+  /* 选择列：只装一个勾选框，左右留和普通格一样的边距 */
+  .m-table__th--selection,
+  .m-table__td--selection {
+    line-height: 0;
   }
 
   /* 排序按钮铺满表头文字区，文字和指示器一起可点；键盘焦点落在它身上 */
@@ -240,6 +255,22 @@
   /* 斑马纹在 hover 时让位给墨晕 */
   html.m-ink-ready .m-table--stripe .m-table__row--body:hover {
     background-color: transparent;
+  }
+
+  /* 选中的行不铺朱砂底，同一团毛边淡墨常驻，hover 时再深一点 */
+  html.m-ink-ready .m-table__row--selected,
+  html.m-ink-ready .m-table__row--selected:hover,
+  html.m-ink-ready .m-table--stripe .m-table__row--selected:nth-child(even),
+  html.m-ink-ready .m-table--stripe .m-table__row--selected:hover {
+    background-color: transparent;
+  }
+
+  html.m-ink-ready .m-table__row--selected::before {
+    opacity: 0.16;
+  }
+
+  html.m-ink-ready .m-table__row--selected:hover::before {
+    opacity: 0.22;
   }
 
   /* 点亮的那枚三角换成一粒毛边墨点（MTable 内联在排序按钮的变量里） */

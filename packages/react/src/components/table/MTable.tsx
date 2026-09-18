@@ -11,6 +11,10 @@ import {
   nextTableSort,
   resolveTableColumns,
   sortTableRows,
+  TABLE_SELECT_ALL_LABEL,
+  TABLE_SELECTION_CELL_CLASS,
+  TABLE_SELECTION_HEAD_CLASS,
+  TABLE_SELECTION_LABEL,
   tableCellScope,
   tableCellText,
   tableCellValue,
@@ -18,18 +22,25 @@ import {
   tableGridTemplate,
   tableHeadScope,
   tableInk,
+  tableRowClasses,
   tableRowId,
+  tableSelectedRows,
+  tableSelectionState,
   tableSortAria,
   tableSortClasses,
   tableSortInk,
   tableSortOrder,
+  toggleAllTableSelection,
+  toggleTableSelection,
   type TableColumnConfig,
   type TableProps as CoreTableProps,
   type TableRow,
+  type TableRowKeyValue,
   type TableSort,
 } from "@shuimo-design/core";
 import { IconCaretDown, IconCaretUp } from "../../icons";
 import { useMounted, useSize } from "../../runtime";
+import { MCheckbox } from "../checkbox";
 import { MTableColumn, type MTableColumnProps } from "./MTableColumn";
 
 /** React 这边的一列：render / renderHead 返回 ReactNode */
@@ -45,6 +56,16 @@ export interface MTableProps<Row extends object = TableRow> extends Omit<
   sort?: TableSort | null;
   /** 排序变化；null 是取消排序 */
   onSortChange?: (sort: TableSort | null) => void;
+  /** 受控的选中行 key；不传就由组件自己记（配合 defaultSelectedKeys） */
+  selectedKeys?: TableRowKeyValue[];
+  defaultSelectedKeys?: TableRowKeyValue[];
+  onSelectedKeysChange?: (keys: TableRowKeyValue[]) => void;
+  /** 选中集合变化，带上变化后的全部 key 和当前数据里对应的行 */
+  onSelectionChange?: (keys: TableRowKeyValue[], rows: Row[]) => void;
+  /** 勾选 / 取消某一行 */
+  onSelect?: (row: Row, selected: boolean) => void;
+  /** 表头全选 / 取消全选 */
+  onSelectAll?: (selected: boolean) => void;
   /** 点击某一行 */
   onRowClick?: (row: Row, index: number, event: MouseEvent) => void;
   /** 没有数据时显示的内容，优先于 emptyText */
@@ -90,6 +111,8 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
     empty,
     children,
     sortRemote = false,
+    selection = false,
+    selectable,
   } = props;
 
   // 列的来源：传了 columns 就用传的，没传才从 children 收集
@@ -108,17 +131,44 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
     props.onSortChange?.(next);
   }
 
-  /** 排好序的行，key 一并算好；sortRemote 时不在本地排，行序交给服务端 */
+  /* ---------- 行选择：受控 / 非受控都支持，纯函数在 core ---------- */
+  const keysControlled = props.selectedKeys !== undefined;
+  const [ownKeys, setOwnKeys] = useState<TableRowKeyValue[]>(props.defaultSelectedKeys ?? []);
+  const selectedKeys = keysControlled ? props.selectedKeys! : ownKeys;
+  const selectionState = tableSelectionState(selectedKeys, data, rowKey, selectable);
+
+  function commitSelection(keys: TableRowKeyValue[]) {
+    if (!keysControlled) setOwnKeys(keys);
+    props.onSelectedKeysChange?.(keys);
+    props.onSelectionChange?.(keys, tableSelectedRows(keys, data, rowKey));
+  }
+
+  function toggleRow(row: Row, index: number, selected: boolean) {
+    const key = tableRowId(row, index, rowKey);
+    commitSelection(toggleTableSelection(selectedKeys, key, selected, selection));
+    props.onSelect?.(row, selected);
+  }
+
+  function toggleAll(selected: boolean) {
+    commitSelection(toggleAllTableSelection(selectedKeys, data, rowKey, selectable, selected));
+    props.onSelectAll?.(selected);
+  }
+
+  /** 排好序的行，key 和选中态一并算好；sortRemote 时不在本地排，行序交给服务端 */
   const localSort = sortRemote ? null : sort;
-  const rows = useMemo(
-    () =>
-      sortTableRows(data, localSort, rawColumns).map(({ row, index }) => ({
+  const rows = useMemo(() => {
+    const selected = new Set(selectedKeys);
+    return sortTableRows(data, localSort, rawColumns).map(({ row, index }) => {
+      const key = tableRowId(row, index, rowKey);
+      return {
         row,
         index,
-        key: tableRowId(row, index, rowKey),
-      })),
-    [data, localSort, rawColumns, rowKey],
-  );
+        key,
+        selected: selected.has(key),
+        disabled: selectable ? !selectable(row, index) : false,
+      };
+    });
+  }, [data, localSort, rawColumns, rowKey, selectable, selectedKeys]);
 
   // ---- 墨线：按表格实际宽度生成，宽度按 32px 分桶。首帧量到 0，渲染朴素版 ----
   const [rootRef, size] = useSize();
@@ -136,10 +186,30 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
         <table
           className="m-table__inner"
           role="table"
-          style={{ gridTemplateColumns: tableGridTemplate(columns) }}
+          style={{ gridTemplateColumns: tableGridTemplate(columns, selection) }}
         >
           <thead className="m-table__head">
             <tr className="m-table__row m-table__row--head" role="row">
+              {selection ? (
+                <th
+                  className={TABLE_SELECTION_HEAD_CLASS}
+                  role="columnheader"
+                  scope="col"
+                  aria-label={
+                    selection === "multiple" ? TABLE_SELECT_ALL_LABEL : TABLE_SELECTION_LABEL
+                  }
+                >
+                  {/* 单选没有"全选"这回事，表头只留个空位 */}
+                  {selection === "multiple" ? (
+                    <MCheckbox
+                      checked={selectionState.all}
+                      indeterminate={selectionState.some}
+                      disabled={selectionState.total === 0}
+                      onCheckedChange={toggleAll}
+                    />
+                  ) : null}
+                </th>
+              ) : null}
               {columns.map((col) => {
                 const head = col.column.renderHead
                   ? col.column.renderHead(tableHeadScope(col.column))
@@ -181,13 +251,25 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
           </thead>
           <tbody className="m-table__body">
             {rows.length > 0 ? (
-              rows.map(({ row, index, key }) => (
+              rows.map(({ row, index, key, selected, disabled }) => (
                 <tr
                   key={key}
-                  className="m-table__row m-table__row--body"
+                  className={tableRowClasses({ selected }).join(" ")}
                   role="row"
+                  aria-selected={selection ? selected : undefined}
                   onClick={(event) => props.onRowClick?.(row, index, event)}
                 >
+                  {selection ? (
+                    <td className={TABLE_SELECTION_CELL_CLASS} role="cell">
+                      {/* 点勾选框只改选中态，不算点行；拦住冒泡 */}
+                      <MCheckbox
+                        checked={selected}
+                        disabled={disabled}
+                        onClick={(event: MouseEvent<HTMLLabelElement>) => event.stopPropagation()}
+                        onCheckedChange={(value) => toggleRow(row, index, value)}
+                      />
+                    </td>
+                  ) : null}
                   {columns.map((col) => (
                     <td key={col.key} className={col.cellClass} role="cell" data-prop={col.prop}>
                       {col.column.render
@@ -199,7 +281,11 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
               ))
             ) : (
               <tr className="m-table__row m-table__row--empty" role="row">
-                <td className="m-table__empty" role="cell" aria-colspan={columns.length || 1}>
+                <td
+                  className="m-table__empty"
+                  role="cell"
+                  aria-colspan={columns.length + (selection ? 1 : 0) || 1}
+                >
                   {empty ?? emptyText}
                 </td>
               </tr>

@@ -8,6 +8,8 @@ export type {
   TableProps,
   TableRow,
   TableRowKey,
+  TableRowKeyValue,
+  TableSelection,
   TableSort,
   TableSorter,
   TableSortOrder,

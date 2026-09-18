@@ -4,6 +4,10 @@ import {
   nextTableSort,
   resolveTableColumns,
   sortTableRows,
+  TABLE_SELECT_ALL_LABEL,
+  TABLE_SELECTION_CELL_CLASS,
+  TABLE_SELECTION_HEAD_CLASS,
+  TABLE_SELECTION_LABEL,
   tableCellScope,
   tableCellText,
   tableCellValue,
@@ -11,19 +15,26 @@ import {
   tableGridTemplate,
   tableHeadScope,
   tableInk,
+  tableRowClasses,
   tableRowId,
+  tableSelectedRows,
+  tableSelectionState,
   tableSortAria,
   tableSortClasses,
   tableSortInk,
   tableSortOrder,
+  toggleAllTableSelection,
+  toggleTableSelection,
   type ResolvedTableColumn,
   type TableEmits,
+  type TableRowKeyValue,
   type TableSlots,
   type TableSort,
 } from "@shuimo-design/core";
 import { RenderNode } from "../../runtime/render-node";
 import { useSize } from "../../runtime";
 import { IconCaretDown, IconCaretUp } from "../../icons";
+import { MCheckbox } from "../checkbox";
 import { collectColumns, type MTableProps } from "./collect";
 
 defineOptions({ name: "MTable" });
@@ -38,12 +49,16 @@ const {
   emptyText = "暂无数据",
   defaultSort,
   sortRemote = false,
+  selection = false,
+  selectable,
 } = defineProps<MTableProps<T>>();
 const emit = defineEmits<TableEmits<T>>();
 const slots = useSlots() as TableSlots;
 defineSlots<TableSlots>();
 /** 当前排序；null 是不排。不绑时从 defaultSort 起步 */
 const sortModel = defineModel<TableSort | null>("sort");
+/** 选中行的 key（按 rowKey 算） */
+const selectedKeys = defineModel<TableRowKeyValue[]>("selectedKeys", { default: () => [] });
 
 /**
  * 列的来源：传了 columns 就用传的，没传才从子组件收集。
@@ -51,7 +66,7 @@ const sortModel = defineModel<TableSort | null>("sort");
  */
 const rawColumns = computed(() => columnsProp ?? collectColumns<T>(slots.default?.()));
 const columns = computed(() => resolveTableColumns(rawColumns.value, align));
-const gridTemplate = computed(() => tableGridTemplate(columns.value));
+const gridTemplate = computed(() => tableGridTemplate(columns.value, selection));
 
 // ---- 排序：model 没被赋过值（undefined）时用 defaultSort；点表头之后 model 里就是 null 或具体值 ----
 const sort = computed(() =>
@@ -65,14 +80,43 @@ function toggleSort(col: ResolvedTableColumn<T>) {
   emit("sortChange", next);
 }
 
-/** 排好序的行，key 一并算好；sortRemote 时不在本地排，行序交给服务端 */
-const rows = computed(() =>
-  sortTableRows(data, sortRemote ? null : sort.value, rawColumns.value).map(({ row, index }) => ({
-    row,
-    index,
-    key: tableRowId(row, index, rowKey),
-  })),
+// ---- 行选择：三个纯函数在 core，这里只把结果写回 model 再发事件 ----
+const selectionState = computed(() =>
+  tableSelectionState(selectedKeys.value, data, rowKey, selectable),
 );
+
+/** 排好序的行，key 和选中态一并算好；sortRemote 时不在本地排，行序交给服务端 */
+const rows = computed(() => {
+  const selected = new Set(selectedKeys.value);
+  return sortTableRows(data, sortRemote ? null : sort.value, rawColumns.value).map(
+    ({ row, index }) => {
+      const key = tableRowId(row, index, rowKey);
+      return {
+        row,
+        index,
+        key,
+        selected: selected.has(key),
+        disabled: selectable ? !selectable(row, index) : false,
+      };
+    },
+  );
+});
+
+function commitSelection(keys: TableRowKeyValue[]) {
+  selectedKeys.value = keys;
+  emit("selectionChange", keys, tableSelectedRows(keys, data, rowKey));
+}
+
+function toggleRow(row: T, index: number, selected: boolean) {
+  const key = tableRowId(row, index, rowKey);
+  commitSelection(toggleTableSelection(selectedKeys.value, key, selected, selection));
+  emit("select", row, selected);
+}
+
+function toggleAll(selected: boolean) {
+  commitSelection(toggleAllTableSelection(selectedKeys.value, data, rowKey, selectable, selected));
+  emit("selectAll", selected);
+}
 
 // ---- 墨线：按表格实际宽度生成，宽度按 32px 分桶 ----
 const root = useTemplateRef<HTMLElement>("root");
@@ -89,6 +133,24 @@ const ink = computed(() => tableInk({ width: width.value, mounted: mounted.value
       <table class="m-table__inner" role="table" :style="{ gridTemplateColumns: gridTemplate }">
         <thead class="m-table__head">
           <tr class="m-table__row m-table__row--head" role="row">
+            <th
+              v-if="selection"
+              :class="TABLE_SELECTION_HEAD_CLASS"
+              role="columnheader"
+              scope="col"
+              :aria-label="
+                selection === 'multiple' ? TABLE_SELECT_ALL_LABEL : TABLE_SELECTION_LABEL
+              "
+            >
+              <!-- 单选没有"全选"这回事，表头只留个空位 -->
+              <MCheckbox
+                v-if="selection === 'multiple'"
+                :model-value="selectionState.all"
+                :indeterminate="selectionState.some"
+                :disabled="selectionState.total === 0"
+                @update:model-value="(value: boolean) => toggleAll(value)"
+              />
+            </th>
             <th
               v-for="col in columns"
               :key="col.key"
@@ -131,12 +193,22 @@ const ink = computed(() => tableInk({ width: width.value, mounted: mounted.value
         <tbody class="m-table__body">
           <template v-if="rows.length">
             <tr
-              v-for="{ row, index, key } in rows"
+              v-for="{ row, index, key, selected, disabled } in rows"
               :key="key"
-              class="m-table__row m-table__row--body"
+              :class="tableRowClasses({ selected })"
               role="row"
+              :aria-selected="selection ? selected : undefined"
               @click="emit('rowClick', row, index, $event)"
             >
+              <td v-if="selection" :class="TABLE_SELECTION_CELL_CLASS" role="cell">
+                <!-- 点勾选框只改选中态，不算点行；@click.stop 拦住冒泡 -->
+                <MCheckbox
+                  :model-value="selected"
+                  :disabled="disabled"
+                  @click.stop
+                  @update:model-value="(value: boolean) => toggleRow(row, index, value)"
+                />
+              </td>
               <td
                 v-for="col in columns"
                 :key="col.key"
@@ -153,7 +225,11 @@ const ink = computed(() => tableInk({ width: width.value, mounted: mounted.value
             </tr>
           </template>
           <tr v-else class="m-table__row m-table__row--empty" role="row">
-            <td class="m-table__empty" role="cell" :aria-colspan="columns.length || 1">
+            <td
+              class="m-table__empty"
+              role="cell"
+              :aria-colspan="columns.length + (selection ? 1 : 0) || 1"
+            >
               <slot name="empty">{{ emptyText }}</slot>
             </td>
           </tr>

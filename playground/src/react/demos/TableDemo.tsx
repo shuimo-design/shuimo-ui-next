@@ -4,6 +4,7 @@ import {
   MTable,
   MTableColumn,
   type ReactTableColumn,
+  type TableRowKeyValue,
   type TableSort,
 } from "@shuimo-design/react";
 
@@ -42,6 +43,11 @@ const SORT_COLUMNS: ReactTableColumn<Solar>[] = [
   },
 ];
 
+const SELECT_COLUMNS: ReactTableColumn<Solar>[] = [
+  { prop: "name", label: "节气", align: "left" },
+  { prop: "date", label: "日期" },
+];
+
 const DATA: Term[] = [
   { id: 1, name: "立春" },
   { id: 2, name: "雨水" },
@@ -59,6 +65,8 @@ export default function TableDemo() {
   const [clicked, setClicked] = useState("");
   const [stripe, setStripe] = useState(true);
   const [sort, setSort] = useState<TableSort | null>({ prop: "temp", order: "descending" });
+  const [multiKeys, setMultiKeys] = useState<TableRowKeyValue[]>([2]);
+  const [singleKeys, setSingleKeys] = useState<TableRowKeyValue[]>([]);
 
   /** 列就是一个数组，顺序即列序；自定义单元格挂在列上的 render，和 Vue 那边同一个签名 */
   const columns: ReactTableColumn<Term>[] = [
@@ -154,6 +162,41 @@ export default function TableDemo() {
           onSortChange={setSort}
         />
         <p className="demo__hint">sort：{sort ? `${sort.prop} ${sort.order}` : "无"}</p>
+      </div>
+
+      <div className="demo__block">
+        <p className="demo__caption">
+          多选：selection="multiple" 在第一列插入勾选框，表头全选 /
+          半选；点行不改选中态，只有点勾选框才改；selectedKeys 按 rowKey 记
+        </p>
+        <MTable<Solar>
+          data={SOLAR}
+          columns={SELECT_COLUMNS}
+          rowKey="id"
+          selection="multiple"
+          selectedKeys={multiKeys}
+          onSelectedKeysChange={setMultiKeys}
+        />
+        <p className="demo__hint">selectedKeys：{multiKeys.length ? multiKeys.join(", ") : "无"}</p>
+      </div>
+
+      <div className="demo__block">
+        <p className="demo__caption">
+          单选 + 部分不可选：selection="single" 同一时刻只保留一行；selectable 返回 false
+          的行勾选框禁用，全选也跳过它
+        </p>
+        <MTable<Solar>
+          data={SOLAR}
+          columns={SELECT_COLUMNS}
+          rowKey="id"
+          selection="single"
+          selectable={(row) => row.temp !== null}
+          selectedKeys={singleKeys}
+          onSelectedKeysChange={setSingleKeys}
+        />
+        <p className="demo__hint">
+          selectedKeys：{singleKeys.length ? singleKeys.join(", ") : "无"}
+        </p>
       </div>
 
       <div className="demo__block">

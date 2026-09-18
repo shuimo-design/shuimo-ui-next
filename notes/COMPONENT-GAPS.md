@@ -19,7 +19,7 @@
 | Watermark                 | 水墨水印                                               | wash / bleed                           |
 | AutoComplete              | 搜索框；复用 Dropdown 的弹层                           | MInput + popper                        |
 
-能力补齐：MTable 列排序、行选择。筛选 / 固定列 / 展开行再等。
+能力补齐：MTable 筛选 / 固定列 / 展开行再等。
 
 ## 构想，等需求
 

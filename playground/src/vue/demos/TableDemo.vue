@@ -4,6 +4,7 @@ import {
   MButton,
   MTable,
   MTableColumn,
+  type TableRowKeyValue,
   type TableSort,
   type VueTableColumn,
 } from "@shuimo-design/vue";
@@ -59,6 +60,13 @@ const sortColumns: VueTableColumn<Solar>[] = [
   },
 ];
 const sort = ref<TableSort | null>({ prop: "temp", order: "descending" });
+
+const multiKeys = ref<TableRowKeyValue[]>([2]);
+const singleKeys = ref<TableRowKeyValue[]>([]);
+const selectColumns: VueTableColumn<Solar>[] = [
+  { prop: "name", label: "节气", align: "left" },
+  { prop: "date", label: "日期" },
+];
 
 /**
  * 新写法：列就是一个数组，顺序即列序。
@@ -138,6 +146,37 @@ const columns: VueTableColumn<Term>[] = [
       </p>
       <MTable :data="solar" :columns="sortColumns" row-key="id" v-model:sort="sort" />
       <p class="demo__hint">sort：{{ sort ? `${sort.prop} ${sort.order}` : "无" }}</p>
+    </div>
+
+    <div class="demo__block">
+      <p class="demo__caption">
+        多选：selection="multiple" 在第一列插入勾选框，表头全选 /
+        半选；点行不改选中态，只有点勾选框才改；v-model:selectedKeys 按 rowKey 记
+      </p>
+      <MTable
+        :data="solar"
+        :columns="selectColumns"
+        row-key="id"
+        selection="multiple"
+        v-model:selectedKeys="multiKeys"
+      />
+      <p class="demo__hint">selectedKeys：{{ multiKeys.length ? multiKeys.join(", ") : "无" }}</p>
+    </div>
+
+    <div class="demo__block">
+      <p class="demo__caption">
+        单选 + 部分不可选：selection="single" 同一时刻只保留一行；selectable 返回 false
+        的行勾选框禁用，全选也跳过它
+      </p>
+      <MTable
+        :data="solar"
+        :columns="selectColumns"
+        row-key="id"
+        selection="single"
+        :selectable="(row) => row.temp !== null"
+        v-model:selectedKeys="singleKeys"
+      />
+      <p class="demo__hint">selectedKeys：{{ singleKeys.length ? singleKeys.join(", ") : "无" }}</p>
     </div>
 
     <div class="demo__block">

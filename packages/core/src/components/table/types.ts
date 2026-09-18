@@ -4,8 +4,11 @@ export type TableAlign = "left" | "center" | "right";
 /** 行数据的兜底类型：没给泛型时行就按它算 */
 export type TableRow = Record<string, unknown>;
 
+/** 一行算出来的 key 的值 */
+export type TableRowKeyValue = string | number;
+
 /** 行的唯一标识：字段名，或按行算一个 key 的函数 */
-export type TableRowKey<Row> = string | ((row: Row, index: number) => string | number);
+export type TableRowKey<Row> = string | ((row: Row, index: number) => TableRowKeyValue);
 
 /** 排序方向 */
 export type TableSortOrder = "ascending" | "descending";
@@ -20,6 +23,9 @@ export interface TableSort {
 
 /** 列的比较函数：返回负数 a 在前、正数 b 在前；组件按 ascending 用它、descending 取反 */
 export type TableSorter<Row> = (a: Row, b: Row) => number;
+
+/** 行选择的模式：multiple 多选、single 单选、false 不显示选择列 */
+export type TableSelection = "multiple" | "single" | false;
 
 /** 单元格的作用域，交给列上的 render */
 export interface TableCellScope<Row = TableRow> {
@@ -87,6 +93,10 @@ export interface TableProps<Row = TableRow> {
   defaultSort?: TableSort;
   /** 服务端排序：不在本地排，只发 sortChange */
   sortRemote?: boolean;
+  /** 行选择：multiple 多选、single 单选；默认 false 不显示选择列 */
+  selection?: TableSelection;
+  /** 哪些行可选；返回 false 的行禁用勾选框，全选也不算它 */
+  selectable?: (row: Row, index: number) => boolean;
 }
 
 export interface TableEmits<Row = TableRow> {
@@ -94,6 +104,12 @@ export interface TableEmits<Row = TableRow> {
   rowClick: [row: Row, index: number, event: MouseEvent];
   /** 排序变化；null 是取消排序 */
   sortChange: [sort: TableSort | null];
+  /** 选中集合变化，带上变化后的全部 key 和当前数据里对应的行 */
+  selectionChange: [keys: TableRowKeyValue[], rows: Row[]];
+  /** 勾选 / 取消某一行 */
+  select: [row: Row, selected: boolean];
+  /** 表头全选 / 取消全选 */
+  selectAll: [selected: boolean];
 }
 
 export interface TableSlots {

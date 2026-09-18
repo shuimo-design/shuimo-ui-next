@@ -12,6 +12,8 @@ export type {
   TableProps,
   TableRow,
   TableRowKey,
+  TableRowKeyValue,
+  TableSelection,
   TableSlots,
   TableSort,
   TableSorter,

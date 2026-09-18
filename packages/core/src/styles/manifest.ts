@@ -104,7 +104,8 @@ export const COMPONENT_STYLES = {
   MSteps: { css: "steps" },
   MSvg: { css: "svg" },
   MSwitch: { css: "switch" },
-  MTable: { css: "table" },
+  // 开了行选择时第一列是 MCheckbox
+  MTable: { css: "table", renders: ["MCheckbox"] },
   MTableColumn: { css: "table" },
   MTabPane: { css: "tabs" },
   MTabs: { css: "tabs" },

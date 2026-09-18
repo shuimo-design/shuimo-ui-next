@@ -1,5 +1,5 @@
 /**
- * 表格的无框架部分：列的归一化、取值与文本化、grid 轨道、class 派生、排序的纯函数，
+ * 表格的无框架部分：列的归一化、取值与文本化、grid 轨道、class 派生、排序与行选择的纯函数，
  * 以及按表宽生成的三张墨图。
  *
  * 列序就是 `columns` 数组的顺序（子组件写法由壳在 render 期按书写顺序收集成同一个数组），
@@ -17,6 +17,8 @@ import type {
   TableProps,
   TableRow,
   TableRowKey,
+  TableRowKeyValue,
+  TableSelection,
   TableSort,
   TableSortOrder,
   TableSorter,
@@ -33,6 +35,8 @@ export type {
   TableProps,
   TableRow,
   TableRowKey,
+  TableRowKeyValue,
+  TableSelection,
   TableSlots,
   TableSort,
   TableSortOrder,
@@ -96,16 +100,16 @@ export function resolveTableColumns<Row, Node>(
   });
 }
 
-/** 列宽 → grid 轨道：给了宽度就定死，没给的按内容分剩余空间 */
+/** 列宽 → grid 轨道：给了宽度就定死，没给的按内容分剩余空间；开了行选择时最前面加一条按内容收紧的轨给勾选框 */
 export function tableGridTemplate(
   columns: readonly { readonly width?: string | number }[],
+  selection: TableSelection = false,
 ): string {
-  return columns
-    .map(({ width }) => {
-      if (width === undefined || width === "") return "auto";
-      return typeof width === "number" ? `${width}px` : width;
-    })
-    .join(" ");
+  const tracks = columns.map(({ width }) => {
+    if (width === undefined || width === "") return "auto";
+    return typeof width === "number" ? `${width}px` : width;
+  });
+  return (selection ? ["max-content", ...tracks] : tracks).join(" ");
 }
 
 /* ---------------- 排序 ---------------- */
@@ -177,6 +181,101 @@ export function sortTableRows<Row, Node>(
   const sign = sort.order === "ascending" ? 1 : -1;
   return list.sort((a, b) => sign * sorter(a.row, b.row));
 }
+
+/* ---------------- 行选择 ---------------- */
+
+export interface TableSelectionState {
+  /** 可选的行全部选中了（一行可选的都没有时是 false） */
+  all: boolean;
+  /** 选了一部分：表头勾选框显示半选 */
+  some: boolean;
+  /** 当前数据里选中的可选行数 */
+  count: number;
+  /** 当前数据里可选的行数；为 0 时表头全选框禁用 */
+  total: number;
+}
+
+function tableSelectableKeys<Row>(
+  rows: readonly Row[],
+  rowKey: TableRowKey<Row> | undefined,
+  selectable: ((row: Row, index: number) => boolean) | undefined,
+): TableRowKeyValue[] {
+  const keys: TableRowKeyValue[] = [];
+  rows.forEach((row, index) => {
+    if (!selectable || selectable(row, index)) keys.push(tableRowId(row, index, rowKey));
+  });
+  return keys;
+}
+
+/** 表头勾选框要显示什么：只看 selectable 为 true 的行，禁选的行不算进"全部" */
+export function tableSelectionState<Row>(
+  keys: readonly TableRowKeyValue[],
+  rows: readonly Row[],
+  rowKey: TableRowKey<Row> | undefined,
+  selectable?: (row: Row, index: number) => boolean,
+): TableSelectionState {
+  const selected = new Set(keys);
+  const candidates = tableSelectableKeys(rows, rowKey, selectable);
+  const count = candidates.filter((key) => selected.has(key)).length;
+  const all = count > 0 && count === candidates.length;
+  return { all, some: count > 0 && !all, count, total: candidates.length };
+}
+
+/** 勾 / 取消一行之后的 key 数组：单选时勾上的那行把别的都顶掉 */
+export function toggleTableSelection(
+  keys: readonly TableRowKeyValue[],
+  key: TableRowKeyValue,
+  selected: boolean,
+  selection: TableSelection,
+): TableRowKeyValue[] {
+  if (!selected) return keys.filter((k) => k !== key);
+  if (selection === "single") return [key];
+  return keys.includes(key) ? [...keys] : [...keys, key];
+}
+
+/**
+ * 全选 / 取消全选之后的 key 数组。只动当前数据里可选的行：
+ * 不在这份数据里的 key（比如翻页前选的）保持原样，禁选的行既不会被选上也不会被清掉。
+ */
+export function toggleAllTableSelection<Row>(
+  keys: readonly TableRowKeyValue[],
+  rows: readonly Row[],
+  rowKey: TableRowKey<Row> | undefined,
+  selectable: ((row: Row, index: number) => boolean) | undefined,
+  selected: boolean,
+): TableRowKeyValue[] {
+  const candidates = tableSelectableKeys(rows, rowKey, selectable);
+  if (!selected) {
+    const drop = new Set(candidates);
+    return keys.filter((key) => !drop.has(key));
+  }
+  const has = new Set(keys);
+  return [...keys, ...candidates.filter((key) => !has.has(key))];
+}
+
+/** key 数组对应到当前数据里的行（selectionChange 的第二个参数）；不在数据里的 key 略过 */
+export function tableSelectedRows<Row>(
+  keys: readonly TableRowKeyValue[],
+  rows: readonly Row[],
+  rowKey: TableRowKey<Row> | undefined,
+): Row[] {
+  const selected = new Set(keys);
+  return rows.filter((row, index) => selected.has(tableRowId(row, index, rowKey)));
+}
+
+/** 表体一行的 class；两个壳必须产出一模一样的一串 */
+export function tableRowClasses(o: { selected: boolean }): string[] {
+  return ["m-table__row", "m-table__row--body", ...(o.selected ? ["m-table__row--selected"] : [])];
+}
+
+/** 选择列的表头 / 单元格 class；对齐固定居中 */
+export const TABLE_SELECTION_HEAD_CLASS = "m-table__th m-table__th--center m-table__th--selection";
+export const TABLE_SELECTION_CELL_CLASS = "m-table__td m-table__td--center m-table__td--selection";
+
+/** 表头全选框的无障碍名字 */
+export const TABLE_SELECT_ALL_LABEL = "全选";
+/** 单选时选择列的表头文字 */
+export const TABLE_SELECTION_LABEL = "选择";
 
 /* ---------------- 墨迹 ---------------- */
 

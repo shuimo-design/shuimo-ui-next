@@ -205,4 +205,79 @@ describe("MTable", () => {
     expect(onSortChange).toHaveBeenCalledWith(null);
     expect(names(screen)).toEqual(["惊蛰", "雨水", "立春"]);
   });
+
+  it("selects rows with checkboxes, selects all / none from the header and skips unselectable rows", async () => {
+    const onSelectionChange = vi.fn();
+    const onSelect = vi.fn();
+    const onSelectAll = vi.fn();
+    const onRowClick = vi.fn();
+    const onSelectedKeysChange = vi.fn();
+    const screen = await render(
+      <MTable<Term>
+        data={terms}
+        columns={[{ prop: "name", label: "节气" }]}
+        rowKey="id"
+        selection="multiple"
+        selectable={(row) => row.id !== 2}
+        onSelectionChange={onSelectionChange}
+        onSelect={onSelect}
+        onSelectAll={onSelectAll}
+        onRowClick={onRowClick}
+        onSelectedKeysChange={onSelectedKeysChange}
+      />,
+    );
+    const boxes = screen.getByRole("checkbox");
+    expect(boxes.elements()).toHaveLength(4);
+    const head = boxes.first();
+    await expect.element(boxes.nth(2)).toBeDisabled();
+    expect(screen.container.querySelector(".m-table__inner")!.getAttribute("style")).toContain(
+      "max-content",
+    );
+
+    // 勾一行：只改选中态，不算点行
+    await boxes.nth(1).click();
+    expect(onRowClick).not.toHaveBeenCalled();
+    expect(onSelect).toHaveBeenLastCalledWith(terms[0], true);
+    expect(onSelectionChange).toHaveBeenLastCalledWith([1], [terms[0]]);
+    expect(onSelectedKeysChange).toHaveBeenLastCalledWith([1]);
+    const rows = screen.container.querySelectorAll(".m-table__row--body");
+    expect(rows[0]!.classList.contains("m-table__row--selected")).toBe(true);
+    expect(rows[0]!.getAttribute("aria-selected")).toBe("true");
+    expect(rows[1]!.classList.contains("m-table__row--selected")).toBe(false);
+    await expect.element(head).toHaveAttribute("aria-checked", "mixed");
+
+    // 表头全选：禁选的 2 不进来
+    await head.click();
+    expect(onSelectAll).toHaveBeenLastCalledWith(true);
+    expect(onSelectionChange).toHaveBeenLastCalledWith([1, 3], [terms[0], terms[2]]);
+    await expect.element(head).toHaveAttribute("aria-checked", "true");
+    await expect.element(boxes.nth(2)).not.toBeChecked();
+
+    await head.click();
+    expect(onSelectAll).toHaveBeenLastCalledWith(false);
+    expect(onSelectionChange).toHaveBeenLastCalledWith([], []);
+    await expect.element(head).toHaveAttribute("aria-checked", "false");
+  });
+
+  it("keeps a single selection and shows no header checkbox in single mode", async () => {
+    const onSelectionChange = vi.fn();
+    const screen = await render(
+      <MTable<Term>
+        data={terms}
+        columns={[{ prop: "name", label: "节气" }]}
+        rowKey="id"
+        selection="single"
+        onSelectionChange={onSelectionChange}
+      />,
+    );
+    const boxes = screen.getByRole("checkbox");
+    expect(boxes.elements()).toHaveLength(3);
+    await boxes.first().click();
+    await boxes.nth(2).click();
+    expect(onSelectionChange).toHaveBeenLastCalledWith([3], [terms[2]]);
+    await expect.element(boxes.first()).not.toBeChecked();
+    await expect.element(boxes.nth(2)).toBeChecked();
+    await boxes.nth(2).click();
+    expect(onSelectionChange).toHaveBeenLastCalledWith([], []);
+  });
 });
