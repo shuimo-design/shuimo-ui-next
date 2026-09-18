@@ -85,6 +85,7 @@ export const CATALOG: DemoGroup[] = [
       entry("virtual-tree", "虚拟树", "MVirtualTree"),
       entry("steps", "步骤条", "MSteps", "MStep"),
       entry("tabs", "标签页", "MTabs", "MTabPane"),
+      entry("anchor", "锚点导航", "MAnchor"),
     ],
   },
   {

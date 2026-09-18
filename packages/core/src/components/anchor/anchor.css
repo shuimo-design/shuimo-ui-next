@@ -1,0 +1,166 @@
+@layer m.component {
+  /*
+   * <nav> 是定位上下文：指示线绝对定位在里面，链接的 offsetTop / offsetLeft 就是相对它的。
+   * 竖排：左侧一条淡轨道，指示线压在轨道上、随激活项上下滑；横排：底部轨道，指示线左右滑。
+   */
+  .m-anchor {
+    --m-anchor-indent: var(--m-space-4);
+    --m-anchor-rail-color: var(--m-border);
+    --m-anchor-line-color: var(--m-ink);
+    --m-anchor-line-thickness: 2px;
+    --m-anchor-top: 0px;
+    --m-anchor-link-py: 3px;
+    --m-anchor-link-px: var(--m-space-3);
+    position: relative;
+    display: block;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+  }
+
+  .m-anchor--affix {
+    position: sticky;
+    top: var(--m-anchor-top);
+  }
+
+  .m-anchor__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .m-anchor--horizontal .m-anchor__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .m-anchor__item {
+    --m-anchor-level: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .m-anchor__link {
+    display: block;
+    box-sizing: border-box;
+    padding: var(--m-anchor-link-py) var(--m-anchor-link-px);
+    /* 竖排按层级缩进 */
+    padding-inline-start: calc(
+      var(--m-anchor-link-px) + var(--m-anchor-level) * var(--m-anchor-indent)
+    );
+    overflow: hidden;
+    color: var(--m-fg-muted);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-fg);
+    }
+
+    &.m-anchor__link--active {
+      color: var(--m-fg-strong);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -2px;
+    }
+  }
+
+  /* 横排不缩进，子锚点和父锚点排成一行 */
+  .m-anchor--horizontal .m-anchor__link {
+    padding-inline-start: var(--m-anchor-link-px);
+  }
+
+  /* 轨道：竖排贴左、横排贴底 */
+  .m-anchor__rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: var(--m-anchor-rail-color);
+    pointer-events: none;
+  }
+
+  .m-anchor--horizontal .m-anchor__rail {
+    top: auto;
+    right: 0;
+    width: auto;
+    height: 1px;
+  }
+
+  /* 指示线：默认皮肤一段实线，长度和位移由控制器量出来写进 style；m.ink 层换成按长度生成的笔触线 */
+  .m-anchor__ink {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: var(--m-anchor-line-thickness);
+    height: 0;
+    border-radius: 3px 1px 2px 3px / 2px 3px 1px 2px;
+    background: var(--m-anchor-line-color);
+    pointer-events: none;
+    transition:
+      transform var(--m-duration) var(--m-ease),
+      width var(--m-duration) var(--m-ease),
+      height var(--m-duration) var(--m-ease);
+  }
+
+  .m-anchor--horizontal .m-anchor__ink {
+    top: auto;
+    bottom: 0;
+    width: 0;
+    height: var(--m-anchor-line-thickness);
+  }
+}
+
+@layer m.ink {
+  /* 笔触画在 ::before 上、元素自己的盒子保持 2px 不变：画幅（含晕染余量）比笔画宽，
+     若直接改元素宽度，ResizeObserver 会在同一帧里再收到一次尺寸变化而报 loop 错误 */
+  html.m-ink-ready .m-anchor__ink {
+    background: transparent;
+    border-radius: 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: var(--m-brush-line-band, var(--m-anchor-line-thickness));
+      background: var(--m-anchor-line-color);
+      transform: translateX(-50%);
+      /* 还没量出长度时先用通用竖线兜底，量出来后换成按实际长度生成的那条 */
+      mask: var(--m-brush-line-mask, var(--m-ink-line-v)) center / 100% 100% no-repeat;
+    }
+  }
+
+  html.m-ink-ready .m-anchor--horizontal .m-anchor__ink::before {
+    top: 50%;
+    right: 0;
+    bottom: auto;
+    left: 0;
+    width: auto;
+    height: var(--m-brush-line-band, var(--m-anchor-line-thickness));
+    transform: translateY(-50%);
+    mask: var(--m-brush-line-mask, var(--m-ink-line-h)) center / 100% 100% no-repeat;
+  }
+
+  /* 轨道淡成一缕干墨 */
+  html.m-ink-ready .m-anchor__rail {
+    opacity: 0.6;
+  }
+
+  /* 链接全部换手写体（只换激活项会让文字宽度在切换时跳、指示线错位），字面比正文小，放大一档才和 14px 正文等高 */
+  html.m-ink-ready .m-anchor__link {
+    font-family: var(--m-font-brush);
+    font-size: 17px;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+  }
+}

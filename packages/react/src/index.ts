@@ -72,3 +72,4 @@ export * from "./components/upload";
 export * from "./components/watermark";
 export * from "./components/auto-complete";
 export * from "./components/carousel";
+export * from "./components/anchor";

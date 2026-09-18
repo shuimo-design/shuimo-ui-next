@@ -79,4 +79,5 @@ export const COMPONENT_NAMES = [
   "MAutoComplete",
   "MCarousel",
   "MCarouselItem",
+  "MAnchor",
 ] as const;

@@ -61,3 +61,4 @@ export * from "./upload";
 export * from "./watermark";
 export * from "./auto-complete";
 export * from "./carousel";
+export * from "./anchor";

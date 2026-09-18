@@ -31,6 +31,7 @@ const MINIMAL_PROPS: Record<string, Record<string, unknown>> = {
   MTree: { data: [{ key: "1", label: "山" }] },
   MVirtualTree: { data: [{ key: "1", label: "山" }] },
   MDescriptionsItem: { label: "山" },
+  MAnchor: { items: [{ href: "#shan", title: "山" }] },
 };
 
 /** 必须放在某个父组件里才有意义的子组件：单独渲染本来就该抛错，不是服务端的问题 */
