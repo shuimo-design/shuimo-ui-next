@@ -133,6 +133,57 @@
     text-align: right;
   }
 
+  /* 排序按钮铺满表头文字区，文字和指示器一起可点；键盘焦点落在它身上 */
+  .m-table__sort {
+    display: inline-flex;
+    gap: var(--m-space-1);
+    align-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: var(--m-cursor-pointer);
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  /* 两枚小三角上下叠着，没排到时都是淡墨，排到哪个方向哪枚变实 */
+  .m-table__sort-icons {
+    display: inline-flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-size: 9px;
+    line-height: 0;
+  }
+
+  .m-table__sort-icon {
+    position: relative;
+    display: block;
+    width: 1em;
+    height: 1em;
+    color: var(--m-fg-muted);
+    opacity: 0.55;
+    transition:
+      color var(--m-duration) var(--m-ease),
+      opacity var(--m-duration) var(--m-ease);
+
+    & .m-icon {
+      display: block;
+      vertical-align: 0;
+    }
+  }
+
+  .m-table__sort--ascending .m-table__sort-icon--ascending,
+  .m-table__sort--descending .m-table__sort-icon--descending {
+    color: var(--m-accent);
+    opacity: 1;
+  }
+
   .m-table__empty {
     grid-column: 1 / -1;
     padding: var(--m-space-3) var(--m-table-cell-px);
@@ -189,5 +240,21 @@
   /* 斑马纹在 hover 时让位给墨晕 */
   html.m-ink-ready .m-table--stripe .m-table__row--body:hover {
     background-color: transparent;
+  }
+
+  /* 点亮的那枚三角换成一粒毛边墨点（MTable 内联在排序按钮的变量里） */
+  html.m-ink-ready .m-table__sort--ascending .m-table__sort-icon--ascending,
+  html.m-ink-ready .m-table__sort--descending .m-table__sort-icon--descending {
+    & .m-icon {
+      visibility: hidden;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--m-ink);
+      mask: var(--m-table-sort-dot) center / contain no-repeat;
+    }
   }
 }

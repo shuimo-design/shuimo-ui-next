@@ -1,12 +1,16 @@
 import {
   Children,
   isValidElement,
+  useMemo,
+  useState,
   type CSSProperties,
   type MouseEvent,
   type ReactNode,
 } from "react";
 import {
+  nextTableSort,
   resolveTableColumns,
+  sortTableRows,
   tableCellScope,
   tableCellText,
   tableCellValue,
@@ -15,10 +19,16 @@ import {
   tableHeadScope,
   tableInk,
   tableRowId,
+  tableSortAria,
+  tableSortClasses,
+  tableSortInk,
+  tableSortOrder,
   type TableColumnConfig,
   type TableProps as CoreTableProps,
   type TableRow,
+  type TableSort,
 } from "@shuimo-design/core";
+import { IconCaretDown, IconCaretUp } from "../../icons";
 import { useMounted, useSize } from "../../runtime";
 import { MTableColumn, type MTableColumnProps } from "./MTableColumn";
 
@@ -31,6 +41,10 @@ export interface MTableProps<Row extends object = TableRow> extends Omit<
 > {
   /** 列声明，顺序就是列序；不传则按书写顺序从子组件 MTableColumn 上收集 */
   columns?: ReactTableColumn<Row>[];
+  /** 受控的排序，null 是不排；不传就由组件自己记（配合 defaultSort） */
+  sort?: TableSort | null;
+  /** 排序变化；null 是取消排序 */
+  onSortChange?: (sort: TableSort | null) => void;
   /** 点击某一行 */
   onRowClick?: (row: Row, index: number, event: MouseEvent) => void;
   /** 没有数据时显示的内容，优先于 emptyText */
@@ -57,6 +71,7 @@ function collectColumns<Row>(children: ReactNode): ReactTableColumn<Row>[] {
       label: props.label,
       width: props.width,
       align: props.align,
+      sortable: props.sortable,
       render: props.render,
       renderHead: props.renderHead,
     });
@@ -74,10 +89,36 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
     emptyText = "暂无数据",
     empty,
     children,
+    sortRemote = false,
   } = props;
 
   // 列的来源：传了 columns 就用传的，没传才从 children 收集
-  const columns = resolveTableColumns(props.columns ?? collectColumns<Row>(children), align);
+  const rawColumns = props.columns ?? collectColumns<Row>(children);
+  const columns = resolveTableColumns(rawColumns, align);
+
+  /* ---------- 排序：受控 / 非受控都支持 ---------- */
+  const sortControlled = props.sort !== undefined;
+  const [ownSort, setOwnSort] = useState<TableSort | null>(props.defaultSort ?? null);
+  const sort = sortControlled ? props.sort! : ownSort;
+  const sortInk = tableSortInk();
+
+  function toggleSort(prop: string) {
+    const next = nextTableSort(sort, prop);
+    if (!sortControlled) setOwnSort(next);
+    props.onSortChange?.(next);
+  }
+
+  /** 排好序的行，key 一并算好；sortRemote 时不在本地排，行序交给服务端 */
+  const localSort = sortRemote ? null : sort;
+  const rows = useMemo(
+    () =>
+      sortTableRows(data, localSort, rawColumns).map(({ row, index }) => ({
+        row,
+        index,
+        key: tableRowId(row, index, rowKey),
+      })),
+    [data, localSort, rawColumns, rowKey],
+  );
 
   // ---- 墨线：按表格实际宽度生成，宽度按 32px 分桶。首帧量到 0，渲染朴素版 ----
   const [rootRef, size] = useSize();
@@ -99,26 +140,50 @@ export function MTable<Row extends object = TableRow>(props: MTableProps<Row>) {
         >
           <thead className="m-table__head">
             <tr className="m-table__row m-table__row--head" role="row">
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className={col.headClass}
-                  role="columnheader"
-                  scope="col"
-                  data-prop={col.prop}
-                >
-                  {col.column.renderHead
-                    ? col.column.renderHead(tableHeadScope(col.column))
-                    : col.label}
-                </th>
-              ))}
+              {columns.map((col) => {
+                const head = col.column.renderHead
+                  ? col.column.renderHead(tableHeadScope(col.column))
+                  : col.label;
+                return (
+                  <th
+                    key={col.key}
+                    className={col.headClass}
+                    role="columnheader"
+                    scope="col"
+                    data-prop={col.prop}
+                    aria-sort={col.sortable ? tableSortAria(sort, col.prop) : undefined}
+                  >
+                    {/* 可排序的列：整个表头文字是一个真按钮，键盘也能点；三态循环在 core */}
+                    {col.sortable ? (
+                      <button
+                        type="button"
+                        className={tableSortClasses(tableSortOrder(sort, col.prop)).join(" ")}
+                        style={sortInk as CSSProperties}
+                        onClick={() => toggleSort(col.prop)}
+                      >
+                        {head}
+                        <span className="m-table__sort-icons" aria-hidden="true">
+                          <span className="m-table__sort-icon m-table__sort-icon--ascending">
+                            <IconCaretUp />
+                          </span>
+                          <span className="m-table__sort-icon m-table__sort-icon--descending">
+                            <IconCaretDown />
+                          </span>
+                        </span>
+                      </button>
+                    ) : (
+                      head
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody className="m-table__body">
-            {data.length > 0 ? (
-              data.map((row, index) => (
+            {rows.length > 0 ? (
+              rows.map(({ row, index, key }) => (
                 <tr
-                  key={tableRowId(row, index, rowKey)}
+                  key={key}
                   className="m-table__row m-table__row--body"
                   role="row"
                   onClick={(event) => props.onRowClick?.(row, index, event)}

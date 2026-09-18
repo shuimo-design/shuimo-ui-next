@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { MTable, MTableColumn, type ReactTableColumn } from ".";
+import { MTable, MTableColumn, type ReactTableColumn, type TableSort } from ".";
 
 interface Term {
   id: number;
@@ -44,7 +44,7 @@ describe("MTable", () => {
   it("collects MTableColumn children in written order and renders their render props", async () => {
     const screen = await render(
       <MTable<Term> data={terms}>
-        <MTableColumn<Term> prop="name" label="节气" />
+        <MTableColumn<Term> prop="name" label="节气" sortable />
         <MTableColumn<Term>
           prop="id"
           label="序号"
@@ -56,6 +56,7 @@ describe("MTable", () => {
     );
     const headers = screen.getByRole("columnheader");
     await expect.element(headers.first()).toHaveTextContent("节气");
+    await expect.element(headers.first()).toHaveAttribute("aria-sort", "none");
     await expect.element(headers.nth(1)).toHaveTextContent("编号");
     expect(screen.container.querySelector("th em")).not.toBeNull();
     const cells = screen.getByRole("cell");
@@ -118,5 +119,90 @@ describe("MTable", () => {
     expect(onRowClick).toHaveBeenCalledTimes(1);
     expect(onRowClick.mock.calls[0]?.[0]).toEqual(terms[1]);
     expect(onRowClick.mock.calls[0]?.[1]).toBe(1);
+  });
+
+  const names = (screen: { container: Element }) =>
+    [...screen.container.querySelectorAll('.m-table__td[data-prop="name"]')].map((td) =>
+      td.textContent?.trim(),
+    );
+
+  it("cycles a sortable header ascending → descending → none and calls onSortChange", async () => {
+    const onSortChange = vi.fn();
+    const screen = await render(
+      <MTable<Term>
+        data={[terms[2]!, terms[0]!, terms[1]!]}
+        columns={[
+          { prop: "id", label: "序号", sortable: true },
+          { prop: "name", label: "节气" },
+        ]}
+        rowKey="id"
+        onSortChange={onSortChange}
+      />,
+    );
+    const header = screen.getByRole("columnheader", { name: "序号" });
+    await expect.element(header).toHaveAttribute("aria-sort", "none");
+    // 不可排的列没有 aria-sort，也没有按钮
+    await expect
+      .element(screen.getByRole("columnheader", { name: "节气" }))
+      .not.toHaveAttribute("aria-sort");
+    expect(screen.container.querySelectorAll(".m-table__sort")).toHaveLength(1);
+    expect(names(screen)).toEqual(["惊蛰", "立春", "雨水"]);
+
+    const button = screen.getByRole("button", { name: "序号" });
+    await button.click();
+    await expect.element(header).toHaveAttribute("aria-sort", "ascending");
+    await expect.element(button).toHaveClass("m-table__sort--ascending");
+    expect(names(screen)).toEqual(["立春", "雨水", "惊蛰"]);
+    expect(onSortChange).toHaveBeenLastCalledWith({ prop: "id", order: "ascending" });
+
+    await button.click();
+    await expect.element(header).toHaveAttribute("aria-sort", "descending");
+    expect(names(screen)).toEqual(["惊蛰", "雨水", "立春"]);
+    expect(onSortChange).toHaveBeenLastCalledWith({ prop: "id", order: "descending" });
+
+    await button.click();
+    await expect.element(header).toHaveAttribute("aria-sort", "none");
+    expect(names(screen)).toEqual(["惊蛰", "立春", "雨水"]);
+    expect(onSortChange).toHaveBeenLastCalledWith(null);
+    expect(onSortChange).toHaveBeenCalledTimes(3);
+  });
+
+  it("starts from defaultSort and only calls back when sortRemote", async () => {
+    const onSortChange = vi.fn();
+    const screen = await render(
+      <MTable<Term>
+        data={terms}
+        columns={[{ prop: "id", label: "序号", sortable: true }, { prop: "name" }]}
+        rowKey="id"
+        defaultSort={{ prop: "id", order: "descending" } satisfies TableSort}
+        sortRemote
+        onSortChange={onSortChange}
+      />,
+    );
+    const header = screen.getByRole("columnheader", { name: "序号" });
+    await expect.element(header).toHaveAttribute("aria-sort", "descending");
+    // 服务端排序：行序原样，只发事件
+    expect(names(screen)).toEqual(["立春", "雨水", "惊蛰"]);
+    await screen.getByRole("button", { name: "序号" }).click();
+    await expect.element(header).toHaveAttribute("aria-sort", "none");
+    expect(names(screen)).toEqual(["立春", "雨水", "惊蛰"]);
+    expect(onSortChange).toHaveBeenCalledWith(null);
+  });
+
+  it("keeps a controlled sort until the parent changes it", async () => {
+    const onSortChange = vi.fn();
+    const screen = await render(
+      <MTable<Term>
+        data={terms}
+        columns={[{ prop: "id", label: "序号", sortable: true }, { prop: "name" }]}
+        rowKey="id"
+        sort={{ prop: "id", order: "descending" }}
+        onSortChange={onSortChange}
+      />,
+    );
+    expect(names(screen)).toEqual(["惊蛰", "雨水", "立春"]);
+    await screen.getByRole("button", { name: "序号" }).click();
+    expect(onSortChange).toHaveBeenCalledWith(null);
+    expect(names(screen)).toEqual(["惊蛰", "雨水", "立春"]);
   });
 });

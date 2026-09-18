@@ -54,6 +54,22 @@ export const ICONS = {
       { tag: "path", attrs: { d: "M4 10h16M8 3v4M16 3v4" } },
     ],
   },
+  /** 实心小三角，尖朝下；表格排序指示器用，和 caret-up 成对 */
+  "caret-down": {
+    viewBox: "0 0 24 24",
+    width: "1em",
+    height: "1em",
+    fill: "currentColor",
+    shapes: [{ tag: "path", attrs: { d: "M4 7.5h16L12 17.5z" } }],
+  },
+  /** 实心小三角，尖朝上 */
+  "caret-up": {
+    viewBox: "0 0 24 24",
+    width: "1em",
+    height: "1em",
+    fill: "currentColor",
+    shapes: [{ tag: "path", attrs: { d: "M4 16.5h16L12 6.5z" } }],
+  },
   check: {
     viewBox: "0 0 24 24",
     width: "1em",

@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import type { TableAlign, TableCellScope, TableHeadScope, TableRow } from "@shuimo-design/core";
+import type {
+  TableAlign,
+  TableCellScope,
+  TableHeadScope,
+  TableRow,
+  TableSorter,
+} from "@shuimo-design/core";
 
 export interface MTableColumnProps<Row = TableRow> {
   /** 列对应的字段名，取值 row[prop] */
@@ -14,6 +20,8 @@ export interface MTableColumnProps<Row = TableRow> {
   render?: (scope: TableCellScope<Row>) => ReactNode;
   /** 自定义表头；不给就直出 label */
   renderHead?: (scope: TableHeadScope<Row>) => ReactNode;
+  /** 可排序：true 按 row[prop] 用默认比较（数字按数值、字符串 localeCompare、空值排最后），也可以给比较函数 */
+  sortable?: boolean | TableSorter<Row>;
 }
 
 /**

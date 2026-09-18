@@ -13,4 +13,7 @@ export type {
   TableRow,
   TableRowKey,
   TableSlots,
+  TableSort,
+  TableSorter,
+  TableSortOrder,
 } from "@shuimo-design/core";

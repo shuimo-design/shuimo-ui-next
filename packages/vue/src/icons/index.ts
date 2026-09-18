@@ -35,6 +35,8 @@ function icon(name: IconName): FunctionalComponent {
 
 export const IconBrushChevronDown = icon("brush-chevron-down");
 export const IconCalendar = icon("calendar");
+export const IconCaretDown = icon("caret-down");
+export const IconCaretUp = icon("caret-up");
 export const IconCheck = icon("check");
 export const IconChevronDown = icon("chevron-down");
 export const IconChevronLeft = icon("chevron-left");

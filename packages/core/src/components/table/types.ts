@@ -7,6 +7,20 @@ export type TableRow = Record<string, unknown>;
 /** 行的唯一标识：字段名，或按行算一个 key 的函数 */
 export type TableRowKey<Row> = string | ((row: Row, index: number) => string | number);
 
+/** 排序方向 */
+export type TableSortOrder = "ascending" | "descending";
+
+/** 当前的排序：按哪一列、什么方向；null 是不排 */
+export interface TableSort {
+  /** 列的 prop */
+  prop: string;
+  /** 方向 */
+  order: TableSortOrder;
+}
+
+/** 列的比较函数：返回负数 a 在前、正数 b 在前；组件按 ascending 用它、descending 取反 */
+export type TableSorter<Row> = (a: Row, b: Row) => number;
+
 /** 单元格的作用域，交给列上的 render */
 export interface TableCellScope<Row = TableRow> {
   /** 当前行 */
@@ -50,6 +64,8 @@ export interface TableColumnConfig<Row = TableRow, Node = unknown> {
   render?: (scope: TableCellScope<Row>) => Node;
   /** 自定义表头；不给就直出 label */
   renderHead?: (scope: TableHeadScope<Row>) => Node;
+  /** 可排序：true 按 row[prop] 用默认比较（数字按数值、字符串 localeCompare、空值排最后），也可以给比较函数 */
+  sortable?: boolean | TableSorter<Row>;
 }
 
 export interface TableProps<Row = TableRow> {
@@ -67,11 +83,17 @@ export interface TableProps<Row = TableRow> {
   stripe?: boolean;
   /** 没有数据时的文字；empty 插槽优先 */
   emptyText?: string;
+  /** 初始排序；不绑 sort 时作为非受控初值 */
+  defaultSort?: TableSort;
+  /** 服务端排序：不在本地排，只发 sortChange */
+  sortRemote?: boolean;
 }
 
 export interface TableEmits<Row = TableRow> {
   /** 点击某一行 */
   rowClick: [row: Row, index: number, event: MouseEvent];
+  /** 排序变化；null 是取消排序 */
+  sortChange: [sort: TableSort | null];
 }
 
 export interface TableSlots {
@@ -90,6 +112,8 @@ export interface TableColumnProps {
   width?: string | number;
   /** 对齐，默认跟随表格的 align */
   align?: TableAlign;
+  /** 可排序：true 按 row[prop] 用默认比较，也可以给比较函数 */
+  sortable?: boolean | TableSorter<TableRow>;
 }
 
 export interface TableColumnSlots {

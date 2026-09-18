@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-vue";
 import { h } from "vue";
-import { MTable, MTableColumn, type TableCellScope, type VueTableColumn } from ".";
+import { MTable, MTableColumn, type TableCellScope, type TableSort, type VueTableColumn } from ".";
 
 interface Term {
   id: number;
@@ -47,7 +47,7 @@ describe("MTable", () => {
       props: { data: terms },
       slots: {
         default: () => [
-          h(MTableColumn, { prop: "name", label: "节气" }),
+          h(MTableColumn, { prop: "name", label: "节气", sortable: true }),
           h(
             MTableColumn,
             { prop: "id", label: "序号", align: "right" },
@@ -61,6 +61,7 @@ describe("MTable", () => {
     });
     const headers = screen.getByRole("columnheader");
     await expect.element(headers.first()).toHaveTextContent("节气");
+    await expect.element(headers.first()).toHaveAttribute("aria-sort", "none");
     await expect.element(headers.nth(1)).toHaveTextContent("编号");
     expect(screen.container.querySelector("th em")).not.toBeNull();
     const cells = screen.getByRole("cell");
@@ -124,5 +125,76 @@ describe("MTable", () => {
     expect(onRowClick).toHaveBeenCalledTimes(1);
     expect(onRowClick.mock.calls[0]?.[0]).toEqual(terms[1]);
     expect(onRowClick.mock.calls[0]?.[1]).toBe(1);
+  });
+
+  const names = (screen: { container: Element }) =>
+    [...screen.container.querySelectorAll('.m-table__td[data-prop="name"]')].map((td) =>
+      td.textContent?.trim(),
+    );
+
+  it("cycles a sortable header ascending → descending → none and emits sortChange", async () => {
+    const onSortChange = vi.fn();
+    const screen = await render(MTable<Term>, {
+      props: {
+        data: [terms[2]!, terms[0]!, terms[1]!],
+        columns: [
+          { prop: "id", label: "序号", sortable: true },
+          { prop: "name", label: "节气" },
+        ],
+        rowKey: "id",
+        onSortChange,
+      },
+    });
+    const header = screen.getByRole("columnheader", { name: "序号" });
+    await expect.element(header).toHaveAttribute("aria-sort", "none");
+    // 不可排的列没有 aria-sort，也没有按钮
+    await expect
+      .element(screen.getByRole("columnheader", { name: "节气" }))
+      .not.toHaveAttribute("aria-sort");
+    expect(screen.container.querySelectorAll(".m-table__sort")).toHaveLength(1);
+    expect(names(screen)).toEqual(["惊蛰", "立春", "雨水"]);
+
+    const button = screen.getByRole("button", { name: "序号" });
+    await button.click();
+    await expect.element(header).toHaveAttribute("aria-sort", "ascending");
+    await expect.element(button).toHaveClass("m-table__sort--ascending");
+    expect(names(screen)).toEqual(["立春", "雨水", "惊蛰"]);
+    expect(onSortChange).toHaveBeenLastCalledWith({ prop: "id", order: "ascending" });
+
+    await button.click();
+    await expect.element(header).toHaveAttribute("aria-sort", "descending");
+    expect(names(screen)).toEqual(["惊蛰", "雨水", "立春"]);
+    expect(onSortChange).toHaveBeenLastCalledWith({ prop: "id", order: "descending" });
+
+    await button.click();
+    await expect.element(header).toHaveAttribute("aria-sort", "none");
+    expect(names(screen)).toEqual(["惊蛰", "立春", "雨水"]);
+    expect(onSortChange).toHaveBeenLastCalledWith(null);
+    expect(onSortChange).toHaveBeenCalledTimes(3);
+  });
+
+  it("starts from defaultSort and only emits when sortRemote", async () => {
+    const onSortChange = vi.fn();
+    const onUpdate = vi.fn();
+    const screen = await render(MTable<Term>, {
+      props: {
+        data: terms,
+        columns: [{ prop: "id", label: "序号", sortable: true }, { prop: "name" }],
+        rowKey: "id",
+        defaultSort: { prop: "id", order: "descending" } satisfies TableSort,
+        sortRemote: true,
+        onSortChange,
+        "onUpdate:sort": onUpdate,
+      },
+    });
+    const header = screen.getByRole("columnheader", { name: "序号" });
+    await expect.element(header).toHaveAttribute("aria-sort", "descending");
+    // 服务端排序：行序原样，只发事件
+    expect(names(screen)).toEqual(["立春", "雨水", "惊蛰"]);
+    await screen.getByRole("button", { name: "序号" }).click();
+    await expect.element(header).toHaveAttribute("aria-sort", "none");
+    expect(names(screen)).toEqual(["立春", "雨水", "惊蛰"]);
+    expect(onSortChange).toHaveBeenCalledWith(null);
+    expect(onUpdate).toHaveBeenCalledWith(null);
   });
 });

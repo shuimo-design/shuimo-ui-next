@@ -8,4 +8,7 @@ export type {
   TableProps,
   TableRow,
   TableRowKey,
+  TableSort,
+  TableSorter,
+  TableSortOrder,
 } from "@shuimo-design/core";

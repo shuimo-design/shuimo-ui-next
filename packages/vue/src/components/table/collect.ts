@@ -5,6 +5,7 @@ import type {
   TableHeadScope,
   TableProps,
   TableRow,
+  TableSorter,
 } from "@shuimo-design/core";
 import MTableColumn from "./MTableColumn.vue";
 
@@ -55,6 +56,8 @@ export function collectColumns<Row>(nodes: unknown): VueTableColumn<Row>[] {
         label: props.label as string | undefined,
         width: props.width as string | number | undefined,
         align: props.align as VueTableColumn<Row>["align"],
+        // 模板里裸写 `sortable` 到 vnode 上是空串（没经过 Boolean 归一化），这里当 true
+        sortable: props.sortable === "" ? true : (props.sortable as boolean | TableSorter<Row>),
         render: slots.default,
         renderHead: slots.head,
       });

@@ -1,10 +1,46 @@
 import { useState } from "react";
-import { MButton, MTable, MTableColumn, type ReactTableColumn } from "@shuimo-design/react";
+import {
+  MButton,
+  MTable,
+  MTableColumn,
+  type ReactTableColumn,
+  type TableSort,
+} from "@shuimo-design/react";
 
 interface Term {
   id: number;
   name: string;
 }
+
+interface Solar {
+  id: number;
+  name: string;
+  /** 公历日期，月-日 */
+  date: string;
+  /** 平均气温，缺测为 null */
+  temp: number | null;
+}
+
+const SOLAR: Solar[] = [
+  { id: 1, name: "立春", date: "02-04", temp: 4 },
+  { id: 2, name: "雨水", date: "02-19", temp: 6 },
+  { id: 3, name: "惊蛰", date: "03-05", temp: 9 },
+  { id: 4, name: "春分", date: "03-20", temp: null },
+  { id: 5, name: "清明", date: "04-04", temp: 14 },
+  { id: 6, name: "谷雨", date: "04-20", temp: 18 },
+];
+
+/** 排序：sortable: true 走默认比较；date 列自定义比较函数按月日 */
+const SORT_COLUMNS: ReactTableColumn<Solar>[] = [
+  { prop: "name", label: "节气", align: "left" },
+  { prop: "date", label: "日期", sortable: (a, b) => a.date.localeCompare(b.date) },
+  {
+    prop: "temp",
+    label: "均温 ℃",
+    sortable: true,
+    render: ({ row }) => row.temp ?? "—",
+  },
+];
 
 const DATA: Term[] = [
   { id: 1, name: "立春" },
@@ -22,6 +58,7 @@ const DATA: Term[] = [
 export default function TableDemo() {
   const [clicked, setClicked] = useState("");
   const [stripe, setStripe] = useState(true);
+  const [sort, setSort] = useState<TableSort | null>({ prop: "temp", order: "descending" });
 
   /** 列就是一个数组，顺序即列序；自定义单元格挂在列上的 render，和 Vue 那边同一个签名 */
   const columns: ReactTableColumn<Term>[] = [
@@ -101,6 +138,22 @@ export default function TableDemo() {
             { prop: "name", label: "节气" },
           ]}
         />
+      </div>
+
+      <div className="demo__block">
+        <p className="demo__caption">
+          排序：列上 sortable 为 true 用默认比较（数字按数值、字符串 localeCompare、空值排最后），
+          也可以给比较函数；表头点一下升序、再点降序、第三下取消；sort / onSortChange 受控，
+          defaultSort 非受控，sortRemote 时只回调不在本地排
+        </p>
+        <MTable<Solar>
+          data={SOLAR}
+          columns={SORT_COLUMNS}
+          rowKey="id"
+          sort={sort}
+          onSortChange={setSort}
+        />
+        <p className="demo__hint">sort：{sort ? `${sort.prop} ${sort.order}` : "无"}</p>
       </div>
 
       <div className="demo__block">

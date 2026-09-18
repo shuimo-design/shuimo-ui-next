@@ -1,10 +1,25 @@
 <script setup lang="ts">
 import { h, ref } from "vue";
-import { MButton, MTable, MTableColumn, type VueTableColumn } from "@shuimo-design/vue";
+import {
+  MButton,
+  MTable,
+  MTableColumn,
+  type TableSort,
+  type VueTableColumn,
+} from "@shuimo-design/vue";
 
 interface Term {
   id: number;
   name: string;
+}
+
+interface Solar {
+  id: number;
+  name: string;
+  /** 公历日期，月-日 */
+  date: string;
+  /** 平均气温，缺测为 null */
+  temp: number | null;
 }
 
 const data = ref<Term[]>([
@@ -22,6 +37,28 @@ const data = ref<Term[]>([
 
 const clicked = ref("");
 const stripe = ref(true);
+
+const solar: Solar[] = [
+  { id: 1, name: "立春", date: "02-04", temp: 4 },
+  { id: 2, name: "雨水", date: "02-19", temp: 6 },
+  { id: 3, name: "惊蛰", date: "03-05", temp: 9 },
+  { id: 4, name: "春分", date: "03-20", temp: null },
+  { id: 5, name: "清明", date: "04-04", temp: 14 },
+  { id: 6, name: "谷雨", date: "04-20", temp: 18 },
+];
+
+/** 排序：sortable: true 走默认比较；date 列自定义比较函数按月日 */
+const sortColumns: VueTableColumn<Solar>[] = [
+  { prop: "name", label: "节气", align: "left" },
+  { prop: "date", label: "日期", sortable: (a, b) => a.date.localeCompare(b.date) },
+  {
+    prop: "temp",
+    label: "均温 ℃",
+    sortable: true,
+    render: ({ row }) => row.temp ?? "—",
+  },
+];
+const sort = ref<TableSort | null>({ prop: "temp", order: "descending" });
 
 /**
  * 新写法：列就是一个数组，顺序即列序。
@@ -91,6 +128,16 @@ const columns: VueTableColumn<Term>[] = [
           { prop: 'name', label: '节气' },
         ]"
       />
+    </div>
+
+    <div class="demo__block">
+      <p class="demo__caption">
+        排序：列上 sortable 为 true 用默认比较（数字按数值、字符串 localeCompare、空值排最后），
+        也可以给比较函数；表头点一下升序、再点降序、第三下取消；v-model:sort 双向绑定，sortRemote
+        时只发 sortChange 不在本地排
+      </p>
+      <MTable :data="solar" :columns="sortColumns" row-key="id" v-model:sort="sort" />
+      <p class="demo__hint">sort：{{ sort ? `${sort.prop} ${sort.order}` : "无" }}</p>
     </div>
 
     <div class="demo__block">
