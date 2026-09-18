@@ -34,6 +34,7 @@ interface StyleEntry {
 
 export const COMPONENT_STYLES = {
   MAlert: { css: "alert" },
+  MAutoComplete: { css: "auto-complete", renders: ["popper"] },
   MAvatar: { css: "avatar" },
   // 默认那枚「顶」字印是 MStamp
   MBackTop: { css: "back-top", renders: ["MStamp"] },

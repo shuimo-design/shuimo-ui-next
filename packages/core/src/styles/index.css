@@ -25,6 +25,7 @@
 
 /* 组件样式，按目录名排序 */
 @import "../components/alert/alert.css";
+@import "../components/auto-complete/auto-complete.css";
 @import "../components/avatar/avatar.css";
 @import "../components/back-top/back-top.css";
 @import "../components/badge/badge.css";

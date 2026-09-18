@@ -1,0 +1,175 @@
+@layer m.component {
+  .m-auto-complete {
+    --m-auto-complete-h: 36px;
+    --m-auto-complete-px: var(--m-space-3);
+    --m-auto-complete-border: var(--m-border);
+    /* 和输入框一样，底是一层比纸面略白的色，字才立得住 */
+    --m-auto-complete-bg: rgb(var(--m-paper-rgb) / 0.6);
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    max-width: 320px;
+    color: var(--m-fg);
+
+    &.m-auto-complete--open,
+    &.m-auto-complete--focused {
+      --m-auto-complete-border: var(--m-accent);
+    }
+
+    &.m-auto-complete--disabled {
+      --m-auto-complete-border: var(--m-disabled);
+      --m-auto-complete-bg: color-mix(in srgb, var(--m-disabled) 40%, transparent);
+      color: var(--m-fg-muted);
+    }
+  }
+
+  .m-auto-complete__trigger {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--m-auto-complete-h);
+    padding: 0 var(--m-auto-complete-px);
+    gap: var(--m-space-2);
+    border: 1px solid var(--m-auto-complete-border);
+    border-radius: var(--m-radius);
+    background: var(--m-auto-complete-bg);
+    cursor: text;
+    transition: border-color var(--m-duration) var(--m-ease);
+  }
+
+  .m-auto-complete--disabled .m-auto-complete__trigger {
+    cursor: var(--m-cursor-disabled);
+  }
+
+  .m-auto-complete__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: calc(var(--m-auto-complete-h) - 2px);
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+
+    &::placeholder {
+      color: var(--m-fg-muted);
+      opacity: 0.8;
+    }
+
+    &:disabled {
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  /* 焦点框画在外框上，输入框本身的 outline 已经关掉 */
+  .m-auto-complete__trigger:has(.m-auto-complete__input:focus-visible) {
+    outline: 2px solid var(--m-accent);
+    outline-offset: 1px;
+  }
+
+  .m-auto-complete__prefix,
+  .m-auto-complete__suffix {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--m-space-1);
+    flex: none;
+    color: var(--m-fg-muted);
+  }
+
+  .m-auto-complete__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font: inherit;
+    cursor: var(--m-cursor-pointer);
+    transition: color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      color: var(--m-accent);
+    }
+  }
+
+  .m-auto-complete__dropdown {
+    /* 下拉被 Teleport 到 body，继承不到根上的变量，这里重新声明一份 */
+    --m-auto-complete-px: var(--m-space-2);
+    /* 高亮底色是半透明墨，深色主题下自动跟着变 */
+    --m-auto-complete-option-active: color-mix(in srgb, var(--m-ink) 10%, transparent);
+    padding: var(--m-space-1) 0;
+    border: 1px solid var(--m-border);
+    border-radius: var(--m-radius);
+    background: var(--m-bg);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+  }
+
+  .m-auto-complete__options {
+    max-height: 240px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .m-auto-complete__option {
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    min-height: 32px;
+    margin: var(--m-space-1);
+    padding: 2px var(--m-auto-complete-px);
+    border-radius: 5px;
+    cursor: var(--m-cursor-pointer);
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &.m-auto-complete__option--active {
+      background: var(--m-auto-complete-option-active);
+    }
+
+    &.m-auto-complete__option--disabled {
+      color: var(--m-fg-muted);
+      opacity: 0.6;
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-auto-complete__option-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .m-auto-complete__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--m-space-3);
+    color: var(--m-fg-muted);
+  }
+}
+
+@layer m.ink {
+  /* 笔触边框挂在 trigger 上（useBrushBorder），打开 / 聚焦 / 禁用只换墨色 */
+  html.m-ink-ready .m-auto-complete--open .m-auto-complete__trigger,
+  html.m-ink-ready .m-auto-complete--focused .m-auto-complete__trigger {
+    --m-ink: var(--m-accent);
+  }
+
+  html.m-ink-ready .m-auto-complete--disabled .m-auto-complete__trigger {
+    /* 禁用底色和 --m-disabled 几乎同色，笔触改成半透明灰墨才看得见 */
+    --m-ink: color-mix(in srgb, var(--m-fg-muted) 55%, transparent);
+  }
+
+  /* 下拉面板：笔触边框也挂在面板容器上（useBrushBorder），去掉普通皮肤的投影，只靠一圈手绘线 */
+  html.m-ink-ready .m-auto-complete__dropdown {
+    box-shadow: none;
+    border-radius: 0;
+  }
+}

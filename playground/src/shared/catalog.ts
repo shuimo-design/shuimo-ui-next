@@ -52,6 +52,7 @@ export const CATALOG: DemoGroup[] = [
     items: [
       entry("button", "按钮", "MButton"),
       entry("input", "输入框", "MInput"),
+      entry("auto-complete", "自动完成", "MAutoComplete"),
       entry("input-number", "数字输入", "MInputNumber"),
       entry("select", "选择器", "MSelect"),
       entry("date-picker", "日期选择", "MDatePicker"),

@@ -25,6 +25,7 @@ const MINIMAL_PROPS: Record<string, Record<string, unknown>> = {
   MPopconfirm: { title: "确定删除？" },
   MImage: { src: "/shan.png" },
   MSelect: { options: [{ label: "山", value: "shan" }] },
+  MAutoComplete: { options: [{ value: "shan" }] },
   MSealColophon: { author: "白石" },
   MStamp: { text: "山水" },
   MTree: { data: [{ key: "1", label: "山" }] },
