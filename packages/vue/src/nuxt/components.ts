@@ -80,4 +80,5 @@ export const COMPONENT_NAMES = [
   "MCarousel",
   "MCarouselItem",
   "MAnchor",
+  "MShanShui",
 ] as const;

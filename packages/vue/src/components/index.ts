@@ -1,5 +1,6 @@
 export * from "./button";
 export * from "./rice-paper";
+export * from "./shan-shui";
 export * from "./border";
 export * from "./ink-transition";
 export * from "./input";

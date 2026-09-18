@@ -21,6 +21,12 @@ export interface ParallaxOptions {
   pointer?: boolean;
   /** 强制关闭动效；未传则跟随 prefers-reduced-motion */
   reducedMotion?: boolean;
+  /**
+   * 自定义"滚了多远"的读法，默认读 window.scrollY。
+   * 页面在某个滚动容器里滚（不是 window）时，window.scrollY 永远是 0；传这个函数改成读容器或元素自己的位置。
+   * 传了它，滚动事件改在捕获阶段监听，任何容器的滚动都收得到
+   */
+  scrollOffset?: () => number;
 }
 
 export interface ParallaxController {
@@ -91,9 +97,15 @@ export function createParallax(options: ParallaxOptions = {}): ParallaxControlle
     target.y = 0;
     schedule();
   };
+  const readScroll = options.scrollOffset ?? (() => window.scrollY);
   const onScroll = () => {
-    scrollY = window.scrollY;
+    scrollY = readScroll();
     apply();
+  };
+  /** 自定义读法时在捕获阶段听：scroll 事件不冒泡，只有这样才收得到内层容器的滚动 */
+  const scrollListen: AddEventListenerOptions = {
+    passive: true,
+    capture: Boolean(options.scrollOffset),
   };
 
   const pointerTarget =
@@ -106,7 +118,7 @@ export function createParallax(options: ParallaxOptions = {}): ParallaxControlle
       });
       pointerTarget.addEventListener("pointerleave", onPointerLeave, { passive: true });
     }
-    if (scrollFactor !== 0) window.addEventListener("scroll", onScroll, { passive: true });
+    if (scrollFactor !== 0) window.addEventListener("scroll", onScroll, scrollListen);
   }
 
   return {
@@ -136,7 +148,7 @@ export function createParallax(options: ParallaxOptions = {}): ParallaxControlle
       if (listening) {
         pointerTarget?.removeEventListener("pointermove", onPointerMove as EventListener);
         pointerTarget?.removeEventListener("pointerleave", onPointerLeave);
-        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("scroll", onScroll, scrollListen);
       }
       for (const { element } of layers) element.style.transform = "";
       layers = [];
