@@ -1,0 +1,245 @@
+@layer m.component {
+  /*
+   * 每次只渲染当前那一张；翻页时进来的那张正常占位、出去的那张绝对定位盖在同一块地方，
+   * 两张一起滑。位移方向来自根上的 --m-carousel-dir（1 往后、-1 往前），服务端没有过渡类名，
+   * 输出里没有任何 transform。
+   */
+  .m-carousel {
+    --m-carousel-dir: 1;
+    /* 没给 height 时由当前那张撑开 */
+    --m-carousel-h: auto;
+    --m-carousel-arrow-size: 32px;
+    --m-carousel-dot-size: 8px;
+    --m-carousel-dot-gap: var(--m-space-2);
+    --m-carousel-dot-color: var(--m-ink);
+    /* 滑动比普通动效慢一拍，一张图的位移要看得清 */
+    --m-carousel-duration: calc(var(--m-duration) * 2);
+    position: relative;
+    display: block;
+    color: var(--m-fg);
+    outline: none;
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .m-carousel__track {
+    position: relative;
+    height: var(--m-carousel-h);
+    overflow: hidden;
+  }
+
+  .m-carousel__slide {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 图片铺满：给了高度就 cover，没给就按图片自己的比例 */
+  .m-carousel__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---- 过渡：类名时序和 Vue <Transition> 一致，React 侧由 MTransition 产出同一套 ---- */
+  .m-carousel-slide-enter-active,
+  .m-carousel-slide-leave-active {
+    transition:
+      transform var(--m-carousel-duration) var(--m-ease),
+      opacity var(--m-carousel-duration) var(--m-ease);
+  }
+
+  /* 出去的那张让出文档流，盖在进来的那张上面一起滑 */
+  .m-carousel-slide-leave-active {
+    position: absolute;
+    inset: 0;
+  }
+
+  .m-carousel-slide-enter-from {
+    opacity: 0;
+    transform: translateX(calc(100% * var(--m-carousel-dir)));
+  }
+
+  .m-carousel-slide-leave-to {
+    opacity: 0;
+    transform: translateX(calc(-100% * var(--m-carousel-dir)));
+  }
+
+  .m-carousel--vertical .m-carousel-slide-enter-from {
+    transform: translateY(calc(100% * var(--m-carousel-dir)));
+  }
+
+  .m-carousel--vertical .m-carousel-slide-leave-to {
+    transform: translateY(calc(-100% * var(--m-carousel-dir)));
+  }
+
+  /* ---- 箭头 ---- */
+  .m-carousel__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--m-carousel-arrow-size);
+    height: var(--m-carousel-arrow-size);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--m-bg) 80%, transparent);
+    color: var(--m-fg);
+    font: inherit;
+    line-height: 0;
+    cursor: var(--m-cursor-pointer);
+    transform: translateY(-50%);
+    transition:
+      opacity var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease);
+
+    &:hover:not(:disabled) {
+      background: var(--m-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: var(--m-cursor-disabled);
+    }
+  }
+
+  .m-carousel__arrow--prev {
+    left: var(--m-space-3);
+  }
+
+  .m-carousel__arrow--next {
+    right: var(--m-space-3);
+  }
+
+  /* 竖向：箭头挪到上下居中，图标转九十度 */
+  .m-carousel--vertical .m-carousel__arrow {
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .m-carousel--vertical .m-carousel__arrow--prev {
+    top: var(--m-space-3);
+  }
+
+  .m-carousel--vertical .m-carousel__arrow--next {
+    right: auto;
+    bottom: var(--m-space-3);
+  }
+
+  .m-carousel--vertical .m-carousel__arrow .m-icon {
+    transform: rotate(90deg);
+  }
+
+  /* hover 模式：平时藏着，鼠标进来或焦点在里面时浮现 */
+  .m-carousel--arrows-hover .m-carousel__arrow {
+    opacity: 0;
+  }
+
+  .m-carousel--arrows-hover:hover .m-carousel__arrow,
+  .m-carousel--arrows-hover:focus-within .m-carousel__arrow {
+    opacity: 1;
+  }
+
+  .m-carousel--arrows-hover:hover .m-carousel__arrow:disabled,
+  .m-carousel--arrows-hover:focus-within .m-carousel__arrow:disabled {
+    opacity: 0.35;
+  }
+
+  /* ---- 指示器：一排墨点，横向贴底居中，竖向贴右居中 ---- */
+  .m-carousel__dots {
+    position: absolute;
+    bottom: var(--m-space-3);
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    gap: var(--m-carousel-dot-gap);
+    transform: translateX(-50%);
+  }
+
+  .m-carousel--vertical .m-carousel__dots {
+    top: 50%;
+    right: var(--m-space-3);
+    bottom: auto;
+    left: auto;
+    flex-direction: column;
+    transform: translateY(-50%);
+  }
+
+  .m-carousel__dot {
+    position: relative;
+    display: block;
+    width: var(--m-carousel-dot-size);
+    height: var(--m-carousel-dot-size);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--m-carousel-dot-color);
+    opacity: 0.35;
+    cursor: var(--m-cursor-pointer);
+    transition:
+      opacity var(--m-duration) var(--m-ease),
+      transform var(--m-duration) var(--m-ease);
+
+    /* 点太小不好点：把可点区域扩一圈 */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &.m-carousel__dot--active {
+      opacity: 1;
+      transform: scale(1.25);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 3px;
+    }
+  }
+}
+
+@layer m.ink {
+  /* 墨点换成按 seed 生成的毛边墨团；素材画幅比点大，盒子往外扩一圈 */
+  html.m-ink-ready .m-carousel__dot {
+    background: transparent;
+    border-radius: 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      background: var(--m-carousel-dot-color);
+      mask: var(--m-carousel-dot) center / 100% 100% no-repeat;
+    }
+
+    /* 激活的那粒蘸朱砂 */
+    &.m-carousel__dot--active {
+      --m-carousel-dot-color: var(--m-seal);
+    }
+  }
+
+  /* 箭头底色换成一片淡墨晕 */
+  html.m-ink-ready .m-carousel__arrow {
+    background: color-mix(in srgb, var(--m-bg) 70%, transparent);
+    filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--m-ink) 20%, transparent));
+  }
+}

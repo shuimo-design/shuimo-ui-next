@@ -77,4 +77,6 @@ export const COMPONENT_NAMES = [
   "MUpload",
   "MWatermark",
   "MAutoComplete",
+  "MCarousel",
+  "MCarouselItem",
 ] as const;

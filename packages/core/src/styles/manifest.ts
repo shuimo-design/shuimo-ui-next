@@ -44,6 +44,8 @@ export const COMPONENT_STYLES = {
   MBreadcrumbItem: { css: "breadcrumb" },
   MButton: { css: "button" },
   MCard: { css: "card" },
+  MCarousel: { css: "carousel" },
+  MCarouselItem: { css: "carousel" },
   MCell: { css: "grid" },
   MCheckbox: { css: "checkbox" },
   MCheckboxGroup: { css: "checkbox" },
