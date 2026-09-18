@@ -1,6 +1,6 @@
 # 组件缺口与排期
 
-2026-09-16。现状 73 个组件（`docs/api/`）。做完一项删一项。
+2026-09-19。现状 80 个组件（`docs/api/`）。做完一项删一项。
 
 排序依据：目标场景（博客、作品集、文化 / 品牌站、文档站）的出场频率 × 水墨风的加分 × 现有积木。不按"Ant / Element / Arco / Naive 有没有"排——那是后台库的尺子，穿梭框、级联、树选择、图片墙在这些场景里基本不出现，且都是硬骨头。
 
@@ -9,6 +9,8 @@
 已完成（1.0.0-beta.3）：Dropdown、Notification、Popconfirm、Timeline、Rate、BackTop、Image、Descriptions、MPaperTheme、MSealColophon。剩下：MDatePicker range。
 
 ## 第二批
+
+已完成（1.0.0-beta.4）：Carousel、Anchor、Watermark、AutoComplete、Upload、MReadingStroke，MTable 列排序 / 行选择。剩下：
 
 | 组件               | 说明                                                   | 积木                                   |
 | ------------------ | ------------------------------------------------------ | -------------------------------------- |
