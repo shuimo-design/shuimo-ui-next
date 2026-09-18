@@ -1,0 +1,244 @@
+@layer m.component {
+  .m-upload {
+    --m-upload-drop-bg: color-mix(in srgb, var(--m-ink) 3%, var(--m-bg));
+    --m-upload-drop-bg-over: color-mix(in srgb, var(--m-ink) 8%, var(--m-bg));
+    --m-upload-drop-border: color-mix(in srgb, var(--m-border) 60%, transparent);
+    --m-upload-drop-pad: var(--m-space-6);
+    display: block;
+    color: var(--m-fg);
+    font-size: var(--m-font-size);
+    line-height: var(--m-line-height);
+  }
+
+  .m-upload__trigger {
+    display: inline-block;
+  }
+
+  /* ── 拖拽区：一块虚线框的空地，拖入时框变实、底变深 ─────────────── */
+  .m-upload__drop {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--m-space-1);
+    min-height: 120px;
+    padding: var(--m-upload-drop-pad);
+    border: 1px dashed var(--m-upload-drop-border);
+    border-radius: var(--m-radius);
+    background: var(--m-upload-drop-bg);
+    color: var(--m-fg-muted);
+    text-align: center;
+    cursor: var(--m-cursor-pointer);
+    outline: 0;
+    transition:
+      border-color var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease),
+      color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      border-color: var(--m-border);
+      color: var(--m-fg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .m-upload--dragover .m-upload__drop {
+    border-style: solid;
+    border-color: var(--m-ink);
+    background: var(--m-upload-drop-bg-over);
+    color: var(--m-fg-strong);
+  }
+
+  .m-upload--disabled .m-upload__drop {
+    color: var(--m-fg-muted);
+    cursor: var(--m-cursor-disabled);
+    opacity: 0.6;
+
+    &:hover {
+      border-color: var(--m-upload-drop-border);
+    }
+  }
+
+  /* 拖入时晕开的那团墨：只在 m.ink 层显示 */
+  .m-upload__drop-wash {
+    display: none;
+  }
+
+  .m-upload__tip {
+    margin-top: var(--m-space-2);
+    color: var(--m-fg-muted);
+    font-size: 12px;
+  }
+
+  /* ── 文件列表：借 MList 的骨架，行里是名字、尺寸、进度和删除 ────────── */
+  .m-upload__list {
+    --m-list-gap: var(--m-space-1);
+    margin-top: var(--m-space-2);
+    padding: 0;
+  }
+
+  .m-upload-file {
+    display: flex;
+    align-items: center;
+    gap: var(--m-space-2);
+    min-width: 0;
+    padding: var(--m-space-1) var(--m-space-2);
+    border-radius: var(--m-radius);
+    transition: background-color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      background: color-mix(in srgb, var(--m-ink) 4%, transparent);
+    }
+  }
+
+  /* 文件名是个按钮：点了报 preview */
+  .m-upload-file__name {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: var(--m-cursor-pointer);
+
+    &:hover {
+      color: var(--m-info);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+  }
+
+  .m-upload-file--error .m-upload-file__name {
+    color: var(--m-danger);
+  }
+
+  .m-upload-file__size {
+    flex-shrink: 0;
+    color: var(--m-fg-muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 传输中：一条短进度条顶掉尺寸 */
+  .m-upload-file__progress {
+    --m-progress-w: 120px;
+    flex-shrink: 0;
+  }
+
+  .m-upload-file__status {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .m-upload-file--success .m-upload-file__status {
+    color: var(--m-success);
+  }
+
+  .m-upload-file--error .m-upload-file__status {
+    color: var(--m-danger);
+  }
+
+  .m-upload-file__remove {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--m-fg-muted);
+    font-size: 14px;
+    cursor: var(--m-cursor-pointer);
+    transition:
+      color var(--m-duration) var(--m-ease),
+      background-color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      background: color-mix(in srgb, var(--m-ink) 8%, transparent);
+      color: var(--m-fg-strong);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: 1px;
+    }
+  }
+
+  .m-upload--disabled .m-upload-file__remove,
+  .m-upload--disabled .m-upload-file__name {
+    cursor: var(--m-cursor-disabled);
+  }
+}
+
+@layer m.ink {
+  /* 拖拽区变成一张撕下来的纸：虚线框撤了，纸缘套毛边遮罩，里面留一圈淡淡的虚线 */
+  html.m-ink-ready .m-upload__drop {
+    border: 0;
+    border-radius: 0;
+    background:
+      var(--m-ink-sheet-texture, none) center / 384px 384px repeat,
+      var(--m-upload-drop-bg);
+    background-blend-mode: multiply, normal;
+    mask: var(--m-upload-drop-mask, none) center / 100% 100% no-repeat;
+    outline: 1px dashed color-mix(in srgb, var(--m-ink) 28%, transparent);
+    outline-offset: -10px;
+    transition:
+      background-color var(--m-duration) var(--m-ease),
+      outline-color var(--m-duration) var(--m-ease),
+      color var(--m-duration) var(--m-ease);
+
+    &:hover {
+      outline-color: color-mix(in srgb, var(--m-ink) 50%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--m-accent);
+      outline-offset: -6px;
+    }
+  }
+
+  /* 拖入：一团淡墨从中心晕开 */
+  html.m-ink-ready .m-upload__drop-wash {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--m-ink);
+    mask: var(--m-upload-drop-wash, var(--m-ink-dot)) center / 70% 90% no-repeat;
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity calc(var(--m-duration) * 1.5) var(--m-ease),
+      transform calc(var(--m-duration) * 1.5) var(--m-ease);
+    pointer-events: none;
+  }
+
+  html.m-ink-ready .m-upload--dragover .m-upload__drop {
+    background-color: var(--m-upload-drop-bg-over);
+    outline-color: var(--m-ink);
+    outline-style: solid;
+  }
+
+  html.m-ink-ready .m-upload--dragover .m-upload__drop-wash {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+}

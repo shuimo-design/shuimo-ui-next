@@ -74,4 +74,5 @@ export const COMPONENT_NAMES = [
   "MTimelineItem",
   "MDescriptions",
   "MDescriptionsItem",
+  "MUpload",
 ] as const;

@@ -114,6 +114,8 @@ export const COMPONENT_STYLES = {
   MTooltip: { css: "tooltip", renders: ["popper", "MBorder"] },
   // 行的皮肤是两棵树共用的 tree-row 块；checkable 时行里是 MCheckbox
   MTree: { css: "tree", renders: ["tree-row", "MCheckbox"] },
+  // 默认触发钮是 MButton；文件列表借 MList / MListItem 的骨架，传输中的行里是 MProgress
+  MUpload: { css: "upload", renders: ["MButton", "MList", "MListItem", "MProgress"] },
   MVirtualList: { css: "virtual-list" },
   MVirtualTree: { css: "virtual-tree", renders: ["tree-row", "MCheckbox"] },
 } as const satisfies Record<string, StyleEntry>;

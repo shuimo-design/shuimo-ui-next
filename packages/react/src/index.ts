@@ -68,3 +68,4 @@ export * from "./components/grid";
 export * from "./components/back-top";
 export * from "./components/timeline";
 export * from "./components/descriptions";
+export * from "./components/upload";

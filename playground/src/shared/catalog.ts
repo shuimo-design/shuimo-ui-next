@@ -60,6 +60,7 @@ export const CATALOG: DemoGroup[] = [
       entry("switch", "开关", "MSwitch"),
       entry("slider", "滑块", "MSlider"),
       entry("rate", "评分", "MRate"),
+      entry("upload", "上传", "MUpload"),
       entry("tag", "标签", "MTag"),
       entry("avatar", "头像", "MAvatar"),
       entry("progress", "进度条", "MProgress"),

@@ -78,5 +78,6 @@
 @import "../components/tag/tag.css";
 @import "../components/tooltip/tooltip.css";
 @import "../components/tree/tree.css";
+@import "../components/upload/upload.css";
 @import "../components/virtual-list/virtual-list.css";
 @import "../components/virtual-tree/virtual-tree.css";

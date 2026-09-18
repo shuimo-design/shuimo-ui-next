@@ -14,6 +14,8 @@ import { useMounted, useSize } from "../../runtime";
 export interface MButtonProps extends CoreButtonProps {
   children?: ReactNode;
   onClick?: (event: MouseEvent<HTMLElement>) => void;
+  /** 指向说明文字的 id（MUpload 的 tip 用） */
+  "aria-describedby"?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -58,6 +60,7 @@ export function MButton(props: MButtonProps) {
     ...ink.attrs,
     "aria-disabled": disabled || undefined,
     "aria-busy": loading || undefined,
+    "aria-describedby": props["aria-describedby"],
     onClick,
   };
 

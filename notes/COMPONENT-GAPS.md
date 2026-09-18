@@ -18,7 +18,6 @@
 | Anchor                    | 文档站侧边导航，自己先用                               | —                                      |
 | Watermark                 | 水墨水印                                               | wash / bleed                           |
 | AutoComplete              | 搜索框；复用 Dropdown 的弹层                           | MInput + popper                        |
-| Upload                    | 文件选择 / 拖拽 / 列表；图片墙再等                     | MButton + MList                        |
 
 能力补齐：MTable 列排序、行选择。筛选 / 固定列 / 展开行再等。
 

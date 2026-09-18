@@ -57,3 +57,4 @@ export * from "./overlay-outlet";
 export * from "./back-top";
 export * from "./timeline";
 export * from "./descriptions";
+export * from "./upload";
