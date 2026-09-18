@@ -45,6 +45,7 @@ export const CATALOG: DemoGroup[] = [
       entry("stamp", "印章", "MStamp"),
       entry("seal-colophon", "落款", "MSealColophon"),
       entry("shan-shui", "山水横幅", "MShanShui"),
+      entry("reading-stroke", "一笔书进度", "MReadingStroke"),
       entry("ink-transition", "落墨与转场", "MInkTransition"),
     ],
   },

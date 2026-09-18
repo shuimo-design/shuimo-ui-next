@@ -666,6 +666,27 @@ export {
   type ShanShuiSnapshot,
 } from "./components/shan-shui";
 export {
+  createReadingStroke,
+  READING_STROKE_LABEL,
+  READING_STROKE_SEED,
+  READING_STROKE_THICKNESS,
+  READING_STROKE_Z_INDEX,
+  readingStrokeAria,
+  readingStrokeClasses,
+  readingStrokeMask,
+  readingStrokePercent,
+  readingStrokeProgress,
+  readingStrokeStyle,
+  resolveReadingStrokeTarget,
+  type ReadingStrokeController,
+  type ReadingStrokeEmits,
+  type ReadingStrokeInk,
+  type ReadingStrokeOptions,
+  type ReadingStrokePosition,
+  type ReadingStrokeProps,
+  type ReadingStrokeSnapshot,
+} from "./components/reading-stroke";
+export {
   checkboxAriaChecked,
   checkboxBrush,
   checkboxClasses,

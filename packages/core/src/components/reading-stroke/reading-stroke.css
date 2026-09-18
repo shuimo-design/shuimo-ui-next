@@ -1,0 +1,71 @@
+@layer m.component {
+  /* 固定在视口顶部（或底部）的一根条：本体透明、不接鼠标，高度是笔触画幅的高度 */
+  .m-reading-stroke {
+    --m-reading-stroke-thickness: 4px;
+    --m-reading-stroke-color: var(--m-ink);
+    --m-reading-stroke-z: 9000;
+    --m-reading-stroke-progress: 0;
+    --m-reading-stroke-band: var(--m-reading-stroke-thickness);
+    /* 笔尖化开的长度 */
+    --m-reading-stroke-tip: 24px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: var(--m-reading-stroke-z);
+    height: var(--m-reading-stroke-band);
+    pointer-events: none;
+
+    &.m-reading-stroke--top {
+      top: 0;
+    }
+
+    &.m-reading-stroke--bottom {
+      bottom: 0;
+    }
+
+    /* 写完了：笔尖不再化开，露出笔触自己的收笔 */
+    &.m-reading-stroke--done {
+      --m-reading-stroke-tip: 0px;
+    }
+  }
+
+  /* 朴素版：一条实墨，居中在画幅里，按进度从左往右揭开 */
+  .m-reading-stroke__bar {
+    position: absolute;
+    top: calc((var(--m-reading-stroke-band) - var(--m-reading-stroke-thickness)) / 2);
+    left: 0;
+    width: 100%;
+    height: var(--m-reading-stroke-thickness);
+    background: var(--m-reading-stroke-color);
+    clip-path: inset(0 calc(100% - var(--m-reading-stroke-progress) * 100%) 0 0);
+    /* 锚点跳转这种大步的进度变化滑一下，跟手滚动时这点时长感觉不到 */
+    transition: clip-path calc(var(--m-duration) / 3) linear;
+  }
+}
+
+@layer m.ink {
+  /* 引擎起来且量到了宽度：条撑满画幅，套按视口宽度生成的笔触遮罩；进度还是 clip-path 揭开 */
+  html.m-ink-ready .m-reading-stroke--masked .m-reading-stroke__bar {
+    top: 0;
+    height: 100%;
+    mask: var(--m-reading-stroke-mask) left center / 100% 100% no-repeat;
+  }
+
+  /* 支持遮罩相交的浏览器：再叠一层横向渐变，笔尖那一头化开；不支持的就是上面那条直接截宽 */
+  @supports (mask-composite: intersect) {
+    html.m-ink-ready .m-reading-stroke--masked .m-reading-stroke__bar {
+      clip-path: none;
+      mask-image:
+        var(--m-reading-stroke-mask),
+        linear-gradient(
+          to right,
+          #000 calc(var(--m-reading-stroke-progress) * 100% - var(--m-reading-stroke-tip)),
+          transparent calc(var(--m-reading-stroke-progress) * 100%)
+        );
+      mask-size: 100% 100%;
+      mask-position: left center;
+      mask-repeat: no-repeat;
+      mask-composite: intersect;
+    }
+  }
+}
