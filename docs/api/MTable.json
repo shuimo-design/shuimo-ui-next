@@ -98,14 +98,125 @@
       "react": {
         "name": "emptyText"
       }
+    },
+    {
+      "name": "defaultSort",
+      "description": "初始排序；不绑 sort 时作为非受控初值",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableSort | undefined"
+      },
+      "react": {
+        "name": "defaultSort"
+      }
+    },
+    {
+      "name": "sortRemote",
+      "description": "服务端排序：不在本地排，只发 sortChange",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "sortRemote"
+      }
+    },
+    {
+      "name": "selection",
+      "description": "行选择：multiple 多选、single 单选；默认 false 不显示选择列",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableSelection | undefined"
+      },
+      "react": {
+        "name": "selection"
+      }
+    },
+    {
+      "name": "selectable",
+      "description": "哪些行可选；返回 false 的行禁用勾选框，全选也不算它",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "((row: TableRow, index: number) => boolean) | undefined"
+      },
+      "react": {
+        "name": "selectable"
+      }
+    },
+    {
+      "name": "sort",
+      "description": "当前排序；null 是不排。不绑时从 defaultSort 起步",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableSort | null | undefined"
+      },
+      "react": {
+        "name": "sort",
+        "extra": ["defaultSort", "onSortChange"]
+      }
+    },
+    {
+      "name": "selectedKeys",
+      "description": "选中行的 key（按 rowKey 算）",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "TableRowKeyValue[] | undefined"
+      },
+      "react": {
+        "name": "selectedKeys",
+        "extra": ["defaultSelectedKeys", "onSelectedKeysChange"]
+      }
     }
   ],
   "events": [
+    {
+      "name": "update:sort"
+    },
+    {
+      "name": "update:selectedKeys"
+    },
     {
       "name": "rowClick",
       "description": "点击某一行",
       "react": {
         "name": "onRowClick"
+      }
+    },
+    {
+      "name": "sortChange",
+      "description": "排序变化；null 是取消排序",
+      "react": {
+        "name": "onSortChange"
+      }
+    },
+    {
+      "name": "selectionChange",
+      "description": "选中集合变化，带上变化后的全部 key 和当前数据里对应的行",
+      "react": {
+        "name": "onSelectionChange"
+      }
+    },
+    {
+      "name": "select",
+      "description": "勾选 / 取消某一行",
+      "react": {
+        "name": "onSelect"
+      }
+    },
+    {
+      "name": "selectAll",
+      "description": "表头全选 / 取消全选",
+      "react": {
+        "name": "onSelectAll"
       }
     }
   ],

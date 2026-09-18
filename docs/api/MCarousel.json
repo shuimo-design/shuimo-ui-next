@@ -1,0 +1,152 @@
+{
+  "name": "MCarousel",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCarousel"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCarousel"
+    }
+  },
+  "attributes": [
+    {
+      "name": "items",
+      "description": "幻灯片数据；不传则从子组件 MCarouselItem 上按书写顺序收集",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "readonly CarouselItem<unknown>[] | undefined"
+      },
+      "react": {
+        "name": "items"
+      }
+    },
+    {
+      "name": "autoplay",
+      "description": "自动播放：true 每 4000ms 翻一张，传数字指定毫秒；悬停、聚焦时暂停，减弱动效时不播",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | boolean | undefined"
+      },
+      "react": {
+        "name": "autoplay"
+      }
+    },
+    {
+      "name": "loop",
+      "description": "循环：最后一张再往后回到第一张，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "loop"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "滚动方向，默认 horizontal",
+      "default": "\"horizontal\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CarouselDirection | undefined"
+      },
+      "react": {
+        "name": "direction"
+      }
+    },
+    {
+      "name": "height",
+      "description": "容器高度，数字按 px；不传由当前那张撑开",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | number | undefined"
+      },
+      "react": {
+        "name": "height"
+      }
+    },
+    {
+      "name": "indicator",
+      "description": "指示器，默认 dots",
+      "default": "\"dots\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CarouselIndicator | undefined"
+      },
+      "react": {
+        "name": "indicator"
+      }
+    },
+    {
+      "name": "arrows",
+      "description": "翻页箭头，默认 hover",
+      "default": "\"hover\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "CarouselArrows | undefined"
+      },
+      "react": {
+        "name": "arrows"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "指示器墨点的随机种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "current",
+      "description": "当前那一张的下标，从 0 起",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "current",
+        "extra": ["defaultCurrent", "onCurrentChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:current"
+    },
+    {
+      "name": "change",
+      "description": "当前张变化：新下标、旧下标",
+      "react": {
+        "name": "onChange"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放 MCarouselItem（语法糖；传了 items 就不看这里）",
+      "react": {
+        "name": "children"
+      }
+    }
+  ]
+}

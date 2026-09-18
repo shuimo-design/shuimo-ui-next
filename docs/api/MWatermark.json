@@ -1,0 +1,162 @@
+{
+  "name": "MWatermark",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MWatermark"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MWatermark"
+    }
+  },
+  "attributes": [
+    {
+      "name": "content",
+      "description": "水印文字；数组按行排",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | string[] | undefined"
+      },
+      "react": {
+        "name": "content"
+      }
+    },
+    {
+      "name": "image",
+      "description": "水印图片地址；传了就不画字",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "image"
+      }
+    },
+    {
+      "name": "font",
+      "description": "文字的字号、字体、字重、墨色",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "WatermarkFont | undefined"
+      },
+      "react": {
+        "name": "font"
+      }
+    },
+    {
+      "name": "rotate",
+      "description": "旋转角度 deg，默认 -22",
+      "default": "-22",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "rotate"
+      }
+    },
+    {
+      "name": "gap",
+      "description": "相邻水印的横向、纵向间距 px，默认 [100, 100]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "[number, number] | undefined"
+      },
+      "react": {
+        "name": "gap"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "平铺起点的偏移 px，默认各取 gap 的一半",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "[number, number] | undefined"
+      },
+      "react": {
+        "name": "offset"
+      }
+    },
+    {
+      "name": "width",
+      "description": "单个水印的宽 px；不传按字号和字数估算",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "width"
+      }
+    },
+    {
+      "name": "height",
+      "description": "单个水印的高 px；不传按字号和行数估算",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "height"
+      }
+    },
+    {
+      "name": "zIndex",
+      "description": "水印层的 z-index，默认 9",
+      "default": "9",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "zIndex"
+      }
+    },
+    {
+      "name": "ink",
+      "description": "水墨皮下文字加一层按 seed 生成的晕染；false 是干净的字。默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "ink"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "晕染的随机种子，同 seed 同纹理，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "被水印覆盖的内容",
+      "react": {
+        "name": "children"
+      }
+    }
+  ]
+}

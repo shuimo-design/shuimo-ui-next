@@ -1,0 +1,220 @@
+{
+  "name": "MAutoComplete",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MAutoComplete"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MAutoComplete"
+    }
+  },
+  "attributes": [
+    {
+      "name": "options",
+      "description": "候选项",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "readonly AutoCompleteOption[]"
+      },
+      "react": {
+        "name": "options"
+      }
+    },
+    {
+      "name": "filter",
+      "description": "过滤方式。true（默认）按前缀匹配、大小写不敏感；传函数自定义；\nfalse 不过滤，调用方按 search 事件自己筛好再传 options",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | AutoCompleteFilter | undefined"
+      },
+      "react": {
+        "name": "filter"
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "占位文字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "placeholder"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
+      }
+    },
+    {
+      "name": "clearable",
+      "description": "有内容时显示清空按钮",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "clearable"
+      }
+    },
+    {
+      "name": "debounce",
+      "description": "search 事件的防抖毫秒数，默认 0（每次输入都发）",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "debounce"
+      }
+    },
+    {
+      "name": "placement",
+      "description": "下拉出现的方位（floating-ui placement），默认 bottom-start",
+      "default": "\"bottom-start\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Placement | undefined"
+      },
+      "react": {
+        "name": "placement"
+      }
+    },
+    {
+      "name": "teleport",
+      "description": "下拉传送到 body；默认 true。关掉时渲染在原地（用于测试或受限容器）",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "teleport"
+      }
+    },
+    {
+      "name": "emptyText",
+      "description": "没有匹配项时显示的文字；空串（默认）就不弹下拉",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "emptyText"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "下拉边框笔触的种子，默认 3",
+      "default": "3",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "modelValue",
+      "description": "输入框里的文字",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "value",
+        "extra": ["defaultValue", "onValueChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue"
+    },
+    {
+      "name": "search",
+      "description": "输入的文字（防抖之后）",
+      "react": {
+        "name": "onSearch"
+      }
+    },
+    {
+      "name": "select",
+      "description": "选中了某一项",
+      "react": {
+        "name": "onSelect"
+      }
+    },
+    {
+      "name": "focus",
+      "description": "获得焦点",
+      "react": {
+        "name": "onFocus"
+      }
+    },
+    {
+      "name": "blur",
+      "description": "失去焦点",
+      "react": {
+        "name": "onBlur"
+      }
+    },
+    {
+      "name": "clear",
+      "description": "点了清空按钮",
+      "react": {
+        "name": "onClear"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "option",
+      "description": "自定义每一项的内容",
+      "react": {
+        "name": "renderOption"
+      }
+    },
+    {
+      "name": "prefix",
+      "description": "输入框前的内容（图标）",
+      "react": {
+        "name": "prefix"
+      }
+    },
+    {
+      "name": "suffix",
+      "description": "输入框后的内容",
+      "react": {
+        "name": "suffix"
+      }
+    }
+  ]
+}

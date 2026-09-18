@@ -1,0 +1,171 @@
+{
+  "name": "MAnchor",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MAnchor"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MAnchor"
+    }
+  },
+  "attributes": [
+    {
+      "name": "items",
+      "description": "锚点列表，children 嵌套一级缩进一级",
+      "required": true,
+      "value": {
+        "kind": "expression",
+        "type": "readonly AnchorItem[]"
+      },
+      "react": {
+        "name": "items"
+      }
+    },
+    {
+      "name": "container",
+      "description": "监听哪个容器的滚动，默认整页",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "AnchorContainer | undefined"
+      },
+      "react": {
+        "name": "container"
+      }
+    },
+    {
+      "name": "offset",
+      "description": "激活判定的顶部偏移 px：目标顶边越过容器顶边下方这么多就算到了，默认 0",
+      "default": "0",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "offset"
+      }
+    },
+    {
+      "name": "targetOffset",
+      "description": "点击滚动后目标距容器顶边的距离 px，默认等于 offset",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "targetOffset"
+      }
+    },
+    {
+      "name": "smooth",
+      "description": "点击平滑滚动，默认 true；减弱动效时一律瞬时到位",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "smooth"
+      }
+    },
+    {
+      "name": "affix",
+      "description": "吸顶：`position: sticky`，top 取 offset，默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "affix"
+      }
+    },
+    {
+      "name": "direction",
+      "description": "排布方向，默认 vertical",
+      "default": "\"vertical\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "AnchorDirection | undefined"
+      },
+      "react": {
+        "name": "direction"
+      }
+    },
+    {
+      "name": "updateHash",
+      "description": "点击后把 href 写进地址栏（replaceState），默认 false",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "updateHash"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "指示线笔触的随机种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "current",
+      "description": "当前激活的 href；还没滚到任何锚点时是空串",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "current",
+        "extra": ["defaultCurrent", "onCurrentChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:current"
+    },
+    {
+      "name": "change",
+      "description": "激活项变化（滚动到、或点击）",
+      "react": {
+        "name": "onChange"
+      }
+    },
+    {
+      "name": "click",
+      "description": "点了某条锚点；默认行为已拦下，滚动由组件做",
+      "react": {
+        "name": "onClick"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "item",
+      "description": "自定义每条的内容，作用域 { item, active }",
+      "react": {
+        "name": "renderItem"
+      }
+    }
+  ]
+}

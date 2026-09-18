@@ -1,0 +1,102 @@
+{
+  "name": "MReadingStroke",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MReadingStroke"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MReadingStroke"
+    }
+  },
+  "attributes": [
+    {
+      "name": "seed",
+      "description": "笔触的随机种子；同 seed 同一根笔。默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "position",
+      "description": "贴在视口顶部还是底部，默认 top",
+      "default": "\"top\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "ReadingStrokePosition | undefined"
+      },
+      "react": {
+        "name": "position"
+      }
+    },
+    {
+      "name": "target",
+      "description": "监听哪个滚动容器：CSS 选择器、元素，或一个返回元素的函数；不传就是整页",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | HTMLElement | (() => HTMLElement | null) | undefined"
+      },
+      "react": {
+        "name": "target"
+      }
+    },
+    {
+      "name": "thickness",
+      "description": "笔宽 px，默认 4",
+      "default": "4",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "thickness"
+      }
+    },
+    {
+      "name": "color",
+      "description": "墨色，默认跟随 --m-ink",
+      "default": "\"var(--m-ink)\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "color"
+      }
+    },
+    {
+      "name": "zIndex",
+      "description": "层级，默认 9000",
+      "default": "9000",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "zIndex"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "description": "进度跨过整数百分点时触发，参数是 0–1 的进度",
+      "react": {
+        "name": "onChange"
+      }
+    }
+  ],
+  "slots": []
+}

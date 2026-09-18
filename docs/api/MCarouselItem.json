@@ -1,0 +1,49 @@
+{
+  "name": "MCarouselItem",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MCarouselItem"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MCarouselItem"
+    }
+  },
+  "attributes": [
+    {
+      "name": "src",
+      "description": "图片地址；给了就渲染一张铺满的图",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "src"
+      }
+    },
+    {
+      "name": "alt",
+      "description": "图片的替代文字",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "alt"
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "这一张的内容，优先于 src",
+      "react": {
+        "name": "children"
+      }
+    }
+  ]
+}

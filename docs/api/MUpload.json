@@ -1,0 +1,333 @@
+{
+  "name": "MUpload",
+  "source": {
+    "vue": {
+      "module": "@shuimo-design/vue",
+      "symbol": "MUpload"
+    },
+    "react": {
+      "module": "@shuimo-design/react",
+      "symbol": "MUpload"
+    }
+  },
+  "attributes": [
+    {
+      "name": "action",
+      "description": "上传地址；不给且没有 customRequest 时只选文件不发请求，状态停在 ready",
+      "default": "\"\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "action"
+      }
+    },
+    {
+      "name": "method",
+      "description": "请求方法，默认 POST",
+      "default": "\"POST\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "method"
+      }
+    },
+    {
+      "name": "headers",
+      "description": "请求头",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "Record<string, string> | undefined"
+      },
+      "react": {
+        "name": "headers"
+      }
+    },
+    {
+      "name": "data",
+      "description": "随文件一起提交的附加字段；函数按文件算",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "UploadData | undefined"
+      },
+      "react": {
+        "name": "data"
+      }
+    },
+    {
+      "name": "name",
+      "description": "文件在表单里的字段名，默认 file",
+      "default": "\"file\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "name"
+      }
+    },
+    {
+      "name": "withCredentials",
+      "description": "跨域请求带上 cookie",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "withCredentials"
+      }
+    },
+    {
+      "name": "customRequest",
+      "description": "自定义发请求；给了就不用内置的 XMLHttpRequest",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "UploadRequest | undefined"
+      },
+      "react": {
+        "name": "customRequest"
+      }
+    },
+    {
+      "name": "multiple",
+      "description": "一次选多个文件",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "multiple"
+      }
+    },
+    {
+      "name": "accept",
+      "description": "可选的文件类型，同 input 的 accept，如 \".png,image/*\"",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "string | undefined"
+      },
+      "react": {
+        "name": "accept"
+      }
+    },
+    {
+      "name": "directory",
+      "description": "选整个目录",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "directory"
+      }
+    },
+    {
+      "name": "drag",
+      "description": "拖拽区模式：把文件拖进来就上传",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "drag"
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "禁用",
+      "default": "false",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "disabled"
+      }
+    },
+    {
+      "name": "limit",
+      "description": "最多几个文件；超过触发 exceed，这一批一个都不加",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "limit"
+      }
+    },
+    {
+      "name": "maxSize",
+      "description": "单个文件的最大字节数；超过的不入列表，触发 error",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "maxSize"
+      }
+    },
+    {
+      "name": "autoUpload",
+      "description": "选完自动上传，默认 true；关掉后调 submit() 手动传",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "autoUpload"
+      }
+    },
+    {
+      "name": "beforeUpload",
+      "description": "上传前的钩子：返回 false 跳过（从列表移除），返回 File 用它替换后再传",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "UploadBeforeUpload | undefined"
+      },
+      "react": {
+        "name": "beforeUpload"
+      }
+    },
+    {
+      "name": "showFileList",
+      "description": "显示文件列表，默认 true",
+      "default": "true",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | undefined"
+      },
+      "react": {
+        "name": "showFileList"
+      }
+    },
+    {
+      "name": "seed",
+      "description": "拖拽区毛边的随机种子，默认 1",
+      "default": "1",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "number | undefined"
+      },
+      "react": {
+        "name": "seed"
+      }
+    },
+    {
+      "name": "fileList",
+      "description": "文件列表；组件加入、上传、删除都会写回来",
+      "default": "[]",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "UploadFile[] | undefined"
+      },
+      "react": {
+        "name": "fileList",
+        "extra": ["defaultFileList", "onFileListChange"]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "update:fileList"
+    },
+    {
+      "name": "change",
+      "description": "列表变化：加入、上传成功或失败",
+      "react": {
+        "name": "onChange"
+      }
+    },
+    {
+      "name": "progress",
+      "description": "上传进度",
+      "react": {
+        "name": "onProgress"
+      }
+    },
+    {
+      "name": "success",
+      "description": "上传成功",
+      "react": {
+        "name": "onSuccess"
+      }
+    },
+    {
+      "name": "error",
+      "description": "上传失败；超过 maxSize 的文件也走这里",
+      "react": {
+        "name": "onError"
+      }
+    },
+    {
+      "name": "remove",
+      "description": "点了删除",
+      "react": {
+        "name": "onRemove"
+      }
+    },
+    {
+      "name": "exceed",
+      "description": "加入的文件数超过 limit；这一批一个都没加",
+      "react": {
+        "name": "onExceed"
+      }
+    },
+    {
+      "name": "preview",
+      "description": "点了文件名",
+      "react": {
+        "name": "onPreview"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发区内容；默认一个「选择文件」按钮，drag 模式下是拖拽区里的提示文字",
+      "react": {
+        "name": "children"
+      }
+    },
+    {
+      "name": "tip",
+      "description": "触发区下方的说明",
+      "react": {
+        "name": "renderTip"
+      }
+    },
+    {
+      "name": "file",
+      "description": "自定义列表里的每一项",
+      "react": {
+        "name": "renderFile"
+      }
+    }
+  ]
+}

@@ -59,6 +59,18 @@
       "react": {
         "name": "align"
       }
+    },
+    {
+      "name": "sortable",
+      "description": "可排序：true 按 row[prop] 用默认比较，也可以给比较函数",
+      "required": false,
+      "value": {
+        "kind": "expression",
+        "type": "boolean | TableSorter<TableRow> | undefined"
+      },
+      "react": {
+        "name": "sortable"
+      }
     }
   ],
   "events": [],
