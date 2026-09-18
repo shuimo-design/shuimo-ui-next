@@ -119,6 +119,7 @@ export const CATALOG: DemoGroup[] = [
       entry("delete-icon", "删除图标", "MDeleteIcon"),
       entry("config-provider", "全局配置", "MConfigProvider", "MOverlayOutlet"),
       entry("dark-mode", "深浅切换", "MDarkMode"),
+      entry("watermark", "水印", "MWatermark"),
       entry("svg", "图标", "MSvg"),
       entry("empty", "空状态", "MEmpty"),
       entry("skeleton", "骨架屏", "MSkeleton", "MSkeletonItem"),

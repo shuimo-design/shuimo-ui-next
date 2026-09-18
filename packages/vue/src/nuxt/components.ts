@@ -75,4 +75,5 @@ export const COMPONENT_NAMES = [
   "MDescriptions",
   "MDescriptionsItem",
   "MUpload",
+  "MWatermark",
 ] as const;

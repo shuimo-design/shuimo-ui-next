@@ -59,3 +59,23 @@
   margin: 0 0 8px;
   line-height: 2;
 }
+
+/* 水印示例：一张有边框的"纸"，内容留出高度让水印铺得开 */
+.watermark-demo__sheet {
+  min-height: 160px;
+  padding: 16px 24px;
+  border: 1px solid var(--m-divider);
+}
+.watermark-demo__sheet p {
+  margin: 0 0 8px;
+}
+.watermark-demo__controls {
+  gap: 16px;
+  font-size: 13px;
+}
+.watermark-demo__controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 200px;
+}

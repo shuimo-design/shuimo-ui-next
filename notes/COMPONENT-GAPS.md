@@ -16,7 +16,6 @@
 | MReadingStroke 一笔书进度 | 阅读进度 = 随滚动写完的一根笔触                        | brush line；Safari 17 静态降级         |
 | Carousel                  | 指示器用墨点                                           | —                                      |
 | Anchor                    | 文档站侧边导航，自己先用                               | —                                      |
-| Watermark                 | 水墨水印                                               | wash / bleed                           |
 | AutoComplete              | 搜索框；复用 Dropdown 的弹层                           | MInput + popper                        |
 
 能力补齐：MTable 筛选 / 固定列 / 展开行再等。

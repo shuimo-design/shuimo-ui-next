@@ -1,0 +1,49 @@
+@layer m.component {
+  .m-watermark {
+    /* 淡墨：跟随 --m-ink，深色主题下自动变成淡灰白 */
+    --m-watermark-color: color-mix(in srgb, var(--m-ink) 15%, transparent);
+    position: relative;
+  }
+
+  /* 水印层铺满容器、不接鼠标；平铺单元和起点由组件写进变量 */
+  .m-watermark__layer {
+    position: absolute;
+    inset: 0;
+    z-index: var(--m-watermark-z, 9);
+    pointer-events: none;
+    background-repeat: repeat;
+    background-size: var(--m-watermark-tile);
+    background-position: var(--m-watermark-offset);
+  }
+
+  /* 文字：SVG 画黑当遮罩，墨色从变量来 */
+  .m-watermark--text .m-watermark__layer {
+    background-color: var(--m-watermark-color);
+    mask: var(--m-watermark-image) var(--m-watermark-offset) / var(--m-watermark-tile) repeat;
+  }
+
+  /* 图片：自带颜色，直接平铺 */
+  .m-watermark--image .m-watermark__layer {
+    background-image: var(--m-watermark-image);
+  }
+}
+
+@layer m.ink {
+  /* 水墨皮：换成带晕染滤镜的那张遮罩，字边发毛像洇在纸上 */
+  html.m-ink-ready .m-watermark--ink .m-watermark__layer {
+    mask-image: var(--m-watermark-image-ink);
+    /* 墨压在纸纹上是叠色，不是盖色 */
+    mix-blend-mode: multiply;
+  }
+
+  /* 暗色纸上叠底会把淡墨吞掉，换回正常盖色 */
+  html.m-ink-ready:root[data-theme="dark"] .m-watermark--ink .m-watermark__layer {
+    mix-blend-mode: normal;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html.m-ink-ready:root[data-theme="system"] .m-watermark--ink .m-watermark__layer {
+      mix-blend-mode: normal;
+    }
+  }
+}

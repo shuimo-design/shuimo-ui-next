@@ -119,6 +119,7 @@ export const COMPONENT_STYLES = {
   MUpload: { css: "upload", renders: ["MButton", "MList", "MListItem", "MProgress"] },
   MVirtualList: { css: "virtual-list" },
   MVirtualTree: { css: "virtual-tree", renders: ["tree-row", "MCheckbox"] },
+  MWatermark: { css: "watermark" },
 } as const satisfies Record<string, StyleEntry>;
 
 export type StyledComponentName = keyof typeof COMPONENT_STYLES;
