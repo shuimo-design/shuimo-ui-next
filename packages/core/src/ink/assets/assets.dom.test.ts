@@ -3,14 +3,11 @@ import {
   brushLineUrl,
   ensureInkAssets,
   inkBlobUrl,
-  inkBoatUrl,
   inkCursorUrl,
-  inkGeeseUrl,
   inkMarkUrl,
   inkRidgeUrl,
   inkScaleUrl,
   inkShapeUrl,
-  inkSunUrl,
   inkWashUrl,
 } from ".";
 
@@ -49,9 +46,6 @@ describe("ink assets", () => {
       inkRidgeUrl({ seed: 1, width: 400, height: 100 }).url,
       inkCursorUrl("pointer"),
       inkScaleUrl().url,
-      inkSunUrl({ seed: 1 }),
-      inkGeeseUrl({ seed: 1 }),
-      inkBoatUrl({ seed: 1 }),
     ];
     for (const url of urls) {
       expect(url.startsWith("data:image/svg+xml")).toBe(true);

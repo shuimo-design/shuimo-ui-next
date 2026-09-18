@@ -44,7 +44,6 @@ export * from "./components/breadcrumb";
 export * from "./components/steps";
 export * from "./components/alert";
 export * from "./components/rice-paper";
-export * from "./components/shan-shui";
 export * from "./components/reading-stroke";
 export * from "./components/ink-transition";
 export * from "./components/checkbox";

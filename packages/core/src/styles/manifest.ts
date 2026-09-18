@@ -100,7 +100,6 @@ export const COMPONENT_STYLES = {
   MSealColophon: { css: "seal-colophon", renders: ["MStamp"] },
   // 多选时选中项渲染成 MTag
   MSelect: { css: "select", renders: ["popper", "MTag"] },
-  MShanShui: { css: "shan-shui" },
   MReadingStroke: { css: "reading-stroke" },
   MSkeleton: { css: "skeleton" },
   MSkeletonItem: { css: "skeleton" },

@@ -40,9 +40,6 @@ export { inkEnsoUrl, type InkEnsoOptions } from "./enso";
 export { inkScaleUrl, type InkScale, type InkScaleOptions } from "./scale";
 export { inkSplashUrl, type InkSplashOptions } from "./splash";
 export { inkSceneSvg, INK_SCENE_HEIGHT, INK_SCENE_WIDTH, type InkSceneOptions } from "./scene";
-export { inkSunUrl, type InkSunOptions } from "./sun";
-export { inkGeeseUrl, type InkGeeseOptions } from "./geese";
-export { inkBoatUrl, type InkBoatOptions } from "./boat";
 
 import { brushLineUrl } from "./line";
 import { inkBlobUrl } from "./blob";
