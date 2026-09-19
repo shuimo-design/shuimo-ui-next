@@ -2,12 +2,13 @@
   .m-rice-paper {
     --m-rice-paper-tile: 384px;
     --m-rice-paper-gold-tile: 768px;
-    /* 远山：整组按旧站 0.3 上下的透明度。线是墨色掺一点纸的青色；山体是青绿（旧图颜料 ≈ rgb(60 85 78)），
+    /* 远山：旧站整组是 0.3 透明度，但旧图本身比我们生成的密一些（同样 0.3 时中间调浅了约一成半），
+       这里 0.45 落到纸上才是旧站那个深浅。线是墨色掺一点纸的青色；山体是青绿（旧图颜料 ≈ rgb(60 85 78)），
        前景两座深一档。三种颜色都掺了 --m-ink，暗色主题下 --m-ink 是灰白，掺出来是灰绿，正好是旧 dark 那组的调子 */
-    --m-rice-paper-landscape-opacity: 0.32;
+    --m-rice-paper-landscape-opacity: 0.45;
     --m-rice-paper-landscape-color: color-mix(in srgb, var(--m-ink) 70%, var(--m-paper-tint));
-    --m-rice-paper-landscape-wash: color-mix(in srgb, var(--m-ink) 30%, #4a6b62);
-    --m-rice-paper-landscape-front: color-mix(in srgb, var(--m-ink) 55%, #3c5a52);
+    --m-rice-paper-landscape-wash: color-mix(in srgb, var(--m-ink) 38%, #3f6156);
+    --m-rice-paper-landscape-front: color-mix(in srgb, var(--m-ink) 60%, #34524a);
     position: relative;
     isolation: isolate;
     background: rgb(var(--m-rice-paper-rgb, var(--m-paper-rgb)));

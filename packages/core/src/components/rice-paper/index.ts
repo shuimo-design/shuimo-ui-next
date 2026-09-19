@@ -5,7 +5,7 @@
  * data-theme 和系统深浅偏好、等纹理图解码完再淡入、给远山挂视差。这些东西在服务端一个都不存在，
  * 留在壳里就等于 Vue 和 React 各写一遍降级分支，所以整包塞进下面的控制器，壳里一个 document. 都没有。
  *
- * 纯派生（class、CSS 变量、四张远山的排布）留在渲染期算：它们只依赖 props 和控制器的快照，
+ * 纯派生（class、CSS 变量、八层远山的排布）留在渲染期算：它们只依赖 props 和控制器的快照，
  * 底下的素材生成函数各自带缓存，同参数不会重复生成。
  */
 import { inkMountainScene } from "../../ink/assets/mountain";

@@ -19,7 +19,7 @@ const presets: { label: string; value: PaperPreset | undefined }[] = [
 ];
 
 /** 旧站示例：用 CSS 变量调远山透明度 */
-const mountainsOpacity = ref(0.32);
+const mountainsOpacity = ref(0.45);
 const opacityStyle = computed(() => ({
   "--m-rice-paper-landscape-opacity": String(mountainsOpacity.value),
 }));
@@ -93,8 +93,8 @@ const stats = computed(() => {
     >
       <p style="margin: 0; font-size: 18px; line-height: 1.8">
         宣纸：一张可平铺的 SVG 纹理，颗粒、纤维、洒金在一个滤镜里合成，浏览器光栅化一次即缓存。
-        底部两侧的远山是四张带种子的 SVG 剪影（左右各远近两层），跟着鼠标和滚动做视差； 同一个 seed
-        永远是同一张纸、同一组山。切到暗色主题，山会换成灰白的调子。
+        底部两侧的远山照旧站那套手绘远山的结构生成（左右各一组、一组四层，山脊是从旧图抠出来的真笔触），跟着鼠标和滚动做视差；
+        同一个 seed 永远是同一张纸、同一组山。切到暗色主题，山会换成灰白的调子。
       </p>
     </MRicePaper>
     <p class="demo__hint">
