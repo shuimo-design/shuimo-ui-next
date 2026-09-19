@@ -1,5 +1,86 @@
 # @shuimo-design/react
 
+## 1.0.0-beta.4
+
+### Minor Changes
+
+- [`fe32329`](https://github.com/shuimo-design/shuimo-ui-next/commit/fe3232930ff1e08b84393a99973d9ae59d7162b2) Thanks [@JobinJia](https://github.com/JobinJia)! - 新增 MCarousel 走马灯。
+  
+  - `items` 一项一张（`key` / `src` / `alt` / `render`），或用子组件 `MCarouselItem` 按书写顺序收集；每次只渲染当前那张，服务端输出没有 transform
+  - `v-model:current` / React `current` + `onCurrentChange` + `defaultCurrent`；`change` 报新旧下标
+  - `autoplay` true 每 4000ms 一张、传数字指定毫秒；悬停、焦点在里面时暂停，`prefers-reduced-motion` 下不自动播；计时器在 core 的 `createCarousel` 控制器里
+  - `loop`（默认开）关掉后两头的箭头禁用；`direction="vertical"` 上下翻；`height` 定容器高度，不传由当前那张撑开
+  - `indicator="dots"` 一排墨点（水墨层换成按 `seed` 生成的毛边墨团，激活的蘸朱砂）；`arrows` hover / always / none
+  - 容器 `role="region"` + `aria-roledescription="carousel"`，可聚焦：← →（竖向 ↑ ↓）翻页，Home / End 到两头；自动播放时 `aria-live="off"`，停下来才 `polite`
+  - 过渡走 Vue 原生 `<Transition>` / React `MTransition`，同一套 `m-carousel-slide-*` 类名，翻页方向由根上的 `--m-carousel-dir` 决定
+  
+  新增 MAnchor 锚点导航。
+  
+  - `items` 必填（`href` / `title` / `children`），children 缩进一级；`<nav>` + `<a>`，激活项 `aria-current="true"`
+  - `v-model:current` / React `current` + `onCurrentChange` + `defaultCurrent`，值是激活的 href；`change` 报激活变化，`click` 报点击（默认跳转已拦下）
+  - `container` 支持选择器、元素、返回元素的函数，默认整页；`offset` 是激活判定的顶部偏移，激活项 = 最后一个顶边越过它的锚点，容器滚到底时激活最后一个
+  - 点击滚到目标（`targetOffset` 定距顶距离，默认等于 offset；`smooth` 平滑，减弱动效时瞬时），滚动途中锁住判定不让激活项来回跳；`updateHash` 才写地址栏
+  - `affix` 吸顶（sticky，top 取 offset）；`direction="horizontal"` 横排；`item` 插槽 / `renderItem` 自定义每条并拿到 active
+  - 指示线随激活项滑动，水墨层换成按实际长度生成的笔触线（`seed` 定笔触）；监听、判定、滚动、测量都在 core 的 `createAnchor` 控制器里
+
+- [`8287c2b`](https://github.com/shuimo-design/shuimo-ui-next/commit/8287c2b8b619b67fe590d5482581feea2cfdbd51) Thanks [@JobinJia](https://github.com/JobinJia)! - 新增 MReadingStroke 一笔书进度：阅读进度 = 随页面滚动写完的一根笔触，固定在视口顶部（或底部）。
+  
+  - 状态由 core 控制器 `createReadingStroke` 持有：目标解析（选择器 / 元素 / 函数，默认整页）、滚动和 resize 监听、进度换算；服务端快照恒为 0
+  - 笔触用 `brushLineUrl` 按视口实际宽度（64px 分桶）生成当遮罩，进度用 clip-path 从左往右揭开；支持 `mask-composite` 的浏览器再叠一层横向渐变让笔尖化开，不支持的直接按进度截宽
+  - 没有墨迹引擎时是一条实墨；`role="progressbar"` + `aria-valuenow`（整数百分点）
+  - `change` 事件只在跨过整数百分点时触发；`seed` / `position` / `target` / `thickness` / `color` / `zIndex`
+
+- [`6098b47`](https://github.com/shuimo-design/shuimo-ui-next/commit/6098b47b9face9114df8a7b4d03a160bd7f825c5) Thanks [@JobinJia](https://github.com/JobinJia)! - MRicePaper 的远山重做：照旧站 shuimo-ui 0.3 那套手绘远山的结构生成。
+  
+  - 左右各一组、一组四层（base / mid / front / front2），最高的山在最后面，前景两座矮、深、清楚；山脊是连绵的钝三角，坡线上有褶皱，云雾盖在山上
+  - 山脊的墨线是真笔触：从旧站手绘 webp 里抠出来的矢量墨线（`ink/assets/mountain-brushes.ts`），一段段弯到生成的山脊上
+  - 新增 `inkMountainScene`（`@shuimo-design/core/ink`）：每层四张 alpha 遮罩（剪影 / 山体 / 墨线 / 云雾），颜色由 CSS 变量上
+  - 新增 CSS 变量 `--m-rice-paper-landscape-wash`（山体青绿）、`--m-rice-paper-landscape-front`（前景两座）；`--m-rice-paper-landscape-opacity` 默认从 0.55 改为 0.45
+  - 远山的图只在挂载后才生成（八层图约 550 KB，不进服务端 HTML；它们本来要等 ready 才淡入）
+  - DOM：`.m-rice-paper__ridge` 从 4 个变 8 个，里面多了 `.m-rice-paper__ridge-wash` / `.m-rice-paper__ridge-line` 两个子元素，修饰类多了 `--base/--mid/--front/--front2` 和 `--wash/--ink`
+
+- [`6f52ccc`](https://github.com/shuimo-design/shuimo-ui-next/commit/6f52ccca223f80b277741cf5299fead8ef717a51) Thanks [@JobinJia](https://github.com/JobinJia)! - MTable 补列排序与行选择。
+  
+  - 列上 `sortable: true` 按 `row[prop]` 用默认比较（数字按数值、字符串 localeCompare、空值排最后），也可以给比较函数；`MTableColumn` 同步加 `sortable`
+  - 表头点一下升序、再点降序、第三下取消；可排序列的表头是真按钮，键盘可达，`aria-sort` 标在 `<th>` 上；指示器两枚小三角，水墨层把点亮的那枚换成墨点
+  - `v-model:sort` / React `sort` + `onSortChange` + `defaultSort`，`sortChange` 事件；`sortRemote` 时不在本地排只发事件，给服务端排序用
+  - 排序纯函数 `sortTableRows` 在 core，返回带原下标的行，按下标算的 rowKey 排序后不变
+  - `selection="multiple" | "single"` 在第一列插入 MCheckbox；表头全选 / 半选只算 `selectable` 为 true 的行；点行不改选中态，只有点勾选框才改
+  - `v-model:selectedKeys` / React `selectedKeys` + `onSelectedKeysChange` + `defaultSelectedKeys`，按 `rowKey` 记；`selectionChange` / `select` / `selectAll` 事件
+  - 选中行加 `m-table__row--selected` 和 `aria-selected`，水墨层铺一层淡墨；选择状态的纯函数 `tableSelectionState` / `toggleTableSelection` / `toggleAllTableSelection` 在 core
+  - 新增内部图标 `caret-up`、`caret-down`
+
+- [`268d4cb`](https://github.com/shuimo-design/shuimo-ui-next/commit/268d4cbf22d06e5bb8f25a5f00a2a063d7f99a7e) Thanks [@JobinJia](https://github.com/JobinJia)! - 新增 MUpload 上传。
+  
+  - `v-model:fileList` / React `fileList` + `onFileListChange` + `defaultFileList`；每项是 `{ uid, name, size, type, status, percent, raw, response, error, url }`，uid 由壳层的 `useId` 前缀派生
+  - `action` / `method` / `headers` / `data` / `name` / `withCredentials` 走内置的 XMLHttpRequest（core 的 `upload/request.ts`），`customRequest` 整个换掉；不给地址也没自定义请求时只选文件，状态停在 `ready`
+  - `multiple` / `accept` / `directory` / `limit` / `maxSize` / `beforeUpload`（返回 false 跳过、返回 File 替换）/ `autoUpload`（关掉后 `submit()` 手动传）；`abort()` 中断、`clearFiles(status?)` 清空
+  - `drag` 拖拽区：`role="button"` + 回车 / 空格打开选择框，`dragenter / dragover / drop` 的判定在 core；水墨层是一张毛边纸，拖入时中心晕开一团淡墨
+  - 默认触发钮是 MButton，`tip` 插槽 / `renderTip` 由 `aria-describedby` 指向；文件列表借 MList 的骨架，传输中的行是 MProgress，`file` 插槽 / `renderFile` 自定义每一行；删除钮带 `aria-label`
+  - 事件：`change` / `progress` / `success` / `error` / `remove` / `exceed` / `preview`；列表变化会通知外层 MFormItem 校验
+  - React 的 MButton 多了 `aria-describedby` 透传
+
+- [`44d0d60`](https://github.com/shuimo-design/shuimo-ui-next/commit/44d0d600d029857be3c736da0d28226109a6a2d2) Thanks [@JobinJia](https://github.com/JobinJia)! - 新增 MWatermark 水印。
+  
+  - `content` 文字（数组多行）或 `image` 图片；`font` 调字号 / 字体 / 字重 / 墨色，`rotate`（默认 -22）、`gap`、`offset`、`width` / `height`、`zIndex`（默认 9）
+  - 平铺图是 core 纯函数 `watermarkSvg` / `watermarkStyle` 拼出的 SVG data URL，不量 DOM、不用 canvas，服务端也能出
+  - 文字画成遮罩、墨色走 `--m-watermark-color`（默认淡墨，跟随深浅主题）；`ink`（默认开）在水墨皮下换成带 `seed` 晕染的那张
+  - 防篡改：core 的 `createWatermark` 用 MutationObserver 盯水印层，被删、被改样式 / 属性就贴回去
+  
+  新增 MAutoComplete 自动完成。
+  
+  - `v-model` / `value` 就是输入框里的文字；`options` 是 `{ value, label?, disabled? }`，选中后把 value 写回
+  - `filter` 默认前缀匹配、不分大小写（value 或 label 对上都算），传函数自定义，`false` 交给调用方按 `search` 事件筛好再传；`debounce` 给 search 防抖
+  - 上下键移动高亮（跳过禁用项）、Enter 选中、Esc / Tab 收起、再输入重新弹；`emptyText` 给了才在无匹配时弹那行字
+  - `role="combobox"` + `aria-expanded` / `aria-controls` / `aria-activedescendant`，列表 `role="listbox"` / `option`
+  - `select` / `search` / `focus` / `blur` / `clear` 事件；`option`（`{ option, active }`）/ `prefix` / `suffix` 插槽，React 是 `renderOption` / `prefix` / `suffix`；暴露 `focus()` / `blur()`
+  - 弹层复用 MPopper（`placement` / `teleport`），边框笔触种子由 `seed` 给；开合、高亮、防抖都在 core 的 `createAutoComplete`
+
+### Patch Changes
+
+- Updated dependencies [[`fe32329`](https://github.com/shuimo-design/shuimo-ui-next/commit/fe3232930ff1e08b84393a99973d9ae59d7162b2), [`8287c2b`](https://github.com/shuimo-design/shuimo-ui-next/commit/8287c2b8b619b67fe590d5482581feea2cfdbd51), [`6098b47`](https://github.com/shuimo-design/shuimo-ui-next/commit/6098b47b9face9114df8a7b4d03a160bd7f825c5), [`6f52ccc`](https://github.com/shuimo-design/shuimo-ui-next/commit/6f52ccca223f80b277741cf5299fead8ef717a51), [`268d4cb`](https://github.com/shuimo-design/shuimo-ui-next/commit/268d4cbf22d06e5bb8f25a5f00a2a063d7f99a7e), [`44d0d60`](https://github.com/shuimo-design/shuimo-ui-next/commit/44d0d600d029857be3c736da0d28226109a6a2d2)]:
+  - @shuimo-design/core@1.0.0-beta.4
+
 ## 1.0.0-beta.3
 
 ### Minor Changes
