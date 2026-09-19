@@ -738,9 +738,11 @@ function generateMountainScene(options: MountainSceneOptions): MountainScene {
       const ry = height * (0.05 + rng() * 0.08);
       holes += `<ellipse cx="${fmt(cx)}" cy="${fmt(cy)}" rx="${fmt(rx)}" ry="${fmt(ry)}" fill="#000" fill-opacity="${(0.15 + rng() * 0.15).toFixed(2)}"/>`;
     }
+    // 所有 <mask> 的作用范围都按整张画幅算：默认是被遮罩元素包围盒外扩 10%，雾那层的包围盒只有几团椭圆大，
+    // 化开的边一超出去就被切成方框（页面上做 CSS 遮罩时看得很清楚）
     defsWash.push(
       `<filter id="holeBlur" filterUnits="userSpaceOnUse" x="${fmt(-width * 0.1)}" y="${fmt(-height * 0.2)}" width="${fmt(width * 1.2)}" height="${fmt(height * 1.5)}"><feGaussianBlur stdDeviation="${fmt(height * 0.035)}"/></filter>`,
-      `<mask id="holes"><rect x="-5%" y="-5%" width="110%" height="110%" fill="#fff"/><g filter="url(#holeBlur)">${holes}</g></mask>`,
+      `<mask id="holes" maskUnits="userSpaceOnUse" x="-10%" y="-20%" width="120%" height="140%"><rect x="-5%" y="-5%" width="110%" height="110%" fill="#fff"/><g filter="url(#holeBlur)">${holes}</g></mask>`,
     );
     const wash =
       `<g filter="url(#wash)" clip-path="url(#body)" mask="url(#holes)">` +
@@ -772,8 +774,8 @@ function generateMountainScene(options: MountainSceneOptions): MountainScene {
       `<filter id="crest" x="-5%" y="-10%" width="110%" height="130%"><feGaussianBlur stdDeviation="${fmt(height * 0.014)}"/></filter>`,
       `<linearGradient id="lineFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.6" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0.25"/></linearGradient>` +
         (ink
-          ? `<mask id="lineMask"><rect width="${width}" height="${height}" fill="url(#lineFade)"/></mask>`
-          : `<mask id="lineMask"><g filter="url(#feather)">${fadeBands(1.8, strokeWidth * 2, "#fff")}</g></mask>`),
+          ? `<mask id="lineMask" maskUnits="userSpaceOnUse" x="-10%" y="-20%" width="120%" height="140%"><rect width="${width}" height="${height}" fill="url(#lineFade)"/></mask>`
+          : `<mask id="lineMask" maskUnits="userSpaceOnUse" x="-10%" y="-20%" width="120%" height="140%"><g filter="url(#feather)">${fadeBands(1.8, strokeWidth * 2, "#fff")}</g></mask>`),
     );
     // 轮廓下面化开的一道墨：线不是描上去的，是墨从脊线往下渗进山体
     const crest = `<g filter="url(#crest)" clip-path="url(#body)"><path d="${band(-strokeWidth * 0.3, height * (ink ? 0.025 : 0.03))}" fill="#000" fill-opacity="${ink ? 0.45 : 0.35}"/></g>`;
@@ -791,8 +793,8 @@ function generateMountainScene(options: MountainSceneOptions): MountainScene {
       `<linearGradient id="innerFade" gradientUnits="userSpaceOnUse" x1="${fmt(innerX[0] * width)}" y1="0" x2="${fmt(innerX[0] * width + (innerX[1] - innerX[0]) * width * 0.3)}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.4" stop-color="#fff" stop-opacity="0.3"/><stop offset="1" stop-color="#fff"/></linearGradient>`,
       `<filter id="fogEdge" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.008 0.02" numOctaves="3" seed="${seed + 90 + li}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${fmt(height * 0.2)}" xChannelSelector="R" yChannelSelector="G"/></filter>`,
       // 两个遮罩分开套（遮罩里画第二个矩形会盖掉第一个，不是相乘）
-      `<mask id="fog"><g filter="url(#fogEdge)"><rect x="-10%" y="-10%" width="120%" height="120%" fill="url(#bottomFade)"/></g></mask>`,
-      `<mask id="inner"><g filter="url(#fogEdge)"><rect x="-10%" y="-10%" width="120%" height="120%" fill="url(#innerFade)"/></g></mask>`,
+      `<mask id="fog" maskUnits="userSpaceOnUse" x="-10%" y="-20%" width="120%" height="140%"><g filter="url(#fogEdge)"><rect x="-10%" y="-10%" width="120%" height="120%" fill="url(#bottomFade)"/></g></mask>`,
+      `<mask id="inner" maskUnits="userSpaceOnUse" x="-10%" y="-20%" width="120%" height="140%"><g filter="url(#fogEdge)"><rect x="-10%" y="-10%" width="120%" height="120%" fill="url(#innerFade)"/></g></mask>`,
     );
     const wrap = (inner: string, fog: boolean) => {
       const withInner = `<g mask="url(#inner)">${inner}</g>`;
