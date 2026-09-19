@@ -61,6 +61,7 @@ props 的纯派生（归一化、过滤、分页折叠、几何）是纯函数�
 - 只用 `core/src/theme/tokens.css` 的语义变量，不直接用 `--m-color-*`。组件私有变量 `--m-<name>-*`，在根元素声明默认值。
 - BEM：`.m-<name>`、`.m-<name>__part`、`.m-<name>--state`。两个壳的类名必须完全相同，class 字符串由 core 的函数派生。
 - 形状优先 CSS；只有需要笔触手感的地方用 `core/src/ink/assets` 的 SVG 生成器做 mask。笔触线按实际长度生成，不横向拉伸通用线。
+- 生成器里的 `<mask>` / `<filter>` 一律写 `userSpaceOnUse` 按整张画幅算作用范围：默认是被套元素包围盒外扩 10%，化开的边一超出去就被切成方框；样张画在 canvas 上看不出来，页面上做 CSS 遮罩才露。
 - 图标从各包的 `icons` 引，几何只在 `core/src/icons/index.ts`。
 - 浮层内容传送到 body 后继承不到组件根的 CSS 变量，浮层用到的 `--m-<name>-*` 要在浮层容器上再声明。
 - `role` / `aria-*` 完整，键盘可操作，焦点样式用 `:focus-visible`。

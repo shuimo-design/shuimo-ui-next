@@ -55,32 +55,32 @@ next 是重写版：所有水墨素材改为程序化 SVG（仓库里没有任�
 
 ## 模版组件
 
-| 组件              | 旧                                         | 新                                                                            | 说明                       |
-| ----------------- | ------------------------------------------ | ----------------------------------------------------------------------------- | -------------------------- |
-| MBorder           | `top/right/bottom/left: boolean \| string` | 仅 `boolean`                                                                  |                            |
-| MBorder           | `mask` 默认 true                           | 默认 false                                                                    | backdrop-filter 代价大     |
-| MBorder           | `insteadMain`                              | 删除                                                                          | 根元素就是边框盒           |
-| MRicePaper        | `type: cold/warm/default`                  | `paper` 预设                                                                  |                            |
-| MRicePaper        | `mountain`                                 | `landscape`                                                                   | 默认开                     |
-| MRicePaper        | `autoDarkMode`                             | 删除                                                                          | 主题统一走 data-theme      |
-| MForm / MFormItem | 无校验                                     | 新增 `rules`、`validate() / resetFields() / clearValidate()`                  | 旧库无校验代码             |
-| MFormItem         | `prop` 直接当 `<label for>`                | `for` 自动生成并写到控件上；`prop` 只是字段名                                 |                            |
-| MForm             | `submit` 布尔控制 onsubmit                 | 总会 emit `submit`；`submit=false` 阻止原生提交                               |                            |
-| MTable            | `paramClass` 开关                          | 每个 th/td 固定带 `data-param`                                                |                            |
-| MTable            | `height` 固定高                            | `height` 是 max-height                                                        |                            |
-| MTable            | 单元格插槽 `{ data, index }`               | `{ row, data, value, index, column }`                                         | 旧写法仍可用               |
-| MPagination       | `v-model` / `defaultCurrent`               | `v-model:current`（默认 1）                                                   |                            |
-| MPagination       | `pageSize` 只读                            | `v-model:page-size` + `sizeChange`                                            |                            |
-| MPagination       | `foldedMaxPageBtn: number \| null`         | 只接受 `number`                                                               |                            |
-| MBreadcrumb       | 字符串 provide key                         | `breadcrumbKey` InjectionKey                                                  | 内部实现，仅影响自定义子项 |
-| MMenu             | `config`                                   | `fieldNames`                                                                  |                            |
-| MMenu             | 数据里的 `isActive`                        | `v-model`（当前 key）+ `v-model:expandedKeys`                                 |                            |
-| MMenu             | 默认插槽 `{ data }`                        | `#label="{ item, level }"`；默认插槽放手写 MMenuItem                          |                            |
-| MMenu             | `checkbox / checkedKeys / checkStrictly`   | 删除                                                                          | 旧实现无效果               |
-| MMenu             | `nodeClick(树节点)`                        | `nodeClick(MenuItem)`，另有 `change / expand`                                 |                            |
-| MCell             | `style` prop、`a/b/c/d` 坐标模式           | 删除；只接受角度                                                              | 坐标模式从未实现           |
-| MGrid             | `w/h` 写到栅格自身                         | 只作为格子默认宽高                                                            |                            |
-| MVirtualList      | 只有 `list`                                | 新增 `itemHeight / estimatedItemHeight / buffer / height / itemKey / divider` |                            |
+| 组件              | 旧                                         | 新                                                                            | 说明                                                |
+| ----------------- | ------------------------------------------ | ----------------------------------------------------------------------------- | --------------------------------------------------- |
+| MBorder           | `top/right/bottom/left: boolean \| string` | 仅 `boolean`                                                                  |                                                     |
+| MBorder           | `mask` 默认 true                           | 默认 false                                                                    | backdrop-filter 代价大                              |
+| MBorder           | `insteadMain`                              | 删除                                                                          | 根元素就是边框盒                                    |
+| MRicePaper        | `type: cold/warm/default`                  | `paper` 预设                                                                  |                                                     |
+| MRicePaper        | `mountain`                                 | `landscape`                                                                   | 默认开；山照旧站那套手绘远山的结构生成，不再是 webp |
+| MRicePaper        | `autoDarkMode`                             | 删除                                                                          | 主题统一走 data-theme                               |
+| MForm / MFormItem | 无校验                                     | 新增 `rules`、`validate() / resetFields() / clearValidate()`                  | 旧库无校验代码                                      |
+| MFormItem         | `prop` 直接当 `<label for>`                | `for` 自动生成并写到控件上；`prop` 只是字段名                                 |                                                     |
+| MForm             | `submit` 布尔控制 onsubmit                 | 总会 emit `submit`；`submit=false` 阻止原生提交                               |                                                     |
+| MTable            | `paramClass` 开关                          | 每个 th/td 固定带 `data-param`                                                |                                                     |
+| MTable            | `height` 固定高                            | `height` 是 max-height                                                        |                                                     |
+| MTable            | 单元格插槽 `{ data, index }`               | `{ row, data, value, index, column }`                                         | 旧写法仍可用                                        |
+| MPagination       | `v-model` / `defaultCurrent`               | `v-model:current`（默认 1）                                                   |                                                     |
+| MPagination       | `pageSize` 只读                            | `v-model:page-size` + `sizeChange`                                            |                                                     |
+| MPagination       | `foldedMaxPageBtn: number \| null`         | 只接受 `number`                                                               |                                                     |
+| MBreadcrumb       | 字符串 provide key                         | `breadcrumbKey` InjectionKey                                                  | 内部实现，仅影响自定义子项                          |
+| MMenu             | `config`                                   | `fieldNames`                                                                  |                                                     |
+| MMenu             | 数据里的 `isActive`                        | `v-model`（当前 key）+ `v-model:expandedKeys`                                 |                                                     |
+| MMenu             | 默认插槽 `{ data }`                        | `#label="{ item, level }"`；默认插槽放手写 MMenuItem                          |                                                     |
+| MMenu             | `checkbox / checkedKeys / checkStrictly`   | 删除                                                                          | 旧实现无效果                                        |
+| MMenu             | `nodeClick(树节点)`                        | `nodeClick(MenuItem)`，另有 `change / expand`                                 |                                                     |
+| MCell             | `style` prop、`a/b/c/d` 坐标模式           | 删除；只接受角度                                                              | 坐标模式从未实现                                    |
+| MGrid             | `w/h` 写到栅格自身                         | 只作为格子默认宽高                                                            |                                                     |
+| MVirtualList      | 只有 `list`                                | 新增 `itemHeight / estimatedItemHeight / buffer / height / itemKey / divider` |                                                     |
 
 ## 消息组件
 
