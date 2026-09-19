@@ -5,6 +5,7 @@ import {
   inkBlobUrl,
   inkCursorUrl,
   inkMarkUrl,
+  inkMountainScene,
   inkRidgeUrl,
   inkScaleUrl,
   inkShapeUrl,
@@ -56,6 +57,26 @@ describe("ink assets", () => {
     expect(inkMarkUrl("check", { seed: 1 })).toBe(inkMarkUrl("check", { seed: 1 }));
     expect(inkMarkUrl("check", { seed: 1 })).not.toBe(inkMarkUrl("check", { seed: 2 }));
     expect(inkShapeUrl(121, 29, { seed: 1 })).toBe(inkShapeUrl(123, 31, { seed: 1 }));
+  });
+
+  it("mountain scene: four layers per side, deterministic, every mask decodes", async () => {
+    const a = inkMountainScene({ seed: 4, side: "left" });
+    const b = inkMountainScene({ seed: 4, side: "left" });
+    expect(a.layers.map((l) => l.name)).toEqual(["base", "mid", "front", "front2"]);
+    expect(a.layers.map((l) => l.role)).toEqual(["wash", "wash", "ink", "ink"]);
+    expect(a.layers.map((l) => l.line)).toEqual(b.layers.map((l) => l.line));
+    // 左右两组不是同一座山
+    expect(inkMountainScene({ seed: 4, side: "right" }).layers[0]!.line).not.toBe(
+      a.layers[0]!.line,
+    );
+    for (const layer of a.layers)
+      for (const url of [layer.line, layer.wash, layer.silhouette, layer.mist]) await decode(url);
+    // 山体：脊线附近实，画幅底边化进雾里
+    const alpha = await alphaSampler(a.layers[0]!.wash, 1800, 610);
+    let top = 0;
+    while (top < 600 && alpha(600, top) < 100) top++;
+    expect(top).toBeLessThan(500);
+    expect(alpha(600, Math.min(609, top + 30))).toBeGreaterThan(alpha(600, 605));
   });
 
   it("ridge silhouettes are opaque at the bottom and clear at the top", async () => {

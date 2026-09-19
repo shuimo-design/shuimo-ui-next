@@ -2,9 +2,12 @@
   .m-rice-paper {
     --m-rice-paper-tile: 384px;
     --m-rice-paper-gold-tile: 768px;
-    /* 远山：旧站整组山 0.3 透明度（图本身近黑）；墨色掺一点纸的青色，暗色主题下 --m-ink 是灰白、掺黑后成灰，正好是旧 dark 那组的调子 */
-    --m-rice-paper-landscape-opacity: 0.55;
+    /* 远山：整组按旧站 0.3 上下的透明度。线是墨色掺一点纸的青色；山体是青绿（旧图颜料 ≈ rgb(60 85 78)），
+       前景两座深一档。三种颜色都掺了 --m-ink，暗色主题下 --m-ink 是灰白，掺出来是灰绿，正好是旧 dark 那组的调子 */
+    --m-rice-paper-landscape-opacity: 0.32;
     --m-rice-paper-landscape-color: color-mix(in srgb, var(--m-ink) 70%, var(--m-paper-tint));
+    --m-rice-paper-landscape-wash: color-mix(in srgb, var(--m-ink) 30%, #4a6b62);
+    --m-rice-paper-landscape-front: color-mix(in srgb, var(--m-ink) 55%, #3c5a52);
     position: relative;
     isolation: isolate;
     background: rgb(var(--m-rice-paper-rgb, var(--m-paper-rgb)));
@@ -55,8 +58,8 @@
     opacity: var(--m-rice-paper-landscape-opacity);
   }
 
-  /* 每座山是一张 SVG 当遮罩、上墨色：换主题只换颜色，不重新生成。
-     山是淡墨，近山直接叠在远山上会透出远山，所以先用实心剪影铺一层纸色把后面挡住，再在上面上墨；
+  /* 每层山是四张 SVG 当遮罩、各上一种颜色：换主题只换颜色，不重新生成。
+     画的次序：纸色剪影垫底（把后面那层挡住）→ 山体（青绿；前景两座深一档）→ 墨线 → 纸色的云雾盖在最上面。
      整组山的透明度挂在外层容器上，容器是整体合成的，垫层不会露出来 */
   .m-rice-paper__ridge {
     position: absolute;
@@ -66,6 +69,12 @@
     &::before,
     &::after {
       content: "";
+    }
+
+    &::before,
+    &::after,
+    > .m-rice-paper__ridge-wash,
+    > .m-rice-paper__ridge-line {
       position: absolute;
       inset: 0;
     }
@@ -75,9 +84,23 @@
       mask: var(--m-rice-paper-ridge-silhouette) center / 100% 100% no-repeat;
     }
 
-    &::after {
+    > .m-rice-paper__ridge-wash {
+      background: var(--m-rice-paper-landscape-wash);
+      mask: var(--m-rice-paper-ridge-wash) center / 100% 100% no-repeat;
+    }
+
+    &.m-rice-paper__ridge--ink > .m-rice-paper__ridge-wash {
+      background: var(--m-rice-paper-landscape-front);
+    }
+
+    > .m-rice-paper__ridge-line {
       background: var(--m-rice-paper-landscape-color);
       mask: var(--m-rice-paper-ridge) center / 100% 100% no-repeat;
+    }
+
+    &::after {
+      background: rgb(var(--m-rice-paper-rgb, var(--m-paper-rgb)));
+      mask: var(--m-rice-paper-ridge-mist) center / 100% 100% no-repeat;
     }
   }
 

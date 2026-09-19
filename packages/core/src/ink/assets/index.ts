@@ -23,6 +23,15 @@ export { inkBlobUrl, type InkBlobOptions } from "./blob";
 export { generateInkShape, inkShapeUrl, type InkShape, type InkShapeOptions } from "./shape";
 export { inkWashUrl, type InkWashOptions } from "./wash";
 export { inkRidgeUrl, type InkRidge, type InkRidgeOptions } from "./ridge";
+export {
+  inkMountainScene,
+  type BrushLib,
+  type BrushStroke,
+  type MountainLayer,
+  type MountainRole,
+  type MountainScene,
+  type MountainSceneOptions,
+} from "./mountain";
 export { inkBadgeUrl, type InkBadgeKind, type InkBadgeOptions } from "./badge";
 export { inkLatticeUrl, type InkLatticeCorner, type InkLatticeOptions } from "./lattice";
 export { inkCursorUrl, type InkCursorKind, type InkCursorOptions } from "./cursor";

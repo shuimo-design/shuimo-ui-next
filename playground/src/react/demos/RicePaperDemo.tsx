@@ -54,7 +54,7 @@ export default function RicePaperDemo() {
   const [preset, setPreset] = useState<PaperPreset | undefined>(undefined);
 
   /** 旧站示例：用 CSS 变量调远山透明度 */
-  const [opacity, setOpacity] = useState(0.5);
+  const [opacity, setOpacity] = useState(0.32);
 
   /** 洒金对比：旧做法是滤镜里把噪声过阈值得到金点；新做法是 shuimo-core 移植来的矢量金箔 */
   const [goldColor, setGoldColor] = useState<GoldPreset>("gold");

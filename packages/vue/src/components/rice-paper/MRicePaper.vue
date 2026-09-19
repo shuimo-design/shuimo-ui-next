@@ -58,7 +58,10 @@ const resolvedSeed = computed(() => ricePaperSeed(seed, state.value.fallbackSeed
 const tier = computed(() => ricePaperTier(tierProp, state.value.detectedTier));
 const baseColor = computed(() => ricePaperBaseColor(paper, state.value.themePaper));
 const showLandscape = computed(() => ricePaperShowLandscape(landscape, tier.value));
-const ridges = computed(() => (showLandscape.value ? ricePaperRidges(resolvedSeed.value) : []));
+// 远山的图只在挂载后生成：几百 KB 不进服务端 HTML，反正要等 ready 才淡入
+const ridges = computed(() =>
+  showLandscape.value && state.value.mounted ? ricePaperRidges(resolvedSeed.value) : [],
+);
 
 const rootClass = computed(() =>
   ricePaperClasses({
@@ -107,7 +110,10 @@ onMounted(() => {
         class="m-rice-paper__ridge"
         :class="ridge.className"
         :style="ridge.style"
-      />
+      >
+        <span class="m-rice-paper__ridge-wash" />
+        <span class="m-rice-paper__ridge-line" />
+      </div>
     </div>
     <div class="m-rice-paper__content"><slot /></div>
   </div>

@@ -8,7 +8,7 @@
  * 纯派生（class、CSS 变量、四张远山的排布）留在渲染期算：它们只依赖 props 和控制器的快照，
  * 底下的素材生成函数各自带缓存，同参数不会重复生成。
  */
-import { inkRidgeUrl } from "../../ink/assets/ridge";
+import { inkMountainScene } from "../../ink/assets/mountain";
 import { createParallax, type ParallaxController } from "../../ink/parallax";
 import {
   deckleMaskUrl,
@@ -39,8 +39,6 @@ const DEFAULT_SEED = 1;
 const MASK_BUCKET = 32;
 /** 旧版：横向最多 ±5px、纵向再减半；这里近层 ±8px，滚动联动压得很轻，整站背景不能晃 */
 const PARALLAX = { strength: 8, damping: 0.08, scrollFactor: 0.02 };
-/** 远山的画幅宽度；高度按每层自己的宽高比算 */
-const RIDGE_WIDTH = 1200;
 
 /* ── 纯派生 ──────────────────────────────────────────────────── */
 
@@ -142,99 +140,46 @@ export function ricePaperStyle(o: RicePaperInk): Record<string, string> {
 }
 
 /**
- * 远山版式：左右各一远一近，共四张，和旧站 4096 宽那套 webp 的占位对齐（宽度、贴边位置都是容器宽度的百分比）。
- * 远层贴着容器外沿放（切口藏在外面），近层往里挪一点并把外沿化开；depth 是视差里的层深。
+ * 远山版式：照旧站 4096 宽那套 webp 的摆法——左右各一组，每组从后往前四层（base / mid / front / front2，
+ * 见 ink/assets/mountain），两组都贴着纸的底边、外沿伸出容器 1.34%（切口藏在外面）；
+ * 宽度是容器宽度的百分比，高度按画幅比例来。
  */
-interface RidgeSpec {
-  side: "left" | "right";
-  depth: number;
-  width: number;
-  inset: number;
-  ratio: number;
-  range: [number, number];
-  opacity: number;
-  soft: boolean;
-}
-
-const RIDGES: readonly RidgeSpec[] = [
-  {
-    side: "left",
-    depth: 0.3,
-    width: 46,
-    inset: -2,
-    ratio: 3,
-    range: [0, 0.45],
-    opacity: 0.85,
-    soft: false,
-  },
-  {
-    side: "left",
-    depth: 1,
-    width: 30,
-    inset: 5,
-    ratio: 2.3,
-    range: [0.6, 1],
-    opacity: 1,
-    soft: true,
-  },
-  {
-    side: "right",
-    depth: 0.3,
-    width: 56,
-    inset: -2,
-    ratio: 2.9,
-    range: [0, 0.45],
-    opacity: 0.85,
-    soft: false,
-  },
-  {
-    side: "right",
-    depth: 1,
-    width: 32,
-    inset: 6,
-    ratio: 2.4,
-    range: [0.6, 1],
-    opacity: 1,
-    soft: true,
-  },
-];
+const GROUPS = [
+  { side: "left", inset: -1.34, width: 43.26 },
+  { side: "right", inset: -1.34, width: 55.5 },
+] as const;
+/** 每层的视差层深，顺序和 inkMountainScene 的 layers 一致（base / mid / front / front2） */
+const LAYER_DEPTHS = [0.3, 0.8, 1, 1];
 
 export interface RicePaperRidge {
-  /** v-for / map 的 key，同时也是它在 RIDGES 里的下标 */
+  /** v-for / map 的 key：组序号 × 4 + 层序号 */
   key: number;
   /** 追加在 .m-rice-paper__ridge 后面的修饰类 */
   className: string;
   style: Record<string, string>;
 }
 
-/** 四张远山的 class 和内联样式。两个壳必须拿到一模一样的结果，CSS 是共用的 */
+/**
+ * 八层远山（左右各四层）的 class 和内联样式。两个壳必须拿到一模一样的结果，CSS 是共用的。
+ * 每层四张遮罩：纸色剪影垫底、山体、墨线、纸色云雾盖顶；颜色都在 CSS 变量上，换主题不重新生成。
+ * 只在挂载后才算：八层图一共五六百 KB，不该塞进服务端 HTML，而且它们要等 ready 才淡入，首帧本来就看不见。
+ */
 export function ricePaperRidges(seed: number): RicePaperRidge[] {
-  return RIDGES.map((spec, index) => {
-    const ridge = inkRidgeUrl({
-      // 每层错开一位种子：同一张纸上左右两侧不会是同一座山
-      seed: seed + index + 1,
-      width: RIDGE_WIDTH,
-      height: Math.round(RIDGE_WIDTH / spec.ratio),
-      layers: 2,
-      opacity: spec.opacity,
-      side: spec.side,
-      crest: true,
-      depthRange: spec.range,
-      softOuter: spec.soft,
-    });
-    return {
-      key: index,
-      className: `m-rice-paper__ridge--${spec.side} m-rice-paper__ridge--${
-        spec.depth < 0.5 ? "far" : "near"
-      }`,
+  return GROUPS.flatMap((group, g) => {
+    const scene = inkMountainScene({ seed, side: group.side });
+    return scene.layers.map((layer, i) => ({
+      key: g * 4 + i,
+      className: `m-rice-paper__ridge--${group.side} m-rice-paper__ridge--${layer.name} m-rice-paper__ridge--${layer.role}`,
       style: {
-        [spec.side]: `${spec.inset}%`,
-        width: `${spec.width}%`,
-        aspectRatio: `${ridge.width} / ${ridge.height}`,
-        "--m-rice-paper-ridge": `url("${ridge.url}")`,
-        "--m-rice-paper-ridge-silhouette": `url("${ridge.silhouette}")`,
+        [group.side]: `${group.inset}%`,
+        width: `${group.width}%`,
+        aspectRatio: `${scene.width} / ${scene.height}`,
+        "--m-rice-paper-ridge": `url("${layer.line}")`,
+        "--m-rice-paper-ridge-silhouette": `url("${layer.silhouette}")`,
+        "--m-rice-paper-ridge-wash": `url("${layer.wash}")`,
+        "--m-rice-paper-ridge-mist": `url("${layer.mist}")`,
       },
-    };
+    }));
   });
 }
 
@@ -267,6 +212,8 @@ export interface RicePaperSnapshot {
   /** 元素实际尺寸，毛边遮罩按它生成 */
   readonly width: number;
   readonly height: number;
+  /** 已经挂载：远山的图只在挂载后才生成（服务端和首帧没有） */
+  readonly mounted: boolean;
 }
 
 export interface RicePaperController extends Controller<RicePaperSnapshot, RicePaperOptions> {
@@ -287,6 +234,7 @@ const SERVER_SNAPSHOT: RicePaperSnapshot = {
   ready: false,
   width: 0,
   height: 0,
+  mounted: false,
 };
 
 const THEME_MEDIA = "(prefers-color-scheme: dark)";
@@ -384,7 +332,7 @@ export function createRicePaper(initial: RicePaperOptions): RicePaperController 
     if (next.length === 0) return;
     parallax = createParallax(PARALLAX);
     parallax.setLayers(
-      next.map((element, index) => ({ element, depth: RIDGES[index]?.depth ?? 1 })),
+      next.map((element, index) => ({ element, depth: LAYER_DEPTHS[index % 4] ?? 1 })),
     );
   }
 
@@ -433,7 +381,7 @@ export function createRicePaper(initial: RicePaperOptions): RicePaperController 
       connected = true;
       mountedAt = typeof performance === "undefined" ? 0 : performance.now();
       picked ??= Math.floor(Math.random() * 2 ** 31);
-      store.set({ fallbackSeed: picked, detectedTier: detectInkTier() });
+      store.set({ fallbackSeed: picked, detectedTier: detectInkTier(), mounted: true });
       start();
     },
     disconnect() {

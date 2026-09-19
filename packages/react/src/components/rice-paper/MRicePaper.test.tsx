@@ -84,21 +84,31 @@ describe("MRicePaper", () => {
     expect(svg).toContain("width='224' height='128'");
   });
 
-  it("draws four ridge layers at the bottom and moves near layers more than far ones", async () => {
+  it("draws eight ridge layers at the bottom and moves near layers more than far ones", async () => {
     const screen = await render(
       <MRicePaper seed={5} tier={1} style={{ width: 800, height: 400 }} />,
     );
+    // 远山的图挂载后才生成
+    await vi.waitFor(() =>
+      expect(screen.container.querySelectorAll(".m-rice-paper__ridge")).toHaveLength(8),
+    );
     const ridges = [...screen.container.querySelectorAll<HTMLElement>(".m-rice-paper__ridge")];
-    expect(ridges).toHaveLength(4);
-    expect(screen.container.querySelectorAll(".m-rice-paper__ridge--left")).toHaveLength(2);
-    expect(screen.container.querySelectorAll(".m-rice-paper__ridge--right")).toHaveLength(2);
+    expect(screen.container.querySelectorAll(".m-rice-paper__ridge--left")).toHaveLength(4);
+    expect(screen.container.querySelectorAll(".m-rice-paper__ridge--right")).toHaveLength(4);
+    expect(screen.container.querySelectorAll(".m-rice-paper__ridge--ink")).toHaveLength(4);
     for (const ridge of ridges) {
       expect(ridge.style.getPropertyValue("--m-rice-paper-ridge")).toMatch(
         /^url\("data:image\/svg\+xml/,
       );
-      // 墨层和纸色垫层各自套遮罩：垫层用实心剪影挡住后面的山
+      // 四张遮罩各上一种颜色：纸色剪影垫底（::before）、山体、墨线、纸色云雾盖顶（::after）
       expect(getComputedStyle(ridge, "::after").maskImage).toContain("data:image/svg+xml");
       expect(getComputedStyle(ridge, "::before").maskImage).toContain("data:image/svg+xml");
+      expect(
+        getComputedStyle(ridge.querySelector(".m-rice-paper__ridge-wash")!).maskImage,
+      ).toContain("data:image/svg+xml");
+      expect(
+        getComputedStyle(ridge.querySelector(".m-rice-paper__ridge-line")!).maskImage,
+      ).toContain("data:image/svg+xml");
       expect(ridge.style.getPropertyValue("--m-rice-paper-ridge-silhouette")).not.toBe(
         ridge.style.getPropertyValue("--m-rice-paper-ridge"),
       );
@@ -108,10 +118,9 @@ describe("MRicePaper", () => {
       ).getBoundingClientRect();
       expect(Math.abs(ridge.getBoundingClientRect().bottom - paper.bottom)).toBeLessThan(2);
     }
-    // 同 seed 同山：左右两侧远层拿到的不是同一张图
-    const [leftFar, , rightFar] = ridges;
-    expect(leftFar!.style.getPropertyValue("--m-rice-paper-ridge")).not.toBe(
-      rightFar!.style.getPropertyValue("--m-rice-paper-ridge"),
+    // 同 seed 同山：左右两组的最后一层不是同一座山
+    expect(ridges[0]!.style.getPropertyValue("--m-rice-paper-ridge")).not.toBe(
+      ridges[4]!.style.getPropertyValue("--m-rice-paper-ridge"),
     );
 
     // 鼠标移到最右边：近层位移比远层大
@@ -121,13 +130,13 @@ describe("MRicePaper", () => {
         clientY: window.innerHeight / 2,
       }),
     );
-    await vi.waitFor(() => expect(translateX(ridges[1]!)).toBeGreaterThan(5), { timeout: 3000 });
-    expect(translateX(ridges[1]!)).toBeGreaterThan(translateX(ridges[0]!) * 2);
+    await vi.waitFor(() => expect(translateX(ridges[2]!)).toBeGreaterThan(5), { timeout: 3000 });
+    expect(translateX(ridges[2]!)).toBeGreaterThan(translateX(ridges[0]!) * 2);
     // 放开视差后 transform 清掉
     await screen.rerender(
       <MRicePaper seed={5} tier={1} parallax={false} style={{ width: 800, height: 400 }} />,
     );
-    await vi.waitFor(() => expect(ridges[1]!.style.transform).toBe(""));
+    await vi.waitFor(() => expect(ridges[2]!.style.transform).toBe(""));
   });
 
   it("landscape can be switched off", async () => {
@@ -141,7 +150,7 @@ describe("MRicePaper", () => {
       <MRicePaper seed={5} tier={1} landscape style={{ width: 400, height: 200 }} />,
     );
     await vi.waitFor(() =>
-      expect(screen.container.querySelectorAll(".m-rice-paper__ridge")).toHaveLength(4),
+      expect(screen.container.querySelectorAll(".m-rice-paper__ridge")).toHaveLength(8),
     );
   });
 

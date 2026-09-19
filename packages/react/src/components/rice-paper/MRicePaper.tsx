@@ -67,7 +67,8 @@ export function MRicePaper(props: MRicePaperProps) {
   const tier = ricePaperTier(tierProp, state.detectedTier);
   const baseColor = ricePaperBaseColor(paper, state.themePaper);
   const showLandscape = ricePaperShowLandscape(landscape, tier);
-  const ridges = showLandscape ? ricePaperRidges(resolvedSeed) : [];
+  // 远山的图只在挂载后生成：几百 KB 不进服务端 HTML，反正要等 ready 才淡入
+  const ridges = showLandscape && state.mounted ? ricePaperRidges(resolvedSeed) : [];
 
   const ink = ricePaperStyle({
     tier,
@@ -101,7 +102,10 @@ export function MRicePaper(props: MRicePaperProps) {
               key={ridge.key}
               className={`m-rice-paper__ridge ${ridge.className}`}
               style={ridge.style as CSSProperties}
-            />
+            >
+              <span className="m-rice-paper__ridge-wash" />
+              <span className="m-rice-paper__ridge-line" />
+            </div>
           ))}
         </div>
       ) : null}

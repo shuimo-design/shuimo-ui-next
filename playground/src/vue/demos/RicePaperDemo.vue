@@ -19,7 +19,7 @@ const presets: { label: string; value: PaperPreset | undefined }[] = [
 ];
 
 /** 旧站示例：用 CSS 变量调远山透明度 */
-const mountainsOpacity = ref(0.5);
+const mountainsOpacity = ref(0.32);
 const opacityStyle = computed(() => ({
   "--m-rice-paper-landscape-opacity": String(mountainsOpacity.value),
 }));
